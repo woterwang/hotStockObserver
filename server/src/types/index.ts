@@ -4,6 +4,73 @@ export interface Stock {
   market: string;
 }
 
+// HotStock 接口 - 数据库存储结构
+export interface HotStock {
+  _id?: string;
+  date: Date;
+  stockCode: string;
+  stockName: string;
+  currentPrice: number;
+  changePercent: number;
+  changeAmount: number;
+  volume: number;
+  turnover: number;
+  turnoverRate: number;
+  rank: number;
+  consecutiveDays: number;
+  hotScore: number;
+  sector: string;
+  sectorCode: string;
+  riseReason: string;
+  concept: string[];
+}
+
+// MarketIndex 接口 - 市场指数
+export interface MarketIndex {
+  _id?: string;
+  date: Date;
+  indexCode: string;
+  indexName: string;
+  currentPoint: number;
+  changePercent: number;
+  changePoint: number;
+  volume: number;
+  turnover: number;
+  high: number;
+  low: number;
+  open: number;
+  preClose: number;
+  amplitude: number;
+}
+
+// Sector 接口 - 板块数据
+export interface Sector {
+  _id?: string;
+  date: Date;
+  sectorCode: string;
+  sectorName: string;
+  changePercent: number;
+  turnover: number;
+  leadingStocks: string[];
+  stockCount: number;
+  riseCount: number;
+  fallCount: number;
+}
+
+// StockNews 接口 - 股票新闻
+export interface StockNews {
+  _id?: string;
+  stockCode: string;
+  title: string;
+  summary: string;
+  content: string;
+  source: string;
+  url: string;
+  publishTime: Date;
+  sentiment: string;
+  createdAt?: Date;
+}
+
 export interface HotStockData {
   code: string;
   name: string;

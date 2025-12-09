@@ -17,6 +17,15 @@ const EASTMONEY_KLINE_API = 'https://push2his.eastmoney.com/api/qt/stock/kline/g
 // 东方财富股票新闻API
 const EASTMONEY_NEWS_API = 'https://search-api-web.eastmoney.com/search/jsonp';
 
+// 同花顺快讯新闻API
+const THS_NEWS_API = 'https://news.10jqka.com.cn/app/flash/flashnews/v1/list';
+
+// 同花顺个股新闻API
+const THS_STOCK_NEWS_API = 'https://basic.10jqka.com.cn/api/stockph/news';
+
+// 新浪财经7x24小时滚动新闻API
+const SINA_7X24_NEWS_API = 'https://zhibo.sina.com.cn/api/zhibo/feed';
+
 // 请求配置
 const axiosInstance = axios.create({
   timeout: parseInt(process.env.REQUEST_TIMEOUT || '10000'),
@@ -595,7 +604,237 @@ export class DataFetchService {
   }
 
   /**
-   * 获取股票相关新闻（使用东方财富搜索API）
+   * 从新浪财经7x24小时获取与股票相关的新闻
+   * @param stockCode 股票代码
+   * @param stockName 股票名称
+   * @param limit 返回条数
+   */
+  async fetchStockNewsFromSina(
+    stockCode: string,
+    stockName: string,
+    limit: number = 10
+  ): Promise<any[]> {
+    try {
+      // 将股票代码转换为新浪格式
+      const prefix = this.getMarketPrefix(stockCode);
+      const sinaSymbol = `${prefix}${stockCode}`.toLowerCase();
+
+      // 获取多页新闻以增加匹配概率
+      const allNews: any[] = [];
+      const pagesToFetch = 3; // 获取3页
+
+      for (let page = 1; page <= pagesToFetch; page++) {
+        try {
+          // 新浪7x24小时滚动新闻API
+          const response = await axios.get(SINA_7X24_NEWS_API, {
+            params: {
+              callback: '', // 不需要callback，直接返回JSON
+              page,
+              page_size: 50, // 每页50条
+              zhibo_id: 152, // 财经频道
+              tag_id: 0,
+              type: 0,
+            },
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+              'Referer': 'https://finance.sina.com.cn/7x24/',
+              'Accept': 'application/json, text/javascript, */*',
+            },
+            timeout: 10000,
+          });
+
+          let data = response.data;
+          // 处理JSONP响应
+          if (typeof data === 'string') {
+            const match = data.match(/try\{cb\((.*)\);\}catch\(e\)\{\}/s);
+            if (match) {
+              data = JSON.parse(match[1]);
+            }
+          }
+
+          if (data?.result?.data?.feed?.list) {
+            allNews.push(...data.result.data.feed.list);
+          }
+        } catch (e) {
+          // 单页获取失败继续下一页
+        }
+      }
+
+      if (allNews.length === 0) {
+        logger.warn(`新浪7x24 API返回数据为空`);
+        return [];
+      }
+
+      logger.info(`新浪7x24获取到 ${allNews.length} 条新闻，正在筛选与 ${stockCode}(${stockName}) 相关的新闻...`);
+      
+      // 筛选与当前股票相关的新闻
+      const relatedNews = allNews.filter((item: any) => {
+        // 方式1：通过stocks字段匹配
+        if (item.ext) {
+          try {
+            const ext = typeof item.ext === 'string' ? JSON.parse(item.ext) : item.ext;
+            if (ext.stocks && Array.isArray(ext.stocks)) {
+              // 检查是否有匹配的股票代码
+              const hasMatch = ext.stocks.some((s: any) => {
+                if (s.symbol) {
+                  const symbolLower = s.symbol.toLowerCase();
+                  return symbolLower.includes(stockCode) || symbolLower === sinaSymbol;
+                }
+                return false;
+              });
+              if (hasMatch) return true;
+            }
+          } catch (e) {
+            // ext解析失败，继续用文本匹配
+          }
+        }
+        
+        // 方式2：通过新闻内容匹配股票名称
+        const content = item.rich_text || '';
+        if (stockName && stockName.length >= 2) {
+          // 去除ST前缀做匹配
+          const cleanName = stockName.replace(/^(ST|\*ST|S\*ST|N)/, '');
+          if (content.includes(stockName) || (cleanName.length >= 2 && content.includes(cleanName))) {
+            return true;
+          }
+        }
+        
+        return false;
+      });
+
+      // 转换为统一格式
+      const news = relatedNews.slice(0, limit).map((item: any) => {
+        let docurl = '';
+        try {
+          const ext = typeof item.ext === 'string' ? JSON.parse(item.ext) : item.ext;
+          docurl = ext?.docurl || item.docurl || '';
+        } catch (e) {
+          docurl = item.docurl || '';
+        }
+
+        return {
+          stockCode,
+          title: (item.rich_text || '').substring(0, 100),
+          summary: (item.rich_text || '').substring(0, 300),
+          source: '新浪财经',
+          url: docurl,
+          publishTime: new Date(item.create_time || Date.now()),
+          sentiment: 'neutral',
+        };
+      });
+
+      logger.debug(`从新浪7x24获取 ${stockCode}(${stockName}) 新闻: ${news.length}条`);
+      return news;
+    } catch (error) {
+      logger.warn(`从新浪7x24获取 ${stockCode} 新闻失败: ${(error as Error).message}`);
+      return [];
+    }
+  }
+
+  /**
+   * 从同花顺快讯中获取与股票相关的新闻
+   * @param stockCode 股票代码
+   * @param limit 返回条数
+   */
+  async fetchStockNewsFromTHS(
+    stockCode: string,
+    limit: number = 5
+  ): Promise<any[]> {
+    try {
+      // 同花顺快讯API，获取最新的异动新闻
+      const response = await axios.get(THS_NEWS_API, {
+        params: {
+          seq: 0,
+          tagId: 21111,  // 异动标签
+        },
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Referer': 'https://news.10jqka.com.cn/',
+        },
+        timeout: 10000,
+      });
+
+      if (response.data?.status_code !== 0 || !response.data?.data?.list) {
+        return [];
+      }
+
+      // 筛选出与当前股票相关的新闻
+      const allNews = response.data.data.list;
+      const relatedNews = allNews.filter((item: any) => {
+        if (!item.stocks || !Array.isArray(item.stocks)) return false;
+        return item.stocks.some((s: any) => s.stockCode === stockCode);
+      });
+
+      // 取前limit条
+      const news = relatedNews.slice(0, limit).map((item: any) => ({
+        stockCode,
+        title: item.title || '',
+        summary: item.summary || '',
+        source: '同花顺',
+        url: item.url || item.shareUrl || '',
+        publishTime: new Date(item.createTime * 1000),
+        sentiment: 'neutral',
+      }));
+
+      return news;
+    } catch (error) {
+      logger.warn(`从同花顺获取 ${stockCode} 新闻失败: ${(error as Error).message}`);
+      return [];
+    }
+  }
+
+  /**
+   * 从雪球获取股票相关新闻
+   * @param stockCode 股票代码  
+   * @param limit 返回条数
+   */
+  async fetchStockNewsFromXueqiu(
+    stockCode: string,
+    limit: number = 5
+  ): Promise<any[]> {
+    try {
+      // 根据股票代码确定市场前缀
+      const prefix = this.getMarketPrefix(stockCode).toUpperCase();
+      const symbol = `${prefix}${stockCode}`;
+      
+      // 雪球个股新闻API
+      const response = await axios.get('https://stock.xueqiu.com/v5/stock/news.json', {
+        params: {
+          symbol: symbol,
+          page: 1,
+          count: limit,
+        },
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Referer': `https://xueqiu.com/S/${symbol}`,
+          'Cookie': 'xq_a_token=your_token;', // 可能需要cookie
+        },
+        timeout: 10000,
+      });
+
+      if (!response.data?.data?.list) {
+        return [];
+      }
+
+      const news = response.data.data.list.slice(0, limit).map((item: any) => ({
+        stockCode,
+        title: item.title || item.text?.substring(0, 50) || '',
+        summary: (item.text || '').substring(0, 200),
+        source: '雪球',
+        url: `https://xueqiu.com${item.target || ''}`,
+        publishTime: new Date(item.created_at || Date.now()),
+        sentiment: 'neutral',
+      }));
+
+      return news;
+    } catch (error) {
+      // 雪球可能需要登录，失败时静默处理
+      return [];
+    }
+  }
+
+  /**
+   * 获取股票相关新闻（整合多个数据源）
    * @param stockCode 股票代码
    * @param stockName 股票名称
    * @param limit 返回条数，默认5条
@@ -605,51 +844,93 @@ export class DataFetchService {
     stockName: string,
     limit: number = 5
   ): Promise<any[]> {
+    const allNews: any[] = [];
+    
+    logger.info(`开始获取 ${stockCode}(${stockName}) 的相关新闻...`);
+
+    // 1. 优先从新浪7x24小时获取（数据最丰富、最可靠）
     try {
-      // 使用股票名称搜索新闻
-      const searchKey = stockName || stockCode;
-      const timestamp = Date.now();
-      
-      const url = `${EASTMONEY_NEWS_API}?cb=jQuery&param={"uid":"","keyword":"${encodeURIComponent(searchKey)}","type":["cmsArticleWebOld"],"client":"web","clientType":"web","clientVersion":"curr","param":{"cmsArticleWebOld":{"searchScope":"default","sort":"default","pageIndex":1,"pageSize":${limit},"preTag":"<em>","postTag":"</em>"}}}&_=${timestamp}`;
-      
-      const response = await axios.get(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-          'Referer': 'https://so.eastmoney.com/',
-        },
-        timeout: 10000,
-      });
-
-      // 解析JSONP响应
-      const jsonpData = response.data;
-      const jsonMatch = jsonpData.match(/jQuery\((.*)\)/s);
-      if (!jsonMatch) {
-        return [];
+      const sinaNews = await this.fetchStockNewsFromSina(stockCode, stockName, limit * 2);
+      if (sinaNews.length > 0) {
+        logger.info(`从新浪7x24获取到 ${sinaNews.length} 条新闻`);
+        allNews.push(...sinaNews);
       }
-
-      const data = JSON.parse(jsonMatch[1]);
-      
-      if (!data?.result?.cmsArticleWebOld?.list) {
-        return [];
-      }
-
-      const newsList = data.result.cmsArticleWebOld.list;
-      
-      const news = newsList.map((item: any) => ({
-        stockCode,
-        title: (item.title || '').replace(/<\/?em>/g, ''), // 移除高亮标签
-        summary: (item.content || '').replace(/<\/?em>/g, '').substring(0, 200),
-        source: item.mediaName || '东方财富',
-        url: item.url || '',
-        publishTime: new Date(item.date || Date.now()),
-        sentiment: 'neutral',
-      }));
-
-      return news;
-    } catch (error) {
-      logger.warn(`获取 ${stockCode} 新闻失败: ${(error as Error).message}`);
-      return [];
+    } catch (e) {
+      logger.warn(`新浪7x24新闻获取失败: ${(e as Error).message}`);
     }
+
+    // 2. 如果新浪新闻不够，从同花顺快讯补充
+    if (allNews.length < limit) {
+      try {
+        const thsNews = await this.fetchStockNewsFromTHS(stockCode, limit);
+        if (thsNews.length > 0) {
+          logger.info(`从同花顺获取到 ${thsNews.length} 条新闻`);
+          allNews.push(...thsNews);
+        }
+      } catch (e) {
+        // 忽略错误
+      }
+    }
+
+    // 3. 如果还不够，从东方财富搜索补充
+    if (allNews.length < limit) {
+      try {
+        const searchKey = stockName || stockCode;
+        const timestamp = Date.now();
+        const needCount = limit - allNews.length;
+        
+        const url = `${EASTMONEY_NEWS_API}?cb=jQuery&param={"uid":"","keyword":"${encodeURIComponent(searchKey)}","type":["cmsArticleWebOld"],"client":"web","clientType":"web","clientVersion":"curr","param":{"cmsArticleWebOld":{"searchScope":"default","sort":"default","pageIndex":1,"pageSize":${needCount + 5},"preTag":"<em>","postTag":"</em>"}}}&_=${timestamp}`;
+        
+        const response = await axios.get(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': 'https://so.eastmoney.com/',
+          },
+          timeout: 10000,
+        });
+
+        const jsonpData = response.data;
+        const jsonMatch = jsonpData.match(/jQuery\((.*)\)/s);
+        if (jsonMatch) {
+          const data = JSON.parse(jsonMatch[1]);
+          if (data?.result?.cmsArticleWebOld?.list) {
+            const eastMoneyNews = data.result.cmsArticleWebOld.list.map((item: any) => ({
+              stockCode,
+              title: (item.title || '').replace(/<\/?em>/g, ''),
+              summary: (item.content || '').replace(/<\/?em>/g, '').substring(0, 200),
+              source: item.mediaName || '东方财富',
+              url: item.url || '',
+              publishTime: new Date(item.date || Date.now()),
+              sentiment: 'neutral',
+            }));
+            if (eastMoneyNews.length > 0) {
+              logger.info(`从东方财富获取到 ${eastMoneyNews.length} 条新闻`);
+              allNews.push(...eastMoneyNews);
+            }
+          }
+        }
+      } catch (e) {
+        // 忽略错误
+      }
+    }
+
+    // 4. 去重（按标题）并按时间排序，取前limit条
+    const seen = new Set<string>();
+    const uniqueNews = allNews.filter(news => {
+      const normalizedTitle = news.title.substring(0, 50); // 用标题前50字符做去重
+      if (seen.has(normalizedTitle)) return false;
+      seen.add(normalizedTitle);
+      return true;
+    });
+
+    // 按发布时间降序排序
+    uniqueNews.sort((a, b) => 
+      new Date(b.publishTime).getTime() - new Date(a.publishTime).getTime()
+    );
+
+    const result = uniqueNews.slice(0, limit);
+    logger.info(`最终返回 ${stockCode} 新闻 ${result.length} 条`);
+    return result;
   }
 
   /**

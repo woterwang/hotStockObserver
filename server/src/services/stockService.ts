@@ -308,21 +308,30 @@ export class StockService {
     // 获取历史记录
     const history = await this.getStockHistory(stockCode, 30);
 
-    // 获取相关新闻（先查数据库，如果没有则实时抓取）
-    let news = await this.getStockNews(stockCode, 5);
+    // 获取相关新闻：每次都尝试获取最新新闻
+    let news: any[] = [];
     
-    // 如果数据库没有新闻，尝试实时获取
-    if (news.length === 0 && latestRecord) {
+    if (latestRecord) {
       try {
-        await dataFetchService.fetchAndSaveStockNews(
+        // 直接从API获取最新新闻（不依赖数据库缓存，确保是最新的）
+        news = await dataFetchService.fetchStockNews(
           stockCode,
           latestRecord.stockName,
           5
         );
-        // 重新查询
-        news = await this.getStockNews(stockCode, 5);
+        
+        // 异步保存到数据库（不阻塞返回）
+        if (news.length > 0) {
+          dataFetchService.fetchAndSaveStockNews(
+            stockCode,
+            latestRecord.stockName,
+            5
+          ).catch(() => {}); // 忽略保存错误
+        }
       } catch (error) {
         logger.warn(`获取 ${stockCode} 新闻失败: ${(error as Error).message}`);
+        // 如果实时获取失败，尝试从数据库读取缓存
+        news = await this.getStockNews(stockCode, 5);
       }
     }
 
