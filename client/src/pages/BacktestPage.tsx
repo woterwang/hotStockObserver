@@ -59,15 +59,25 @@ const API_BASE = '/api';
  * 策略回测页面
  */
 const BacktestPage: React.FC = () => {
-  // 表单状态
-  const [startDate, setStartDate] = useState('20240101');
-  const [endDate, setEndDate] = useState('20241231');
+  // 获取当年的默认日期范围
+  const currentYear = new Date().getFullYear();
+  const defaultStartDate = `${currentYear}-01-01`;
+  const today = new Date().toISOString().split('T')[0];
+
+  // 表单状态 - 日期格式 YYYY-MM-DD 用于日历控件
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(today);
   const [config, setConfig] = useState<BacktestConfig>({
     stopLossPercent: -5,
     takeProfitPercent: 10,
-    maxHoldDays: 10,
+    maxHoldDays: 3,  // 默认3天，符合短线策略
     useDay2LowAsStopLoss: true,
   });
+
+  // 日期格式转换：YYYY-MM-DD -> YYYYMMDD
+  const formatDateForApi = (dateStr: string): string => {
+    return dateStr.replace(/-/g, '');
+  };
 
   // 结果状态
   const [result, setResult] = useState<BacktestResult | null>(null);
@@ -130,7 +140,11 @@ const BacktestPage: React.FC = () => {
       const response = await fetch(`${API_BASE}/backtest/run`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ startDate, endDate, config }),
+        body: JSON.stringify({ 
+          startDate: formatDateForApi(startDate), 
+          endDate: formatDateForApi(endDate), 
+          config 
+        }),
       });
 
       const data = await response.json();
@@ -176,16 +190,16 @@ const BacktestPage: React.FC = () => {
           <h2 className="text-lg font-semibold mb-4">回测参数</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* 日期范围 */}
+            {/* 日期范围 - 使用日历选择器 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 开始日期
               </label>
               <input
-                type="text"
+                type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                placeholder="YYYYMMDD"
+                max={endDate}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -195,10 +209,11 @@ const BacktestPage: React.FC = () => {
                 结束日期
               </label>
               <input
-                type="text"
+                type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                placeholder="YYYYMMDD"
+                min={startDate}
+                max={new Date().toISOString().split('T')[0]}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>

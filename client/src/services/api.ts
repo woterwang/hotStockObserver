@@ -133,7 +133,7 @@ export const breakthroughApi = {
   },
 
   // 手动触发扫描（需要更长超时时间，问财接口响应较慢）
-  scan: (date?: string): Promise<ApiResponse<{ count: number }>> => {
+  scan: (date?: string): Promise<ApiResponse<any> & { count?: number }> => {
     return api.post('/breakthrough/scan', { date }, { timeout: 60000 });
   },
 };

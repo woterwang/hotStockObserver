@@ -1,7 +1,7 @@
 import cron from 'node-cron';
-import { dataFetchService, priceBreakthroughService } from '../services';
+import { dataFetchService, priceBreakthroughService, tradingSignalService } from '../services';
 import { logger } from '../utils';
-import { isTradingDay, isTradingTime } from '../utils/dateUtils';
+import { isTradingDay, isTradingTime, formatDate } from '../utils/dateUtils';
 
 /**
  * 定时任务管理
@@ -9,6 +9,8 @@ import { isTradingDay, isTradingTime } from '../utils/dateUtils';
 export class JobScheduler {
   private updateJob: cron.ScheduledTask | null = null;
   private breakthroughJob: cron.ScheduledTask | null = null;
+  private auctionJob: cron.ScheduledTask | null = null;
+  private signalGenerateJob: cron.ScheduledTask | null = null;
 
   /**
    * 启动所有定时任务
@@ -16,6 +18,8 @@ export class JobScheduler {
   start() {
     this.startHotStockUpdateJob();
     this.startBreakthroughScanJob();
+    this.startAuctionUpdateJob();
+    this.startSignalGenerateJob();
     logger.info('定时任务已启动');
   }
 
@@ -30,6 +34,14 @@ export class JobScheduler {
     if (this.breakthroughJob) {
       this.breakthroughJob.stop();
       this.breakthroughJob = null;
+    }
+    if (this.auctionJob) {
+      this.auctionJob.stop();
+      this.auctionJob = null;
+    }
+    if (this.signalGenerateJob) {
+      this.signalGenerateJob.stop();
+      this.signalGenerateJob = null;
     }
     logger.info('定时任务已停止');
   }
@@ -116,6 +128,69 @@ export class JobScheduler {
     });
 
     logger.info(`价格突破扫描任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /**
+   * 盘后信号生成任务
+   * 交易日收盘后执行（15:35），生成次日入场信号
+   */
+  private startSignalGenerateJob() {
+    // 每个交易日15:35执行
+    const cronExpression = '35 15 * * 1-5';
+    
+    this.signalGenerateJob = cron.schedule(cronExpression, async () => {
+      try {
+        if (!isTradingDay()) {
+          logger.info('非交易日，跳过信号生成');
+          return;
+        }
+
+        logger.info('开始执行盘后信号生成任务');
+        
+        // 当天是 Day2，生成 Day3 的入场信号
+        const today = formatDate(new Date(), 'YYYYMMDD');
+        const count = await tradingSignalService.generateSignalsAfterMarketClose(today);
+        
+        logger.info(`盘后信号生成完成，共 ${count} 个信号`);
+      } catch (error) {
+        logger.error(`盘后信号生成失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`盘后信号生成任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /**
+   * 集合竞价后入场条件更新任务
+   * 交易日09:26执行，更新今日信号的入场条件
+   */
+  private startAuctionUpdateJob() {
+    // 每个交易日09:26执行（集合竞价后1分钟）
+    const cronExpression = '26 9 * * 1-5';
+    
+    this.auctionJob = cron.schedule(cronExpression, async () => {
+      try {
+        if (!isTradingDay()) {
+          logger.info('非交易日，跳过入场条件更新');
+          return;
+        }
+
+        logger.info('开始执行集合竞价后入场条件更新');
+        
+        const today = formatDate(new Date(), 'YYYYMMDD');
+        const result = await tradingSignalService.updateSignalsAfterAuction(today);
+        
+        logger.info(`入场条件更新完成: 可入场=${result.ready}, 部分满足=${result.partial}, 不满足=${result.rejected}`);
+      } catch (error) {
+        logger.error(`入场条件更新失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`集合竞价更新任务已配置，Cron表达式: ${cronExpression}`);
   }
 }
 

@@ -3,6 +3,7 @@ import stockRoutes from './stockRoutes';
 import marketRoutes from './marketRoutes';
 import breakthroughRoutes from './breakthroughRoutes';
 import backtestRoutes from './backtestRoutes';
+import signalRoutes from './signalRoutes';
 
 const router = Router();
 
@@ -11,6 +12,7 @@ router.use('/stocks', stockRoutes);
 router.use('/market', marketRoutes);
 router.use('/breakthrough', breakthroughRoutes);
 router.use('/backtest', backtestRoutes);
+router.use('/signals', signalRoutes);
 
 // 健康检查
 router.get('/health', (req, res) => {

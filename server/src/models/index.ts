@@ -3,3 +3,4 @@ export * from './MarketIndex';
 export * from './Sector';
 export * from './StockNews';
 export * from './PriceBreakthrough';
+export * from './TradingSignal';

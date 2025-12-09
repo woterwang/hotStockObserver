@@ -77,7 +77,9 @@ const BreakthroughPage: React.FC = () => {
     try {
       const response = await breakthroughApi.scan();
       if (response.success) {
-        alert(`扫描完成，发现 ${response.data.count} 只突破股票`);
+        // 注意：count 直接在 response 上，不是 response.data.count
+        const count = (response as any).count || 0;
+        alert(`扫描完成，发现 ${count} 只突破股票`);
         fetchList(selectedDate);
         fetchDates();
       }
