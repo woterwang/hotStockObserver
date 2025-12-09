@@ -1,0 +1,134 @@
+import React, { useEffect, useState } from 'react';
+import { Layout, IndexList, HotStockTable, SectorList, Loading, ErrorMessage, Empty } from '../components';
+import { stockApi } from '../services/api';
+import type { MarketOverview } from '../types';
+
+/**
+ * 首页 - 信息概览
+ */
+const HomePage: React.FC = () => {
+  const [data, setData] = useState<MarketOverview | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await stockApi.getOverview();
+      if (response.success) {
+        setData(response.data);
+      } else {
+        setError('获取数据失败');
+      }
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    // 每5分钟刷新一次
+    const interval = setInterval(fetchData, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (loading) {
+    return (
+      <Layout>
+        <Loading text="正在加载市场数据..." />
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <ErrorMessage message={error} onRetry={fetchData} />
+      </Layout>
+    );
+  }
+
+  if (!data) {
+    return (
+      <Layout>
+        <Empty message="暂无数据" />
+      </Layout>
+    );
+  }
+
+  return (
+    <Layout>
+      <div className="space-y-6">
+        {/* 大盘指数 */}
+        <section>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">📊 大盘指数</h2>
+          <IndexList indices={data.indices} />
+        </section>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* 热搜股票Top20 */}
+          <div className="lg:col-span-2">
+            <div className="card">
+              <h3 className="card-header">🔥 热搜股票 Top 20</h3>
+              {data.hotStocks.length > 0 ? (
+                <HotStockTable stocks={data.hotStocks} showRank={true} />
+              ) : (
+                <Empty message="暂无热搜股票数据" />
+              )}
+            </div>
+          </div>
+
+          {/* 右侧栏 */}
+          <div className="space-y-6">
+            {/* 热门板块 */}
+            <div className="card">
+              <h3 className="card-header">📈 热门板块</h3>
+              {data.sectors.length > 0 ? (
+                <SectorList sectors={data.sectors} />
+              ) : (
+                <Empty message="暂无板块数据" />
+              )}
+            </div>
+
+            {/* 强势股 */}
+            <div className="card">
+              <h3 className="card-header">💪 强势股（涨幅&gt;5%）</h3>
+              {data.strongStocks.length > 0 ? (
+                <div className="space-y-2">
+                  {data.strongStocks.slice(0, 5).map((stock) => (
+                    <div
+                      key={stock.stockCode}
+                      className="flex items-center justify-between py-2 px-3 bg-red-50 rounded-lg"
+                    >
+                      <div>
+                        <div className="font-medium text-sm">{stock.stockName}</div>
+                        <div className="text-xs text-gray-500">{stock.stockCode}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-mono text-rise">
+                          +{stock.changePercent.toFixed(2)}%
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Empty message="暂无强势股" />
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* 更新时间 */}
+        <div className="text-center text-sm text-gray-400">
+          数据更新时间: {new Date(data.updateTime).toLocaleString()}
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default HomePage;

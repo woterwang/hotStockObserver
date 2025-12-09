@@ -1,0 +1,170 @@
+[
+    {
+        "order": 1,
+        "code": "000547",
+        "name": "航天发展",
+        "rate": "64245290",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "商业航天+孙公司增资扩股+央企+海峡两岸",
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "福建自贸区"
+            ],
+            "popularity_tag": "持续上榜"
+        }
+    },
+    {
+        "order": 2,
+        "code": "000592",
+        "name": "平潭发展",
+        "rate": "56619776",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "此前涨幅较大+估值偏高",
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "福建自贸区"
+            ],
+            "popularity_tag": "27天14板"
+        }
+    },
+    {
+        "order": 3,
+        "code": "300058",
+        "name": "蓝色光标",
+        "rate": "41868553",
+        "market": 33,
+        "topic": {
+            "title": "章盟主近5亿扫货蓝色光标",
+            "topic_code": "Tuxhvy5",
+            "ios_jump_url": "client.html?action=ymtz^webid=2804^url=https://t.10jqka.com.cn/lgt/main/frontend-main-service/topic/index.html?code=Tuxhvy5^mode=new",
+            "android_jump_url": "client.html?action=ymtz^webid=2804^fullscreen=1^notitlebar=1^url=https://t.10jqka.com.cn/m/topic/index.html?code=Tuxhvy5^mode=new"
+        },
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "小红书概念",
+                "快手概念"
+            ]
+        }
+    },
+    {
+        "order": 4,
+        "code": "002474",
+        "name": "榕基软件",
+        "rate": "36753014",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "Web3.0",
+                "云办公"
+            ],
+            "popularity_tag": "6天5板"
+        }
+    },
+    {
+        "order": 5,
+        "code": "601138",
+        "name": "工业富联",
+        "rate": "36589311",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "共封装光学(CPO)",
+                "同花顺果指数"
+            ]
+        }
+    },
+    {
+        "order": 6,
+        "code": "601606",
+        "name": "长城军工",
+        "rate": "28961969",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "弹药装备+军工投资+央企+亏损收窄",
+        "tag": {
+            "concept_tag": [
+                "兵装重组概念",
+                "军民融合"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 7,
+        "code": "601360",
+        "name": "三六零",
+        "rate": "24078276",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "AI应用+安全+亏损收窄",
+        "tag": {
+            "concept_tag": [
+                "AI语料",
+                "Sora概念(文生视频)"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 8,
+        "code": "600410",
+        "name": "华胜天成",
+        "rate": "23000864",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "信创",
+                "网络安全"
+            ]
+        }
+    },
+    {
+        "order": 9,
+        "code": "600734",
+        "name": "实达集团",
+        "rate": "22401078",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "拟收购数产名商+智算中心+福建国资+中标",
+        "tag": {
+            "concept_tag": [
+                "职业教育",
+                "海峡两岸"
+            ],
+            "popularity_tag": "3天3板"
+        }
+    },
+    {
+        "order": 10,
+        "code": "002279",
+        "name": "久其软件",
+        "rate": "21591265",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 1,
+        "analyse_title": "女娲GPT+AIGC+信创+管理软件+回购",
+        "tag": {
+            "concept_tag": [
+                "快手概念",
+                "小红书概念"
+            ],
+            "popularity_tag": "2天2板"
+        }
+    }
+]

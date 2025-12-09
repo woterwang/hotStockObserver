@@ -1,0 +1,336 @@
+[
+    {
+        "order": 1,
+        "code": "000678",
+        "name": "襄阳轴承",
+        "rate": "11636019",
+        "market": 33,
+        "topic": {
+            "title": "社区大爱：襄阳轴承",
+            "topic_code": "Tyie5dx",
+            "ios_jump_url": "client.html?action=ymtz^webid=2804^url=https://t.10jqka.com.cn/lgt/main/frontend-main-service/topic/index.html?code=Tyie5dx^mode=new",
+            "android_jump_url": "client.html?action=ymtz^webid=2804^fullscreen=1^notitlebar=1^url=https://t.10jqka.com.cn/m/topic/index.html?code=Tyie5dx^mode=new"
+        },
+        "hot_rank_chg": 0,
+        "analyse_title": "汽车轴承+军工+扭亏",
+        "tag": {
+            "concept_tag": [
+                "减速器",
+                "农机"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 2,
+        "code": "000547",
+        "name": "航天发展",
+        "rate": "5800207",
+        "market": 33,
+        "topic": {
+            "title": "新闸路狂轰1.6亿！航天发展尾盘涨停",
+            "topic_code": "Tuxhvy5",
+            "ios_jump_url": "client.html?action=ymtz^webid=2804^url=https://t.10jqka.com.cn/lgt/main/frontend-main-service/topic/index.html?code=Tuxhvy5^mode=new",
+            "android_jump_url": "client.html?action=ymtz^webid=2804^fullscreen=1^notitlebar=1^url=https://t.10jqka.com.cn/m/topic/index.html?code=Tuxhvy5^mode=new"
+        },
+        "hot_rank_chg": 0,
+        "analyse_title": "商业航天+孙公司增资扩股+央企+海峡两岸",
+        "tag": {
+            "concept_tag": [
+                "军工信息化",
+                "军民融合"
+            ],
+            "popularity_tag": "持续上榜"
+        }
+    },
+    {
+        "order": 3,
+        "code": "000592",
+        "name": "平潭发展",
+        "rate": "5099323",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "海峡两岸+平潭开发+林业+菌草",
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "福建自贸区"
+            ],
+            "popularity_tag": "持续上榜"
+        }
+    },
+    {
+        "order": 4,
+        "code": "002413",
+        "name": "雷科防务",
+        "rate": "3624753",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 1,
+        "analyse_title": "商业航天+毫米波雷达+存储芯片+收购尧云",
+        "tag": {
+            "concept_tag": [
+                "太赫兹",
+                "军工信息化"
+            ],
+            "popularity_tag": "5天4板"
+        }
+    },
+    {
+        "order": 5,
+        "code": "601162",
+        "name": "天风证券",
+        "rate": "3546945",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": -1,
+        "tag": {
+            "concept_tag": [
+                "期货概念",
+                "物业管理"
+            ]
+        }
+    },
+    {
+        "order": 6,
+        "code": "603778",
+        "name": "国晟科技",
+        "rate": "3469768",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "固态电池+孚悦科技+光伏组件+异质结",
+        "tag": {
+            "concept_tag": [
+                "硅能源",
+                "HJT电池"
+            ],
+            "popularity_tag": "15天10板"
+        }
+    },
+    {
+        "order": 7,
+        "code": "000888",
+        "name": "峨眉山A",
+        "rate": "3224061",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 1,
+        "tag": {
+            "concept_tag": [
+                "冰雪产业",
+                "旅游概念"
+            ]
+        }
+    },
+    {
+        "order": 8,
+        "code": "600734",
+        "name": "实达集团",
+        "rate": "2909430",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": -1,
+        "tag": {
+            "concept_tag": [
+                "福建自贸区",
+                "国资云"
+            ],
+            "popularity_tag": "持续上榜"
+        }
+    },
+    {
+        "order": 9,
+        "code": "300102",
+        "name": "乾照光电",
+        "rate": "2595726",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "商业航天+砷化镓电池+三季报增长+CPO",
+        "tag": {
+            "concept_tag": [
+                "MicroLED概念",
+                "MiniLED"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 10,
+        "code": "603122",
+        "name": "合富中国",
+        "rate": "2193660",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "猴痘概念"
+            ],
+            "popularity_tag": "24天13板"
+        }
+    },
+    {
+        "order": 11,
+        "code": "002611",
+        "name": "东方精工",
+        "rate": "2166716",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 1,
+        "tag": {
+            "concept_tag": [
+                "英伟达概念",
+                "人形机器人"
+            ]
+        }
+    },
+    {
+        "order": 12,
+        "code": "002702",
+        "name": "海欣食品",
+        "rate": "2111623",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": -1,
+        "analyse_title": "海峡两岸+山姆渠道+常温新品+火锅丸滑",
+        "tag": {
+            "concept_tag": [
+                "预制菜",
+                "人造肉"
+            ],
+            "popularity_tag": "3天3板"
+        }
+    },
+    {
+        "order": 13,
+        "code": "600930",
+        "name": "华电新能",
+        "rate": "2002408",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "绿色电力",
+                "国企改革"
+            ]
+        }
+    },
+    {
+        "order": 14,
+        "code": "002792",
+        "name": "通宇通讯",
+        "rate": "1926024",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "投资凌空天行+商业航天+卫星通信+射频器件+CPO",
+        "tag": {
+            "concept_tag": [
+                "6G概念",
+                "铜缆高速连接"
+            ],
+            "popularity_tag": "2天2板"
+        }
+    },
+    {
+        "order": 15,
+        "code": "000078",
+        "name": "海王生物",
+        "rate": "1752616",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "创新药+流感+医药流通+民营龙头",
+        "tag": {
+            "concept_tag": [
+                "流感",
+                "仿制药一致性评价"
+            ],
+            "popularity_tag": "3天3板"
+        }
+    },
+    {
+        "order": 16,
+        "code": "600343",
+        "name": "航天动力",
+        "rate": "1738768",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "商业航天",
+                "军民融合"
+            ]
+        }
+    },
+    {
+        "order": 17,
+        "code": "000070",
+        "name": "特发信息",
+        "rate": "1604810",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 1,
+        "tag": {
+            "concept_tag": [
+                "深圳国企改革",
+                "F5G概念"
+            ],
+            "popularity_tag": "6天4板"
+        }
+    },
+    {
+        "order": 18,
+        "code": "002264",
+        "name": "新华都",
+        "rate": "1567119",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 2,
+        "analyse_title": "异常波动+前期涨幅较大+三季报下滑+资金流出",
+        "tag": {
+            "concept_tag": [
+                "赛马概念",
+                "小红书概念"
+            ],
+            "popularity_tag": "6天4板"
+        }
+    },
+    {
+        "order": 19,
+        "code": "600246",
+        "name": "万通发展",
+        "rate": "1562103",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": -2,
+        "tag": {
+            "concept_tag": [
+                "存储芯片",
+                "芯片概念"
+            ],
+            "popularity_tag": "3天2板"
+        }
+    },
+    {
+        "order": 20,
+        "code": "002407",
+        "name": "多氟多",
+        "rate": "1554760",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 1,
+        "tag": {
+            "concept_tag": [
+                "钠离子电池",
+                "氟化工概念"
+            ]
+        }
+    }
+]

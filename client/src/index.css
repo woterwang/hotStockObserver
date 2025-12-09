@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义全局样式 */
+:root {
+  --color-rise: #ef4444;
+  --color-fall: #22c55e;
+  --color-flat: #6b7280;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 数字样式 */
+.num-rise {
+  color: var(--color-rise);
+}
+
+.num-fall {
+  color: var(--color-fall);
+}
+
+.num-flat {
+  color: var(--color-flat);
+}
+
+/* 卡片样式 */
+.card {
+  @apply bg-white rounded-lg shadow-sm p-4;
+}
+
+.card-header {
+  @apply text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100;
+}
+
+/* 表格样式 */
+.stock-table {
+  @apply w-full text-sm;
+}
+
+.stock-table th {
+  @apply text-left py-2 px-3 bg-gray-50 font-medium text-gray-600;
+}
+
+.stock-table td {
+  @apply py-3 px-3 border-b border-gray-50;
+}
+
+.stock-table tr:hover {
+  @apply bg-gray-50;
+}
+
+/* 指数卡片 */
+.index-card {
+  @apply bg-white rounded-lg p-4 shadow-sm;
+}
+
+.index-card.rise {
+  @apply border-l-4 border-rise;
+}
+
+.index-card.fall {
+  @apply border-l-4 border-fall;
+}
+
+.index-card.flat {
+  @apply border-l-4 border-flat;
+}
+
+/* 股票行样式 */
+.stock-row {
+  @apply flex items-center justify-between py-3 px-4 hover:bg-gray-50 cursor-pointer border-b border-gray-50;
+}
+
+.stock-row:last-child {
+  @apply border-b-0;
+}
+
+/* 标签样式 */
+.tag {
+  @apply inline-block px-2 py-0.5 text-xs rounded-full;
+}
+
+.tag-hot {
+  @apply bg-red-100 text-red-600;
+}
+
+.tag-sector {
+  @apply bg-blue-100 text-blue-600;
+}
+
+.tag-concept {
+  @apply bg-purple-100 text-purple-600;
+}
+
+/* 图表容器 */
+.chart-container {
+  @apply w-full min-h-[300px];
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .stock-table {
+    @apply text-xs;
+  }
+  
+  .stock-table th,
+  .stock-table td {
+    @apply px-2 py-2;
+  }
+}
+
+/* 加载动画 */
+.loading {
+  @apply flex items-center justify-center py-8;
+}
+
+.loading-spinner {
+  @apply w-8 h-8 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}

@@ -1,0 +1,339 @@
+[
+    {
+        "order": 1,
+        "code": "000547",
+        "name": "航天发展",
+        "rate": "4963066",
+        "market": 33,
+        "topic": {
+            "title": "新闸路狂轰1.6亿！航天发展尾盘涨停",
+            "topic_code": "Tuxhvy5",
+            "ios_jump_url": "client.html?action=ymtz^webid=2804^url=https://t.10jqka.com.cn/lgt/main/frontend-main-service/topic/index.html?code=Tuxhvy5^mode=new",
+            "android_jump_url": "client.html?action=ymtz^webid=2804^fullscreen=1^notitlebar=1^url=https://t.10jqka.com.cn/m/topic/index.html?code=Tuxhvy5^mode=new"
+        },
+        "hot_rank_chg": 0,
+        "analyse_title": "商业航天+孙公司增资扩股+央企+海峡两岸",
+        "tag": {
+            "concept_tag": [
+                "军工信息化",
+                "军民融合"
+            ],
+            "popularity_tag": "持续上榜"
+        }
+    },
+    {
+        "order": 2,
+        "code": "002413",
+        "name": "雷科防务",
+        "rate": "3715866",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 1,
+        "analyse_title": "商业航天+毫米波雷达+存储芯片+收购尧云",
+        "tag": {
+            "concept_tag": [
+                "太赫兹",
+                "军工信息化"
+            ],
+            "popularity_tag": "5天4板"
+        }
+    },
+    {
+        "order": 3,
+        "code": "000888",
+        "name": "峨眉山A",
+        "rate": "3586043",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": -1,
+        "tag": {
+            "concept_tag": [
+                "冰雪产业",
+                "旅游概念"
+            ]
+        }
+    },
+    {
+        "order": 4,
+        "code": "000592",
+        "name": "平潭发展",
+        "rate": "3244905",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "海峡两岸+平潭开发+林业+菌草",
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "福建自贸区"
+            ],
+            "popularity_tag": "持续上榜"
+        }
+    },
+    {
+        "order": 5,
+        "code": "000678",
+        "name": "襄阳轴承",
+        "rate": "2727454",
+        "market": 33,
+        "topic": {
+            "title": "社区大爱：襄阳轴承",
+            "topic_code": "Tyie5dx",
+            "ios_jump_url": "client.html?action=ymtz^webid=2804^url=https://t.10jqka.com.cn/lgt/main/frontend-main-service/topic/index.html?code=Tyie5dx^mode=new",
+            "android_jump_url": "client.html?action=ymtz^webid=2804^fullscreen=1^notitlebar=1^url=https://t.10jqka.com.cn/m/topic/index.html?code=Tyie5dx^mode=new"
+        },
+        "hot_rank_chg": 0,
+        "analyse_title": "汽车轴承+军工+扭亏",
+        "tag": {
+            "concept_tag": [
+                "减速器",
+                "农机"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 6,
+        "code": "603778",
+        "name": "国晟科技",
+        "rate": "2520125",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "固态电池+孚悦科技+光伏组件+异质结",
+        "tag": {
+            "concept_tag": [
+                "硅能源",
+                "HJT电池"
+            ],
+            "popularity_tag": "15天10板"
+        }
+    },
+    {
+        "order": 7,
+        "code": "300102",
+        "name": "乾照光电",
+        "rate": "2206095",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "商业航天+砷化镓电池+三季报增长+CPO",
+        "tag": {
+            "concept_tag": [
+                "MicroLED概念",
+                "MiniLED"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 8,
+        "code": "600734",
+        "name": "实达集团",
+        "rate": "2189157",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "福建自贸区",
+                "国资云"
+            ],
+            "popularity_tag": "持续上榜"
+        }
+    },
+    {
+        "order": 9,
+        "code": "002792",
+        "name": "通宇通讯",
+        "rate": "1952003",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "投资凌空天行+商业航天+卫星通信+射频器件+CPO",
+        "tag": {
+            "concept_tag": [
+                "6G概念",
+                "铜缆高速连接"
+            ],
+            "popularity_tag": "2天2板"
+        }
+    },
+    {
+        "order": 10,
+        "code": "600977",
+        "name": "中国电影",
+        "rate": "1940430",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "影视院线+《疯狂动物城2》+IP经济+央企",
+        "tag": {
+            "concept_tag": [
+                "短剧游戏",
+                "文化传媒概念"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 11,
+        "code": "002519",
+        "name": "银河电子",
+        "rate": "1645012",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "商业航天+军工+智能终端+新能源",
+        "tag": {
+            "concept_tag": [
+                "军民融合",
+                "军工信息化"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 12,
+        "code": "000078",
+        "name": "海王生物",
+        "rate": "1525287",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "创新药+流感+医药流通+民营龙头",
+        "tag": {
+            "concept_tag": [
+                "流感",
+                "仿制药一致性评价"
+            ],
+            "popularity_tag": "3天3板"
+        }
+    },
+    {
+        "order": 13,
+        "code": "600343",
+        "name": "航天动力",
+        "rate": "1505717",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "商业航天",
+                "军民融合"
+            ]
+        }
+    },
+    {
+        "order": 14,
+        "code": "603122",
+        "name": "合富中国",
+        "rate": "1467831",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "猴痘概念"
+            ],
+            "popularity_tag": "24天13板"
+        }
+    },
+    {
+        "order": 15,
+        "code": "002702",
+        "name": "海欣食品",
+        "rate": "1407698",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 1,
+        "analyse_title": "海峡两岸+山姆渠道+常温新品+火锅丸滑",
+        "tag": {
+            "concept_tag": [
+                "预制菜",
+                "人造肉"
+            ],
+            "popularity_tag": "3天3板"
+        }
+    },
+    {
+        "order": 16,
+        "code": "002611",
+        "name": "东方精工",
+        "rate": "1384478",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": -1,
+        "tag": {
+            "concept_tag": [
+                "英伟达概念",
+                "人形机器人"
+            ]
+        }
+    },
+    {
+        "order": 17,
+        "code": "000070",
+        "name": "特发信息",
+        "rate": "1305536",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 1,
+        "tag": {
+            "concept_tag": [
+                "深圳国企改革",
+                "F5G概念"
+            ],
+            "popularity_tag": "6天4板"
+        }
+    },
+    {
+        "order": 18,
+        "code": "002812",
+        "name": "恩捷股份",
+        "rate": "1287541",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 9,
+        "tag": {
+            "concept_tag": [
+                "固态电池",
+                "锂电池概念"
+            ]
+        }
+    },
+    {
+        "order": 19,
+        "code": "600678",
+        "name": "四川金顶",
+        "rate": "1261375",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "石灰石+商业航天+人形机器人+黄金+国企改革",
+        "tag": {
+            "concept_tag": [
+                "西部大开发",
+                "国企改革"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 20,
+        "code": "600930",
+        "name": "华电新能",
+        "rate": "1227027",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": -3,
+        "tag": {
+            "concept_tag": [
+                "绿色电力",
+                "国企改革"
+            ]
+        }
+    }
+]

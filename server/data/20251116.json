@@ -1,0 +1,1666 @@
+[
+	{
+		"order": 1,
+		"code": "000592",
+		"name": "平潭发展",
+		"rate": "5532252",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "海峡两岸+平潭开发+林业+化肥",
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"福建自贸区"
+			],
+			"popularity_tag": "持续上榜"
+		}
+	},
+	{
+		"order": 2,
+		"code": "002083",
+		"name": "孚日股份",
+		"rate": "4780282",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "电解液添加剂+涂层材料+股权解冻+国企",
+		"tag": {
+			"concept_tag": [
+				"氟化工概念",
+				"托育服务"
+			],
+			"popularity_tag": "7天7板"
+		}
+	},
+	{
+		"order": 3,
+		"code": "601606",
+		"name": "长城军工",
+		"rate": "3514102",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"兵装重组概念",
+				"军民融合"
+			]
+		}
+	},
+	{
+		"order": 4,
+		"code": "000547",
+		"name": "航天发展",
+		"rate": "3437238",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "商业航天+亏损收窄+央企+海峡两岸",
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"福建自贸区"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 5,
+		"code": "600340",
+		"name": "华夏幸福",
+		"rate": "2840267",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "产业新城+债务重组+轻资产转型",
+		"tag": {
+			"concept_tag": [
+				"特色小镇",
+				"新型城镇化"
+			],
+			"popularity_tag": "2天2板"
+		}
+	},
+	{
+		"order": 6,
+		"code": "603122",
+		"name": "合富中国",
+		"rate": "2715547",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"猴痘概念"
+			],
+			"popularity_tag": "持续上榜"
+		}
+	},
+	{
+		"order": 7,
+		"code": "603366",
+		"name": "日出东方",
+		"rate": "2300653",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"analyse_title": "光伏+储能+太阳能热水器+光储热充一体化",
+		"tag": {
+			"concept_tag": [
+				"参股银行",
+				"建筑节能"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 8,
+		"code": "600408",
+		"name": "安泰集团",
+		"rate": "2199555",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"analyse_title": "焦炭+型钢+减亏+循环经济",
+		"tag": {
+			"concept_tag": [
+				"煤炭概念",
+				"煤化工概念"
+			],
+			"popularity_tag": "22天13板"
+		}
+	},
+	{
+		"order": 9,
+		"code": "600157",
+		"name": "永泰能源",
+		"rate": "2090631",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"analyse_title": "煤电一体+储能+煤下铝+低价股",
+		"tag": {
+			"concept_tag": [
+				"超超临界发电",
+				"煤炭概念"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 10,
+		"code": "002682",
+		"name": "龙洲股份",
+		"rate": "2067879",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"analyse_title": "储能+应急装备+卫星导航+海峡两岸+国企",
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"污水处理"
+			],
+			"popularity_tag": "2天2板"
+		}
+	},
+	{
+		"order": 11,
+		"code": "000572",
+		"name": "海马汽车",
+		"rate": "2036291",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -2,
+		"tag": {
+			"concept_tag": [
+				"海南自贸区",
+				"自由贸易港"
+			],
+			"popularity_tag": "11天6板"
+		}
+	},
+	{
+		"order": 12,
+		"code": "600693",
+		"name": "东百集团",
+		"rate": "1944213",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "海峡两岸+首店经济+商业零售+仓储物流",
+		"tag": {
+			"concept_tag": [
+				"免税店",
+				"物业管理"
+			],
+			"popularity_tag": "5天5板"
+		}
+	},
+	{
+		"order": 13,
+		"code": "002407",
+		"name": "多氟多",
+		"rate": "1848761",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"钠离子电池",
+				"氟化工概念"
+			],
+			"popularity_tag": "2天1板"
+		}
+	},
+	{
+		"order": 14,
+		"code": "000407",
+		"name": "胜利股份",
+		"rate": "1761275",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "燃气并购+页岩气+复牌",
+		"tag": {
+			"concept_tag": [
+				"页岩气",
+				"天然气"
+			],
+			"popularity_tag": "4天4板"
+		}
+	},
+	{
+		"order": 15,
+		"code": "002317",
+		"name": "众生药业",
+		"rate": "1727741",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 2,
+		"analyse_title": "流感+创新药+RAY1225+三季报增长",
+		"tag": {
+			"concept_tag": [
+				"仿制药一致性评价",
+				"肝炎概念"
+			],
+			"popularity_tag": "3天2板"
+		}
+	},
+	{
+		"order": 16,
+		"code": "000632",
+		"name": "三木集团",
+		"rate": "1698085",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"analyse_title": "海峡两岸+跨境电商+创投+国企改革",
+		"tag": {
+			"concept_tag": [
+				"特色小镇",
+				"旅游概念"
+			],
+			"popularity_tag": "6天6板"
+		}
+	},
+	{
+		"order": 17,
+		"code": "603778",
+		"name": "国晟科技",
+		"rate": "1687072",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"analyse_title": "光伏组件+固态电池+此前获大单",
+		"tag": {
+			"concept_tag": [
+				"硅能源",
+				"新型城镇化"
+			],
+			"popularity_tag": "5天5板"
+		}
+	},
+	{
+		"order": 18,
+		"code": "600829",
+		"name": "人民同泰",
+		"rate": "1643611",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "医药流通+流感+黑龙江龙头+哈药集团",
+		"tag": {
+			"concept_tag": [
+				"民营医院",
+				"医药电商"
+			],
+			"popularity_tag": "5天5板"
+		}
+	},
+	{
+		"order": 19,
+		"code": "000620",
+		"name": "盈新发展",
+		"rate": "1612416",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "拟收购半导体+具身智能+文旅+短剧游戏",
+		"tag": {
+			"concept_tag": [
+				"短剧游戏",
+				"旅游概念"
+			],
+			"popularity_tag": "20天12板"
+		}
+	},
+	{
+		"order": 20,
+		"code": "002451",
+		"name": "摩恩电气",
+		"rate": "1480607",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "严重异常波动+高市盈率+短期涨幅大+业绩下滑",
+		"tag": {
+			"concept_tag": [
+				"物业管理",
+				"智能电网"
+			],
+			"popularity_tag": "9天8板"
+		}
+	},
+	{
+		"order": 21,
+		"code": "002759",
+		"name": "天际股份",
+		"rate": "1470528",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"氟化工概念",
+				"磷化工"
+			],
+			"popularity_tag": "6天3板"
+		}
+	},
+	{
+		"order": 22,
+		"code": "600506",
+		"name": "统一股份",
+		"rate": "1414453",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"高铁",
+				"汽车热管理"
+			]
+		}
+	},
+	{
+		"order": 23,
+		"code": "600327",
+		"name": "大东方",
+		"rate": "1353651",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "百货零售+医疗健康+儿科医疗",
+		"tag": {
+			"concept_tag": [
+				"预制菜",
+				"三胎概念"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 24,
+		"code": "002050",
+		"name": "三花智控",
+		"rate": "1327221",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"人形机器人",
+				"汽车热管理"
+			]
+		}
+	},
+	{
+		"order": 25,
+		"code": "601012",
+		"name": "隆基绿能",
+		"rate": "1255860",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"BC电池",
+				"硅能源"
+			]
+		}
+	},
+	{
+		"order": 26,
+		"code": "600403",
+		"name": "大有能源",
+		"rate": "1232254",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "煤炭开采+战略重组+河南国资",
+		"tag": {
+			"concept_tag": [
+				"煤炭概念",
+				"国企改革"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 27,
+		"code": "002728",
+		"name": "特一药业",
+		"rate": "1231437",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "流感+止咳宝片+三季报增长+营销改革",
+		"tag": {
+			"concept_tag": [
+				"NMN概念",
+				"流感"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 28,
+		"code": "000833",
+		"name": "粤桂股份",
+		"rate": "1226861",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"analyse_title": "三季报增长+硫铁矿+新能源材料+广东国资",
+		"tag": {
+			"concept_tag": [
+				"磷化工",
+				"化肥"
+			],
+			"popularity_tag": "3天2板"
+		}
+	},
+	{
+		"order": 29,
+		"code": "002639",
+		"name": "雪人集团",
+		"rate": "1215994",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"可控核聚变",
+				"抽水蓄能"
+			]
+		}
+	},
+	{
+		"order": 30,
+		"code": "002593",
+		"name": "日上集团",
+		"rate": "1203318",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "三季报大增+钢结构+海峡两岸+机器人概念",
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"福建自贸区"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 31,
+		"code": "300300",
+		"name": "海峡创新",
+		"rate": "1171151",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"家庭医生"
+			]
+		}
+	},
+	{
+		"order": 32,
+		"code": "603026",
+		"name": "石大胜华",
+		"rate": "1151236",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "电解液+六氟磷酸锂+宁德时代+国企",
+		"tag": {
+			"concept_tag": [
+				"氟化工概念",
+				"锂电池概念"
+			],
+			"popularity_tag": "3天3板"
+		}
+	},
+	{
+		"order": 33,
+		"code": "002709",
+		"name": "天赐材料",
+		"rate": "1121401",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"钠离子电池",
+				"固态电池"
+			],
+			"popularity_tag": "2天1板"
+		}
+	},
+	{
+		"order": 34,
+		"code": "000536",
+		"name": "华映科技",
+		"rate": "1101790",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "车载显示+面板+福建国资+海峡两岸",
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"福建自贸区"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 35,
+		"code": "002326",
+		"name": "永太科技",
+		"rate": "1056658",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"氟化工概念",
+				"钠离子电池"
+			],
+			"popularity_tag": "6天3板"
+		}
+	},
+	{
+		"order": 36,
+		"code": "000566",
+		"name": "海南海药",
+		"rate": "1028217",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "海南自贸港+创新药+央企",
+		"tag": {
+			"concept_tag": [
+				"海南自贸区",
+				"流感"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 37,
+		"code": "002250",
+		"name": "联化科技",
+		"rate": "1014410",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "农药+六氟磷酸锂+创新药+三季报大增",
+		"tag": {
+			"concept_tag": [
+				"氟化工概念",
+				"回购增持再贷款概念"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 38,
+		"code": "002146",
+		"name": "荣盛发展",
+		"rate": "995779",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "房地产+低空经济+并购重组+海南",
+		"tag": {
+			"concept_tag": [
+				"特色小镇",
+				"物业管理"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 39,
+		"code": "000559",
+		"name": "万向钱潮",
+		"rate": "961186",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"小米汽车",
+				"人形机器人"
+			]
+		}
+	},
+	{
+		"order": 40,
+		"code": "002242",
+		"name": "九阳股份",
+		"rate": "958529",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "哈基米豆浆（已澄清）+小家电+三季报增长",
+		"tag": {
+			"concept_tag": [
+				"证金持股",
+				"净水概念"
+			],
+			"popularity_tag": "2天2板"
+		}
+	},
+	{
+		"order": 41,
+		"code": "600089",
+		"name": "特变电工",
+		"rate": "949333",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"抽水蓄能",
+				"柔性直流输电"
+			]
+		}
+	},
+	{
+		"order": 42,
+		"code": "603686",
+		"name": "福龙马",
+		"rate": "948848",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"垃圾分类",
+				"生物质能发电"
+			]
+		}
+	},
+	{
+		"order": 43,
+		"code": "300560",
+		"name": "中富通",
+		"rate": "942526",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "AI智能体+通信服务+海峡两岸+边缘计算",
+		"tag": {
+			"concept_tag": [
+				"福建自贸区",
+				"海峡两岸"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 44,
+		"code": "000955",
+		"name": "欣龙控股",
+		"rate": "912119",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "业绩扭亏+海南自贸港+非织造新材料+土地重估",
+		"tag": {
+			"concept_tag": [
+				"海南自贸区",
+				"自由贸易港"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 45,
+		"code": "000797",
+		"name": "中国武夷",
+		"rate": "910144",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 3,
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"福建自贸区"
+			],
+			"popularity_tag": "2天1板"
+		}
+	},
+	{
+		"order": 46,
+		"code": "002506",
+		"name": "协鑫集成",
+		"rate": "907099",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"钙钛矿电池",
+				"光伏建筑一体化"
+			]
+		}
+	},
+	{
+		"order": 47,
+		"code": "000796",
+		"name": "凯撒旅业",
+		"rate": "894593",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"海南自贸区",
+				"免税店"
+			]
+		}
+	},
+	{
+		"order": 48,
+		"code": "601138",
+		"name": "工业富联",
+		"rate": "892977",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"共封装光学(CPO)",
+				"同花顺果指数"
+			]
+		}
+	},
+	{
+		"order": 49,
+		"code": "000798",
+		"name": "中水渔业",
+		"rate": "889158",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 11,
+		"analyse_title": "远洋渔业+国企改革+业绩增长+央企",
+		"tag": {
+			"concept_tag": [
+				"预制菜",
+				"国企改革"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 50,
+		"code": "301017",
+		"name": "漱玉平民",
+		"rate": "882992",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "药店+阿里巴巴概念+海峡两岸+三季报扭亏",
+		"tag": {
+			"concept_tag": [
+				"医药电商",
+				"冷链物流"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 51,
+		"code": "600745",
+		"name": "闻泰科技",
+		"rate": "870888",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -2,
+		"tag": {
+			"concept_tag": [
+				"同花顺果指数",
+				"AI手机"
+			]
+		}
+	},
+	{
+		"order": 52,
+		"code": "002218",
+		"name": "拓日新能",
+		"rate": "849597",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"钙钛矿电池",
+				"光伏建筑一体化"
+			]
+		}
+	},
+	{
+		"order": 53,
+		"code": "001203",
+		"name": "大中矿业",
+		"rate": "845382",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"analyse_title": "锂矿采矿证+固态电池+铁矿+金属锂",
+		"tag": {
+			"concept_tag": [
+				"金属锌",
+				"金属铅"
+			],
+			"popularity_tag": "2天2板"
+		}
+	},
+	{
+		"order": 54,
+		"code": "600617",
+		"name": "国新能源",
+		"rate": "833936",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"analyse_title": "燃气+股权收购+生物天然气+山西国资",
+		"tag": {
+			"concept_tag": [
+				"天然气",
+				"地下管网"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 55,
+		"code": "002196",
+		"name": "方正电机",
+		"rate": "827274",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"特斯拉概念",
+				"共同富裕示范区"
+			]
+		}
+	},
+	{
+		"order": 56,
+		"code": "300750",
+		"name": "宁德时代",
+		"rate": "822909",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -3,
+		"tag": {
+			"concept_tag": [
+				"固态电池",
+				"钠离子电池"
+			]
+		}
+	},
+	{
+		"order": 57,
+		"code": "002805",
+		"name": "丰元股份",
+		"rate": "821800",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "固态电池+磷酸铁锂+草酸龙头+产能利用率提升",
+		"tag": {
+			"concept_tag": [
+				"钠离子电池",
+				"固态电池"
+			],
+			"popularity_tag": "2天2板"
+		}
+	},
+	{
+		"order": 58,
+		"code": "002255",
+		"name": "海陆重工",
+		"rate": "812793",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"可控核聚变",
+				"核电"
+			],
+			"popularity_tag": "10天5板"
+		}
+	},
+	{
+		"order": 59,
+		"code": "601888",
+		"name": "中国中免",
+		"rate": "806353",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -3,
+		"tag": {
+			"concept_tag": [
+				"免税店",
+				"旅游概念"
+			]
+		}
+	},
+	{
+		"order": 60,
+		"code": "601566",
+		"name": "九牧王",
+		"rate": "799225",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"analyse_title": "海峡两岸+男裤龙头+线上增长",
+		"tag": {
+			"concept_tag": [
+				"网红经济",
+				"IP经济(谷子经济)"
+			],
+			"popularity_tag": "3天3板"
+		}
+	},
+	{
+		"order": 61,
+		"code": "300086",
+		"name": "康芝药业",
+		"rate": "767988",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "海南本地股+儿童药+股权转让",
+		"tag": {
+			"concept_tag": [
+				"海南自贸区",
+				"仿制药一致性评价"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 62,
+		"code": "688353",
+		"name": "华盛锂电",
+		"rate": "762659",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"tag": {
+			"concept_tag": [
+				"有机硅概念",
+				"钠离子电池"
+			],
+			"popularity_tag": "2天1板"
+		}
+	},
+	{
+		"order": 63,
+		"code": "000039",
+		"name": "中集集团",
+		"rate": "759790",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"analyse_title": "储能+氢能+集装箱+绿色甲醇",
+		"tag": {
+			"concept_tag": [
+				"航运概念",
+				"天然气"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 64,
+		"code": "002780",
+		"name": "三夫户外",
+		"rate": "755782",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"analyse_title": "冰雪产业+露营经济+X-BIONIC+业绩高增",
+		"tag": {
+			"concept_tag": [
+				"露营经济",
+				"冰雪产业"
+			],
+			"popularity_tag": "2天2板"
+		}
+	},
+	{
+		"order": 65,
+		"code": "002251",
+		"name": "步步高",
+		"rate": "742233",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"预制菜",
+				"免税店"
+			],
+			"popularity_tag": "2天1板"
+		}
+	},
+	{
+		"order": 66,
+		"code": "000633",
+		"name": "合金投资",
+		"rate": "737764",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"analyse_title": "镍基合金+新能源重卡+三季报增长",
+		"tag": {
+			"concept_tag": [
+				"核电",
+				"西部大开发"
+			],
+			"popularity_tag": "2天2板"
+		}
+	},
+	{
+		"order": 67,
+		"code": "000533",
+		"name": "顺钠股份",
+		"rate": "725892",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"analyse_title": "电网设备下跌+前期涨幅较大+资金流出",
+		"tag": {
+			"concept_tag": [
+				"抽水蓄能",
+				"智能电网"
+			],
+			"popularity_tag": "8天4板"
+		}
+	},
+	{
+		"order": 68,
+		"code": "002788",
+		"name": "鹭燕医药",
+		"rate": "712906",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "海峡两岸+医药分销+中药饮片+人工智能",
+		"tag": {
+			"concept_tag": [
+				"医药电商",
+				"高股息精选"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 69,
+		"code": "000981",
+		"name": "山子高科",
+		"rate": "705180",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"汽车拆解概念",
+				"减速器"
+			]
+		}
+	},
+	{
+		"order": 70,
+		"code": "002402",
+		"name": "和而泰",
+		"rate": "701061",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"tag": {
+			"concept_tag": [
+				"汽车芯片",
+				"华为海思概念股"
+			]
+		}
+	},
+	{
+		"order": 71,
+		"code": "002163",
+		"name": "海南发展",
+		"rate": "697489",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"海南自贸区",
+				"免税店"
+			]
+		}
+	},
+	{
+		"order": 72,
+		"code": "002578",
+		"name": "闽发铝业",
+		"rate": "688455",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"国企改革"
+			],
+			"popularity_tag": "3天2板"
+		}
+	},
+	{
+		"order": 73,
+		"code": "000958",
+		"name": "电投产融",
+		"rate": "677759",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"analyse_title": "核电重组+央企+绿色能源",
+		"tag": {
+			"concept_tag": [
+				"乡村振兴",
+				"雄安新区"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 74,
+		"code": "600376",
+		"name": "首开股份",
+		"rate": "669758",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -2,
+		"tag": {
+			"concept_tag": [
+				"租售同权",
+				"体育产业"
+			]
+		}
+	},
+	{
+		"order": 75,
+		"code": "600815",
+		"name": "厦工股份",
+		"rate": "666741",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 5,
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"福建自贸区"
+			],
+			"popularity_tag": "2天1板"
+		}
+	},
+	{
+		"order": 76,
+		"code": "600203",
+		"name": "福日电子",
+		"rate": "666071",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"福建自贸区"
+			]
+		}
+	},
+	{
+		"order": 77,
+		"code": "600110",
+		"name": "诺德股份",
+		"rate": "663624",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -2,
+		"tag": {
+			"concept_tag": [
+				"固态电池",
+				"PET铜箔"
+			]
+		}
+	},
+	{
+		"order": 78,
+		"code": "603817",
+		"name": "海峡环保",
+		"rate": "658441",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -2,
+		"analyse_title": "海峡两岸+污水处理+国企改革+三季报增长",
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"福建自贸区"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 79,
+		"code": "601969",
+		"name": "海南矿业",
+		"rate": "648833",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"海南自贸区",
+				"氟化工概念"
+			]
+		}
+	},
+	{
+		"order": 80,
+		"code": "002227",
+		"name": "奥特迅",
+		"rate": "645735",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"analyse_title": "柔性直流+充电桩+储能+央企客户",
+		"tag": {
+			"concept_tag": [
+				"柔性直流输电",
+				"换电概念"
+			],
+			"popularity_tag": "2天2板"
+		}
+	},
+	{
+		"order": 81,
+		"code": "600635",
+		"name": "大众公用",
+		"rate": "645713",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -2,
+		"tag": {
+			"concept_tag": [
+				"污水处理",
+				"天然气"
+			]
+		}
+	},
+	{
+		"order": 82,
+		"code": "600429",
+		"name": "三元股份",
+		"rate": "636745",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "异常波动+风险提示+估值高于行业+资金流出",
+		"tag": {
+			"concept_tag": [
+				"乳业",
+				"三胎概念"
+			],
+			"popularity_tag": "5天4板"
+		}
+	},
+	{
+		"order": 83,
+		"code": "300497",
+		"name": "富祥药业",
+		"rate": "621513",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"有机硅概念",
+				"猴痘概念"
+			],
+			"popularity_tag": "2天1板"
+		}
+	},
+	{
+		"order": 84,
+		"code": "600550",
+		"name": "保变电气",
+		"rate": "615641",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"抽水蓄能",
+				"特高压"
+			]
+		}
+	},
+	{
+		"order": 85,
+		"code": "002115",
+		"name": "三维通信",
+		"rate": "615341",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"网红经济",
+				"短剧游戏"
+			]
+		}
+	},
+	{
+		"order": 86,
+		"code": "601600",
+		"name": "中国铝业",
+		"rate": "605771",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 2,
+		"tag": {
+			"concept_tag": [
+				"小金属概念",
+				"俄乌冲突概念"
+			]
+		}
+	},
+	{
+		"order": 87,
+		"code": "300062",
+		"name": "中能电气",
+		"rate": "604979",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"海峡两岸",
+				"福建自贸区"
+			]
+		}
+	},
+	{
+		"order": 88,
+		"code": "603948",
+		"name": "建业股份",
+		"rate": "603243",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"analyse_title": "超纯氨+半导体+三季报增长+精细化工",
+		"tag": {
+			"concept_tag": [
+				"芯片概念",
+				"光伏概念"
+			],
+			"popularity_tag": "2天2板"
+		}
+	},
+	{
+		"order": 89,
+		"code": "603628",
+		"name": "清源股份",
+		"rate": "596204",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 2,
+		"analyse_title": "光伏支架+储能+海峡两岸+机器人",
+		"tag": {
+			"concept_tag": [
+				"光伏建筑一体化",
+				"绿色电力"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 90,
+		"code": "002240",
+		"name": "盛新锂能",
+		"rate": "591716",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"盐湖提锂",
+				"固态电池"
+			],
+			"popularity_tag": "2天1板"
+		}
+	},
+	{
+		"order": 91,
+		"code": "600792",
+		"name": "云煤能源",
+		"rate": "589886",
+		
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -2,
+		"analyse_title": "焦炭+云南国资+扭亏",
+		"tag": {
+			"concept_tag": [
+				"煤炭概念",
+				"煤化工概念"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 92,
+		"code": "300274",
+		"name": "阳光电源",
+		"rate": "575850",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"宁德时代概念",
+				"储能"
+			]
+		}
+	},
+	{
+		"order": 93,
+		"code": "002812",
+		"name": "恩捷股份",
+		"rate": "572776",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"固态电池",
+				"锂电池概念"
+			],
+			"popularity_tag": "2天1板"
+		}
+	},
+	{
+		"order": 94,
+		"code": "301292",
+		"name": "海科新源",
+		"rate": "568454",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"tag": {
+			"concept_tag": [
+				"钠离子电池",
+				"固态电池"
+			],
+			"popularity_tag": "2天1板"
+		}
+	},
+	{
+		"order": 95,
+		"code": "300483",
+		"name": "首华燃气",
+		"rate": "562717",
+		
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 0,
+		"analyse_title": "天然气+煤层气+扭亏+产量倍增",
+		"tag": {
+			"concept_tag": [
+				"天然气",
+				"俄乌冲突概念"
+			],
+			"popularity_tag": "首板涨停"
+		}
+	},
+	{
+		"order": 96,
+		"code": "002129",
+		"name": "TCL中环",
+		"rate": "558364",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 2,
+		"tag": {
+			"concept_tag": [
+				"BC电池",
+				"硅能源"
+			]
+		}
+	},
+	{
+		"order": 97,
+		"code": "600021",
+		"name": "上海电力",
+		"rate": "556854",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": -1,
+		"tag": {
+			"concept_tag": [
+				"虚拟电厂",
+				"储能"
+			]
+		}
+	},
+	{
+		"order": 98,
+		"code": "300475",
+		"name": "香农芯创",
+		"rate": "556069",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"tag": {
+			"concept_tag": [
+				"存储芯片",
+				"芯片概念"
+			]
+		}
+	},
+	{
+		"order": 99,
+		"code": "300450",
+		"name": "先导智能",
+		"rate": "552444",
+		"market": 33,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"tag": {
+			"concept_tag": [
+				"固态电池",
+				"PET铜箔"
+			]
+		}
+	},
+	{
+		"order": 100,
+		"code": "600681",
+		"name": "百川能源",
+		"rate": "550575",
+		"market": 17,
+		"topic": null,
+		"hot_rank_chg": 1,
+		"tag": {
+			"concept_tag": [
+				"天然气",
+				"高股息精选"
+			],
+			"popularity_tag": "4天2板"
+		}
+	}
+]

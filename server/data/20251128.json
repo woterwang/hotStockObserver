@@ -1,0 +1,331 @@
+[
+    {
+        "order": 1,
+        "code": "000592",
+        "name": "平潭发展",
+        "rate": "59889057",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "海峡两岸+平潭开发+林业+菌草",
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "福建自贸区"
+            ],
+            "popularity_tag": "持续上榜"
+        }
+    },
+    {
+        "order": 2,
+        "code": "000547",
+        "name": "航天发展",
+        "rate": "44776973",
+        "market": 33,
+        "topic": {
+            "title": "新闸路狂轰1.6亿！航天发展尾盘涨停",
+            "topic_code": "Tuxhvy5",
+            "ios_jump_url": "client.html?action=ymtz^webid=2804^url=https://t.10jqka.com.cn/lgt/main/frontend-main-service/topic/index.html?code=Tuxhvy5^mode=new",
+            "android_jump_url": "client.html?action=ymtz^webid=2804^fullscreen=1^notitlebar=1^url=https://t.10jqka.com.cn/m/topic/index.html?code=Tuxhvy5^mode=new"
+        },
+        "hot_rank_chg": 0,
+        "analyse_title": "商业航天+孙公司增资扩股+央企+海峡两岸",
+        "tag": {
+            "concept_tag": [
+                "军工信息化",
+                "军民融合"
+            ],
+            "popularity_tag": "持续上榜"
+        }
+    },
+    {
+        "order": 3,
+        "code": "600734",
+        "name": "实达集团",
+        "rate": "33346966",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "福建自贸区",
+                "国资云"
+            ],
+            "popularity_tag": "持续上榜"
+        }
+    },
+    {
+        "order": 4,
+        "code": "603122",
+        "name": "合富中国",
+        "rate": "25724280",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "猴痘概念"
+            ],
+            "popularity_tag": "24天13板"
+        }
+    },
+    {
+        "order": 5,
+        "code": "000070",
+        "name": "特发信息",
+        "rate": "25278474",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "深圳国企改革",
+                "F5G概念"
+            ],
+            "popularity_tag": "6天4板"
+        }
+    },
+    {
+        "order": 6,
+        "code": "000678",
+        "name": "襄阳轴承",
+        "rate": "24850631",
+        "market": 33,
+        "topic": {
+            "title": "社区大爱：襄阳轴承",
+            "topic_code": "Tyie5dx",
+            "ios_jump_url": "client.html?action=ymtz^webid=2804^url=https://t.10jqka.com.cn/lgt/main/frontend-main-service/topic/index.html?code=Tyie5dx^mode=new",
+            "android_jump_url": "client.html?action=ymtz^webid=2804^fullscreen=1^notitlebar=1^url=https://t.10jqka.com.cn/m/topic/index.html?code=Tyie5dx^mode=new"
+        },
+        "hot_rank_chg": 2,
+        "analyse_title": "汽车轴承+军工+扭亏",
+        "tag": {
+            "concept_tag": [
+                "减速器",
+                "农机"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 7,
+        "code": "603778",
+        "name": "国晟科技",
+        "rate": "23676884",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": -1,
+        "analyse_title": "固态电池+孚悦科技+光伏组件+异质结",
+        "tag": {
+            "concept_tag": [
+                "硅能源",
+                "HJT电池"
+            ],
+            "popularity_tag": "15天10板"
+        }
+    },
+    {
+        "order": 8,
+        "code": "600343",
+        "name": "航天动力",
+        "rate": "22810071",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": -1,
+        "tag": {
+            "concept_tag": [
+                "商业航天",
+                "军民融合"
+            ]
+        }
+    },
+    {
+        "order": 9,
+        "code": "300058",
+        "name": "蓝色光标",
+        "rate": "22502088",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "小红书概念",
+                "快手概念"
+            ]
+        }
+    },
+    {
+        "order": 10,
+        "code": "300300",
+        "name": "海峡创新",
+        "rate": "20272113",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "家庭医生"
+            ]
+        }
+    },
+    {
+        "order": 11,
+        "code": "002407",
+        "name": "多氟多",
+        "rate": "20127756",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "钠离子电池",
+                "氟化工概念"
+            ]
+        }
+    },
+    {
+        "order": 12,
+        "code": "002413",
+        "name": "雷科防务",
+        "rate": "19053934",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "商业航天+毫米波雷达+存储芯片+收购尧云",
+        "tag": {
+            "concept_tag": [
+                "太赫兹",
+                "军工信息化"
+            ],
+            "popularity_tag": "5天4板"
+        }
+    },
+    {
+        "order": 13,
+        "code": "300115",
+        "name": "长盈精密",
+        "rate": "18669891",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "同花顺果指数",
+                "人形机器人"
+            ]
+        }
+    },
+    {
+        "order": 14,
+        "code": "002702",
+        "name": "海欣食品",
+        "rate": "16901514",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "海峡两岸+山姆渠道+常温新品+火锅丸滑",
+        "tag": {
+            "concept_tag": [
+                "预制菜",
+                "人造肉"
+            ],
+            "popularity_tag": "3天3板"
+        }
+    },
+    {
+        "order": 15,
+        "code": "002235",
+        "name": "安妮股份",
+        "rate": "16427450",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "数据确权",
+                "福建自贸区"
+            ],
+            "popularity_tag": "2天1板"
+        }
+    },
+    {
+        "order": 16,
+        "code": "002264",
+        "name": "新华都",
+        "rate": "16333806",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "异常波动+前期涨幅较大+三季报下滑+资金流出",
+        "tag": {
+            "concept_tag": [
+                "赛马概念",
+                "小红书概念"
+            ],
+            "popularity_tag": "6天4板"
+        }
+    },
+    {
+        "order": 17,
+        "code": "002474",
+        "name": "榕基软件",
+        "rate": "14651408",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "Web3.0",
+                "云办公"
+            ],
+            "popularity_tag": "10天6板"
+        }
+    },
+    {
+        "order": 18,
+        "code": "600693",
+        "name": "东百集团",
+        "rate": "14484452",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "免税店",
+                "海峡两岸"
+            ]
+        }
+    },
+    {
+        "order": 19,
+        "code": "601138",
+        "name": "工业富联",
+        "rate": "14389859",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "共封装光学(CPO)",
+                "同花顺果指数"
+            ]
+        }
+    },
+    {
+        "order": 20,
+        "code": "002759",
+        "name": "天际股份",
+        "rate": "14164123",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "tag": {
+            "concept_tag": [
+                "氟化工概念",
+                "磷化工"
+            ]
+        }
+    }
+]

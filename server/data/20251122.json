@@ -1,0 +1,175 @@
+[
+    {
+        "order": 1,
+        "code": "000592",
+        "name": "平潭发展",
+        "rate": "4452954",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "复牌+此前涨幅较大+板块下跌+资金流出",
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "福建自贸区"
+            ],
+            "popularity_tag": "26天14板"
+        }
+    },
+    {
+        "order": 2,
+        "code": "600734",
+        "name": "实达集团",
+        "rate": "4245305",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "拟收购数产名商+智算中心+福建国资+中标",
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "福建自贸区"
+            ],
+            "popularity_tag": "2天2板"
+        }
+    },
+    {
+        "order": 3,
+        "code": "000547",
+        "name": "航天发展",
+        "rate": "3508060",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 1,
+        "analyse_title": "海峡两岸板块下跌+军工板块下跌+异常波动+短期涨幅较大",
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "军工信息化"
+            ],
+            "popularity_tag": "6天5板"
+        }
+    },
+    {
+        "order": 4,
+        "code": "920091",
+        "name": "大鹏工业",
+        "rate": "3485725",
+        "market": 151,
+        "topic": null,
+        "hot_rank_chg": -1,
+        "tag": {
+            "concept_tag": [
+                "比亚迪概念",
+                "机器视觉"
+            ]
+        }
+    },
+    {
+        "order": 5,
+        "code": "002474",
+        "name": "榕基软件",
+        "rate": "2925554",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "信创政务+AI+数据要素+海峡两岸",
+        "tag": {
+            "concept_tag": [
+                "Web3.0",
+                "云办公"
+            ],
+            "popularity_tag": "5天5板"
+        }
+    },
+    {
+        "order": 6,
+        "code": "000681",
+        "name": "视觉中国",
+        "rate": "2637441",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "AI训练数据+版权交易+视觉内容平台",
+        "tag": {
+            "concept_tag": [
+                "Sora概念(文生视频)",
+                "AI语料"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    },
+    {
+        "order": 7,
+        "code": "000859",
+        "name": "国风新材",
+        "rate": "2312397",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "光刻胶+膜材料+国企改革",
+        "tag": {
+            "concept_tag": [
+                "光刻胶",
+                "国企改革"
+            ],
+            "popularity_tag": "3天3板"
+        }
+    },
+    {
+        "order": 8,
+        "code": "000798",
+        "name": "中水渔业",
+        "rate": "2140362",
+        "market": 33,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "远洋渔业+国企改革+业绩增长+央企",
+        "tag": {
+            "concept_tag": [
+                "预制菜",
+                "参股保险"
+            ],
+            "popularity_tag": "6天6板"
+        }
+    },
+    {
+        "order": 9,
+        "code": "603122",
+        "name": "合富中国",
+        "rate": "2039046",
+        "market": 17,
+        "topic": null,
+        "hot_rank_chg": 0,
+        "analyse_title": "估值偏离+业绩亏损+资金流出",
+        "tag": {
+            "concept_tag": [
+                "海峡两岸",
+                "猴痘概念"
+            ],
+            "popularity_tag": "19天13板"
+        }
+    },
+    {
+        "order": 10,
+        "code": "301171",
+        "name": "易点天下",
+        "rate": "2003210",
+        "market": 33,
+        "topic": {
+            "title": "中山东路1.6亿扫货易点天下！",
+            "topic_code": "Tuxhvy5",
+            "ios_jump_url": "client.html?action=ymtz^webid=2804^url=https://t.10jqka.com.cn/lgt/main/frontend-main-service/topic/index.html?code=Tuxhvy5^mode=new",
+            "android_jump_url": "client.html?action=ymtz^webid=2804^fullscreen=1^notitlebar=1^url=https://t.10jqka.com.cn/m/topic/index.html?code=Tuxhvy5^mode=new"
+        },
+        "hot_rank_chg": 0,
+        "analyse_title": "AIGC+出海营销+AI漫剧+华为概念",
+        "tag": {
+            "concept_tag": [
+                "Sora概念(文生视频)",
+                "快手概念"
+            ],
+            "popularity_tag": "首板涨停"
+        }
+    }
+]
