@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import { dataFetchService, priceBreakthroughService, tradingSignalService } from '../services';
+import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService } from '../services';
 import { logger } from '../utils';
 import { isTradingDay, isTradingTime, formatDate } from '../utils/dateUtils';
 
@@ -11,6 +11,7 @@ export class JobScheduler {
   private breakthroughJob: cron.ScheduledTask | null = null;
   private auctionJob: cron.ScheduledTask | null = null;
   private signalGenerateJob: cron.ScheduledTask | null = null;
+  private sentimentJob: cron.ScheduledTask | null = null;
 
   /**
    * 启动所有定时任务
@@ -20,6 +21,7 @@ export class JobScheduler {
     this.startBreakthroughScanJob();
     this.startAuctionUpdateJob();
     this.startSignalGenerateJob();
+    this.startSentimentJob();
     logger.info('定时任务已启动');
   }
 
@@ -42,6 +44,10 @@ export class JobScheduler {
     if (this.signalGenerateJob) {
       this.signalGenerateJob.stop();
       this.signalGenerateJob = null;
+    }
+    if (this.sentimentJob) {
+      this.sentimentJob.stop();
+      this.sentimentJob = null;
     }
     logger.info('定时任务已停止');
   }
@@ -191,6 +197,39 @@ export class JobScheduler {
     });
 
     logger.info(`集合竞价更新任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /**
+   * 市场情绪数据获取任务
+   * 交易日收盘后执行（15:32），获取当日市场情绪
+   */
+  private startSentimentJob() {
+    // 每个交易日15:32执行（在突破扫描之前）
+    const cronExpression = '32 15 * * 1-5';
+    
+    this.sentimentJob = cron.schedule(cronExpression, async () => {
+      try {
+        if (!isTradingDay()) {
+          logger.info('非交易日，跳过市场情绪获取');
+          return;
+        }
+
+        logger.info('开始获取市场情绪数据');
+        
+        const today = formatDate(new Date(), 'YYYYMMDD');
+        const sentiment = await marketSentimentService.fetchAndCalculateSentiment(today);
+        
+        if (sentiment) {
+          logger.info(`市场情绪获取完成: 评分=${sentiment.score}, 建议=${sentiment.advice}`);
+        }
+      } catch (error) {
+        logger.error(`市场情绪获取失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`市场情绪获取任务已配置，Cron表达式: ${cronExpression}`);
   }
 }
 

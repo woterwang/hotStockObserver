@@ -11,6 +11,7 @@ export const Header: React.FC = () => {
     { path: '/', label: '信息概览', icon: '📊' },
     { path: '/stats', label: '阶段统计', icon: '📈' },
     { path: '/breakthrough', label: '价格突破', icon: '🚀' },
+    { path: '/signals', label: '交易信号', icon: '🎯' },
     { path: '/backtest', label: '策略回测', icon: '🧪' },
   ];
 

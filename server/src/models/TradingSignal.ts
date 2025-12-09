@@ -95,6 +95,11 @@ export interface ITradingSignal {
   exitReason?: string;                 // 退出原因
   profitPercent?: number;              // 收益率 %
   
+  // 市场情绪（信号生成时的情绪评分）
+  marketSentimentScore?: number;       // 情绪评分
+  marketSentimentAdvice?: string;      // 情绪建议
+  suggestedPosition?: number;          // 建议仓位比例 0-1
+  
   // 其他信息
   sector?: string;                     // 所属板块
   concept?: string[];                  // 概念板块
@@ -176,6 +181,11 @@ const TradingSignalSchema = new Schema<TradingSignalDocument>(
     exitTime: { type: Date },
     exitReason: { type: String },
     profitPercent: { type: Number },
+    
+    // 市场情绪
+    marketSentimentScore: { type: Number },
+    marketSentimentAdvice: { type: String },
+    suggestedPosition: { type: Number },
     
     // 其他
     sector: { type: String, default: '' },

@@ -270,8 +270,8 @@ export class TradingSignalService {
 
     for (const signal of signals) {
       try {
-        // 获取今日开盘价
-        const day3Open = await this.fetchOpenPrice(signal.stockCode);
+        // 获取Day3开盘价（支持历史日期）
+        const day3Open = await this.fetchOpenPrice(signal.stockCode, day3Str);
         
         if (!day3Open || day3Open <= 0) {
           logger.debug(`${signal.stockCode} 获取开盘价失败`);
@@ -344,8 +344,17 @@ export class TradingSignalService {
 
   /**
    * 获取股票开盘价（集合竞价后）
+   * 优先从问财获取实时数据，如果是历史日期则从K线缓存获取
    */
-  private async fetchOpenPrice(stockCode: string): Promise<number | null> {
+  private async fetchOpenPrice(stockCode: string, dateStr?: string): Promise<number | null> {
+    const today = formatDate(new Date(), 'YYYYMMDD');
+    
+    // 如果是历史日期，从K线缓存获取
+    if (dateStr && dateStr !== today) {
+      return await this.fetchOpenPriceFromKline(stockCode, dateStr);
+    }
+    
+    // 实时获取今日开盘价
     try {
       // 使用问财获取今日开盘价
       const question = `${stockCode} 今日开盘价`;
@@ -389,6 +398,67 @@ export class TradingSignalService {
     } catch (error) {
       logger.debug(`获取开盘价失败 ${stockCode}: ${(error as Error).message}`);
       return null;
+    }
+  }
+
+  /**
+   * 从K线缓存获取历史开盘价
+   */
+  private async fetchOpenPriceFromKline(stockCode: string, dateStr: string): Promise<number | null> {
+    try {
+      // 1. 先尝试从缓存文件读取
+      const cacheFile = path.join(this.cacheDir, `${stockCode}.json`);
+      if (fs.existsSync(cacheFile)) {
+        const cacheData = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
+        if (cacheData.klines && cacheData.klines[dateStr]) {
+          const kline = cacheData.klines[dateStr];
+          logger.debug(`从缓存获取 ${stockCode} ${dateStr} 开盘价: ${kline.open}`);
+          return kline.open;
+        }
+      }
+
+      // 2. 缓存中没有，从同花顺获取
+      logger.debug(`缓存未命中，从同花顺获取 ${stockCode} K线...`);
+      const klines = await this.fetchKlineFromTHS(stockCode, 100);
+      
+      if (klines.has(dateStr)) {
+        const kline = klines.get(dateStr);
+        
+        // 保存到缓存
+        this.saveKlineToCache(stockCode, klines);
+        
+        return kline?.open || null;
+      }
+
+      return null;
+    } catch (error) {
+      logger.debug(`获取历史开盘价失败 ${stockCode} ${dateStr}: ${(error as Error).message}`);
+      return null;
+    }
+  }
+
+  /**
+   * 保存K线数据到缓存
+   */
+  private saveKlineToCache(stockCode: string, klines: Map<string, KlineData>): void {
+    try {
+      const cacheFile = path.join(this.cacheDir, `${stockCode}.json`);
+      let existingData: any = { stockCode, cacheTime: Date.now(), klines: {} };
+      
+      // 读取现有缓存
+      if (fs.existsSync(cacheFile)) {
+        existingData = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
+      }
+      
+      // 合并新数据
+      for (const [date, kline] of klines) {
+        existingData.klines[date] = kline;
+      }
+      existingData.cacheTime = Date.now();
+      
+      fs.writeFileSync(cacheFile, JSON.stringify(existingData), 'utf-8');
+    } catch (error) {
+      logger.debug(`保存K线缓存失败 ${stockCode}: ${(error as Error).message}`);
     }
   }
 

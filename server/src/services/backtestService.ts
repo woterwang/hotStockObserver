@@ -184,10 +184,11 @@ export class BacktestService {
 
   /**
    * 从同花顺API获取K线数据
+   * @param totalDays 默认750天，覆盖3年交易日
    */
   private async fetchKlineFromTHS(
     stockCode: string,
-    totalDays: number = 60
+    totalDays: number = 750
   ): Promise<Map<string, KlineData>> {
     try {
       const marketId = this.getMarketId(stockCode);
@@ -284,16 +285,17 @@ export class BacktestService {
   /**
    * 获取股票K线数据（带缓存）
    * 优先从缓存获取，缓存没有或过期则从API获取
+   * @param totalDays 默认750天，覆盖3年交易日
    */
   private async getKlineData(
     stockCode: string,
-    totalDays: number = 60
+    totalDays: number = 750
   ): Promise<Map<string, KlineData>> {
     // 1. 尝试从缓存加载
     let klines = this.loadKlineFromCache(stockCode);
     
-    // 2. 如果缓存为空或数据量不足，从API获取
-    if (!klines || klines.size < totalDays * 0.7) {
+    // 2. 如果缓存为空或数据量不足（至少要有200天数据），从API获取
+    if (!klines || klines.size < Math.min(totalDays * 0.5, 200)) {
       logger.debug(`从同花顺获取 ${stockCode} K线数据...`);
       klines = await this.fetchKlineFromTHS(stockCode, totalDays);
       
@@ -319,7 +321,7 @@ export class BacktestService {
     stockCode: string,
     dateStr: string
   ): Promise<KlineData | null> {
-    const klines = await this.getKlineData(stockCode, 60);
+    const klines = await this.getKlineData(stockCode, 750);
     return klines.get(dateStr) || null;
   }
 
@@ -331,7 +333,7 @@ export class BacktestService {
     startDate: string,
     days: number
   ): Promise<KlineData[]> {
-    const klines = await this.getKlineData(stockCode, 90);
+    const klines = await this.getKlineData(stockCode, 750);
     
     // 获取所有日期并排序
     const allDates = Array.from(klines.keys()).sort();
