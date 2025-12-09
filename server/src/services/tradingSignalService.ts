@@ -196,6 +196,7 @@ export class TradingSignalService {
 
         // 创建信号记录
         const signal: Partial<ITradingSignal> = {
+          strategy: 'breakthrough_3day',  // 突破三天确认策略
           signalDate: parseDate(validDay3Str),
           stockCode: stock.code,
           stockName: stock.name,

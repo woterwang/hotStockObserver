@@ -41,10 +41,60 @@ export type SignalStatus =
   | 'expired';       // 已过期
 
 /**
+ * 策略类型
+ */
+export type StrategyType = 
+  | 'breakthrough_3day'   // 价格突破三天确认模式
+  | 'volume_surge'        // 放量大涨策略
+  | 'volume_breakout'     // 放量突破策略（预留）
+  | 'ma_crossover'        // 均线金叉策略（预留）
+  | 'limit_up_follow'     // 涨停追踪策略（预留）
+  | 'other';              // 其他策略
+
+/**
+ * 策略信息配置
+ */
+export const STRATEGY_INFO: Record<StrategyType, { name: string; description: string; color: string }> = {
+  breakthrough_3day: {
+    name: '突破三天',
+    description: '价格突破188日新高后三天确认模式',
+    color: 'blue',
+  },
+  volume_surge: {
+    name: '放量大涨',
+    description: '放量大涨次日追踪策略',
+    color: 'orange',
+  },
+  volume_breakout: {
+    name: '放量突破',
+    description: '放量突破关键价位策略',
+    color: 'green',
+  },
+  ma_crossover: {
+    name: '均线金叉',
+    description: '均线金叉买入策略',
+    color: 'purple',
+  },
+  limit_up_follow: {
+    name: '涨停追踪',
+    description: '涨停板次日追踪策略',
+    color: 'red',
+  },
+  other: {
+    name: '其他',
+    description: '其他策略',
+    color: 'gray',
+  },
+};
+
+/**
  * 交易信号接口
  */
 export interface ITradingSignal {
   _id?: string;
+  
+  // 策略信息
+  strategy: StrategyType;              // 策略类型
   
   // 基本信息
   signalDate: Date;                    // 信号生成日期（Day3）
@@ -111,6 +161,13 @@ export interface TradingSignalDocument extends Omit<ITradingSignal, '_id'>, Docu
 
 const TradingSignalSchema = new Schema<TradingSignalDocument>(
   {
+    // 策略类型
+    strategy: {
+      type: String,
+      enum: ['breakthrough_3day', 'volume_surge', 'volume_breakout', 'ma_crossover', 'limit_up_follow', 'other'],
+      default: 'breakthrough_3day',
+      index: true,
+    },
     signalDate: {
       type: Date,
       required: true,
@@ -199,9 +256,10 @@ const TradingSignalSchema = new Schema<TradingSignalDocument>(
 );
 
 // 索引
-TradingSignalSchema.index({ signalDate: 1, stockCode: 1 }, { unique: true });
+TradingSignalSchema.index({ signalDate: 1, stockCode: 1, strategy: 1 }, { unique: true });
 TradingSignalSchema.index({ signalDate: 1, status: 1 });
 TradingSignalSchema.index({ signalDate: 1, entryScore: -1 });
+TradingSignalSchema.index({ strategy: 1, signalDate: 1 });
 
 export const TradingSignal = mongoose.model<TradingSignalDocument>(
   'TradingSignal',

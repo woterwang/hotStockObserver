@@ -81,13 +81,21 @@ export const tradingSignalController = {
 
   /**
    * 获取今日信号
-   * GET /api/signals/today?date=YYYYMMDD
+   * GET /api/signals/today?date=YYYYMMDD&strategy=breakthrough_3day
    * date 参数是 Day3（入场日），返回的 day2DateStr 用于获取市场情绪
+   * strategy 可选，筛选特定策略的信号
    */
   async getTodaySignals(req: Request, res: Response) {
     try {
       const date = (req.query.date as string) || formatDate(new Date(), 'YYYYMMDD');
-      const signals = await tradingSignalService.getTodaySignals(date);
+      const strategy = req.query.strategy as string | undefined;
+      
+      let signals = await tradingSignalService.getTodaySignals(date);
+      
+      // 如果指定了策略，筛选该策略的信号
+      if (strategy) {
+        signals = signals.filter(s => s.strategy === strategy);
+      }
 
       // 统计各状态数量
       const summary = {
@@ -109,6 +117,7 @@ export const tradingSignalController = {
         data: {
           date,        // Day3（入场日）
           day2DateStr, // Day2（确认日）- 用于获取市场情绪
+          strategy,    // 当前筛选的策略
           summary,
           signals,
         },

@@ -20,9 +20,53 @@ interface ExitConditions {
   altStopLossPrice: number;
 }
 
+// 策略类型
+type StrategyType = 'breakthrough_3day' | 'volume_surge' | 'volume_breakout' | 'ma_crossover' | 'limit_up_follow' | 'other';
+
+// 策略配置
+const STRATEGY_INFO: Record<StrategyType, { name: string; description: string; color: string; bgColor: string }> = {
+  breakthrough_3day: {
+    name: '突破三天',
+    description: '价格突破188日新高后三天确认模式',
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-100',
+  },
+  volume_surge: {
+    name: '放量大涨',
+    description: '放量大涨次日追踪策略',
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-100',
+  },
+  volume_breakout: {
+    name: '放量突破',
+    description: '放量突破关键价位策略',
+    color: 'text-green-600',
+    bgColor: 'bg-green-100',
+  },
+  ma_crossover: {
+    name: '均线金叉',
+    description: '均线金叉买入策略',
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-100',
+  },
+  limit_up_follow: {
+    name: '涨停追踪',
+    description: '涨停板次日追踪策略',
+    color: 'text-red-600',
+    bgColor: 'bg-red-100',
+  },
+  other: {
+    name: '其他',
+    description: '其他策略',
+    color: 'text-gray-600',
+    bgColor: 'bg-gray-100',
+  },
+};
+
 // 交易信号
 interface TradingSignal {
   _id: string;
+  strategy?: StrategyType;
   signalDate: string;
   stockCode: string;
   stockName: string;
@@ -97,6 +141,7 @@ export default function SignalPage() {
     new Date().toISOString().slice(0, 10).replace(/-/g, '')
   );
   const [day2Date, setDay2Date] = useState<string | null>(null); // Day2日期，用于显示情绪
+  const [selectedStrategy, setSelectedStrategy] = useState<StrategyType | 'all'>('all'); // 策略筛选
   const [summary, setSummary] = useState({
     total: 0,
     ready: 0,
@@ -111,7 +156,8 @@ export default function SignalPage() {
   const fetchSignals = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/signals/today?date=${selectedDate}`);
+      const strategyParam = selectedStrategy !== 'all' ? `&strategy=${selectedStrategy}` : '';
+      const response = await fetch(`/api/signals/today?date=${selectedDate}${strategyParam}`);
       const data = await response.json();
       
       if (data.success) {
@@ -129,7 +175,7 @@ export default function SignalPage() {
     } finally {
       setLoading(false);
     }
-  }, [selectedDate]);
+  }, [selectedDate, selectedStrategy]);
 
   // 加载情绪数据（使用 Day2 日期）
   const fetchSentiment = useCallback(async () => {
@@ -290,6 +336,21 @@ export default function SignalPage() {
           <h1 className="text-2xl font-bold text-gray-900 mb-4">📊 交易信号</h1>
           
           <div className="flex flex-wrap items-center gap-4">
+            {/* 策略选择 */}
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-gray-700">策略:</label>
+              <select
+                value={selectedStrategy}
+                onChange={(e) => setSelectedStrategy(e.target.value as StrategyType | 'all')}
+                className="border rounded px-3 py-1.5 text-sm"
+              >
+                <option value="all">全部策略</option>
+                {Object.entries(STRATEGY_INFO).map(([key, info]) => (
+                  <option key={key} value={key}>{info.name}</option>
+                ))}
+              </select>
+            </div>
+            
             {/* 日期选择 */}
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium text-gray-700">日期:</label>
@@ -448,12 +509,19 @@ export default function SignalPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredSignals.map((signal) => (
+                  {filteredSignals.map((signal) => {
+                    const strategyInfo = signal.strategy ? STRATEGY_INFO[signal.strategy] : STRATEGY_INFO.breakthrough_3day;
+                    return (
                     <tr key={signal._id} className={`hover:bg-gray-50 ${signal.status === 'ready' ? 'bg-green-50' : ''}`}>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center">
                           <div>
-                            <div className="text-sm font-medium text-gray-900">{signal.stockName}</div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium text-gray-900">{signal.stockName}</span>
+                              <span className={`px-1.5 py-0.5 text-xs rounded ${strategyInfo.bgColor} ${strategyInfo.color}`}>
+                                {strategyInfo.name}
+                              </span>
+                            </div>
                             <div className="text-xs text-gray-500">{signal.stockCode}</div>
                           </div>
                         </div>
@@ -501,7 +569,8 @@ export default function SignalPage() {
                         </button>
                       </td>
                     </tr>
-                  ))}
+                  );
+                  })}
                 </tbody>
               </table>
             </div>
