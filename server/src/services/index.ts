@@ -1,2 +1,3 @@
-export { dataFetchService } from './dataFetchService';
+export { dataFetchService, HistoryKline } from './dataFetchService';
 export { stockService } from './stockService';
+export { priceBreakthroughService } from './priceBreakthroughService';

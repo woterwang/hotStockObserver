@@ -7,7 +7,9 @@ import type {
   StockDetail,
   MarketIndex,
   Sector,
-  StockNews 
+  StockNews,
+  PriceBreakthrough,
+  BreakthroughHistory
 } from '../types';
 
 // 创建axios实例
@@ -108,6 +110,31 @@ export const adminApi = {
   // 手动更新数据
   manualUpdate: (): Promise<ApiResponse<{ message: string }>> => {
     return api.post('/admin/update');
+  },
+};
+
+/**
+ * 价格突破相关API
+ */
+export const breakthroughApi = {
+  // 获取突破列表
+  getList: (date?: string, limit: number = 50): Promise<ApiResponse<PriceBreakthrough[]>> => {
+    return api.get('/breakthrough/list', { params: { date, limit } });
+  },
+
+  // 获取历史记录
+  getHistory: (days: number = 30): Promise<ApiResponse<BreakthroughHistory[]>> => {
+    return api.get('/breakthrough/history', { params: { days } });
+  },
+
+  // 获取可用日期列表
+  getDates: (): Promise<ApiResponse<string[]>> => {
+    return api.get('/breakthrough/dates');
+  },
+
+  // 手动触发扫描（需要更长超时时间，问财接口响应较慢）
+  scan: (date?: string): Promise<ApiResponse<{ count: number }>> => {
+    return api.post('/breakthrough/scan', { date }, { timeout: 60000 });
   },
 };
 

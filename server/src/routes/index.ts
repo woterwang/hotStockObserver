@@ -1,12 +1,16 @@
 import { Router } from 'express';
 import stockRoutes from './stockRoutes';
 import marketRoutes from './marketRoutes';
+import breakthroughRoutes from './breakthroughRoutes';
+import backtestRoutes from './backtestRoutes';
 
 const router = Router();
 
 // API路由
 router.use('/stocks', stockRoutes);
 router.use('/market', marketRoutes);
+router.use('/breakthrough', breakthroughRoutes);
+router.use('/backtest', backtestRoutes);
 
 // 健康检查
 router.get('/health', (req, res) => {

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import { Layout, Loading, ErrorMessage, Empty } from '../components';
 import { stockApi } from '../services/api';
-import type { StockDetail, HotStock, StockNews } from '../types';
+import type { StockDetail, HotStock } from '../types';
 
 /**
  * 股票详情页

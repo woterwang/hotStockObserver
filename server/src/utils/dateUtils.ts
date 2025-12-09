@@ -3,12 +3,18 @@
  */
 
 /**
- * 格式化日期为 YYYY-MM-DD
+ * 格式化日期
+ * @param date 日期对象
+ * @param format 格式，支持 'YYYY-MM-DD' 或 'YYYYMMDD'
  */
-export function formatDate(date: Date): string {
+export function formatDate(date: Date, format: string = 'YYYY-MM-DD'): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
+  
+  if (format === 'YYYYMMDD') {
+    return `${year}${month}${day}`;
+  }
   return `${year}-${month}-${day}`;
 }
 
@@ -54,10 +60,21 @@ export function isTradingTime(date: Date = new Date()): boolean {
 }
 
 /**
- * 解析日期字符串
+ * 解析日期字符串（支持 YYYY-MM-DD 或 YYYYMMDD 格式）
  */
 export function parseDate(dateStr: string): Date {
-  const [year, month, day] = dateStr.split('-').map(Number);
+  let year: number, month: number, day: number;
+  
+  if (dateStr.includes('-')) {
+    [year, month, day] = dateStr.split('-').map(Number);
+  } else if (dateStr.length === 8) {
+    year = parseInt(dateStr.substring(0, 4));
+    month = parseInt(dateStr.substring(4, 6));
+    day = parseInt(dateStr.substring(6, 8));
+  } else {
+    throw new Error(`Invalid date format: ${dateStr}`);
+  }
+  
   return new Date(year, month - 1, day);
 }
 

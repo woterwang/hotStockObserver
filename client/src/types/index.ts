@@ -115,6 +115,31 @@ export interface PeriodStats {
   }[];
 }
 
+// 价格突破记录
+export interface PriceBreakthrough {
+  _id?: string;
+  date: string;
+  stockCode: string;
+  stockName: string;
+  currentPrice: number;
+  changePercent: number;
+  turnover: number;
+  prevDayTurnover: number;
+  turnoverRatio: number;
+  high188: number;
+  breakTime?: string;
+  riseReason?: string;
+  sector?: string;
+  concept?: string[];
+}
+
+// 价格突破历史（按日期分组）
+export interface BreakthroughHistory {
+  date: string;
+  count: number;
+  stocks: PriceBreakthrough[];
+}
+
 // 市场概览
 export interface MarketOverview {
   indices: MarketIndex[];
