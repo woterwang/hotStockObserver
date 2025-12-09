@@ -8,9 +8,9 @@ import { formatDate } from '../utils/dateUtils';
  */
 export const tradingSignalController = {
   /**
-   * 盘后生成信号（Day2收盘后执行）
+   * 生成交易信号
    * POST /api/signals/generate
-   * Body: { date: 'YYYYMMDD' } - Day2日期
+   * Body: { date: 'YYYYMMDD' } - Day3日期（入场日，页面选择的日期）
    */
   async generateSignals(req: Request, res: Response) {
     try {
@@ -19,17 +19,23 @@ export const tradingSignalController = {
       if (!date) {
         return res.status(400).json({
           success: false,
-          message: '请提供日期参数 (Day2)',
+          message: '请提供日期参数（入场日 Day3）',
         });
       }
 
-      logger.info(`手动触发信号生成: ${date}`);
-      const count = await tradingSignalService.generateSignalsAfterMarketClose(date);
+      logger.info(`手动触发信号生成，入场日: ${date}`);
+      // 使用新方法：传入 Day3，自动往前推算 Day1、Day2
+      const result = await tradingSignalService.generateSignalsForEntryDate(date);
 
       res.json({
         success: true,
-        message: `已生成 ${count} 个交易信号`,
-        data: { count },
+        message: `已生成 ${result.count} 个交易信号`,
+        data: {
+          count: result.count,
+          signalDate: result.signalDate,  // 入场日期（Day3）
+          day1: result.day1,              // 突破日
+          day2: result.day2,              // 确认日
+        },
       });
     } catch (error) {
       logger.error(`信号生成失败: ${(error as Error).message}`);
@@ -76,6 +82,7 @@ export const tradingSignalController = {
   /**
    * 获取今日信号
    * GET /api/signals/today?date=YYYYMMDD
+   * date 参数是 Day3（入场日），返回的 day2DateStr 用于获取市场情绪
    */
   async getTodaySignals(req: Request, res: Response) {
     try {
@@ -91,10 +98,17 @@ export const tradingSignalController = {
         rejected: signals.filter(s => s.status === 'rejected').length,
       };
 
+      // 从信号中提取 Day2 日期（用于获取市场情绪）
+      let day2DateStr: string | null = null;
+      if (signals.length > 0 && signals[0].day2Date) {
+        day2DateStr = formatDate(new Date(signals[0].day2Date), 'YYYYMMDD');
+      }
+
       res.json({
         success: true,
         data: {
-          date,
+          date,        // Day3（入场日）
+          day2DateStr, // Day2（确认日）- 用于获取市场情绪
           summary,
           signals,
         },

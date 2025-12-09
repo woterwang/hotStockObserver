@@ -135,23 +135,35 @@ export class TradingSignalService {
   }
 
   /**
-   * 盘后扫描：生成次日潜在入场标的
-   * 在 Day2 收盘后执行，生成 Day3 的入场信号
-   * @param day2Str Day2 日期 YYYYMMDD
+   * 生成交易信号
+   * 根据 Day3（入场日）往前推算 Day1、Day2，然后用问财查询符合条件的标的
+   * @param day3Str Day3 日期 YYYYMMDD（入场日，页面选择的日期）
+   * @returns { count, signalDate, day1, day2 }
    */
-  async generateSignalsAfterMarketClose(day2Str: string): Promise<number> {
-    logger.info(`开始生成 ${day2Str} 收盘后的交易信号...`);
+  async generateSignalsForEntryDate(day3Str: string): Promise<{
+    count: number;
+    signalDate: string;
+    day1: string;
+    day2: string;
+  }> {
+    // 验证并调整为有效交易日
+    const validDay3Str = this.adjustToTradingDay(day3Str);
+    if (validDay3Str !== day3Str) {
+      logger.info(`${day3Str} 非交易日，已调整为 ${validDay3Str}`);
+    }
     
-    // Day3 = Day2 的下一个交易日
-    const day3Date = this.getNextTradingDay(day2Str);
-    const [day1Str] = this.getPreviousTradingDays(day2Str, 1);
+    // 往前推算 Day2 和 Day1
+    const [day2Str, day1Str] = this.getPreviousTradingDays(validDay3Str, 2);
+    
+    logger.info(`开始生成入场日 ${validDay3Str} 的交易信号...`);
+    logger.info(`Day1=${day1Str}(突破日), Day2=${day2Str}(确认日), Day3=${validDay3Str}(入场日)`);
     
     // 使用问财查询符合 Day1+Day2 条件的股票
     const candidates = await this.fetchCandidatesFromWencai(day1Str, day2Str);
     
     if (candidates.length === 0) {
       logger.info('未发现符合条件的候选标的');
-      return 0;
+      return { count: 0, signalDate: validDay3Str, day1: day1Str, day2: day2Str };
     }
 
     logger.info(`发现 ${candidates.length} 只候选标的，开始获取详细数据...`);
@@ -184,7 +196,7 @@ export class TradingSignalService {
 
         // 创建信号记录
         const signal: Partial<ITradingSignal> = {
-          signalDate: parseDate(day3Date),
+          signalDate: parseDate(validDay3Str),
           stockCode: stock.code,
           stockName: stock.name,
           
@@ -230,8 +242,23 @@ export class TradingSignalService {
       }
     }
 
-    logger.info(`交易信号生成完成，共 ${savedCount} 个`);
-    return savedCount;
+    logger.info(`交易信号生成完成，共 ${savedCount} 个，入场日=${validDay3Str}`);
+    return { count: savedCount, signalDate: validDay3Str, day1: day1Str, day2: day2Str };
+  }
+
+  /**
+   * 盘后自动任务：生成次日入场信号
+   * 传入当天日期（Day2），自动计算 Day3 并生成信号
+   */
+  async generateSignalsAfterMarketClose(day2Str: string): Promise<{
+    count: number;
+    signalDate: string;
+    day1: string;
+    day2: string;
+  }> {
+    // Day3 = Day2 的下一个交易日
+    const day3Str = this.getNextTradingDay(day2Str);
+    return this.generateSignalsForEntryDate(day3Str);
   }
 
   /**
@@ -247,15 +274,21 @@ export class TradingSignalService {
   }> {
     logger.info(`开始更新 ${day3Str} 的入场条件...`);
     
-    // 获取今日待处理的信号
+    // 获取今日待处理的信号（使用日期范围查询，避免时区问题）
     const day3Date = parseDate(day3Str);
+    const nextDay = new Date(day3Date);
+    nextDay.setDate(nextDay.getDate() + 1);
+    
     const signals = await TradingSignal.find({
-      signalDate: day3Date,
+      signalDate: {
+        $gte: day3Date,
+        $lt: nextDay,
+      },
       status: 'pending',
     });
 
     if (signals.length === 0) {
-      logger.info('今日无待处理信号');
+      logger.info(`今日(${day3Str})无待处理信号`);
       return { ready: 0, partial: 0, rejected: 0, signals: [] };
     }
 
@@ -274,9 +307,11 @@ export class TradingSignalService {
         const day3Open = await this.fetchOpenPrice(signal.stockCode, day3Str);
         
         if (!day3Open || day3Open <= 0) {
-          logger.debug(`${signal.stockCode} 获取开盘价失败`);
+          logger.warn(`${signal.stockCode} 获取开盘价失败，day3Open=${day3Open}`);
           continue;
         }
+        
+        logger.info(`${signal.stockCode} 获取到开盘价: ${day3Open}`);
 
         // 计算开盘涨幅
         const day3OpenChange = ((day3Open - signal.day2Close) / signal.day2Close) * 100;
@@ -348,10 +383,16 @@ export class TradingSignalService {
    */
   private async fetchOpenPrice(stockCode: string, dateStr?: string): Promise<number | null> {
     const today = formatDate(new Date(), 'YYYYMMDD');
+    const now = new Date();
+    const currentHour = now.getHours();
     
-    // 如果是历史日期，从K线缓存获取
-    if (dateStr && dateStr !== today) {
-      return await this.fetchOpenPriceFromKline(stockCode, dateStr);
+    // 如果是历史日期，或者是今天但已经收盘（15点后），从K线缓存获取
+    if (dateStr && (dateStr !== today || currentHour >= 15)) {
+      const openPrice = await this.fetchOpenPriceFromKline(stockCode, dateStr);
+      if (openPrice) {
+        return openPrice;
+      }
+      // 如果K线缓存没有，继续尝试实时获取
     }
     
     // 实时获取今日开盘价
@@ -469,6 +510,9 @@ export class TradingSignalService {
     try {
       // 查询 Day1 突破 + Day2 确认的股票
       const question = `${day1Str}涨幅>8%，${day1Str}股价创188日新高，${day2Str}涨跌幅大于-3%且<3%，${day2Str}最高价>${day1Str}最高价，非ST，非新股，非北交所，近二年未被立案`;
+      
+      logger.info(`问财查询条件: ${question}`);
+      
       const hexinV = this.getHexinV();
       
       const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
@@ -528,6 +572,18 @@ export class TradingSignalService {
     currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
     while (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
       currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+    }
+    return formatDate(currentDate, 'YYYYMMDD');
+  }
+
+  /**
+   * 调整日期为有效交易日（如果是周末则往前调整）
+   */
+  private adjustToTradingDay(dateStr: string): string {
+    let currentDate = parseDate(dateStr);
+    // 如果是周六周日，往前调整到周五
+    while (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+      currentDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
     }
     return formatDate(currentDate, 'YYYYMMDD');
   }

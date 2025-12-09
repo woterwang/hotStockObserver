@@ -96,6 +96,7 @@ export default function SignalPage() {
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().slice(0, 10).replace(/-/g, '')
   );
+  const [day2Date, setDay2Date] = useState<string | null>(null); // Day2日期，用于显示情绪
   const [summary, setSummary] = useState({
     total: 0,
     ready: 0,
@@ -116,6 +117,12 @@ export default function SignalPage() {
       if (data.success) {
         setSignals(data.data.signals || []);
         setSummary(data.data.summary || { total: 0, ready: 0, partial: 0, pending: 0, rejected: 0 });
+        // 保存 Day2 日期用于获取情绪
+        if (data.data.day2DateStr) {
+          setDay2Date(data.data.day2DateStr);
+        } else {
+          setDay2Date(null);
+        }
       }
     } catch (error) {
       console.error('获取信号失败:', error);
@@ -124,11 +131,17 @@ export default function SignalPage() {
     }
   }, [selectedDate]);
 
-  // 加载情绪数据
+  // 加载情绪数据（使用 Day2 日期）
   const fetchSentiment = useCallback(async () => {
+    // 如果没有 Day2 日期，不获取情绪
+    if (!day2Date) {
+      setSentiment(null);
+      return;
+    }
+    
     setSentimentLoading(true);
     try {
-      const response = await fetch(`/api/sentiment/date/${selectedDate}`);
+      const response = await fetch(`/api/sentiment/date/${day2Date}`);
       const data = await response.json();
       
       if (data.success) {
@@ -142,11 +155,11 @@ export default function SignalPage() {
     } finally {
       setSentimentLoading(false);
     }
-  }, [selectedDate]);
+  }, [day2Date]);
 
   // 手动触发生成信号
   const handleGenerateSignals = async () => {
-    if (!confirm('确定要生成信号吗？这将基于当天的突破数据生成次日入场信号。')) {
+    if (!confirm(`确定要生成 ${selectedDate} 的入场信号吗？\n\n选择的日期 ${selectedDate} 为入场日（Day3），\n系统会自动往前推算 Day1（突破日）和 Day2（确认日）。`)) {
       return;
     }
     
@@ -160,7 +173,8 @@ export default function SignalPage() {
       const data = await response.json();
       
       if (data.success) {
-        alert(`成功生成 ${data.data.count} 个信号`);
+        const { count, day1, day2 } = data.data;
+        alert(`成功生成 ${count} 个信号\n\nDay1(突破日): ${day1}\nDay2(确认日): ${day2}\nDay3(入场日): ${selectedDate}`);
         fetchSignals();
       } else {
         alert(`生成失败: ${data.message}`);
@@ -174,7 +188,7 @@ export default function SignalPage() {
 
   // 手动更新入场条件
   const handleUpdateEntry = async () => {
-    if (!confirm('确定要更新入场条件吗？这将获取今日开盘价并判断入场条件。')) {
+    if (!confirm(`确定要更新 ${selectedDate} 的入场条件吗？\n\n这将获取 Day3 开盘价并判断入场条件。`)) {
       return;
     }
     
@@ -200,20 +214,23 @@ export default function SignalPage() {
     }
   };
 
-  // 手动获取情绪数据
+  // 手动获取情绪数据（获取 Day2 的情绪）
   const handleFetchSentiment = async () => {
+    // 如果没有 day2Date，需要先有信号才能知道 Day2
+    const dateToFetch = day2Date || selectedDate;
+    
     setSentimentLoading(true);
     try {
       const response = await fetch('/api/sentiment/fetch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date: selectedDate }),
+        body: JSON.stringify({ date: dateToFetch }),
       });
       const data = await response.json();
       
       if (data.success) {
         setSentiment(data.data);
-        alert(`情绪数据获取成功，评分: ${data.data.score}`);
+        alert(`情绪数据获取成功（${dateToFetch}），评分: ${data.data.score}`);
       } else {
         alert(`获取失败: ${data.message}`);
       }
@@ -224,11 +241,15 @@ export default function SignalPage() {
     }
   };
 
-  // 初始加载
+  // 初始加载信号
   useEffect(() => {
     fetchSignals();
+  }, [fetchSignals]);
+
+  // 当 day2Date 变化时加载情绪
+  useEffect(() => {
     fetchSentiment();
-  }, [fetchSignals, fetchSentiment]);
+  }, [fetchSentiment]);
 
   // 过滤信号
   const filteredSignals = signals.filter(s => {
@@ -319,6 +340,11 @@ export default function SignalPage() {
         <div className="bg-white rounded-lg shadow p-4 mb-6">
           <h2 className="text-lg font-semibold mb-3 flex items-center">
             🎯 市场情绪
+            {day2Date && (
+              <span className="ml-2 text-sm font-normal text-gray-500">
+                （Day2: {day2Date.slice(0, 4)}-{day2Date.slice(4, 6)}-{day2Date.slice(6, 8)}）
+              </span>
+            )}
             {sentimentLoading && <span className="ml-2 text-sm text-gray-400">加载中...</span>}
           </h2>
           

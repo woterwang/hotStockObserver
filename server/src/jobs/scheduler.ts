@@ -155,9 +155,9 @@ export class JobScheduler {
         
         // 当天是 Day2，生成 Day3 的入场信号
         const today = formatDate(new Date(), 'YYYYMMDD');
-        const count = await tradingSignalService.generateSignalsAfterMarketClose(today);
+        const result = await tradingSignalService.generateSignalsAfterMarketClose(today);
         
-        logger.info(`盘后信号生成完成，共 ${count} 个信号`);
+        logger.info(`盘后信号生成完成，共 ${result.count} 个信号，入场日=${result.signalDate}`);
       } catch (error) {
         logger.error(`盘后信号生成失败: ${(error as Error).message}`);
       }
@@ -170,11 +170,12 @@ export class JobScheduler {
 
   /**
    * 集合竞价后入场条件更新任务
-   * 交易日09:26执行，更新今日信号的入场条件
+   * 交易日09:25:18执行，更新今日信号的入场条件
    */
   private startAuctionUpdateJob() {
-    // 每个交易日09:26执行（集合竞价后1分钟）
-    const cronExpression = '26 9 * * 1-5';
+    // 每个交易日09:25:18执行（集合竞价结束后18秒）
+    // node-cron 支持6位表达式：秒 分 时 日 月 周
+    const cronExpression = '18 25 9 * * 1-5';
     
     this.auctionJob = cron.schedule(cronExpression, async () => {
       try {
