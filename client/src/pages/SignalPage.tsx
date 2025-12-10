@@ -88,6 +88,13 @@ interface TradingSignal {
   status: string;
   sector?: string;
   riseReason?: string;
+  // 放量大涨策略专用字段
+  riskLevel?: 'low' | 'medium' | 'high';
+  riskReasons?: string[];
+  day1TurnoverRate?: number;
+  isLimitUp?: boolean;
+  suggestedPosition?: number;
+  marketSentimentScore?: number;
 }
 
 // 市场情绪
@@ -502,7 +509,7 @@ export default function SignalPage() {
                     <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Day1涨幅</th>
                     <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Day2涨幅</th>
                     <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Day3开盘</th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">评分</th>
+                    <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">评分/风险</th>
                     <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">止损价</th>
                     <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">止盈价</th>
                     <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">操作</th>
@@ -511,8 +518,15 @@ export default function SignalPage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredSignals.map((signal) => {
                     const strategyInfo = signal.strategy ? STRATEGY_INFO[signal.strategy] : STRATEGY_INFO.breakthrough_3day;
+                    // 风险等级样式
+                    const riskStyles = {
+                      low: { bg: 'bg-green-100', text: 'text-green-700', label: '低风险' },
+                      medium: { bg: 'bg-yellow-100', text: 'text-yellow-700', label: '中风险' },
+                      high: { bg: 'bg-red-100', text: 'text-red-700', label: '高风险' },
+                    };
+                    const isVolumeSurge = signal.strategy === 'volume_surge';
                     return (
-                    <tr key={signal._id} className={`hover:bg-gray-50 ${signal.status === 'ready' ? 'bg-green-50' : ''}`}>
+                    <tr key={signal._id} className={`hover:bg-gray-50 ${signal.status === 'ready' ? 'bg-green-50' : ''} ${signal.riskLevel === 'high' ? 'bg-red-50' : ''}`}>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center">
                           <div>
@@ -521,8 +535,16 @@ export default function SignalPage() {
                               <span className={`px-1.5 py-0.5 text-xs rounded ${strategyInfo.bgColor} ${strategyInfo.color}`}>
                                 {strategyInfo.name}
                               </span>
+                              {signal.isLimitUp && (
+                                <span className="px-1 py-0.5 text-xs rounded bg-red-500 text-white">涨停</span>
+                              )}
                             </div>
-                            <div className="text-xs text-gray-500">{signal.stockCode}</div>
+                            <div className="text-xs text-gray-500">
+                              {signal.stockCode}
+                              {isVolumeSurge && signal.day1TurnoverRate && (
+                                <span className="ml-2 text-blue-500">换手:{signal.day1TurnoverRate.toFixed(1)}%</span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -550,9 +572,22 @@ export default function SignalPage() {
                         )}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-center">
-                        <span className={`text-lg font-bold ${(signal.entryScore || 0) >= 5 ? 'text-green-600' : (signal.entryScore || 0) >= 4 ? 'text-yellow-600' : 'text-red-500'}`}>
-                          {signal.entryScore || 0}/6
-                        </span>
+                        {isVolumeSurge && signal.riskLevel ? (
+                          <div title={signal.riskReasons?.join('\n') || ''}>
+                            <span className={`px-2 py-1 text-xs rounded ${riskStyles[signal.riskLevel].bg} ${riskStyles[signal.riskLevel].text}`}>
+                              {riskStyles[signal.riskLevel].label}
+                            </span>
+                            {signal.suggestedPosition && (
+                              <div className="text-xs text-gray-500 mt-1">
+                                建议{(signal.suggestedPosition * 100).toFixed(0)}%仓
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <span className={`text-lg font-bold ${(signal.entryScore || 0) >= 5 ? 'text-green-600' : (signal.entryScore || 0) >= 4 ? 'text-yellow-600' : 'text-red-500'}`}>
+                            {signal.entryScore || 0}/6
+                          </span>
+                        )}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-right text-sm text-red-500">
                         {signal.exitConditions?.stopLossPrice?.toFixed(2) || '--'}

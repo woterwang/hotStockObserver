@@ -7,8 +7,11 @@ const router = Router();
  * 交易信号路由
  */
 
-// 盘后生成信号
+// 盘后生成信号（价格突破策略）
 router.post('/generate', tradingSignalController.generateSignals);
+
+// 盘后生成放量大涨策略信号
+router.post('/generate-volume-surge', tradingSignalController.generateVolumeSurgeSignals);
 
 // 集合竞价后更新入场条件
 router.post('/update-entry', tradingSignalController.updateEntryConditions);

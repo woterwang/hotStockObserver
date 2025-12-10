@@ -5,6 +5,7 @@ import { formatDate, parseDate } from '../utils/dateUtils';
 import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
+import { marketSentimentService } from './marketSentimentService';
 
 // 导入同花顺工具
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -260,6 +261,286 @@ export class TradingSignalService {
     // Day3 = Day2 的下一个交易日
     const day3Str = this.getNextTradingDay(day2Str);
     return this.generateSignalsForEntryDate(day3Str);
+  }
+
+  /**
+   * ========================================
+   * 放量大涨策略（volume_surge）
+   * ========================================
+   */
+
+  /**
+   * 放量大涨策略：生成入场信号
+   * @param day3Str Day3 日期 YYYYMMDD（入场日）
+   */
+  async generateVolumeSurgeSignals(day3Str: string): Promise<{
+    count: number;
+    signalDate: string;
+    day1: string;
+    day2: string;
+  }> {
+    // 验证并调整为有效交易日
+    const validDay3Str = this.adjustToTradingDay(day3Str);
+    if (validDay3Str !== day3Str) {
+      logger.info(`${day3Str} 非交易日，已调整为 ${validDay3Str}`);
+    }
+    
+    // 往前推算 Day2 和 Day1
+    const [day2Str, day1Str] = this.getPreviousTradingDays(validDay3Str, 2);
+    
+    logger.info(`[放量大涨] 开始生成入场日 ${validDay3Str} 的交易信号...`);
+    logger.info(`[放量大涨] Day1=${day1Str}(放量日), Day2=${day2Str}(确认日), Day3=${validDay3Str}(入场日)`);
+    
+    // 获取 Day2 的市场情绪（用于风险评估）
+    const sentiment = await marketSentimentService.getSentimentByDate(day2Str);
+    const marketScore = sentiment?.score || 50;
+    const isWeakMarket = marketScore < 40;
+    
+    if (isWeakMarket) {
+      logger.warn(`[放量大涨] 市场情绪偏弱 (score=${marketScore})，信号将标记为高风险`);
+    }
+    
+    // 使用问财查询符合放量大涨条件的股票
+    const candidates = await this.fetchVolumeSurgeCandidates(day1Str, day2Str);
+    
+    if (candidates.length === 0) {
+      logger.info('[放量大涨] 未发现符合条件的候选标的');
+      return { count: 0, signalDate: validDay3Str, day1: day1Str, day2: day2Str };
+    }
+
+    logger.info(`[放量大涨] 发现 ${candidates.length} 只候选标的，开始获取详细数据...`);
+
+    let savedCount = 0;
+    for (const stock of candidates) {
+      try {
+        // 获取K线数据
+        const klines = await this.fetchKlineFromTHS(stock.code, 10);
+        const day1Kline = klines.get(day1Str);
+        const day2Kline = klines.get(day2Str);
+        
+        if (!day1Kline || !day2Kline) {
+          logger.debug(`[放量大涨] ${stock.code} K线数据不完整，跳过`);
+          continue;
+        }
+
+        // 计算Day2均价
+        const day2Avg = day2Kline.turnover / day2Kline.volume / 100 || 
+                        (day2Kline.open + day2Kline.close + day2Kline.high + day2Kline.low) / 4;
+
+        // 【优化3】止损优化：使用 Day2 低点作为止损位
+        // 放量大涨的止损应该更紧，Day2 低点更合适
+        const stopLossPrice = Math.min(day1Kline.low, day2Kline.low);
+        
+        const exitConditions: ExitConditions = {
+          stopLossPrice: Number((stopLossPrice * 0.99).toFixed(2)),  // Day2低点下方1%
+          stopLossPercent: -5,  // 最大止损5%
+          takeProfitPrice: Number((day2Kline.close * 1.12).toFixed(2)),  // 12%止盈
+          takeProfitPercent: 12,
+          altStopLossPrice: Number(day1Kline.low.toFixed(2)),  // 备选止损：Day1低点
+        };
+
+        // 【优化1+4】风险评估
+        const riskReasons: string[] = [];
+        let riskLevel: 'low' | 'medium' | 'high' = 'low';
+        
+        // 市场情绪风险
+        if (isWeakMarket) {
+          riskReasons.push(`市场情绪偏弱(${marketScore}分)`);
+          riskLevel = 'high';
+        } else if (marketScore < 50) {
+          riskReasons.push(`市场情绪一般(${marketScore}分)`);
+          if (riskLevel === 'low') riskLevel = 'medium';
+        }
+        
+        // 涨停股风险（涨停后追高风险较大）
+        if (stock.isLimitUp) {
+          riskReasons.push('Day1涨停，追高风险');
+          if (riskLevel === 'low') riskLevel = 'medium';
+        }
+        
+        // 换手率风险（换手率过低说明筹码锁定不够）
+        if (stock.day1TurnoverRate < 8) {
+          riskReasons.push(`换手率偏低(${stock.day1TurnoverRate.toFixed(1)}%)`);
+        }
+        
+        // 建议仓位（根据风险等级调整）
+        let suggestedPosition = 0.5;  // 默认半仓
+        if (riskLevel === 'high') {
+          suggestedPosition = 0.2;  // 高风险只建议2成仓
+        } else if (riskLevel === 'medium') {
+          suggestedPosition = 0.3;  // 中风险3成仓
+        }
+
+        // 创建信号记录
+        const signal: Partial<ITradingSignal> = {
+          strategy: 'volume_surge',  // 放量大涨策略
+          signalDate: parseDate(validDay3Str),
+          stockCode: stock.code,
+          stockName: stock.name,
+          
+          day1Date: parseDate(day1Str),
+          day1Open: day1Kline.open,
+          day1Close: day1Kline.close,
+          day1High: day1Kline.high,
+          day1Low: day1Kline.low,
+          day1Change: stock.day1Change || 0,
+          day1Volume: day1Kline.volume,
+          day1Turnover: day1Kline.turnover,
+          
+          day2Date: parseDate(day2Str),
+          day2Open: day2Kline.open,
+          day2Close: day2Kline.close,
+          day2High: day2Kline.high,
+          day2Low: day2Kline.low,
+          day2Change: stock.day2Change || 0,
+          day2Volume: day2Kline.volume,
+          day2Turnover: day2Kline.turnover,
+          day2Avg: day2Avg,
+          
+          high188: 0,  // 放量大涨不使用此字段
+          
+          exitConditions,
+          status: 'pending',
+          
+          // 市场情绪
+          marketSentimentScore: marketScore,
+          marketSentimentAdvice: sentiment?.advice || '',
+          suggestedPosition,
+          
+          // 风险标记
+          riskLevel,
+          riskReasons,
+          day1TurnoverRate: stock.day1TurnoverRate,
+          isLimitUp: stock.isLimitUp,
+          
+          sector: stock.sector || '',
+          riseReason: stock.riseReason || '',
+        };
+
+        // 使用 upsert 避免重复（同一天+同一股票+同一策略）
+        await TradingSignal.findOneAndUpdate(
+          { 
+            signalDate: signal.signalDate, 
+            stockCode: signal.stockCode,
+            strategy: 'volume_surge',
+          },
+          signal,
+          { upsert: true, new: true }
+        );
+
+        savedCount++;
+        logger.debug(`[放量大涨] ${stock.code} ${stock.name} 风险=${riskLevel}, 建议仓位=${(suggestedPosition*100).toFixed(0)}%`);
+        await this.delay(200);
+      } catch (error) {
+        logger.debug(`[放量大涨] 处理 ${stock.code} 失败: ${(error as Error).message}`);
+      }
+    }
+
+    logger.info(`[放量大涨] 交易信号生成完成，共 ${savedCount} 个，入场日=${validDay3Str}`);
+    return { count: savedCount, signalDate: validDay3Str, day1: day1Str, day2: day2Str };
+  }
+
+  /**
+   * 放量大涨策略：盘后自动任务
+   * 传入当天日期（Day2），自动计算 Day3 并生成信号
+   */
+  async generateVolumeSurgeAfterMarketClose(day2Str: string): Promise<{
+    count: number;
+    signalDate: string;
+    day1: string;
+    day2: string;
+  }> {
+    const day3Str = this.getNextTradingDay(day2Str);
+    return this.generateVolumeSurgeSignals(day3Str);
+  }
+
+  /**
+   * 放量大涨策略：问财查询候选标的
+   * 筛选逻辑：成交额Top100 + 涨幅>=8% + 换手率>5% + 涨幅排名Top20
+   * 优化：排除炸板股、增加换手率筛选
+   */
+  private async fetchVolumeSurgeCandidates(day1Str: string, day2Str: string): Promise<any[]> {
+    try {
+      // 优化查询条件：
+      // 1. 成交额前100 + 涨幅>=8%
+      // 2. 换手率>5%（真正的放量）
+      // 3. 排除炸板股（曾涨停但收盘未涨停）
+      // 4. Day2确认条件
+      const question = `${day1Str}成交额排名前100，${day1Str}涨幅>=8%，${day1Str}换手率>5%，非${day1Str}炸板，${day2Str}涨跌幅大于-3%且<3%，${day2Str}最高价>${day1Str}最高价，非ST，非新股，非北交所，非退市`;
+      
+      logger.info(`[放量大涨] 问财查询条件: ${question}`);
+      
+      const hexinV = this.getHexinV();
+      
+      const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
+      const data = {
+        question,
+        perpage: 100,
+        page: 1,
+        source: 'Ths_iwencai_Xuangu',
+        version: '2.0',
+        query_area: '',
+        block_list: '',
+        add_info: JSON.stringify({ urp: { scene: 1, company: 1, business: 1 }, contentType: 'json', searchInfo: true }),
+        secondary_intent: 'stock',
+        log_info: JSON.stringify({ input_type: 'typewrite' }),
+      };
+      
+      const headers = {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Hexin-V': hexinV,
+        'Cookie': `v=${hexinV}`,
+        'Host': 'www.iwencai.com',
+        'Origin': 'http://www.iwencai.com',
+        'Referer': 'http://www.iwencai.com/',
+      };
+
+      const response = await axios.post(url, data, { headers, timeout: 15000 });
+      const resData = response.data;
+      
+      if (resData.status_code !== 0) {
+        logger.warn('[放量大涨] 问财查询失败');
+        return [];
+      }
+
+      const datas = resData.data?.answer?.[0]?.txt?.[0]?.content?.components?.[0]?.data?.datas || [];
+      
+      // 解析数据，增加换手率和涨停标记
+      const candidates = datas.map((item: any) => {
+        const code = String(item['股票代码'] || item['code'] || '').replace(/[^0-9]/g, '');
+        const day1Change = Number(item[`涨跌幅:前复权[${day1Str}]`] || item[`${day1Str}涨跌幅`] || 0);
+        const day1TurnoverRate = Number(item[`换手率[${day1Str}]`] || item[`${day1Str}换手率`] || 0);
+        
+        // 判断是否涨停（创业板/科创板 20%，主板 10%）
+        const isCreGem = code.startsWith('30') || code.startsWith('68');
+        const limitThreshold = isCreGem ? 19.5 : 9.5;
+        const isLimitUp = day1Change >= limitThreshold;
+        
+        return {
+          code,
+          name: item['股票简称'] || item['name'] || '',
+          day1Change,
+          day2Change: Number(item[`涨跌幅:前复权[${day2Str}]`] || item[`${day2Str}涨跌幅`] || 0),
+          day1Turnover: Number(item[`成交额[${day1Str}]`] || item[`${day1Str}成交额`] || 0),
+          day1TurnoverRate,
+          isLimitUp,
+          sector: item['所属同花顺行业'] || '',
+          riseReason: item['涨停原因'] || item['异动原因'] || '',
+        };
+      }).filter((s: any) => s.code && s.code.length === 6);
+      
+      // 按 Day1 涨幅降序排序，取前20
+      candidates.sort((a: any, b: any) => b.day1Change - a.day1Change);
+      const top20 = candidates.slice(0, 20);
+      
+      logger.info(`[放量大涨] 筛选结果：换手率>5%且涨幅>=8%有${candidates.length}只，取涨幅Top20`);
+      
+      return top20;
+    } catch (error) {
+      logger.error(`[放量大涨] 问财查询失败: ${(error as Error).message}`);
+      return [];
+    }
   }
 
   /**

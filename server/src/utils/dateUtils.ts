@@ -92,3 +92,37 @@ export function getDateRange(startDate: Date, endDate: Date): Date[] {
   
   return dates;
 }
+
+/**
+ * 获取下一个交易日
+ * @param dateStr 当前日期，格式 YYYYMMDD
+ * @returns 下一个交易日，格式 YYYYMMDD
+ */
+export function getNextTradingDay(dateStr: string): string {
+  const date = parseDate(dateStr);
+  date.setDate(date.getDate() + 1);
+  
+  // 跳过周末
+  while (!isTradingDay(date)) {
+    date.setDate(date.getDate() + 1);
+  }
+  
+  return formatDate(date, 'YYYYMMDD');
+}
+
+/**
+ * 获取前一个交易日
+ * @param dateStr 当前日期，格式 YYYYMMDD
+ * @returns 前一个交易日，格式 YYYYMMDD
+ */
+export function getPrevTradingDay(dateStr: string): string {
+  const date = parseDate(dateStr);
+  date.setDate(date.getDate() - 1);
+  
+  // 跳过周末
+  while (!isTradingDay(date)) {
+    date.setDate(date.getDate() - 1);
+  }
+  
+  return formatDate(date, 'YYYYMMDD');
+}

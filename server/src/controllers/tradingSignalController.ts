@@ -47,6 +47,44 @@ export const tradingSignalController = {
   },
 
   /**
+   * 生成放量大涨策略信号
+   * POST /api/signals/generate-volume-surge
+   * Body: { date: 'YYYYMMDD' } - Day3日期（入场日）
+   */
+  async generateVolumeSurgeSignals(req: Request, res: Response) {
+    try {
+      const { date } = req.body;
+      
+      if (!date) {
+        return res.status(400).json({
+          success: false,
+          message: '请提供日期参数（入场日 Day3）',
+        });
+      }
+
+      logger.info(`手动触发放量大涨信号生成，入场日: ${date}`);
+      const result = await tradingSignalService.generateVolumeSurgeSignals(date);
+
+      res.json({
+        success: true,
+        message: `已生成 ${result.count} 个放量大涨交易信号`,
+        data: {
+          count: result.count,
+          signalDate: result.signalDate,  // 入场日期（Day3）
+          day1: result.day1,              // 放量大涨日
+          day2: result.day2,              // 确认日
+        },
+      });
+    } catch (error) {
+      logger.error(`放量大涨信号生成失败: ${(error as Error).message}`);
+      res.status(500).json({
+        success: false,
+        message: (error as Error).message,
+      });
+    }
+  },
+
+  /**
    * 集合竞价后更新入场条件
    * POST /api/signals/update-entry
    * Body: { date: 'YYYYMMDD' } - Day3日期

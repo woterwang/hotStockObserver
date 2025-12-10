@@ -139,6 +139,7 @@ export class JobScheduler {
   /**
    * 盘后信号生成任务
    * 交易日收盘后执行（15:35），生成次日入场信号
+   * 包含多个策略：价格突破、放量大涨等
    */
   private startSignalGenerateJob() {
     // 每个交易日15:35执行
@@ -151,13 +152,29 @@ export class JobScheduler {
           return;
         }
 
-        logger.info('开始执行盘后信号生成任务');
+        logger.info('开始执行盘后信号生成任务（多策略）');
         
         // 当天是 Day2，生成 Day3 的入场信号
         const today = formatDate(new Date(), 'YYYYMMDD');
-        const result = await tradingSignalService.generateSignalsAfterMarketClose(today);
         
-        logger.info(`盘后信号生成完成，共 ${result.count} 个信号，入场日=${result.signalDate}`);
+        // 1. 价格突破策略
+        try {
+          const breakthroughResult = await tradingSignalService.generateSignalsAfterMarketClose(today);
+          logger.info(`[价格突破] 生成完成，共 ${breakthroughResult.count} 个信号，入场日=${breakthroughResult.signalDate}`);
+        } catch (error) {
+          logger.error(`[价格突破] 生成失败: ${(error as Error).message}`);
+        }
+        
+        // 2. 放量大涨策略
+        try {
+          // service 内部会自动计算 Day3（today 是 Day2）
+          const volumeSurgeResult = await tradingSignalService.generateVolumeSurgeAfterMarketClose(today);
+          logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.count} 个信号，入场日=${volumeSurgeResult.signalDate}`);
+        } catch (error) {
+          logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
+        }
+        
+        logger.info('盘后信号生成任务（多策略）完成');
       } catch (error) {
         logger.error(`盘后信号生成失败: ${(error as Error).message}`);
       }

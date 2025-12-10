@@ -150,6 +150,12 @@ export interface ITradingSignal {
   marketSentimentAdvice?: string;      // 情绪建议
   suggestedPosition?: number;          // 建议仓位比例 0-1
   
+  // 风险标记（放量大涨策略专用）
+  riskLevel?: 'low' | 'medium' | 'high';  // 风险等级
+  riskReasons?: string[];              // 风险原因列表
+  day1TurnoverRate?: number;           // Day1 换手率 %
+  isLimitUp?: boolean;                 // Day1 是否涨停
+  
   // 其他信息
   sector?: string;                     // 所属板块
   concept?: string[];                  // 概念板块
@@ -243,6 +249,12 @@ const TradingSignalSchema = new Schema<TradingSignalDocument>(
     marketSentimentScore: { type: Number },
     marketSentimentAdvice: { type: String },
     suggestedPosition: { type: Number },
+    
+    // 风险标记（放量大涨策略专用）
+    riskLevel: { type: String, enum: ['low', 'medium', 'high'] },
+    riskReasons: { type: [String], default: [] },
+    day1TurnoverRate: { type: Number },
+    isLimitUp: { type: Boolean },
     
     // 其他
     sector: { type: String, default: '' },
