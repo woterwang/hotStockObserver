@@ -5,3 +5,4 @@ export { default as BreakthroughPage } from './BreakthroughPage';
 export { default as BacktestPage } from './BacktestPage';
 export { default as SignalPage } from './SignalPage';
 export { default as VolumeSurgePage } from './VolumeSurgePage';
+export { default as BuySignalPage } from './BuySignalPage';

@@ -8,6 +8,7 @@ const strategies = [
   { id: 'breakthrough', name: '价格突破', icon: '🚀', description: '价格突破188日新高扫描', path: '/breakthrough' },
   { id: 'breakthrough_3day', name: '突破三天', icon: '📈', description: '价格突破后三天确认入场', path: '/signals?strategy=breakthrough_3day' },
   { id: 'volume_surge', name: '强势资金突破', icon: '🔥', description: '成交额前200+趋势突破', path: '/volume-surge' },
+  { id: 'buy_signal', name: '买入信号', icon: '🎯', description: 'T+1开盘买入时机分析', path: '/buy-signal' },
   { id: 'volume_breakout', name: '放量突破', icon: '📊', description: '放量突破关键价位', disabled: true },
   { id: 'ma_crossover', name: '均线金叉', icon: '📉', description: '均线金叉买入', disabled: true },
   { id: 'limit_up_follow', name: '涨停追踪', icon: '⚡', description: '涨停板次日追踪', disabled: true },

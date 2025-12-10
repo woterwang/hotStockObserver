@@ -213,6 +213,84 @@ export interface VolumeSurgeHistory {
   stocks: VolumeSurge[];
 }
 
+// 买入信号
+export interface BuySignal {
+  _id?: string;
+  date: string;
+  stockCode: string;
+  stockName: string;
+  
+  // 选股关联
+  selectionDate: string;
+  selectionScore: number;
+  
+  // 开盘信号指标
+  openPrice: number;
+  openChangePercent: number;
+  openVolumeRatio: number;
+  auctionAmount: number;
+  auctionAmountRatio: number;
+  
+  // 大盘环境
+  indexOpenChange: number;
+  indexMorningTrend: 'up' | 'down' | 'flat';
+  marketMood: number;
+  
+  // 板块联动
+  sectorName: string;
+  sectorOpenChange: number;
+  sectorLimitUpCount: number;
+  sectorLeader: boolean;
+  
+  // 承接力度
+  isLimitUp: boolean;
+  sealAmount?: number;
+  sealRatio?: number;
+  openTimes?: number;
+  
+  // 技术位置
+  distanceToMa5: number;
+  distanceToMa10: number;
+  distanceToMa20: number;
+  distanceToPressure: number;
+  
+  // 评分
+  openStrengthScore: number;
+  volumeConfirmScore: number;
+  auctionScore: number;
+  marketEnvScore: number;
+  sectorLinkScore: number;
+  sealStrengthScore: number;
+  technicalScore: number;
+  totalBuyScore: number;
+  
+  // 买入决策
+  buySignal: 'strong_buy' | 'buy' | 'hold' | 'pass';
+  suggestedPosition: number;
+  suggestedPrice: number;
+  stopLossPrice: number;
+  takeProfitPrice: number;
+  buyReason: string;
+  riskWarning: string[];
+  
+  // 跟踪
+  executed: boolean;
+  resultStatus: 'pending' | 'profit' | 'loss' | 'breakeven';
+  day1CloseChange?: number;
+  maxProfitIn3Days?: number;
+  finalProfit?: number;
+}
+
+// 买入信号统计
+export interface BuySignalStats {
+  total: number;
+  strongBuy: number;
+  buy: number;
+  hold: number;
+  pass: number;
+  avgScore: number;
+}
+
 // 市场概览
 export interface MarketOverview {
   indices: MarketIndex[];

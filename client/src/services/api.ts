@@ -12,7 +12,9 @@ import type {
   BreakthroughHistory,
   VolumeSurge,
   VolumeSurgeHistory,
-  VolumeSurgeStats
+  VolumeSurgeStats,
+  BuySignal,
+  BuySignalStats
 } from '../types';
 
 // 创建axios实例
@@ -163,6 +165,26 @@ export const volumeSurgeApi = {
   // 获取统计数据
   getStats: (date?: string): Promise<ApiResponse<VolumeSurgeStats>> => {
     return api.get('/volume-surge/stats', { params: { date } });
+  },
+};
+
+/**
+ * 买入信号API
+ */
+export const buySignalApi = {
+  // 生成买入信号
+  generate: (date?: string): Promise<ApiResponse<{ count: number; signals: BuySignal[] }>> => {
+    return api.post('/buy-signal/generate', { date });
+  },
+
+  // 获取信号列表
+  getList: (date?: string, signal?: string): Promise<ApiResponse<BuySignal[]>> => {
+    return api.get('/buy-signal/list', { params: { date, signal } });
+  },
+
+  // 获取统计数据
+  getStats: (date?: string): Promise<ApiResponse<BuySignalStats>> => {
+    return api.get('/buy-signal/stats', { params: { date } });
   },
 };
 

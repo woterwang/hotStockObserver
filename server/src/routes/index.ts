@@ -6,6 +6,7 @@ import backtestRoutes from './backtestRoutes';
 import signalRoutes from './signalRoutes';
 import sentimentRoutes from './sentimentRoutes';
 import volumeSurgeRoutes from './volumeSurgeRoutes';
+import buySignalRoutes from './buySignalRoutes';
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.use('/stocks', stockRoutes);
 router.use('/market', marketRoutes);
 router.use('/breakthrough', breakthroughRoutes);
 router.use('/volume-surge', volumeSurgeRoutes);
+router.use('/buy-signal', buySignalRoutes);
 router.use('/backtest', backtestRoutes);
 router.use('/signals', signalRoutes);
 router.use('/sentiment', sentimentRoutes);
