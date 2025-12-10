@@ -20,7 +20,7 @@ import type {
 // 创建axios实例
 const api = axios.create({
   baseURL: '/api',
-  timeout: 10000,
+  timeout: 30000,  // 增加到30秒，买入信号生成需要多次API调用
   headers: {
     'Content-Type': 'application/json',
   },
