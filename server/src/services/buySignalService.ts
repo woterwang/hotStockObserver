@@ -6,11 +6,42 @@
  * 2. 计算买入信号评分
  * 3. 生成买入建议和风险提示
  * 4. 跟踪买入后的收益情况
+ * 
+ * 支持多策略:
+ * - volume_surge: 放量突破策略
+ * - breakthrough: 价格突破策略
+ * - limit_up: 涨停板策略
+ * - ma_crossover: 均线金叉策略
  */
 
 import dayjs from 'dayjs';
 import { BuySignal, IBuySignal } from '../models/BuySignal';
 import { VolumeSurge } from '../models/VolumeSurge';
+import { PriceBreakthrough } from '../models/PriceBreakthrough';
+
+// 策略类型定义
+type StrategyType = 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover';
+
+// 策略名称映射
+const STRATEGY_NAMES: Record<StrategyType, string> = {
+  volume_surge: '放量突破',
+  breakthrough: '价格突破',
+  limit_up: '涨停板',
+  ma_crossover: '均线金叉',
+};
+
+// 候选标的接口（统一各策略的数据结构）
+interface StrategyCandidate {
+  _id: string;
+  stockCode: string;
+  stockName: string;
+  date: Date;
+  strategyType: StrategyType;
+  strategyName: string;
+  score: number;           // 策略得分
+  industry?: string;       // 行业/板块
+  changePercent?: number;  // 当日涨幅
+}
 
 // 解析日期
 function parseDate(dateStr: string): Date {
@@ -282,18 +313,95 @@ class BuySignalScorer {
 class BuySignalService {
   
   /**
-   * 生成买入信号
-   * 在T+1日开盘前/开盘时调用
+   * 从放量突破策略获取候选股票
    */
-  async generateBuySignals(dateStr: string): Promise<IBuySignal[]> {
-    const signalDate = parseDate(dateStr);
-    const selectionDate = dayjs(signalDate).subtract(1, 'day').toDate();
-    
-    // 获取前一天的选股结果
-    const candidates = await VolumeSurge.find({
+  private async getVolumeSurgeCandidates(selectionDate: Date): Promise<StrategyCandidate[]> {
+    const records = await VolumeSurge.find({
       date: selectionDate,
       strategyScore: { $gte: 50 },  // 只处理得分>=50的标的
     }).sort({ strategyScore: -1 });
+    
+    return records.map(r => ({
+      _id: r._id.toString(),
+      stockCode: r.stockCode,
+      stockName: r.stockName,
+      date: r.date,
+      strategyType: 'volume_surge' as StrategyType,
+      strategyName: STRATEGY_NAMES.volume_surge,
+      score: r.strategyScore || 0,
+      industry: r.industry || '',
+      changePercent: r.changePercent,
+    }));
+  }
+  
+  /**
+   * 从价格突破策略获取候选股票
+   */
+  private async getBreakthroughCandidates(selectionDate: Date): Promise<StrategyCandidate[]> {
+    const records = await PriceBreakthrough.find({
+      date: selectionDate,
+      turnoverRatio: { $gte: 1.5 },  // 放量突破
+    }).sort({ turnoverRatio: -1 });
+    
+    return records.map(r => ({
+      _id: r._id.toString(),
+      stockCode: r.stockCode,
+      stockName: r.stockName,
+      date: r.date,
+      strategyType: 'breakthrough' as StrategyType,
+      strategyName: STRATEGY_NAMES.breakthrough,
+      score: Math.min(100, Math.round(r.turnoverRatio * 30)),  // 根据放量比例评分
+      industry: r.sector || '',
+      changePercent: r.changePercent,
+    }));
+  }
+  
+  /**
+   * 获取所有策略的候选股票
+   */
+  private async getAllCandidates(
+    selectionDate: Date, 
+    strategies?: StrategyType[]
+  ): Promise<StrategyCandidate[]> {
+    const allStrategies: StrategyType[] = strategies || ['volume_surge', 'breakthrough'];
+    const candidatePromises: Promise<StrategyCandidate[]>[] = [];
+    
+    if (allStrategies.includes('volume_surge')) {
+      candidatePromises.push(this.getVolumeSurgeCandidates(selectionDate));
+    }
+    if (allStrategies.includes('breakthrough')) {
+      candidatePromises.push(this.getBreakthroughCandidates(selectionDate));
+    }
+    // 可以继续添加更多策略...
+    
+    const results = await Promise.all(candidatePromises);
+    const allCandidates = results.flat();
+    
+    // 去重（同一股票可能被多个策略选中，保留得分最高的）
+    const uniqueMap = new Map<string, StrategyCandidate>();
+    for (const candidate of allCandidates) {
+      const key = candidate.stockCode;
+      const existing = uniqueMap.get(key);
+      if (!existing || candidate.score > existing.score) {
+        uniqueMap.set(key, candidate);
+      }
+    }
+    
+    return Array.from(uniqueMap.values()).sort((a, b) => b.score - a.score);
+  }
+  
+  /**
+   * 生成买入信号
+   * 在T+1日开盘前/开盘时调用
+   * @param dateStr 信号日期（T+1日）
+   * @param strategies 可选，指定要处理的策略类型
+   */
+  async generateBuySignals(dateStr: string, strategies?: StrategyType[]): Promise<IBuySignal[]> {
+    const signalDate = parseDate(dateStr);
+    const selectionDate = dayjs(signalDate).subtract(1, 'day').toDate();
+    
+    // 获取前一天的选股结果（支持多策略）
+    const candidates = await this.getAllCandidates(selectionDate, strategies);
     
     if (candidates.length === 0) {
       console.log(`[BuySignal] ${dateStr} 无可处理的候选标的`);
@@ -334,7 +442,7 @@ class BuySignalService {
    * 为单个股票生成买入信号
    */
   async generateSignalForStock(
-    candidate: any,
+    candidate: StrategyCandidate,
     signalDate: Date
   ): Promise<IBuySignal | null> {
     // 获取开盘数据（这里模拟，实际需要对接实时行情API）
@@ -349,7 +457,7 @@ class BuySignalService {
     const marketEnv = await this.getMarketEnvironment(signalDate);
     
     // 获取板块数据
-    const sectorData = await this.getSectorData(candidate.industry, signalDate);
+    const sectorData = await this.getSectorData(candidate.industry || '', signalDate);
     
     // 获取技术位置
     const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice);
@@ -411,9 +519,11 @@ class BuySignalService {
       stockCode: candidate.stockCode,
       stockName: candidate.stockName,
       
-      volumeSurgeId: candidate._id,
+      strategyType: candidate.strategyType,
+      strategyName: candidate.strategyName,
+      sourceId: candidate._id,
       selectionDate: candidate.date,
-      selectionScore: candidate.strategyScore || 0,
+      selectionScore: candidate.score || 0,
       
       openPrice: openData.openPrice,
       openChangePercent: openData.openChangePercent,
@@ -425,7 +535,7 @@ class BuySignalService {
       indexMorningTrend: marketEnv.indexMorningTrend,
       marketMood: marketEnv.marketMood,
       
-      sectorName: candidate.industry,
+      sectorName: candidate.industry || '',
       sectorOpenChange: sectorData.sectorOpenChange,
       sectorLimitUpCount: sectorData.sectorLimitUpCount,
       sectorLeader: sectorData.sectorLeader,

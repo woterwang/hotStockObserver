@@ -220,7 +220,10 @@ export interface BuySignal {
   stockCode: string;
   stockName: string;
   
-  // 选股关联
+  // 策略关联
+  strategyType: 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover';
+  strategyName: string;
+  sourceId?: string;
   selectionDate: string;
   selectionScore: number;
   

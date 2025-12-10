@@ -4,6 +4,17 @@ import { buySignalApi } from '../services/api';
 import type { BuySignal, BuySignalStats } from '../types';
 import dayjs from 'dayjs';
 
+// 策略类型配置
+const STRATEGY_CONFIG = {
+  all: { label: '全部策略', icon: '📊', color: 'gray' },
+  volume_surge: { label: '放量突破', icon: '📈', color: 'blue' },
+  breakthrough: { label: '价格突破', icon: '🚀', color: 'purple' },
+  limit_up: { label: '涨停板', icon: '🔝', color: 'red' },
+  ma_crossover: { label: '均线金叉', icon: '✨', color: 'green' },
+} as const;
+
+type StrategyFilterType = keyof typeof STRATEGY_CONFIG;
+
 /**
  * 买入信号页面
  * 展示买入时机量化分析结果
@@ -13,6 +24,7 @@ const BuySignalPage: React.FC = () => {
   const [stats, setStats] = useState<BuySignalStats | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>(() => dayjs().format('YYYYMMDD'));
   const [filterSignal, setFilterSignal] = useState<string>('all');
+  const [filterStrategy, setFilterStrategy] = useState<StrategyFilterType>('all');
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -60,10 +72,14 @@ const BuySignalPage: React.FC = () => {
     fetchSignals(selectedDate);
   }, [selectedDate]);
 
-  // 过滤信号
-  const filteredSignals = filterSignal === 'all' 
-    ? signals 
-    : signals.filter(s => s.buySignal === filterSignal);
+  // 过滤信号（支持信号类型和策略类型双重筛选）
+  const filteredSignals = signals.filter(s => {
+    // 信号类型筛选
+    if (filterSignal !== 'all' && s.buySignal !== filterSignal) return false;
+    // 策略类型筛选
+    if (filterStrategy !== 'all' && s.strategyType !== filterStrategy) return false;
+    return true;
+  });
 
   // 获取信号标签样式
   const getSignalBadge = (signal: string) => {
@@ -151,26 +167,49 @@ const BuySignalPage: React.FC = () => {
         )}
 
         {/* 筛选按钮 */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {[
-            { value: 'all', label: '全部' },
-            { value: 'strong_buy', label: '🔥 强烈买入' },
-            { value: 'buy', label: '✅ 建议买入' },
-            { value: 'hold', label: '⏸️ 观望' },
-            { value: 'pass', label: '❌ 放弃' },
-          ].map(item => (
-            <button
-              key={item.value}
-              onClick={() => setFilterSignal(item.value)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
-                filterSignal === item.value
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+        <div className="space-y-3">
+          {/* 策略类型筛选 */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-sm text-gray-500 font-medium">策略:</span>
+            {(Object.entries(STRATEGY_CONFIG) as [StrategyFilterType, typeof STRATEGY_CONFIG[StrategyFilterType]][]).map(([key, config]) => (
+              <button
+                key={key}
+                onClick={() => setFilterStrategy(key)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition flex items-center gap-1 ${
+                  filterStrategy === key
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <span>{config.icon}</span>
+                <span>{config.label}</span>
+              </button>
+            ))}
+          </div>
+          
+          {/* 信号类型筛选 */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-sm text-gray-500 font-medium">信号:</span>
+            {[
+              { value: 'all', label: '全部' },
+              { value: 'strong_buy', label: '🔥 强烈买入' },
+              { value: 'buy', label: '✅ 建议买入' },
+              { value: 'hold', label: '⏸️ 观望' },
+              { value: 'pass', label: '❌ 放弃' },
+            ].map(item => (
+              <button
+                key={item.value}
+                onClick={() => setFilterSignal(item.value)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
+                  filterSignal === item.value
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* 信号列表 */}
@@ -196,6 +235,18 @@ const BuySignalPage: React.FC = () => {
                       <span className={`px-2 py-1 rounded text-sm font-bold ${badge.bg} ${badge.color}`}>
                         {badge.icon} {badge.text}
                       </span>
+                      {/* 策略类型标签 */}
+                      {signal.strategyType && (
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          signal.strategyType === 'volume_surge' ? 'bg-blue-100 text-blue-700' :
+                          signal.strategyType === 'breakthrough' ? 'bg-purple-100 text-purple-700' :
+                          signal.strategyType === 'limit_up' ? 'bg-red-100 text-red-700' :
+                          'bg-green-100 text-green-700'
+                        }`}>
+                          {STRATEGY_CONFIG[signal.strategyType as StrategyFilterType]?.icon}{' '}
+                          {signal.strategyName || STRATEGY_CONFIG[signal.strategyType as StrategyFilterType]?.label}
+                        </span>
+                      )}
                       <span className="font-medium text-gray-900">{signal.stockName}</span>
                       <span className="text-sm text-gray-500">{signal.stockCode}</span>
                     </div>

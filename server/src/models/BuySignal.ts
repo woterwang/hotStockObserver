@@ -13,7 +13,9 @@ export interface IBuySignal {
   // ========================================
   // 📋 关联的选股数据
   // ========================================
-  volumeSurgeId?: string;         // 关联的 VolumeSurge 记录ID
+  strategyType: 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover';  // 策略类型
+  strategyName: string;           // 策略名称
+  sourceId?: string;              // 关联的源记录ID（VolumeSurge/Breakthrough等）
   selectionDate: Date;            // 选股日期（T日）
   selectionScore: number;         // 选股策略得分
   
@@ -120,8 +122,15 @@ const BuySignalSchema = new Schema<BuySignalDocument>(
     stockCode: { type: String, required: true, index: true },
     stockName: { type: String, required: true },
     
-    // 关联数据
-    volumeSurgeId: { type: String },
+    // 关联数据 - 支持多策略
+    strategyType: { 
+      type: String, 
+      enum: ['volume_surge', 'breakthrough', 'limit_up', 'ma_crossover'],
+      required: true,
+      index: true
+    },
+    strategyName: { type: String, required: true },
+    sourceId: { type: String },
     selectionDate: { type: Date, required: true },
     selectionScore: { type: Number, default: 0 },
     
