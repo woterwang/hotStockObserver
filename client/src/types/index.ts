@@ -115,29 +115,102 @@ export interface PeriodStats {
   }[];
 }
 
-// 价格突破记录
+// 价格突破
 export interface PriceBreakthrough {
   _id?: string;
   date: string;
   stockCode: string;
   stockName: string;
-  currentPrice: number;
+  industry: string;
+  concept: string;
+  price: number;
   changePercent: number;
-  turnover: number;
-  prevDayTurnover: number;
-  turnoverRatio: number;
-  high188: number;
-  breakTime?: string;
-  riseReason?: string;
-  sector?: string;
-  concept?: string[];
+  breakthroughPrice: number; // 突破价（day1最高价）
+  day1Date: string;
+  day1Change: number;
+  day2Date: string;
+  day2Change: number;
+  day3Open: number;
+  status: 'pending' | 'success' | 'failed'; // 状态：等待验证、成功获利、失败止损
+  maxProfit?: number; // 最大获利
+  holdDays?: number; // 持仓天数
 }
 
-// 价格突破历史（按日期分组）
 export interface BreakthroughHistory {
   date: string;
   count: number;
+  successCount: number;
+  avgProfit: number;
   stocks: PriceBreakthrough[];
+}
+
+// 放量大涨
+export interface VolumeSurge {
+  _id?: string;
+  date: string;
+  stockCode: string;
+  stockName: string;
+  industry: string;
+  concept: string;
+  price: number;
+  changePercent: number;
+  volumeRatio: number; // 量比
+  turnover: number; // 新增：成交额
+  turnoverRate: number; // 换手率
+  status: 'pending' | 'success' | 'failed';
+  nextDayOpen?: number;
+  nextDayHigh?: number;
+  nextDayLow?: number;
+  nextDayClose?: number;
+  profit?: number;
+  // 新增分析字段
+  amplitude?: number; // 振幅
+  upperShadow?: number; // 上影线
+  lowerShadow?: number; // 下影线
+  volumeRatioTo5Day?: number; // 量能倍数(相对5日均量)
+  isLimitUp?: boolean; // 是否涨停
+  isFirstBoard?: boolean; // 是否首板
+  continuousBoardCount?: number; // 连板数
+  limitUpReason?: string; // 涨停原因
+  strategyScore?: number; // 策略总分
+  baseScore?: number; // 基础分
+  marketBonus?: number; // 市场加分
+  boardBonus?: number; // 连板加分
+  riskLevel?: 'low' | 'medium' | 'high'; // 风险等级
+  marketSentimentScore?: number; // 市场情绪分
+  marketLimitUpCount?: number; // 市场涨停数
+  indexAboveMa20?: boolean; // 指数是否在MA20上方
+  marketAdvice?: string; // 市场建议
+}
+
+// 放量大涨统计
+export interface VolumeSurgeStats {
+  total: number;
+  highQualityCount: number;
+  lowRiskCount: number;
+  avgScore: number;
+  maxScore: number;
+  minScore: number;
+  riskDistribution: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+  industryDistribution: { name: string; count: number }[];
+  marketInfo: {
+    sentiment: number;
+    limitUpCount: number;
+    indexAboveMa20: boolean;
+    advice: string;
+  };
+}
+
+export interface VolumeSurgeHistory {
+  date: string;
+  count: number;
+  successCount: number;
+  avgProfit: number;
+  stocks: VolumeSurge[];
 }
 
 // 市场概览

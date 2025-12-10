@@ -9,7 +9,10 @@ import type {
   Sector,
   StockNews,
   PriceBreakthrough,
-  BreakthroughHistory
+  BreakthroughHistory,
+  VolumeSurge,
+  VolumeSurgeHistory,
+  VolumeSurgeStats
 } from '../types';
 
 // 创建axios实例
@@ -131,10 +134,35 @@ export const breakthroughApi = {
   getDates: (): Promise<ApiResponse<string[]>> => {
     return api.get('/breakthrough/dates');
   },
+};
 
-  // 手动触发扫描（需要更长超时时间，问财接口响应较慢）
-  scan: (date?: string): Promise<ApiResponse<any> & { count?: number }> => {
-    return api.post('/breakthrough/scan', { date }, { timeout: 60000 });
+/**
+ * 放量大涨API
+ */
+export const volumeSurgeApi = {
+  // 手动触发扫描
+  scan: (date?: string): Promise<ApiResponse<{ count: number }>> => {
+    return api.post('/volume-surge/scan', { date });
+  },
+
+  // 获取列表
+  getList: (date?: string): Promise<ApiResponse<VolumeSurge[]>> => {
+    return api.get('/volume-surge/list', { params: { date } });
+  },
+
+  // 获取历史记录
+  getHistory: (days: number = 30): Promise<ApiResponse<VolumeSurgeHistory[]>> => {
+    return api.get('/volume-surge/history', { params: { days } });
+  },
+
+  // 获取可用日期列表
+  getDates: (): Promise<ApiResponse<string[]>> => {
+    return api.get('/volume-surge/dates');
+  },
+
+  // 获取统计数据
+  getStats: (date?: string): Promise<ApiResponse<VolumeSurgeStats>> => {
+    return api.get('/volume-surge/stats', { params: { date } });
   },
 };
 

@@ -4,3 +4,4 @@ export * from './Sector';
 export * from './StockNews';
 export * from './PriceBreakthrough';
 export * from './TradingSignal';
+export * from './VolumeSurge';
