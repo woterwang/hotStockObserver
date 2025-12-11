@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService } from '../services';
+import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, volumeSurgeService } from '../services';
 import { logger } from '../utils';
 import { isTradingDay, isTradingTime, formatDate } from '../utils/dateUtils';
 
@@ -12,6 +12,7 @@ export class JobScheduler {
   private auctionJob: cron.ScheduledTask | null = null;
   private signalGenerateJob: cron.ScheduledTask | null = null;
   private sentimentJob: cron.ScheduledTask | null = null;
+  private volumeSurgeJob: cron.ScheduledTask | null = null;
 
   /**
    * 启动所有定时任务
@@ -22,6 +23,7 @@ export class JobScheduler {
     this.startAuctionUpdateJob();
     this.startSignalGenerateJob();
     this.startSentimentJob();
+    this.startVolumeSurgeScanJob();
     logger.info('定时任务已启动');
   }
 
@@ -48,6 +50,10 @@ export class JobScheduler {
     if (this.sentimentJob) {
       this.sentimentJob.stop();
       this.sentimentJob = null;
+    }
+    if (this.volumeSurgeJob) {
+      this.volumeSurgeJob.stop();
+      this.volumeSurgeJob = null;
     }
     logger.info('定时任务已停止');
   }
@@ -248,6 +254,37 @@ export class JobScheduler {
     });
 
     logger.info(`市场情绪获取任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /**
+   * 强势资金突破（放量大涨）扫描任务
+   * 交易日收盘后执行（15:31），扫描当天的放量大涨股票
+   */
+  private startVolumeSurgeScanJob() {
+    // 每个交易日15:31执行（在市场情绪获取之前，信号生成之前）
+    const cronExpression = '31 15 * * 1-5';
+    
+    this.volumeSurgeJob = cron.schedule(cronExpression, async () => {
+      try {
+        if (!isTradingDay()) {
+          logger.info('非交易日，跳过强势资金突破扫描');
+          return;
+        }
+
+        logger.info('开始执行强势资金突破（放量大涨）扫描任务');
+        
+        const today = formatDate(new Date(), 'YYYYMMDD');
+        const count = await volumeSurgeService.scanAndSave(today);
+        
+        logger.info(`强势资金突破扫描任务完成，共发现 ${count} 只符合条件的股票`);
+      } catch (error) {
+        logger.error(`强势资金突破扫描任务失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`强势资金突破扫描任务已配置，Cron表达式: ${cronExpression}`);
   }
 }
 

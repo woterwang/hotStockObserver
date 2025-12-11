@@ -5,10 +5,12 @@
  */
 
 import { logger } from '../utils';
-import { BuySignal } from '../models';
+import { BuySignal, VolumeSurge } from '../models';
 import { formatDate, parseDate } from '../utils/dateUtils';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * 回测配置参数
@@ -18,6 +20,8 @@ export interface BuySignalBacktestConfig {
   strategyType: 'volume_surge' | 'breakthrough' | 'all';
   // 买入信号类型（只回测强烈买入）
   signalFilter: 'strong_buy' | 'buy' | 'all';
+  // 最低评分过滤（用于 VolumeSurge 数据源）
+  minStrategyScore: number;
   // 标准仓位（元）
   basePosition: number;
   // 市场情绪不好时的仓位比例（0-1）
@@ -121,6 +125,7 @@ class BuySignalBacktestService {
   private defaultConfig: BuySignalBacktestConfig = {
     strategyType: 'volume_surge',
     signalFilter: 'strong_buy',
+    minStrategyScore: 0,            // 最低策略评分（0=不过滤）
     basePosition: 50000,
     lowMoodPositionRatio: 0.5,
     marketMoodThreshold: 50,
@@ -132,6 +137,9 @@ class BuySignalBacktestService {
 
   // K线缓存
   private klineCache: Map<string, KlineData[]> = new Map();
+  
+  // 当前回测需要的 K 线天数
+  private currentKlineDays: number = 120;
 
   /**
    * 获取股票的市场ID（同花顺格式）
@@ -146,19 +154,75 @@ class BuySignalBacktestService {
   }
 
   /**
-   * 从同花顺获取K线数据
+   * 本地 K 线缓存目录
+   */
+  private localKlineCacheDir = path.resolve(__dirname, '../../data/kline_cache');
+
+  /**
+   * 从本地文件缓存读取 K 线数据
+   */
+  private readKlineFromLocalCache(stockCode: string): KlineData[] | null {
+    try {
+      const filePath = path.join(this.localKlineCacheDir, `${stockCode}.json`);
+      if (!fs.existsSync(filePath)) {
+        return null;
+      }
+
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
+      const cacheData = JSON.parse(fileContent);
+      
+      // 本地缓存格式是 { "20230220": {...}, "20230221": {...}, ... }
+      const result: KlineData[] = [];
+      for (const dateKey of Object.keys(cacheData)) {
+        const item = cacheData[dateKey];
+        if (item && item.date) {
+          result.push({
+            date: item.date,
+            open: item.open || 0,
+            high: item.high || 0,
+            low: item.low || 0,
+            close: item.close || 0,
+            volume: item.volume || 0,
+            turnover: item.turnover || 0,
+          });
+        }
+      }
+      
+      // 按日期排序
+      result.sort((a, b) => a.date.localeCompare(b.date));
+      
+      logger.debug(`从本地缓存读取 ${stockCode} K线数据: ${result.length} 条`);
+      return result;
+    } catch (error) {
+      logger.debug(`读取本地缓存失败 ${stockCode}: ${(error as Error).message}`);
+      return null;
+    }
+  }
+
+  /**
+   * 从同花顺获取K线数据（优先使用本地缓存）
    */
   private async fetchKlineFromThs(
     stockCode: string,
     days: number = 60
   ): Promise<KlineData[]> {
     try {
-      // 检查缓存
+      // 检查内存缓存
       const cacheKey = stockCode;
       if (this.klineCache.has(cacheKey)) {
         return this.klineCache.get(cacheKey)!;
       }
 
+      // 优先从本地文件缓存读取
+      const localCache = this.readKlineFromLocalCache(stockCode);
+      if (localCache && localCache.length > 0) {
+        this.klineCache.set(cacheKey, localCache);
+        return localCache;
+      }
+
+      // 本地缓存没有，尝试从网络获取（IP 被封时会失败）
+      logger.debug(`本地缓存未命中 ${stockCode}，尝试从网络获取...`);
+      
       const marketId = this.getMarketId(stockCode);
       const url = `https://d.10jqka.com.cn/v6/line/${marketId}_${stockCode}/01/last${days}.js`;
       
@@ -212,6 +276,7 @@ class BuySignalBacktestService {
 
   /**
    * 获取上证指数K线（用于计算市场情绪）
+   * 优先使用本地缓存
    */
   private async fetchIndexKline(days: number = 60): Promise<KlineData[]> {
     try {
@@ -220,6 +285,16 @@ class BuySignalBacktestService {
         return this.klineCache.get(cacheKey)!;
       }
 
+      // 优先从本地文件缓存读取（假设缓存中有 000001.json 是上证指数）
+      const localCache = this.readKlineFromLocalCache('000001');
+      if (localCache && localCache.length > 0) {
+        this.klineCache.set(cacheKey, localCache);
+        return localCache;
+      }
+
+      // 本地缓存没有，尝试从网络获取
+      logger.debug(`上证指数本地缓存未命中，尝试从网络获取...`);
+      
       const url = `https://d.10jqka.com.cn/v6/line/17_000001/01/last${days}.js`;
       
       const response = await axios.get(url, {
@@ -304,8 +379,8 @@ class BuySignalBacktestService {
       const stockCode = signal.stockCode;
       const signalDateStr = formatDate(signal.date, 'YYYYMMDD');
       
-      // 获取K线数据
-      const klineData = await this.fetchKlineFromThs(stockCode, 120);
+      // 获取K线数据（使用动态计算的天数）
+      const klineData = await this.fetchKlineFromThs(stockCode, this.currentKlineDays);
       if (klineData.length === 0) {
         logger.info(`[回测] ${stockCode} 无K线数据`);
         return null;
@@ -446,40 +521,66 @@ class BuySignalBacktestService {
     const finalConfig: BuySignalBacktestConfig = { ...this.defaultConfig, ...config };
     
     logger.info(`开始买入信号回测: ${startDate} - ${endDate}`);
-    logger.info(`回测配置: 策略=${finalConfig.strategyType}, 信号=${finalConfig.signalFilter}, 止损=${finalConfig.stopLossPercent * 100}%, 止盈=${finalConfig.takeProfitPercent * 100}%, 最大持仓=${finalConfig.maxHoldDays}天`);
+    logger.info(`传入的 config: ${JSON.stringify(config)}`);
+    logger.info(`合并后 finalConfig: ${JSON.stringify(finalConfig)}`);
+    logger.info(`回测配置: 策略=${finalConfig.strategyType}, 最低评分=${finalConfig.minStrategyScore}, 止损=${finalConfig.stopLossPercent * 100}%, 止盈=${finalConfig.takeProfitPercent * 100}%, 最大持仓=${finalConfig.maxHoldDays}天`);
 
     // 清空缓存
     this.klineCache.clear();
 
+    // 计算需要获取的 K 线天数（从回测开始日期到今天的交易日数 + 缓冲）
+    const startDateObj = parseDate(startDate);
+    const today = new Date();
+    const daysDiff = Math.ceil((today.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24));
+    // 交易日大约是自然日的 5/7，再加上 30 天缓冲
+    const klineDays = Math.max(120, Math.ceil(daysDiff * 5 / 7) + 30);
+    logger.info(`根据回测日期范围，需要获取 ${klineDays} 天 K 线数据`);
+
     // 获取上证指数K线
-    const indexKline = await this.fetchIndexKline(120);
+    const indexKline = await this.fetchIndexKline(klineDays);
     if (indexKline.length === 0) {
       logger.warn('无法获取上证指数K线');
     }
 
     // 构建查询条件
-    const startDateObj = parseDate(startDate);
     const endDateObj = parseDate(endDate);
     
-    const query: any = {
-      date: { $gte: startDateObj, $lte: endDateObj },
+    // 日期范围需要扩展一天，因为数据库存储的是 UTC 时间
+    // 例如北京时间 2025-12-02 00:00:00 存储为 UTC 2025-12-01T16:00:00.000Z
+    const startDateForQuery = new Date(startDateObj);
+    startDateForQuery.setDate(startDateForQuery.getDate() - 1);  // 向前扩展一天
+    const endDateForQuery = new Date(endDateObj);
+    endDateForQuery.setDate(endDateForQuery.getDate() + 1);  // 向后扩展一天
+    
+    logger.info(`日期查询范围: ${startDateForQuery.toISOString()} ~ ${endDateForQuery.toISOString()}`);
+    
+    // 直接从 VolumeSurge 集合查询数据（因为 BuySignal 数据可能不完整）
+    const volumeSurgeQuery: any = {
+      date: { $gte: startDateForQuery, $lt: endDateForQuery },
     };
 
-    // 策略类型过滤
-    if (finalConfig.strategyType !== 'all') {
-      query.strategyType = finalConfig.strategyType;
+    // 策略评分过滤（使用 minStrategyScore 作为唯一筛选条件）
+    if (finalConfig.minStrategyScore > 0) {
+      volumeSurgeQuery.strategyScore = { $gte: finalConfig.minStrategyScore };
     }
 
-    // 买入信号过滤（基于 buySignal 字段）
-    if (finalConfig.signalFilter === 'strong_buy') {
-      query.buySignal = 'strong_buy';
-    } else if (finalConfig.signalFilter === 'buy') {
-      query.buySignal = { $in: ['strong_buy', 'buy'] };
-    }
+    // 从 VolumeSurge 集合查询数据
+    const volumeSurgeRecords = await VolumeSurge.find(volumeSurgeQuery).sort({ date: 1, strategyScore: -1 }).lean();
+    logger.info(`从 VolumeSurge 找到 ${volumeSurgeRecords.length} 条记录 (评分 >= ${finalConfig.minStrategyScore})`);
 
-    // 从 BuySignal 集合查询数据
-    const signals = await BuySignal.find(query).sort({ date: 1, totalBuyScore: -1 }).lean();
-    logger.info(`找到 ${signals.length} 条买入信号记录`);
+    // 将 VolumeSurge 数据转换为回测需要的格式
+    const signals = volumeSurgeRecords.map(vs => ({
+      stockCode: vs.stockCode,
+      stockName: vs.stockName,
+      date: vs.date,
+      strategyType: 'volume_surge',
+      strategyName: '强势资金突破',
+      totalBuyScore: vs.strategyScore || 0,
+      marketMood: vs.marketSentimentScore || 50,
+    }));
+
+    // 保存计算出的 K 线天数，供 backtestSingleStock 使用
+    this.currentKlineDays = klineDays;
 
     // 对每条记录执行回测
     const trades: BuySignalTradeRecord[] = [];

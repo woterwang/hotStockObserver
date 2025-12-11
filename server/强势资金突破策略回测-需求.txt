@@ -62,3 +62,27 @@
 
 
 
+http://localhost:8080/volume-surge 这个页面，我发现整个20250101到20250201期间的买入信号都生成发，能否帮我看一下页面 http://localhost:8080/backtest 的 “强势资金突破” 功能，使用“开始回测”之后调用了接口 http://localhost:8080/api/backtest/buy-signal 但没返回任何数据？  谢谢！
+
+
+对于页面 http://localhost:8080/backtest 的 “强势资金突破” 功能这个功能我的理解的流程是这样的：
+	1.调用接口 http://localhost:8080/api/backtest/buy-signal 传参 ： {"startDate":"20251201","endDate":"20251210","config":{"strategyType":"volume_surge","signalFilter":"strong_buy","minStrategyScore":0,"basePosition":50000,"lowMoodPositionRatio":0.5,"marketMoodThreshold":50,"stopLossPercent":0.05,"takeProfitPercent":0.2,"maxHoldDays":5,"marketPanicThreshold":40}}
+	2.通过类似调用接口 http://localhost:8080/api/volume-surge/list?date=20251201 把 20251201到20251210期间的每天的买入信号都获取到且挑选出“强烈买入”的股票
+	3.对每天的买入信号进行模拟交易，计算盈亏，生成回测结果
+
+	请帮我确认一下这个理解是否正确？如果不正确，请帮我理清这个功能的实现思路，谢谢！
+
+
+	调用接口：curl 'http://localhost:8080/api/buy-signal/list?date=20251201' \
+  -H 'Accept: application/json, text/plain, */*' \
+  -H 'Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7' \
+  -H 'Connection: keep-alive' \
+  -H 'If-None-Match: W/"24-fDxFN8Mf1SgODCZgCVo8S9iW524"' \
+  -H 'Referer: http://localhost:8080/buy-signal' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Google Chrome";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' 服务器日志显示：[BuySignal] 20251201 无可处理的候选标的

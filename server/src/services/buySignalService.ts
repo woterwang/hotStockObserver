@@ -315,11 +315,13 @@ class BuySignalService {
   
   /**
    * 从放量突破策略获取候选股票
+   * @param selectionDate 选股日期
+   * @param minScore 最低分数门槛，默认40
    */
-  private async getVolumeSurgeCandidates(selectionDate: Date): Promise<StrategyCandidate[]> {
+  private async getVolumeSurgeCandidates(selectionDate: Date, minScore: number = 40): Promise<StrategyCandidate[]> {
     const records = await VolumeSurge.find({
       date: selectionDate,
-      strategyScore: { $gte: 50 },  // 只处理得分>=50的标的
+      strategyScore: { $gte: minScore },
     }).sort({ strategyScore: -1 });
     
     return records.map(r => ({
@@ -359,16 +361,20 @@ class BuySignalService {
   
   /**
    * 获取所有策略的候选股票
+   * @param selectionDate 选股日期
+   * @param strategies 策略类型列表
+   * @param minScore 最低分数门槛，默认40
    */
   private async getAllCandidates(
     selectionDate: Date, 
-    strategies?: StrategyType[]
+    strategies?: StrategyType[],
+    minScore: number = 40
   ): Promise<StrategyCandidate[]> {
     const allStrategies: StrategyType[] = strategies || ['volume_surge', 'breakthrough'];
     const candidatePromises: Promise<StrategyCandidate[]>[] = [];
     
     if (allStrategies.includes('volume_surge')) {
-      candidatePromises.push(this.getVolumeSurgeCandidates(selectionDate));
+      candidatePromises.push(this.getVolumeSurgeCandidates(selectionDate, minScore));
     }
     if (allStrategies.includes('breakthrough')) {
       candidatePromises.push(this.getBreakthroughCandidates(selectionDate));
@@ -396,13 +402,14 @@ class BuySignalService {
    * 在T+1日开盘前/开盘时调用
    * @param dateStr 信号日期（T+1日）
    * @param strategies 可选，指定要处理的策略类型
+   * @param minScore 可选，最低分数门槛，默认40
    */
-  async generateBuySignals(dateStr: string, strategies?: StrategyType[]): Promise<IBuySignal[]> {
+  async generateBuySignals(dateStr: string, strategies?: StrategyType[], minScore: number = 40): Promise<IBuySignal[]> {
     const signalDate = parseDate(dateStr);
     const selectionDate = dayjs(signalDate).subtract(1, 'day').toDate();
     
     // 获取前一天的选股结果（支持多策略）
-    const candidates = await this.getAllCandidates(selectionDate, strategies);
+    const candidates = await this.getAllCandidates(selectionDate, strategies, minScore);
     
     if (candidates.length === 0) {
       console.log(`[BuySignal] ${dateStr} 无可处理的候选标的`);
@@ -658,25 +665,34 @@ class BuySignalService {
   
   /**
    * 获取大盘环境
-   * 从同花顺获取上证指数K线
+   * 从同花顺获取上证指数K线，失败时使用默认值
    */
   async getMarketEnvironment(date: Date): Promise<{
     indexOpenChange: number;
     indexMorningTrend: 'up' | 'down' | 'flat';
     marketMood: number;
   }> {
+    const defaultResult = { indexOpenChange: 0, indexMorningTrend: 'flat' as const, marketMood: 50 };
+    
     try {
       const dateStr = formatDate(date);
       
       // 获取上证指数K线（市场代码17，股票代码000001）
       const url = 'https://d.10jqka.com.cn/v6/line/17_000001/01/last30.js';
-      const response = await axios.get(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-          'Referer': 'http://www.10jqka.com.cn/',
-        },
-        timeout: 10000,
-      });
+      
+      let response;
+      try {
+        response = await axios.get(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': 'http://www.10jqka.com.cn/',
+          },
+          timeout: 5000,  // 缩短超时时间
+        });
+      } catch (networkError) {
+        console.warn('[BuySignal] 大盘接口网络异常，使用默认市场情绪');
+        return defaultResult;
+      }
       
       if (response.data && typeof response.data === 'string') {
         const dataStr = response.data;
@@ -725,10 +741,10 @@ class BuySignalService {
         }
       }
       
-      return { indexOpenChange: 0, indexMorningTrend: 'flat', marketMood: 50 };
+      return defaultResult;
     } catch (error) {
       console.error('[BuySignal] 获取大盘环境失败:', error);
-      return { indexOpenChange: 0, indexMorningTrend: 'flat', marketMood: 50 };
+      return defaultResult;
     }
   }
   

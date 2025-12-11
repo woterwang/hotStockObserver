@@ -16,6 +16,7 @@ interface BacktestConfig {
 interface BuySignalBacktestConfig {
   strategyType: 'volume_surge' | 'breakthrough' | 'all';
   signalFilter: 'strong_buy' | 'buy' | 'all';
+  minStrategyScore: number;         // 最低策略评分
   basePosition: number;
   lowMoodPositionRatio: number;
   marketMoodThreshold: number;
@@ -145,6 +146,7 @@ const BacktestPage: React.FC = () => {
   const [buySignalConfig, setBuySignalConfig] = useState<BuySignalBacktestConfig>({
     strategyType: 'volume_surge',
     signalFilter: 'strong_buy',
+    minStrategyScore: 0,            // 最低策略评分（0=不过滤）
     basePosition: 50000,
     lowMoodPositionRatio: 0.5,
     marketMoodThreshold: 50,
@@ -374,16 +376,17 @@ const BacktestPage: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">信号类型</label>
-                <select
-                  value={buySignalConfig.signalFilter}
-                  onChange={(e) => setBuySignalConfig({ ...buySignalConfig, signalFilter: e.target.value as any })}
+                <label className="block text-sm font-medium text-gray-700 mb-1">最低策略评分</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={buySignalConfig.minStrategyScore}
+                  onChange={(e) => setBuySignalConfig({ ...buySignalConfig, minStrategyScore: Number(e.target.value) })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="strong_buy">仅强烈买入</option>
-                  <option value="buy">买入+强烈买入</option>
-                  <option value="all">全部信号</option>
-                </select>
+                  placeholder="70"
+                />
+                <span className="text-xs text-gray-500">筛选评分 ≥ 该值的股票</span>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">标准仓位 (元)</label>

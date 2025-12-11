@@ -13,10 +13,11 @@ class BuySignalController {
    */
   async generate(req: Request, res: Response, next: NextFunction) {
     try {
-      const { date } = req.body;
+      const { date, minScore } = req.body;
       const targetDate = date || dayjs().format('YYYYMMDD');
+      const scoreThreshold = minScore !== undefined ? Number(minScore) : 40;
       
-      const signals = await buySignalService.generateBuySignals(targetDate);
+      const signals = await buySignalService.generateBuySignals(targetDate, undefined, scoreThreshold);
       
       res.json({
         success: true,
@@ -34,12 +35,21 @@ class BuySignalController {
   /**
    * 获取买入信号列表
    * GET /api/buy-signal/list
+   * @query date - 日期，格式 YYYYMMDD
+   * @query signal - 信号类型筛选：strong_buy, buy, hold, pass
+   * @query minScore - 最低分数门槛，默认40
    */
   async getList(req: Request, res: Response, next: NextFunction) {
     try {
-      const { date, signal } = req.query;
+      const { date, signal, minScore } = req.query;
+      const scoreThreshold = minScore !== undefined ? Number(minScore) : 40;
       
       let signals = await buySignalService.getTodaySignals(date as string);
+      
+      // 如果没有数据，自动生成
+      if (signals.length === 0 && date) {
+        signals = await buySignalService.generateBuySignals(date as string, undefined, scoreThreshold);
+      }
       
       // 按信号类型筛选
       if (signal && typeof signal === 'string') {

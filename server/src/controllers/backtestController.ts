@@ -114,6 +114,7 @@ export const backtestController = {
       }
 
       logger.info(`收到买入信号回测请求: ${startDate} - ${endDate}`);
+      logger.info(`传入配置: ${JSON.stringify(config)}`);
 
       const result = await buySignalBacktestService.runBacktest(startDate, endDate, config);
 
@@ -138,6 +139,7 @@ export const backtestController = {
     const defaultConfig: BuySignalBacktestConfig = {
       strategyType: 'volume_surge',
       signalFilter: 'strong_buy',
+      minStrategyScore: 0,            // 最低策略评分（0=不过滤）
       basePosition: 50000,
       lowMoodPositionRatio: 0.5,
       marketMoodThreshold: 50,
