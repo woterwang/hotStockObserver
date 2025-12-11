@@ -122,17 +122,25 @@ const API_BASE = '/api';
  * 策略回测页面
  */
 const BacktestPage: React.FC = () => {
-  // 获取当年的默认日期范围
-  const currentYear = new Date().getFullYear();
-  const defaultStartDate = `${currentYear}-01-01`;
-  const today = new Date().toISOString().split('T')[0];
+  // 获取当月的默认日期范围
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth(); // 0-11
+  
+  // 开始日期：当月1号
+  const defaultStartDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`;
+  
+  // 结束日期：T-3（今天往前3天）
+  const endDateObj = new Date(now);
+  endDateObj.setDate(endDateObj.getDate() - 3);
+  const defaultEndDate = endDateObj.toISOString().split('T')[0];
 
   // 策略模式
   const [strategyMode, setStrategyMode] = useState<StrategyMode>('buy_signal');
 
   // 表单状态 - 日期格式 YYYY-MM-DD 用于日历控件
   const [startDate, setStartDate] = useState(defaultStartDate);
-  const [endDate, setEndDate] = useState(today);
+  const [endDate, setEndDate] = useState(defaultEndDate);
   
   // 突破三天策略配置
   const [config, setConfig] = useState<BacktestConfig>({
@@ -146,7 +154,7 @@ const BacktestPage: React.FC = () => {
   const [buySignalConfig, setBuySignalConfig] = useState<BuySignalBacktestConfig>({
     strategyType: 'volume_surge',
     signalFilter: 'strong_buy',
-    minStrategyScore: 0,            // 最低策略评分（0=不过滤）
+    minStrategyScore: 50,           // 最低策略评分
     basePosition: 50000,
     lowMoodPositionRatio: 0.5,
     marketMoodThreshold: 50,

@@ -125,7 +125,7 @@ class BuySignalBacktestService {
   private defaultConfig: BuySignalBacktestConfig = {
     strategyType: 'volume_surge',
     signalFilter: 'strong_buy',
-    minStrategyScore: 0,            // 最低策略评分（0=不过滤）
+    minStrategyScore: 50,           // 最低策略评分
     basePosition: 50000,
     lowMoodPositionRatio: 0.5,
     marketMoodThreshold: 50,
@@ -293,11 +293,15 @@ class BuySignalBacktestService {
     const uniqueStocks = [...new Set(stockCodes)];
     const requiredDaysAfter = maxHoldDays + 5; // 额外5天缓冲
     
+    // 获取今天的日期（YYYYMMDD格式）
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+    
     let loaded = 0;
     let failed = 0;
     let skipped = 0;
 
-    logger.info(`开始预加载 K 线数据: ${uniqueStocks.length} 只股票`);
+    logger.info(`开始预加载 K 线数据: ${uniqueStocks.length} 只股票, 今天: ${todayStr}`);
 
     for (let i = 0; i < uniqueStocks.length; i++) {
       const stockCode = uniqueStocks[i];
@@ -313,8 +317,30 @@ class BuySignalBacktestService {
         continue;
       }
 
-      // 2. 缓存不足或不存在，需要从网络获取
-      logger.info(`[${i + 1}/${uniqueStocks.length}] ${stockCode} K线数据不足，需要从网络获取...`);
+      // 2. 检查是否有缓存数据可用（即使不完整也先用着）
+      const lastCacheDate = localCache && localCache.length > 0 ? localCache[localCache.length - 1].date : null;
+      
+      // 3. 如果缓存已经是最新的（距今 ≤ 1天），没必要再请求网络
+      if (lastCacheDate) {
+        // 计算缓存最后日期距今的天数
+        const lastCacheDateObj = new Date(
+          parseInt(lastCacheDate.substring(0, 4)),
+          parseInt(lastCacheDate.substring(4, 6)) - 1,
+          parseInt(lastCacheDate.substring(6, 8))
+        );
+        const daysSinceLastCache = Math.floor((today.getTime() - lastCacheDateObj.getTime()) / (1000 * 60 * 60 * 24));
+        
+        // 如果缓存距今 ≤ 1天，认为已经是最新数据，不需要网络请求
+        if (daysSinceLastCache <= 1) {
+          logger.info(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 缓存数据较新 (最后日期: ${lastCacheDate}, 距今 ${daysSinceLastCache} 天)，直接使用`);
+          this.klineCache.set(stockCode, localCache!);
+          skipped++;
+          continue;
+        }
+      }
+
+      // 4. 缓存不足且不是最新（距今 > 1天），需要从网络获取
+      logger.info(`[${i + 1}/${uniqueStocks.length}] ${stockCode} K线数据不足 (缓存最后日期: ${lastCacheDate || '无'}, 信号日期: ${signalDate}, 需要信号后 ${requiredDaysAfter} 天)，需要从网络获取...`);
       
       try {
         // 等待请求间隔（至少10秒）
@@ -604,19 +630,21 @@ class BuySignalBacktestService {
       const stopLossPrice = buyPrice * (1 - config.stopLossPercent);
       const takeProfitPrice = buyPrice * (1 + config.takeProfitPercent);
 
-      // 模拟持仓期间
+      // 模拟持仓期间（买入当天计为第1天）
       let sellPrice = 0;
       let sellDate = '';
       let holdDays = 0;
       let exitReason: BuySignalTradeRecord['exitReason'] = 'data_end';
 
-      for (let i = 1; i <= config.maxHoldDays; i++) {
+      // i=0 表示买入当天（第1天），i=1 表示T+1（第2天），以此类推
+      // maxHoldDays=5 意味着持有5天，即 T+0 到 T+4
+      for (let i = 0; i < config.maxHoldDays; i++) {
         const holdIdx = buyIdx + i;
         if (holdIdx >= klineData.length) {
           // 数据不足，用最后一天收盘价
           sellPrice = klineData[klineData.length - 1].close;
           sellDate = klineData[klineData.length - 1].date;
-          holdDays = klineData.length - 1 - buyIdx;
+          holdDays = klineData.length - buyIdx;
           exitReason = 'data_end';
           break;
         }
@@ -624,11 +652,16 @@ class BuySignalBacktestService {
         const dayKline = klineData[holdIdx];
         const dayMood = this.calculateMarketMood(indexKline, dayKline.date);
 
+        // 买入当天（i=0）跳过卖出检查，因为刚买入
+        if (i === 0) {
+          continue;
+        }
+
         // 检查市场情绪恶化
         if (dayMood < config.marketPanicThreshold) {
           sellPrice = dayKline.open;  // 情绪恶化开盘卖出
           sellDate = dayKline.date;
-          holdDays = i;
+          holdDays = i + 1;  // 持仓天数（包含买入当天）
           exitReason = 'market_panic';
           break;
         }
@@ -637,7 +670,7 @@ class BuySignalBacktestService {
         if (dayKline.low <= stopLossPrice) {
           sellPrice = stopLossPrice;
           sellDate = dayKline.date;
-          holdDays = i;
+          holdDays = i + 1;
           exitReason = 'stop_loss';
           break;
         }
@@ -646,16 +679,16 @@ class BuySignalBacktestService {
         if (dayKline.high >= takeProfitPrice) {
           sellPrice = takeProfitPrice;
           sellDate = dayKline.date;
-          holdDays = i;
+          holdDays = i + 1;
           exitReason = 'take_profit';
           break;
         }
 
-        // 最后一天收盘卖出
-        if (i === config.maxHoldDays) {
+        // 最后一天收盘卖出（i = maxHoldDays - 1 表示第 maxHoldDays 天）
+        if (i === config.maxHoldDays - 1) {
           sellPrice = dayKline.close;
           sellDate = dayKline.date;
-          holdDays = i;
+          holdDays = i + 1;
           exitReason = 'max_days';
           break;
         }
