@@ -159,6 +159,16 @@ class BuySignalBacktestService {
   private localKlineCacheDir = path.resolve(__dirname, '../../data/kline_cache');
 
   /**
+   * 上次网络请求时间（用于频率控制）
+   */
+  private lastNetworkRequestTime: number = 0;
+
+  /**
+   * 网络请求间隔（毫秒）- 至少10秒
+   */
+  private readonly NETWORK_REQUEST_INTERVAL = 10000;
+
+  /**
    * 从本地文件缓存读取 K 线数据
    */
   private readKlineFromLocalCache(stockCode: string): KlineData[] | null {
@@ -197,6 +207,177 @@ class BuySignalBacktestService {
       logger.debug(`读取本地缓存失败 ${stockCode}: ${(error as Error).message}`);
       return null;
     }
+  }
+
+  /**
+   * 保存 K 线数据到本地缓存
+   */
+  private saveKlineToLocalCache(stockCode: string, klineData: KlineData[]): void {
+    try {
+      // 确保缓存目录存在
+      if (!fs.existsSync(this.localKlineCacheDir)) {
+        fs.mkdirSync(this.localKlineCacheDir, { recursive: true });
+      }
+
+      // 转换为缓存格式 { "20230220": {...}, ... }
+      const cacheData: Record<string, any> = {};
+      for (const item of klineData) {
+        cacheData[item.date] = item;
+      }
+
+      const filePath = path.join(this.localKlineCacheDir, `${stockCode}.json`);
+      fs.writeFileSync(filePath, JSON.stringify(cacheData, null, 2));
+      logger.debug(`保存 K 线缓存 ${stockCode}: ${klineData.length} 条`);
+    } catch (error) {
+      logger.warn(`保存 K 线缓存失败 ${stockCode}: ${(error as Error).message}`);
+    }
+  }
+
+  /**
+   * 等待网络请求间隔（确保请求频率 >= 10秒）
+   */
+  private async waitForNetworkInterval(): Promise<void> {
+    const now = Date.now();
+    const elapsed = now - this.lastNetworkRequestTime;
+    if (elapsed < this.NETWORK_REQUEST_INTERVAL) {
+      const waitTime = this.NETWORK_REQUEST_INTERVAL - elapsed;
+      logger.debug(`等待网络请求间隔: ${waitTime}ms`);
+      await this.delay(waitTime);
+    }
+    this.lastNetworkRequestTime = Date.now();
+  }
+
+  /**
+   * 检查 K 线数据是否足够回测使用
+   * @param klineData K线数据
+   * @param signalDate 信号日期（YYYYMMDD格式）
+   * @param requiredDaysAfter 信号后需要的交易日数（默认maxHoldDays+5）
+   */
+  private isKlineDataSufficient(
+    klineData: KlineData[],
+    signalDate: string,
+    requiredDaysAfter: number = 10
+  ): boolean {
+    if (!klineData || klineData.length === 0) {
+      return false;
+    }
+
+    // 找到信号日期在K线中的位置
+    const signalIdx = klineData.findIndex(k => k.date === signalDate);
+    if (signalIdx === -1) {
+      // 信号日期不在K线数据中，检查最后一条K线日期是否在信号日期之后
+      const lastDate = klineData[klineData.length - 1]?.date;
+      if (!lastDate || lastDate < signalDate) {
+        return false;
+      }
+    }
+
+    // 检查信号日期之后是否有足够的K线
+    const daysAfterSignal = klineData.length - signalIdx - 1;
+    return daysAfterSignal >= requiredDaysAfter;
+  }
+
+  /**
+   * 预检查并预加载所有需要的 K 线数据
+   * @param stockCodes 股票代码列表
+   * @param signalDates 信号日期列表（对应每个股票的信号日期）
+   * @param klineDays 需要获取的K线天数
+   * @param maxHoldDays 最大持仓天数
+   */
+  async preloadKlineData(
+    stockCodes: string[],
+    signalDates: string[],
+    klineDays: number,
+    maxHoldDays: number
+  ): Promise<{ loaded: number; failed: number; skipped: number }> {
+    const uniqueStocks = [...new Set(stockCodes)];
+    const requiredDaysAfter = maxHoldDays + 5; // 额外5天缓冲
+    
+    let loaded = 0;
+    let failed = 0;
+    let skipped = 0;
+
+    logger.info(`开始预加载 K 线数据: ${uniqueStocks.length} 只股票`);
+
+    for (let i = 0; i < uniqueStocks.length; i++) {
+      const stockCode = uniqueStocks[i];
+      const signalDate = signalDates[stockCodes.indexOf(stockCode)];
+      
+      // 1. 检查本地缓存
+      const localCache = this.readKlineFromLocalCache(stockCode);
+      
+      if (localCache && this.isKlineDataSufficient(localCache, signalDate, requiredDaysAfter)) {
+        // 缓存足够，跳过
+        this.klineCache.set(stockCode, localCache);
+        skipped++;
+        continue;
+      }
+
+      // 2. 缓存不足或不存在，需要从网络获取
+      logger.info(`[${i + 1}/${uniqueStocks.length}] ${stockCode} K线数据不足，需要从网络获取...`);
+      
+      try {
+        // 等待请求间隔（至少10秒）
+        await this.waitForNetworkInterval();
+        
+        const marketId = this.getMarketId(stockCode);
+        const url = `https://d.10jqka.com.cn/v6/line/${marketId}_${stockCode}/01/last${klineDays}.js`;
+        
+        const response = await axios.get(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': 'http://www.10jqka.com.cn/',
+          },
+          timeout: 15000,
+        });
+
+        const klineData: KlineData[] = [];
+        
+        if (response.data && typeof response.data === 'string') {
+          const dataStr = response.data;
+          const startIdx = dataStr.indexOf('({');
+          if (startIdx !== -1) {
+            const jsonStr = dataStr.substring(startIdx + 1, dataStr.length - 1);
+            const json = JSON.parse(jsonStr);
+            if (json && json.data) {
+              const klineList = json.data.split(';');
+              for (const item of klineList) {
+                const parts = item.split(',');
+                if (parts.length >= 7 && parts[0] && parts[1]) {
+                  klineData.push({
+                    date: parts[0],
+                    open: parseFloat(parts[1]) || 0,
+                    high: parseFloat(parts[2]) || 0,
+                    low: parseFloat(parts[3]) || 0,
+                    close: parseFloat(parts[4]) || 0,
+                    volume: parseFloat(parts[5]) || 0,
+                    turnover: parseFloat(parts[6]) || 0,
+                  });
+                }
+              }
+            }
+          }
+        }
+
+        if (klineData.length > 0) {
+          // 保存到本地缓存
+          this.saveKlineToLocalCache(stockCode, klineData);
+          // 保存到内存缓存
+          this.klineCache.set(stockCode, klineData);
+          loaded++;
+          logger.info(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 获取成功: ${klineData.length} 条K线`);
+        } else {
+          failed++;
+          logger.warn(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 获取失败: 无数据`);
+        }
+      } catch (error) {
+        failed++;
+        logger.warn(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 获取失败: ${(error as Error).message}`);
+      }
+    }
+
+    logger.info(`K 线预加载完成: 成功 ${loaded}, 失败 ${failed}, 跳过(缓存足够) ${skipped}`);
+    return { loaded, failed, skipped };
   }
 
   /**
@@ -581,6 +762,21 @@ class BuySignalBacktestService {
 
     // 保存计算出的 K 线天数，供 backtestSingleStock 使用
     this.currentKlineDays = klineDays;
+
+    // === 预加载 K 线数据 ===
+    if (signals.length > 0) {
+      const stockCodes = signals.map(s => s.stockCode);
+      const signalDates = signals.map(s => {
+        // 将信号日期转为 YYYYMMDD 格式
+        const d = new Date(s.date);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}${month}${day}`;
+      });
+      
+      await this.preloadKlineData(stockCodes, signalDates, klineDays, finalConfig.maxHoldDays);
+    }
 
     // 对每条记录执行回测
     const trades: BuySignalTradeRecord[] = [];

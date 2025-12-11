@@ -2,16 +2,21 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 /**
- * 策略列表
+ * 策略中心列表
  */
-const strategies = [
+const strategyItems = [
   { id: 'breakthrough', name: '价格突破', icon: '🚀', description: '价格突破188日新高扫描', path: '/breakthrough' },
-  { id: 'breakthrough_3day', name: '突破三天', icon: '📈', description: '价格突破后三天确认入场', path: '/signals?strategy=breakthrough_3day' },
   { id: 'volume_surge', name: '强势资金突破', icon: '🔥', description: '成交额前200+趋势突破', path: '/volume-surge' },
-  { id: 'buy_signal', name: '买入信号', icon: '🎯', description: 'T+1开盘买入时机分析', path: '/buy-signal' },
-  { id: 'volume_breakout', name: '放量突破', icon: '📊', description: '放量突破关键价位', disabled: true },
-  { id: 'ma_crossover', name: '均线金叉', icon: '📉', description: '均线金叉买入', disabled: true },
-  { id: 'limit_up_follow', name: '涨停追踪', icon: '⚡', description: '涨停板次日追踪', disabled: true },
+];
+
+/**
+ * 信号中心列表
+ */
+const signalItems = [
+  { id: 'signals', name: '突破三天交易信号', icon: '🎯', description: '策略产生的交易信号', path: '/signals' },
+  { id: 'signals', name: '放量上涨交易信号', icon: '📊', description: '策略产生的交易信号', path: '/buy-signal' },
+  { id: 'ma_crossover', name: '均线金叉', icon: '📉', description: '均线金叉买入', path: '#', disabled: true },
+  { id: 'limit_up_follow', name: '涨停追踪', icon: '⚡', description: '涨停板次日追踪', path: '#', disabled: true },
 ];
 
 /**
@@ -20,13 +25,19 @@ const strategies = [
 export const Header: React.FC = () => {
   const location = useLocation();
   const [showStrategyMenu, setShowStrategyMenu] = useState(false);
+  const [showSignalMenu, setShowSignalMenu] = useState(false);
 
   const navItems = [
     { path: '/', label: '信息概览', icon: '📊' },
     { path: '/stats', label: '阶段统计', icon: '📈' },
-    { path: '/signals', label: '交易信号', icon: '🎯' },
     { path: '/backtest', label: '策略回测', icon: '🧪' },
   ];
+
+  // 关闭所有菜单
+  const closeAllMenus = () => {
+    setShowStrategyMenu(false);
+    setShowSignalMenu(false);
+  };
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -35,7 +46,6 @@ export const Header: React.FC = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <span className="text-2xl">🔥</span>
-            {/* <span className="text-xl font-bold text-gray-800">热搜股票观察</span> */}
           </Link>
 
           {/* 导航 */}
@@ -56,13 +66,16 @@ export const Header: React.FC = () => {
             ))}
             
             {/* 策略中心下拉菜单 */}
-            <div 
-              className="relative"
-            >
+            <div className="relative">
               <button
-                onClick={() => setShowStrategyMenu(!showStrategyMenu)}
+                onClick={() => {
+                  setShowStrategyMenu(!showStrategyMenu);
+                  setShowSignalMenu(false);
+                }}
                 className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  showStrategyMenu ? 'bg-purple-50 text-purple-600' : 'text-gray-600 hover:bg-gray-50'
+                  showStrategyMenu || ['/breakthrough', '/volume-surge'].includes(location.pathname)
+                    ? 'bg-purple-50 text-purple-600'
+                    : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
                 <span className="mr-1">🧠</span>
@@ -78,27 +91,73 @@ export const Header: React.FC = () => {
                     <div className="text-sm font-semibold text-gray-700">策略中心</div>
                     <div className="text-xs text-gray-500">选择并配置交易策略</div>
                   </div>
-                  {strategies.map((strategy) => (
+                  {strategyItems.map((strategy) => (
                     <Link
                       key={strategy.id}
-                      to={strategy.disabled ? '#' : (strategy.path || `/signals?strategy=${strategy.id}`)}
-                      className={`block px-4 py-2 hover:bg-gray-50 ${strategy.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      onClick={(e) => {
-                        if (strategy.disabled) {
-                          e.preventDefault();
-                        } else {
-                          setShowStrategyMenu(false);
-                        }
-                      }}
+                      to={strategy.path}
+                      className="block px-4 py-2 hover:bg-gray-50"
+                      onClick={() => closeAllMenus()}
                     >
                       <div className="flex items-center">
                         <span className="mr-2">{strategy.icon}</span>
                         <div>
-                          <div className="text-sm font-medium text-gray-800">
-                            {strategy.name}
-                            {strategy.disabled && <span className="ml-2 text-xs text-gray-400">(开发中)</span>}
-                          </div>
+                          <div className="text-sm font-medium text-gray-800">{strategy.name}</div>
                           <div className="text-xs text-gray-500">{strategy.description}</div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 信号中心下拉菜单 */}
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setShowSignalMenu(!showSignalMenu);
+                  setShowStrategyMenu(false);
+                }}
+                className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  showSignalMenu || ['/signals', '/buy-signal'].includes(location.pathname)
+                    ? 'bg-green-50 text-green-600'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <span className="mr-1">🎯</span>
+                信号中心
+                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {showSignalMenu && (
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <div className="text-sm font-semibold text-gray-700">信号中心</div>
+                    <div className="text-xs text-gray-500">策略产生的交易信号</div>
+                  </div>
+                  {signalItems.map((item) => (
+                    <Link
+                      key={item.id}
+                      to={item.disabled ? '#' : item.path}
+                      className={`block px-4 py-2 hover:bg-gray-50 ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      onClick={(e) => {
+                        if (item.disabled) {
+                          e.preventDefault();
+                        } else {
+                          closeAllMenus();
+                        }
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <span className="mr-2">{item.icon}</span>
+                        <div>
+                          <div className="text-sm font-medium text-gray-800">
+                            {item.name}
+                            {item.disabled && <span className="ml-2 text-xs text-gray-400">(开发中)</span>}
+                          </div>
+                          <div className="text-xs text-gray-500">{item.description}</div>
                         </div>
                       </div>
                     </Link>
