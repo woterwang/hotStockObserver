@@ -177,6 +177,22 @@ export const buySignalApi = {
     return api.post('/buy-signal/generate', { date });
   },
 
+  // 批量生成历史日期买入信号
+  batchGenerate: (startDate: string, endDate: string): Promise<ApiResponse<{
+    totalDays: number;
+    successDays: number;
+    failedDays: number;
+    totalGenerated: number;
+    details: { date: string; count: number; error?: string }[];
+  }>> => {
+    return api.post('/buy-signal/batch-generate', { startDate, endDate });
+  },
+
+  // 获取可用日期列表
+  getAvailableDates: (): Promise<ApiResponse<{ date: string; hasSignal: boolean; surgeCount: number }[]>> => {
+    return api.get('/buy-signal/available-dates');
+  },
+
   // 获取信号列表
   getList: (date?: string, signal?: string): Promise<ApiResponse<BuySignal[]>> => {
     return api.get('/buy-signal/list', { params: { date, signal } });

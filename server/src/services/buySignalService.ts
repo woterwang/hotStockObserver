@@ -1036,6 +1036,41 @@ class BuySignalService {
       }
     }
   }
+
+  /**
+   * 获取可用于生成买入信号的日期列表
+   * 返回有 VolumeSurge 数据但没有 BuySignal 数据的日期
+   */
+  async getAvailableDatesForGeneration(): Promise<{ date: string; hasSignal: boolean; surgeCount: number }[]> {
+    // 获取 VolumeSurge 的所有日期
+    const surgeDates = await VolumeSurge.distinct('date');
+    
+    // 获取已有 BuySignal 的日期
+    const signalDates = await BuySignal.distinct('date');
+    const signalDateSet = new Set(signalDates.map(d => dayjs(d).format('YYYY-MM-DD')));
+    
+    // 构建结果
+    const result: { date: string; hasSignal: boolean; surgeCount: number }[] = [];
+    
+    for (const surgeDate of surgeDates) {
+      const dateStr = dayjs(surgeDate).format('YYYY-MM-DD');
+      const hasSignal = signalDateSet.has(dateStr);
+      
+      // 统计该日期的 VolumeSurge 数量
+      const surgeCount = await VolumeSurge.countDocuments({ date: surgeDate });
+      
+      result.push({
+        date: dateStr,
+        hasSignal,
+        surgeCount,
+      });
+    }
+    
+    // 按日期降序排序
+    result.sort((a, b) => b.date.localeCompare(a.date));
+    
+    return result;
+  }
 }
 
 export const buySignalService = new BuySignalService();

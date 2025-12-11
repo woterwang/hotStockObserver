@@ -10,6 +10,12 @@ const router = Router();
 // 生成买入信号
 router.post('/generate', buySignalController.generate.bind(buySignalController));
 
+// 批量生成历史日期买入信号
+router.post('/batch-generate', buySignalController.batchGenerate.bind(buySignalController));
+
+// 获取可用日期列表
+router.get('/available-dates', buySignalController.getAvailableDates.bind(buySignalController));
+
 // 获取买入信号列表
 router.get('/list', buySignalController.getList.bind(buySignalController));
 

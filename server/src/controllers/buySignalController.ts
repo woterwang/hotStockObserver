@@ -95,6 +95,89 @@ class BuySignalController {
       next(error);
     }
   }
+
+  /**
+   * 批量生成历史日期买入信号
+   * POST /api/buy-signal/batch-generate
+   */
+  async batchGenerate(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { startDate, endDate } = req.body;
+      
+      if (!startDate || !endDate) {
+        return res.status(400).json({
+          success: false,
+          message: '请提供开始日期和结束日期',
+        });
+      }
+
+      // 生成日期列表（只包含工作日）
+      const dates: string[] = [];
+      let current = dayjs(startDate, 'YYYYMMDD');
+      const end = dayjs(endDate, 'YYYYMMDD');
+
+      while (current.isBefore(end) || current.isSame(end, 'day')) {
+        const dayOfWeek = current.day();
+        // 排除周六(6)和周日(0)
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          dates.push(current.format('YYYYMMDD'));
+        }
+        current = current.add(1, 'day');
+      }
+
+      // 批量生成
+      const results: { date: string; count: number; error?: string }[] = [];
+      let totalGenerated = 0;
+      let successDays = 0;
+      let failedDays = 0;
+
+      for (const date of dates) {
+        try {
+          const signals = await buySignalService.generateBuySignals(date);
+          results.push({ date, count: signals.length });
+          totalGenerated += signals.length;
+          successDays++;
+          
+          // 添加延迟避免请求过快
+          await new Promise(resolve => setTimeout(resolve, 500));
+        } catch (error) {
+          results.push({ date, count: 0, error: (error as Error).message });
+          failedDays++;
+        }
+      }
+
+      res.json({
+        success: true,
+        data: {
+          totalDays: dates.length,
+          successDays,
+          failedDays,
+          totalGenerated,
+          details: results,
+        },
+        message: `批量生成完成: ${successDays}天成功, ${failedDays}天失败, 共生成${totalGenerated}条信号`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 获取可用日期列表（有VolumeSurge数据的日期）
+   * GET /api/buy-signal/available-dates
+   */
+  async getAvailableDates(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dates = await buySignalService.getAvailableDatesForGeneration();
+      
+      res.json({
+        success: true,
+        data: dates,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const buySignalController = new BuySignalController();
