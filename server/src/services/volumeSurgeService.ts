@@ -28,6 +28,17 @@ export class VolumeSurgeService {
   }
 
   /**
+   * 随机延迟（8-12秒），模拟真人操作
+   */
+  private async randomDelay(): Promise<void> {
+    const minDelay = 8000;
+    const maxDelay = 12000;
+    const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+    logger.debug(`模拟真人操作，等待 ${(delay / 1000).toFixed(1)} 秒...`);
+    await this.delay(delay);
+  }
+
+  /**
    * 通用问财查询
    */
   private async queryWencai(question: string): Promise<any[]> {
@@ -218,15 +229,15 @@ export class VolumeSurgeService {
     logger.info(`[大盘趋势] 上证指数${indexAboveMa20 ? '站上' : '跌破'}20日均线`);
     
     // 3. 获取首板列表
-    await this.delay(1000);
+    await this.randomDelay();
     const firstBoardSet = await this.getFirstBoardList(targetDate);
     
     // 4. 获取连板信息
-    await this.delay(1000);
+    await this.randomDelay();
     const continuousBoardMap = await this.getContinuousBoardInfo(targetDate);
     
     // 获取选股数据
-    await this.delay(1000);
+    await this.randomDelay();
     const rawData = await this.fetchFromWencai(targetDate);
     logger.info(`获取到 ${rawData.length} 条原始数据`);
     

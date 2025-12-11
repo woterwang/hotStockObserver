@@ -164,9 +164,13 @@ class BuySignalBacktestService {
   private lastNetworkRequestTime: number = 0;
 
   /**
-   * 网络请求间隔（毫秒）- 至少10秒
+   * 获取随机延迟时间（8-12秒），模拟真人操作
    */
-  private readonly NETWORK_REQUEST_INTERVAL = 10000;
+  private getRandomInterval(): number {
+    const minDelay = 8000;
+    const maxDelay = 12000;
+    return Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+  }
 
   /**
    * 从本地文件缓存读取 K 线数据
@@ -234,14 +238,15 @@ class BuySignalBacktestService {
   }
 
   /**
-   * 等待网络请求间隔（确保请求频率 >= 10秒）
+   * 等待网络请求间隔（随机8-12秒，模拟真人操作）
    */
   private async waitForNetworkInterval(): Promise<void> {
     const now = Date.now();
+    const interval = this.getRandomInterval();
     const elapsed = now - this.lastNetworkRequestTime;
-    if (elapsed < this.NETWORK_REQUEST_INTERVAL) {
-      const waitTime = this.NETWORK_REQUEST_INTERVAL - elapsed;
-      logger.debug(`等待网络请求间隔: ${waitTime}ms`);
+    if (elapsed < interval) {
+      const waitTime = interval - elapsed;
+      logger.debug(`模拟真人操作，等待 ${(waitTime / 1000).toFixed(1)} 秒...`);
       await this.delay(waitTime);
     }
     this.lastNetworkRequestTime = Date.now();

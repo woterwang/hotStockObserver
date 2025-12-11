@@ -237,8 +237,8 @@ export class TradingSignalService {
         
         savedCount++;
         
-        // 小延迟
-        await this.delay(200);
+        // 随机延迟，模拟真人操作
+        await this.randomDelay();
       } catch (error) {
         logger.debug(`处理 ${stock.code} 失败: ${(error as Error).message}`);
       }
@@ -430,7 +430,7 @@ export class TradingSignalService {
 
         savedCount++;
         logger.debug(`[放量大涨] ${stock.code} ${stock.name} 风险=${riskLevel}, 建议仓位=${(suggestedPosition*100).toFixed(0)}%`);
-        await this.delay(200);
+        await this.randomDelay();
       } catch (error) {
         logger.debug(`[放量大涨] 处理 ${stock.code} 失败: ${(error as Error).message}`);
       }
@@ -649,7 +649,7 @@ export class TradingSignalService {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         results.signals.push(signal.toObject() as any);
 
-        await this.delay(300);
+        await this.randomDelay();
       } catch (error) {
         logger.debug(`更新 ${signal.stockCode} 失败: ${(error as Error).message}`);
       }
@@ -963,6 +963,16 @@ export class TradingSignalService {
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  /**
+   * 随机延迟（8-12秒），模拟真人操作
+   */
+  private async randomDelay(): Promise<void> {
+    const minDelay = 8000;
+    const maxDelay = 12000;
+    const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+    await this.delay(delay);
   }
 }
 
