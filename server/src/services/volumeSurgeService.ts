@@ -211,14 +211,19 @@ export class VolumeSurgeService {
     let marketAdvice = 'normal';
     
     try {
-      const sentiment = await marketSentimentService.getSentimentByDate(targetDate);
+      let sentiment = await marketSentimentService.getSentimentByDate(targetDate);
+      if (!sentiment) {
+        // 未找到情绪数据，自动获取并保存
+        logger.info(`[市场情绪] 未找到 ${targetDate} 的数据，尝试自动获取...`);
+        sentiment = await marketSentimentService.fetchAndCalculateSentiment(targetDate);
+      }
       if (sentiment) {
         marketSentimentScore = sentiment.score || 50;
         marketLimitUpCount = sentiment.limitUpCount || 0;
         marketAdvice = sentiment.advice || 'normal';
         logger.info(`[市场情绪] 评分=${marketSentimentScore}, 涨停数=${marketLimitUpCount}, 建议=${marketAdvice}`);
       } else {
-        logger.info('[市场情绪] 未找到当日数据，使用默认值');
+        logger.info(`[市场情绪] 无法获取 ${targetDate} 的数据，使用默认值`);
       }
     } catch (error) {
       logger.warn(`获取市场情绪失败: ${(error as Error).message}`);

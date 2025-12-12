@@ -340,7 +340,7 @@ export default function SignalPage() {
       <div className="p-6">
         {/* 标题和控制区 */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">📊 交易信号</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">📊 突破追踪三日信号</h1>
           
           <div className="flex flex-wrap items-center gap-4">
             {/* 策略选择 */}

@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, volumeSurgeService } from '../services';
+import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, volumeSurgeService, tradingCalendarService } from '../services';
 import { logger } from '../utils';
 import { isTradingDay, isTradingTime, formatDate } from '../utils/dateUtils';
 
@@ -13,11 +13,16 @@ export class JobScheduler {
   private signalGenerateJob: cron.ScheduledTask | null = null;
   private sentimentJob: cron.ScheduledTask | null = null;
   private volumeSurgeJob: cron.ScheduledTask | null = null;
+  private tradingCalendarJob: cron.ScheduledTask | null = null;
 
   /**
    * 启动所有定时任务
    */
-  start() {
+  async start() {
+    // 初始化交易日历服务
+    await tradingCalendarService.init();
+    
+    this.startTradingCalendarJob();
     this.startHotStockUpdateJob();
     this.startBreakthroughScanJob();
     this.startAuctionUpdateJob();
@@ -55,7 +60,51 @@ export class JobScheduler {
       this.volumeSurgeJob.stop();
       this.volumeSurgeJob = null;
     }
+    if (this.tradingCalendarJob) {
+      this.tradingCalendarJob.stop();
+      this.tradingCalendarJob = null;
+    }
     logger.info('定时任务已停止');
+  }
+
+  /**
+   * 交易日历更新任务
+   * 每天 15:20 执行（收盘后），获取最新的交易日历
+   * 这样可以明确知道次日是否为交易日
+   */
+  private startTradingCalendarJob() {
+    // 每天15:20执行（收盘后20分钟，确保数据稳定）
+    const cronExpression = '20 15 * * *';
+    
+    this.tradingCalendarJob = cron.schedule(cronExpression, async () => {
+      try {
+        logger.info('开始更新交易日历缓存');
+        
+        const success = await tradingCalendarService.updateCache();
+        
+        if (success) {
+          const status = tradingCalendarService.getCacheStatus();
+          logger.info(`交易日历更新成功，共缓存 ${status.count} 个交易日`);
+        } else {
+          logger.warn('交易日历更新失败，将继续使用旧缓存');
+        }
+      } catch (error) {
+        logger.error(`交易日历更新任务失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`交易日历更新任务已配置，Cron表达式: ${cronExpression}`);
+    
+    // 如果缓存为空，立即更新一次
+    const status = tradingCalendarService.getCacheStatus();
+    if (status.count === 0) {
+      logger.info('交易日历缓存为空，立即执行一次更新');
+      tradingCalendarService.updateCache().catch(err => {
+        logger.error(`初始化交易日历失败: ${err.message}`);
+      });
+    }
   }
 
   /**

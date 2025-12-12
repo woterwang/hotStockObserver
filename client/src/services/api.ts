@@ -122,6 +122,11 @@ export const adminApi = {
  * 价格突破相关API
  */
 export const breakthroughApi = {
+  // 手动触发扫描
+  scan: (date?: string): Promise<ApiResponse<{ count: number }>> => {
+    return api.post('/breakthrough/scan', { date });
+  },
+
   // 获取突破列表
   getList: (date?: string, limit: number = 50): Promise<ApiResponse<PriceBreakthrough[]>> => {
     return api.get('/breakthrough/list', { params: { date, limit } });

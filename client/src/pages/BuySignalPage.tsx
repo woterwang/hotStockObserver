@@ -164,7 +164,7 @@ const BuySignalPage: React.FC = () => {
         {/* 页面标题 */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">买入信号</h1>
+            <h1 className="text-2xl font-bold text-gray-900">放量上涨交易信号</h1>
             <p className="text-sm text-gray-500 mt-1">
               T+1日开盘买入时机量化分析 | 7维度评分系统
             </p>

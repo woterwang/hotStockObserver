@@ -5,3 +5,4 @@ export { volumeSurgeService } from './volumeSurgeService';
 export { tradingSignalService } from './tradingSignalService';
 export { backtestService, BacktestConfig, BacktestResult, TradeRecord } from './backtestService';
 export { marketSentimentService } from './marketSentimentService';
+export { tradingCalendarService } from './tradingCalendarService';
