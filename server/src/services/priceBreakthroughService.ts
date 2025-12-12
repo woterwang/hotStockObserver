@@ -3,6 +3,7 @@ import { PriceBreakthrough, HotStock } from '../models';
 import { dataFetchService, HistoryKline } from './dataFetchService';
 import { getToday, formatDate, parseDate, getDaysAgo } from '../utils/dateUtils';
 import axios from 'axios';
+import { tradingCalendarService } from './tradingCalendarService';
 
 // 导入同花顺 Hexin-V 生成器
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -30,9 +31,17 @@ export class PriceBreakthroughService {
   }
 
   /**
-   * 获取前一个交易日（简单实现：跳过周末）
+   * 获取前一个交易日（使用交易日历服务）
    */
   private getPreviousTradingDay(dateStr: string): string {
+    // 优先使用交易日历服务（支持节假日判断）
+    const prevDay = tradingCalendarService.getPrevTradingDay(dateStr);
+    if (prevDay) {
+      return prevDay;
+    }
+    
+    // 降级：如果交易日历缓存为空，使用简单的周末判断
+    logger.warn('交易日历缓存为空，降级为周末判断');
     const date = parseDate(dateStr);
     let prevDate = new Date(date.getTime() - 24 * 60 * 60 * 1000);
     
@@ -45,11 +54,19 @@ export class PriceBreakthroughService {
   }
 
   /**
-   * 获取前N个交易日（跳过周末）
+   * 获取前N个交易日（使用交易日历服务）
    * @param dateStr 起始日期
    * @param n 往前推几个交易日
    */
   private getPreviousTradingDays(dateStr: string, n: number): string[] {
+    // 优先使用交易日历服务（支持节假日判断）
+    const days = tradingCalendarService.getPrevTradingDays(dateStr, n);
+    if (days.length === n) {
+      return days;
+    }
+    
+    // 降级：如果交易日历缓存为空，使用简单的周末判断
+    logger.warn('交易日历缓存为空，降级为周末判断');
     const result: string[] = [];
     let currentDate = parseDate(dateStr);
     

@@ -6,6 +6,7 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import { marketSentimentService } from './marketSentimentService';
+import { tradingCalendarService } from './tradingCalendarService';
 
 // 导入同花顺工具
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -118,9 +119,17 @@ export class TradingSignalService {
   }
 
   /**
-   * 获取前N个交易日
+   * 获取前N个交易日（使用交易日历服务）
    */
   private getPreviousTradingDays(dateStr: string, n: number): string[] {
+    // 优先使用交易日历服务（支持节假日判断）
+    const days = tradingCalendarService.getPrevTradingDays(dateStr, n);
+    if (days.length === n) {
+      return days;
+    }
+    
+    // 降级：如果交易日历缓存为空，使用简单的周末判断
+    logger.warn('交易日历缓存为空，降级为周末判断');
     const result: string[] = [];
     let currentDate = parseDate(dateStr);
     
@@ -847,9 +856,17 @@ export class TradingSignalService {
   }
 
   /**
-   * 获取下一个交易日
+   * 获取下一个交易日（使用交易日历服务）
    */
   private getNextTradingDay(dateStr: string): string {
+    // 优先使用交易日历服务（支持节假日判断）
+    const nextDay = tradingCalendarService.getNextTradingDay(dateStr);
+    if (nextDay) {
+      return nextDay;
+    }
+    
+    // 降级：如果交易日历缓存为空，使用简单的周末判断
+    logger.warn('交易日历缓存为空，降级为周末判断');
     let currentDate = parseDate(dateStr);
     currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
     while (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
@@ -859,11 +876,24 @@ export class TradingSignalService {
   }
 
   /**
-   * 调整日期为有效交易日（如果是周末则往前调整）
+   * 调整日期为有效交易日（使用交易日历服务）
+   * 如果输入日期不是交易日，往前调整到最近的交易日
    */
   private adjustToTradingDay(dateStr: string): string {
+    // 检查当前日期是否为交易日
+    if (tradingCalendarService.isTradingDay(dateStr)) {
+      return dateStr;
+    }
+    
+    // 不是交易日，获取前一个交易日
+    const prevDay = tradingCalendarService.getPrevTradingDay(dateStr);
+    if (prevDay) {
+      return prevDay;
+    }
+    
+    // 降级：如果交易日历缓存为空，使用简单的周末判断
+    logger.warn('交易日历缓存为空，降级为周末判断');
     let currentDate = parseDate(dateStr);
-    // 如果是周六周日，往前调整到周五
     while (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
       currentDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
     }

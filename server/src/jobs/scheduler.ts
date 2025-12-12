@@ -1,7 +1,7 @@
 import cron from 'node-cron';
 import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, volumeSurgeService, tradingCalendarService } from '../services';
 import { logger } from '../utils';
-import { isTradingDay, isTradingTime, formatDate } from '../utils/dateUtils';
+import { formatDate } from '../utils/dateUtils';
 
 /**
  * 定时任务管理
@@ -117,8 +117,8 @@ export class JobScheduler {
     
     this.updateJob = cron.schedule(cronExpression, async () => {
       try {
-        // 检查是否是交易日
-        if (!isTradingDay()) {
+        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
+        if (!tradingCalendarService.isTradingDayByDate()) {
           logger.info('非交易日，跳过更新');
           return;
         }
@@ -170,8 +170,8 @@ export class JobScheduler {
     
     this.breakthroughJob = cron.schedule(cronExpression, async () => {
       try {
-        // 检查是否是交易日
-        if (!isTradingDay()) {
+        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
+        if (!tradingCalendarService.isTradingDayByDate()) {
           logger.info('非交易日，跳过价格突破扫描');
           return;
         }
@@ -202,7 +202,8 @@ export class JobScheduler {
     
     this.signalGenerateJob = cron.schedule(cronExpression, async () => {
       try {
-        if (!isTradingDay()) {
+        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
+        if (!tradingCalendarService.isTradingDayByDate()) {
           logger.info('非交易日，跳过信号生成');
           return;
         }
@@ -251,7 +252,8 @@ export class JobScheduler {
     
     this.auctionJob = cron.schedule(cronExpression, async () => {
       try {
-        if (!isTradingDay()) {
+        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
+        if (!tradingCalendarService.isTradingDayByDate()) {
           logger.info('非交易日，跳过入场条件更新');
           return;
         }
@@ -282,7 +284,8 @@ export class JobScheduler {
     
     this.sentimentJob = cron.schedule(cronExpression, async () => {
       try {
-        if (!isTradingDay()) {
+        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
+        if (!tradingCalendarService.isTradingDayByDate()) {
           logger.info('非交易日，跳过市场情绪获取');
           return;
         }
@@ -315,7 +318,8 @@ export class JobScheduler {
     
     this.volumeSurgeJob = cron.schedule(cronExpression, async () => {
       try {
-        if (!isTradingDay()) {
+        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
+        if (!tradingCalendarService.isTradingDayByDate()) {
           logger.info('非交易日，跳过强势资金突破扫描');
           return;
         }
