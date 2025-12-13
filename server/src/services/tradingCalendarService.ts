@@ -42,9 +42,14 @@ class TradingCalendarService {
       // 尝试从文件加载缓存
       if (fs.existsSync(CACHE_FILE_PATH)) {
         const cacheData = JSON.parse(fs.readFileSync(CACHE_FILE_PATH, 'utf-8')) as TradingCalendarCache;
-        this.tradingDaysSet = new Set(cacheData.tradingDays);
-        this.lastUpdated = new Date(cacheData.updatedAt);
-        logger.info(`交易日历缓存已加载，共 ${this.tradingDaysSet.size} 个交易日，更新时间: ${cacheData.updatedAt}`);
+        // 确保 tradingDays 是有效数组
+        if (cacheData.tradingDays && Array.isArray(cacheData.tradingDays)) {
+          this.tradingDaysSet = new Set(cacheData.tradingDays);
+          this.lastUpdated = new Date(cacheData.updatedAt);
+          logger.info(`交易日历缓存已加载，共 ${this.tradingDaysSet.size} 个交易日，更新时间: ${cacheData.updatedAt}`);
+        } else {
+          logger.warn('交易日历缓存文件格式无效，将重新获取');
+        }
       } else {
         logger.info('交易日历缓存文件不存在，将在定时任务中获取');
       }
@@ -82,11 +87,36 @@ class TradingCalendarService {
       });
 
       const resData = response.data;
+      
       if (resData.status_code === 0 && resData.data) {
-        // 接口返回格式：{ "data": ["20251210", "20251211", "20251212", ...] }
-        const tradingDays = resData.data as string[];
-        logger.info(`从接口获取到 ${tradingDays.length} 个交易日`);
-        return tradingDays;
+        // 接口实际返回格式:
+        // { "status_code": 0, "data": { "code": 0, "msg": "请求成功", "next_dates": [...], "prev_dates": [...] } }
+        let tradingDays: string[] = [];
+        const innerData = resData.data;
+        
+        // 合并 prev_dates 和 next_dates，并加入当前日期
+        if (innerData.prev_dates && Array.isArray(innerData.prev_dates)) {
+          tradingDays = tradingDays.concat(innerData.prev_dates);
+        }
+        
+        // 注意：接口返回的 prev_dates 和 next_dates 已经是完整的交易日列表
+        // 如果 date 在 lastPrev 和 firstNext 之间但不在列表中，说明 date 不是交易日
+        // 不需要额外添加当前日期，直接使用接口返回的数据即可
+        
+        if (innerData.next_dates && Array.isArray(innerData.next_dates)) {
+          tradingDays = tradingDays.concat(innerData.next_dates);
+        }
+        
+        // 去重并排序
+        tradingDays = [...new Set(tradingDays)].sort();
+        
+        if (tradingDays.length > 0) {
+          logger.info(`从接口获取到 ${tradingDays.length} 个交易日`);
+          return tradingDays;
+        } else {
+          logger.warn('交易日历接口返回的日期列表为空');
+          return null;
+        }
       } else {
         logger.warn(`获取交易日历失败，接口返回: ${JSON.stringify(resData)}`);
         return null;

@@ -16,12 +16,9 @@ import * as path from 'path';
  * 回测配置参数
  */
 export interface BuySignalBacktestConfig {
-  // 策略来源类型
-  strategyType: 'volume_surge' | 'breakthrough' | 'all';
-  // 买入信号类型（只回测强烈买入）
+  // 买入信号类型过滤（strong_buy 或 buy，默认回测两者）
+  // 注意：策略来源固定为 volume_surge，不再支持配置
   signalFilter: 'strong_buy' | 'buy' | 'all';
-  // 最低评分过滤（用于 VolumeSurge 数据源）
-  minStrategyScore: number;
   // 标准仓位（元）
   basePosition: number;
   // 市场情绪不好时的仓位比例（0-1）
@@ -121,17 +118,15 @@ interface KlineData {
  */
 class BuySignalBacktestService {
   
-  // 默认配置
+  // 默认配置（策略来源固定为 volume_surge）
   private defaultConfig: BuySignalBacktestConfig = {
-    strategyType: 'volume_surge',
-    signalFilter: 'strong_buy',
-    minStrategyScore: 50,           // 最低策略评分
+    signalFilter: 'all',            // 默认回测 strong_buy 和 buy
     basePosition: 50000,
     lowMoodPositionRatio: 0.5,
     marketMoodThreshold: 50,
     stopLossPercent: 0.05,
     takeProfitPercent: 0.20,
-    maxHoldDays: 5,
+    maxHoldDays: 3,
     marketPanicThreshold: 40,
   };
 
@@ -625,11 +620,17 @@ class BuySignalBacktestService {
         return null;
       }
 
-      // 确定仓位（根据市场情绪）
+      // 确定仓位
+      // 规则1: strong_buy = 标准仓, buy = 标准仓的一半 (通过 signal.positionRatio 传入)
+      // 规则2: 市场情绪不好时再降低仓位
       const buyDayMood = this.calculateMarketMood(indexKline, buyDateStr);
-      const position = buyDayMood >= config.marketMoodThreshold 
-        ? config.basePosition 
-        : config.basePosition * config.lowMoodPositionRatio;
+      const signalPositionRatio = (signal as any).positionRatio || 1;  // 默认为1（标准仓）
+      let position = config.basePosition * signalPositionRatio;
+      
+      // 市场情绪不好时，再乘以 lowMoodPositionRatio
+      if (buyDayMood < config.marketMoodThreshold) {
+        position = position * config.lowMoodPositionRatio;
+      }
 
       // 计算止盈止损价
       const stopLossPrice = buyPrice * (1 - config.stopLossPercent);
@@ -742,7 +743,7 @@ class BuySignalBacktestService {
     logger.info(`开始买入信号回测: ${startDate} - ${endDate}`);
     logger.info(`传入的 config: ${JSON.stringify(config)}`);
     logger.info(`合并后 finalConfig: ${JSON.stringify(finalConfig)}`);
-    logger.info(`回测配置: 策略=${finalConfig.strategyType}, 最低评分=${finalConfig.minStrategyScore}, 止损=${finalConfig.stopLossPercent * 100}%, 止盈=${finalConfig.takeProfitPercent * 100}%, 最大持仓=${finalConfig.maxHoldDays}天`);
+    logger.info(`回测配置: 策略=强势资金突破(volume_surge), 止损=${finalConfig.stopLossPercent * 100}%, 止盈=${finalConfig.takeProfitPercent * 100}%, 最大持仓=${finalConfig.maxHoldDays}天`);
 
     // 清空缓存
     this.klineCache.clear();
@@ -773,29 +774,32 @@ class BuySignalBacktestService {
     
     logger.info(`日期查询范围: ${startDateForQuery.toISOString()} ~ ${endDateForQuery.toISOString()}`);
     
-    // 直接从 VolumeSurge 集合查询数据（因为 BuySignal 数据可能不完整）
-    const volumeSurgeQuery: any = {
+    // 从 BuySignal 集合查询数据，只查询 strong_buy 和 buy 的信号
+    const buySignalQuery: any = {
       date: { $gte: startDateForQuery, $lt: endDateForQuery },
+      // 策略来源固定为 volume_surge
+      strategyType: 'volume_surge',
+      // 只回测 "强烈买入" 和 "建议买入" 的标的
+      buySignal: { $in: ['strong_buy', 'buy'] },
     };
 
-    // 策略评分过滤（使用 minStrategyScore 作为唯一筛选条件）
-    if (finalConfig.minStrategyScore > 0) {
-      volumeSurgeQuery.strategyScore = { $gte: finalConfig.minStrategyScore };
-    }
+    // 从 BuySignal 集合查询数据
+    const buySignalRecords = await BuySignal.find(buySignalQuery).sort({ date: 1, totalBuyScore: -1 }).lean();
+    logger.info(`从 BuySignal 找到 ${buySignalRecords.length} 条记录 (buySignal=strong_buy/buy)`);
 
-    // 从 VolumeSurge 集合查询数据
-    const volumeSurgeRecords = await VolumeSurge.find(volumeSurgeQuery).sort({ date: 1, strategyScore: -1 }).lean();
-    logger.info(`从 VolumeSurge 找到 ${volumeSurgeRecords.length} 条记录 (评分 >= ${finalConfig.minStrategyScore})`);
-
-    // 将 VolumeSurge 数据转换为回测需要的格式
-    const signals = volumeSurgeRecords.map(vs => ({
-      stockCode: vs.stockCode,
-      stockName: vs.stockName,
-      date: vs.date,
+    // 将 BuySignal 数据转换为回测需要的格式
+    // 仓位规则：strong_buy = 标准仓，buy = 标准仓的一半
+    const signals = buySignalRecords.map(bs => ({
+      stockCode: bs.stockCode,
+      stockName: bs.stockName,
+      date: bs.date,
       strategyType: 'volume_surge',
       strategyName: '强势资金突破',
-      totalBuyScore: vs.strategyScore || 0,
-      marketMood: vs.marketSentimentScore || 50,
+      totalBuyScore: bs.totalBuyScore || 0,
+      marketMood: bs.marketMood || 50,
+      // 根据 buySignal 类型决定仓位比例
+      positionRatio: bs.buySignal === 'strong_buy' ? 1 : 0.5,
+      buySignalType: bs.buySignal,
     }));
 
     // 保存计算出的 K 线天数，供 backtestSingleStock 使用

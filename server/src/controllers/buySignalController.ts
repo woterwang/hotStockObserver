@@ -4,6 +4,8 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { buySignalService } from '../services/buySignalService';
+import { tradingCalendarService } from '../services/tradingCalendarService';
+import { BuySignal } from '../models/BuySignal';
 import dayjs from 'dayjs';
 
 class BuySignalController {
@@ -15,7 +17,7 @@ class BuySignalController {
     try {
       const { date, minScore } = req.body;
       const targetDate = date || dayjs().format('YYYYMMDD');
-      const scoreThreshold = minScore !== undefined ? Number(minScore) : 40;
+      const scoreThreshold = minScore !== undefined ? Number(minScore) : 50;
       
       const signals = await buySignalService.generateBuySignals(targetDate, undefined, scoreThreshold);
       
@@ -121,18 +123,14 @@ class BuySignalController {
         });
       }
 
-      // 生成日期列表（只包含工作日）
-      const dates: string[] = [];
-      let current = dayjs(startDate, 'YYYYMMDD');
-      const end = dayjs(endDate, 'YYYYMMDD');
-
-      while (current.isBefore(end) || current.isSame(end, 'day')) {
-        const dayOfWeek = current.day();
-        // 排除周六(6)和周日(0)
-        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-          dates.push(current.format('YYYYMMDD'));
-        }
-        current = current.add(1, 'day');
+      // 生成日期列表（使用交易日历服务，支持节假日）
+      const dates = tradingCalendarService.getTradingDaysInRange(startDate, endDate);
+      
+      if (dates.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: '指定日期范围内没有交易日，请检查交易日历缓存',
+        });
       }
 
       // 批量生成
@@ -166,6 +164,93 @@ class BuySignalController {
           details: results,
         },
         message: `批量生成完成: ${successDays}天成功, ${failedDays}天失败, 共生成${totalGenerated}条信号`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 批量修复历史买入信号（先删除旧数据再重新生成）
+   * POST /api/buy-signal/batch-repair
+   * @body startDate - 开始日期 YYYYMMDD
+   * @body endDate - 结束日期 YYYYMMDD
+   * @body clearOld - 是否清除旧数据，默认true
+   */
+  async batchRepair(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { startDate, endDate, clearOld = true } = req.body;
+      
+      if (!startDate || !endDate) {
+        return res.status(400).json({
+          success: false,
+          message: '请提供开始日期和结束日期',
+        });
+      }
+
+      // 获取日期范围内的交易日
+      const dates = tradingCalendarService.getTradingDaysInRange(startDate, endDate);
+      
+      if (dates.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: '指定日期范围内没有交易日，请检查交易日历缓存',
+        });
+      }
+
+      // 清除旧数据
+      let deletedCount = 0;
+      if (clearOld) {
+        const startDateObj = dayjs(startDate, 'YYYYMMDD').startOf('day').toDate();
+        const endDateObj = dayjs(endDate, 'YYYYMMDD').endOf('day').toDate();
+        
+        const deleteResult = await BuySignal.deleteMany({
+          date: { $gte: startDateObj, $lte: endDateObj }
+        });
+        deletedCount = deleteResult.deletedCount || 0;
+        console.log(`[BatchRepair] 已删除 ${deletedCount} 条旧的买入信号`);
+      }
+
+      // 开启批量模式（使用长间隔避免被封IP）
+      buySignalService.setBatchMode(true);
+
+      // 重新生成
+      const results: { date: string; count: number; error?: string }[] = [];
+      let totalGenerated = 0;
+      let successDays = 0;
+      let failedDays = 0;
+
+      try {
+        for (const date of dates) {
+          try {
+            const signals = await buySignalService.generateBuySignals(date);
+            results.push({ date, count: signals.length });
+            totalGenerated += signals.length;
+            successDays++;
+            
+            // 添加延迟避免请求过快
+            await new Promise(resolve => setTimeout(resolve, 500));
+          } catch (error) {
+            results.push({ date, count: 0, error: (error as Error).message });
+            failedDays++;
+          }
+        }
+      } finally {
+        // 关闭批量模式
+        buySignalService.setBatchMode(false);
+      }
+
+      res.json({
+        success: true,
+        data: {
+          deletedCount,
+          totalDays: dates.length,
+          successDays,
+          failedDays,
+          totalGenerated,
+          details: results,
+        },
+        message: `批量修复完成: 删除${deletedCount}条旧数据, ${successDays}天成功, ${failedDays}天失败, 重新生成${totalGenerated}条信号`,
       });
     } catch (error) {
       next(error);

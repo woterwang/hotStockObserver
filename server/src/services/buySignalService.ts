@@ -16,9 +16,12 @@
 
 import dayjs from 'dayjs';
 import axios from 'axios';
+import * as fs from 'fs';
+import * as path from 'path';
 import { BuySignal, IBuySignal } from '../models/BuySignal';
 import { VolumeSurge } from '../models/VolumeSurge';
 import { PriceBreakthrough } from '../models/PriceBreakthrough';
+import { tradingCalendarService } from './tradingCalendarService';
 
 // 策略类型定义
 type StrategyType = 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover';
@@ -316,9 +319,9 @@ class BuySignalService {
   /**
    * 从放量突破策略获取候选股票
    * @param selectionDate 选股日期
-   * @param minScore 最低分数门槛，默认40
+   * @param minScore 最低分数门槛，默认50
    */
-  private async getVolumeSurgeCandidates(selectionDate: Date, minScore: number = 40): Promise<StrategyCandidate[]> {
+  private async getVolumeSurgeCandidates(selectionDate: Date, minScore: number = 50): Promise<StrategyCandidate[]> {
     const records = await VolumeSurge.find({
       date: selectionDate,
       strategyScore: { $gte: minScore },
@@ -362,15 +365,17 @@ class BuySignalService {
   /**
    * 获取所有策略的候选股票
    * @param selectionDate 选股日期
-   * @param strategies 策略类型列表
-   * @param minScore 最低分数门槛，默认40
+   * @param strategies 策略类型列表，默认只使用 volume_surge
+   * @param minScore 最低分数门槛，默认50
    */
   private async getAllCandidates(
     selectionDate: Date, 
     strategies?: StrategyType[],
-    minScore: number = 40
+    minScore: number = 50
   ): Promise<StrategyCandidate[]> {
-    const allStrategies: StrategyType[] = strategies || ['volume_surge', 'breakthrough'];
+    // 默认只使用 volume_surge 策略
+    // breakthrough 策略有独立的入场逻辑（day3本身就是入场日），不在此处理
+    const allStrategies: StrategyType[] = strategies || ['volume_surge'];
     const candidatePromises: Promise<StrategyCandidate[]>[] = [];
     
     if (allStrategies.includes('volume_surge')) {
@@ -402,11 +407,24 @@ class BuySignalService {
    * 在T+1日开盘前/开盘时调用
    * @param dateStr 信号日期（T+1日）
    * @param strategies 可选，指定要处理的策略类型
-   * @param minScore 可选，最低分数门槛，默认40
+   * @param minScore 可选，最低分数门槛，默认50
    */
-  async generateBuySignals(dateStr: string, strategies?: StrategyType[], minScore: number = 40): Promise<IBuySignal[]> {
+  async generateBuySignals(dateStr: string, strategies?: StrategyType[], minScore: number = 50): Promise<IBuySignal[]> {
+    // 检查信号日期是否为交易日
+    if (!tradingCalendarService.isTradingDay(dateStr)) {
+      console.log(`[BuySignal] ${dateStr} 不是交易日，跳过生成`);
+      return [];
+    }
+    
     const signalDate = parseDate(dateStr);
-    const selectionDate = dayjs(signalDate).subtract(1, 'day').toDate();
+    
+    // 获取前一个交易日（使用交易日历服务，支持节假日）
+    const prevTradingDay = tradingCalendarService.getPrevTradingDay(dateStr);
+    if (!prevTradingDay) {
+      console.log(`[BuySignal] 无法获取 ${dateStr} 的前一个交易日，跳过生成`);
+      return [];
+    }
+    const selectionDate = parseDate(prevTradingDay);
     
     // 获取前一天的选股结果（支持多策略）
     const candidates = await this.getAllCandidates(selectionDate, strategies, minScore);
@@ -820,11 +838,147 @@ class BuySignalService {
   }
   
   /**
-   * 获取K线数据（从同花顺）
-   * 带缓存，避免重复请求
+   * K线缓存目录
    */
-  private klineCache: Map<string, { data: any[]; time: number }> = new Map();
+  private readonly KLINE_CACHE_DIR = path.join(__dirname, '../../data/kline_cache');
   
+  /**
+   * 内存缓存（用于减少文件IO）
+   */
+  private klineMemCache: Map<string, { data: any[]; time: number }> = new Map();
+  
+  /**
+   * 上次请求同花顺接口的时间（用于控制请求频率）
+   */
+  private lastThsRequestTime: number = 0;
+  
+  /**
+   * 生成随机延迟时间（8-12秒，模拟真人操作，仅批量模式使用）
+   */
+  private getRandomDelay(): number {
+    return Math.floor(8000 + Math.random() * 4000);  // 8000-12000ms
+  }
+  
+  /**
+   * 批量模式标记
+   */
+  private batchMode: boolean = false;
+  
+  /**
+   * 设置批量模式（批量修复时调用）
+   */
+  setBatchMode(enabled: boolean): void {
+    this.batchMode = enabled;
+    console.log(`[BuySignal] 批量模式: ${enabled ? '开启' : '关闭'}`);
+  }
+  
+  /**
+   * 等待适当的时间间隔后再请求（仅批量模式生效）
+   */
+  private async waitForRateLimit(): Promise<void> {
+    // 普通模式不等待，直接返回
+    if (!this.batchMode) {
+      return;
+    }
+    
+    const now = Date.now();
+    const elapsed = now - this.lastThsRequestTime;
+    const minInterval = this.getRandomDelay();
+    
+    if (elapsed < minInterval && this.lastThsRequestTime > 0) {
+      const waitTime = minInterval - elapsed;
+      console.log(`[BuySignal] 批量模式等待 ${Math.round(waitTime / 1000)}s 后请求...`);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+  }
+  
+  /**
+   * 从同花顺接口获取K线数据（带重试机制）
+   * @param stockCode 股票代码
+   * @param days 请求天数
+   * @returns K线数据对象
+   */
+  private async fetchFromThs(stockCode: string, days: number): Promise<Record<string, any>> {
+    const marketId = stockCode.startsWith('6') ? '17' : 
+                     stockCode.startsWith('0') || stockCode.startsWith('3') ? '33' : '17';
+    
+    // v1-v6 版本号列表，用于重试
+    const versions = ['v6', 'v5', 'v4', 'v3', 'v2', 'v1'];
+    
+    for (const version of versions) {
+      try {
+        // 等待适当间隔
+        await this.waitForRateLimit();
+        
+        const url = `https://d.10jqka.com.cn/${version}/line/${marketId}_${stockCode}/01/last${days}.js`;
+        console.log(`[BuySignal] 请求K线: ${stockCode} (${version})`);
+        
+        const response = await axios.get(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer': 'http://www.10jqka.com.cn/',
+            'Accept': '*/*',
+          },
+          timeout: 15000,
+        });
+        
+        // 更新最后请求时间
+        this.lastThsRequestTime = Date.now();
+        
+        if (response.data && typeof response.data === 'string') {
+          const dataStr = response.data;
+          const startIdx = dataStr.indexOf('({');
+          if (startIdx !== -1) {
+            const jsonStr = dataStr.substring(startIdx + 1, dataStr.length - 1);
+            const json = JSON.parse(jsonStr);
+            if (json && json.data) {
+              const newKlines: Record<string, any> = {};
+              const klineList = json.data.split(';');
+              for (const item of klineList) {
+                const parts = item.split(',');
+                if (parts.length >= 7 && parts[0] && parts[1]) {
+                  const dateStr = parts[0];
+                  newKlines[dateStr] = {
+                    date: dateStr,
+                    open: parseFloat(parts[1]) || 0,
+                    high: parseFloat(parts[2]) || 0,
+                    low: parseFloat(parts[3]) || 0,
+                    close: parseFloat(parts[4]) || 0,
+                    volume: parseFloat(parts[5]) || 0,
+                    turnover: parseFloat(parts[6]) || 0,
+                  };
+                }
+              }
+              
+              if (Object.keys(newKlines).length > 0) {
+                console.log(`[BuySignal] ${stockCode} 获取成功，${Object.keys(newKlines).length} 条K线`);
+                return newKlines;
+              }
+            }
+          }
+        }
+        
+        // 数据格式异常，尝试下一个版本
+        console.warn(`[BuySignal] ${stockCode} ${version} 返回数据异常，尝试下一版本`);
+        
+      } catch (error) {
+        const errMsg = (error as Error).message;
+        console.warn(`[BuySignal] ${stockCode} ${version} 请求失败: ${errMsg}，尝试下一版本`);
+        // 更新最后请求时间（即使失败也要记录，避免频繁重试）
+        this.lastThsRequestTime = Date.now();
+      }
+    }
+    
+    // 所有版本都失败
+    console.error(`[BuySignal] ${stockCode} 所有版本接口均失败`);
+    return {};
+  }
+  
+  /**
+   * 获取K线数据（优先本地文件缓存，其次同花顺接口）
+   * @param stockCode 股票代码
+   * @param days 请求天数（用于接口调用）
+   */
   private async fetchKlineData(stockCode: string, days: number = 30): Promise<{
     date: string;
     open: number;
@@ -835,57 +989,77 @@ class BuySignalService {
     turnover: number;
   }[] | null> {
     try {
-      // 检查缓存（5分钟有效）
-      const cacheKey = `${stockCode}_${days}`;
-      const cached = this.klineCache.get(cacheKey);
-      if (cached && Date.now() - cached.time < 5 * 60 * 1000) {
-        return cached.data;
+      // 1. 检查内存缓存（5分钟有效，减少文件IO）
+      const memCacheKey = stockCode;
+      const memCached = this.klineMemCache.get(memCacheKey);
+      if (memCached && Date.now() - memCached.time < 5 * 60 * 1000) {
+        return memCached.data;
       }
       
-      // 判断市场
-      const marketId = stockCode.startsWith('6') ? '17' : 
-                       stockCode.startsWith('0') || stockCode.startsWith('3') ? '33' : '17';
-      const url = `https://d.10jqka.com.cn/v6/line/${marketId}_${stockCode}/01/last${days}.js`;
+      // 2. 检查本地文件缓存
+      const cacheFilePath = path.join(this.KLINE_CACHE_DIR, `${stockCode}.json`);
+      let fileCache: { stockCode: string; cacheTime: number; klines: Record<string, any> } | null = null;
       
-      const response = await axios.get(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-          'Referer': 'http://www.10jqka.com.cn/',
-        },
-        timeout: 10000,
-      });
-      
-      const result: any[] = [];
-      
-      if (response.data && typeof response.data === 'string') {
-        const dataStr = response.data;
-        const startIdx = dataStr.indexOf('({');
-        if (startIdx !== -1) {
-          const jsonStr = dataStr.substring(startIdx + 1, dataStr.length - 1);
-          const json = JSON.parse(jsonStr);
-          if (json && json.data) {
-            const klineList = json.data.split(';');
-            for (const item of klineList) {
-              const parts = item.split(',');
-              if (parts.length >= 7 && parts[0] && parts[1]) {
-                result.push({
-                  date: parts[0],
-                  open: parseFloat(parts[1]) || 0,
-                  high: parseFloat(parts[2]) || 0,
-                  low: parseFloat(parts[3]) || 0,
-                  close: parseFloat(parts[4]) || 0,
-                  volume: parseFloat(parts[5]) || 0,
-                  turnover: parseFloat(parts[6]) || 0,
-                });
-              }
-            }
+      if (fs.existsSync(cacheFilePath)) {
+        try {
+          const fileContent = fs.readFileSync(cacheFilePath, 'utf-8');
+          fileCache = JSON.parse(fileContent);
+          
+          // 如果缓存文件存在且数据足够（至少有days条），直接使用本地缓存
+          if (fileCache && fileCache.klines && Object.keys(fileCache.klines).length >= days) {
+            const result = Object.values(fileCache.klines).sort((a: any, b: any) => 
+              a.date.localeCompare(b.date)
+            );
+            // 更新内存缓存
+            this.klineMemCache.set(memCacheKey, { data: result, time: Date.now() });
+            console.log(`[BuySignal] ${stockCode} 使用本地缓存 (${result.length}条)`);
+            return result;
           }
+        } catch (e) {
+          console.warn(`[BuySignal] 读取K线缓存文件失败: ${stockCode}`);
         }
       }
       
-      // 缓存结果
+      // 3. 从同花顺接口获取最新数据
+      const newKlines = await this.fetchFromThs(stockCode, days);
+      
+      // 4. 合并本地缓存和新数据
+      let mergedKlines: Record<string, any> = {};
+      
+      if (fileCache && fileCache.klines) {
+        mergedKlines = { ...fileCache.klines };
+      }
+      
+      // 新数据覆盖旧数据（更新最新K线）
+      if (Object.keys(newKlines).length > 0) {
+        mergedKlines = { ...mergedKlines, ...newKlines };
+        
+        // 5. 保存到本地文件缓存
+        try {
+          // 确保目录存在
+          if (!fs.existsSync(this.KLINE_CACHE_DIR)) {
+            fs.mkdirSync(this.KLINE_CACHE_DIR, { recursive: true });
+          }
+          
+          const cacheData = {
+            stockCode,
+            cacheTime: Date.now(),
+            klines: mergedKlines,
+          };
+          fs.writeFileSync(cacheFilePath, JSON.stringify(cacheData));
+        } catch (e) {
+          console.warn(`[BuySignal] 保存K线缓存失败: ${stockCode}`);
+        }
+      }
+      
+      // 6. 转换为数组格式并排序
+      const result = Object.values(mergedKlines).sort((a: any, b: any) => 
+        a.date.localeCompare(b.date)
+      );
+      
+      // 7. 更新内存缓存
       if (result.length > 0) {
-        this.klineCache.set(cacheKey, { data: result, time: Date.now() });
+        this.klineMemCache.set(memCacheKey, { data: result, time: Date.now() });
       }
       
       return result.length > 0 ? result : null;

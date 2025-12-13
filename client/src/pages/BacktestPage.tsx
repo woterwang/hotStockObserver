@@ -14,9 +14,8 @@ interface BacktestConfig {
 
 // 买入信号回测配置接口
 interface BuySignalBacktestConfig {
-  strategyType: 'volume_surge' | 'breakthrough' | 'all';
+  // 策略来源固定为 volume_surge，不再支持配置
   signalFilter: 'strong_buy' | 'buy' | 'all';
-  minStrategyScore: number;         // 最低策略评分
   basePosition: number;
   lowMoodPositionRatio: number;
   marketMoodThreshold: number;
@@ -152,15 +151,14 @@ const BacktestPage: React.FC = () => {
 
   // 强势资金突破策略配置
   const [buySignalConfig, setBuySignalConfig] = useState<BuySignalBacktestConfig>({
-    strategyType: 'volume_surge',
+    // 策略来源固定为 volume_surge，不再支持前端配置
     signalFilter: 'strong_buy',
-    minStrategyScore: 50,           // 最低策略评分
     basePosition: 50000,
     lowMoodPositionRatio: 0.5,
     marketMoodThreshold: 50,
     stopLossPercent: 0.05,
     takeProfitPercent: 0.20,
-    maxHoldDays: 5,
+    maxHoldDays: 3,
     marketPanicThreshold: 40,
   });
 
@@ -289,16 +287,6 @@ const BacktestPage: React.FC = () => {
     return map[reason] || reason;
   };
 
-  // 策略类型名称
-  const getStrategyTypeName = (type: string) => {
-    const map: Record<string, string> = {
-      volume_surge: '强势资金突破',
-      breakthrough: '价格突破',
-      all: '全部策略',
-    };
-    return map[type] || type;
-  };
-
   return (
     <Layout>
       <div className="space-y-6">
@@ -371,31 +359,6 @@ const BacktestPage: React.FC = () => {
           {/* 强势资金突破策略参数 */}
           {strategyMode === 'buy_signal' && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">策略来源</label>
-                <select
-                  value={buySignalConfig.strategyType}
-                  onChange={(e) => setBuySignalConfig({ ...buySignalConfig, strategyType: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="volume_surge">强势资金突破</option>
-                  <option value="breakthrough">价格突破</option>
-                  <option value="all">全部策略</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">最低策略评分</label>
-                <input
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={buySignalConfig.minStrategyScore}
-                  onChange={(e) => setBuySignalConfig({ ...buySignalConfig, minStrategyScore: Number(e.target.value) })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="70"
-                />
-                <span className="text-xs text-gray-500">筛选评分 ≥ 该值的股票</span>
-              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">标准仓位 (元)</label>
                 <input
@@ -696,7 +659,7 @@ const BacktestPage: React.FC = () => {
             {/* 统计概览 */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-lg font-semibold mb-4">
-                回测结果 - {getStrategyTypeName(buySignalResult.config.strategyType)}
+                回测结果 - 强势资金突破
               </h2>
               
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -813,7 +776,7 @@ const BacktestPage: React.FC = () => {
                           <td className="px-4 py-3 text-sm text-gray-900">{trade.stockName}</td>
                           <td className="px-4 py-3 text-sm text-center">
                             <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-                              {getStrategyTypeName(trade.strategyType)}
+                              强势资金突破
                             </span>
                           </td>
                           <td className="px-4 py-3 text-sm text-center text-gray-600">{trade.buyDate}</td>
