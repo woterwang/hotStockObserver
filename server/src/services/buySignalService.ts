@@ -22,6 +22,7 @@ import { BuySignal, IBuySignal } from '../models/BuySignal';
 import { VolumeSurge } from '../models/VolumeSurge';
 import { PriceBreakthrough } from '../models/PriceBreakthrough';
 import { tradingCalendarService } from './tradingCalendarService';
+import { marketMoodService } from './marketMoodService';
 
 // 策略类型定义
 type StrategyType = 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover';
@@ -683,7 +684,8 @@ class BuySignalService {
   
   /**
    * 获取大盘环境
-   * 从同花顺获取上证指数K线，失败时使用默认值
+   * 优先从市场情绪服务获取 strong 值，失败则用原有逻辑计算
+   * 原有逻辑：从同花顺获取上证指数K线，基于涨跌幅计算情绪值
    */
   async getMarketEnvironment(date: Date): Promise<{
     indexOpenChange: number;
@@ -691,79 +693,186 @@ class BuySignalService {
     marketMood: number;
   }> {
     const defaultResult = { indexOpenChange: 0, indexMorningTrend: 'flat' as const, marketMood: 50 };
+    const dateStr = formatDate(date);
     
-    try {
-      const dateStr = formatDate(date);
-      
-      // 获取上证指数K线（市场代码17，股票代码000001）
-      const url = 'https://d.10jqka.com.cn/v6/line/17_000001/01/last30.js';
-      
-      let response;
+    // 1. 优先从市场情绪服务获取 strong 值
+    const cachedMood = marketMoodService.getMood(dateStr);
+    if (cachedMood !== null) {
+      console.log(`[BuySignal] 使用缓存的市场情绪: ${dateStr} -> ${cachedMood}`);
+      // 仍需获取指数开盘数据，但情绪值用缓存的
+      const indexData = await this.fetchIndexData(dateStr);
+      return {
+        indexOpenChange: indexData.indexOpenChange,
+        indexMorningTrend: indexData.indexMorningTrend,
+        marketMood: cachedMood,
+      };
+    }
+    
+    // 2. 缓存没有，使用原有逻辑（从同花顺K线计算）
+    console.log(`[BuySignal] 市场情绪缓存未命中 ${dateStr}，使用K线计算`);
+    return this.calculateMarketEnvironmentFromKline(dateStr, defaultResult);
+  }
+  
+  /**
+   * 从同花顺获取上证指数K线数据
+   */
+  private async fetchIndexData(dateStr: string): Promise<{
+    indexOpenChange: number;
+    indexMorningTrend: 'up' | 'down' | 'flat';
+  }> {
+    const defaultResult = { indexOpenChange: 0, indexMorningTrend: 'flat' as const };
+    
+    // 优先使用v6，再从v1-v5中随机挑选2个版本，共3次重试
+    const otherVersions = ['v1', 'v2', 'v3', 'v4', 'v5'].sort(() => Math.random() - 0.5).slice(0, 2);
+    const versions = ['v6', ...otherVersions];
+    
+    for (const version of versions) {
       try {
-        response = await axios.get(url, {
+        const url = `https://d.10jqka.com.cn/${version}/line/17_000001/01/last30.js`;
+        
+        const response = await axios.get(url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
             'Referer': 'http://www.10jqka.com.cn/',
           },
-          timeout: 5000,  // 缩短超时时间
+          timeout: 10000,
         });
-      } catch (networkError) {
-        console.warn('[BuySignal] 大盘接口网络异常，使用默认市场情绪');
-        return defaultResult;
-      }
-      
-      if (response.data && typeof response.data === 'string') {
-        const dataStr = response.data;
-        const startIdx = dataStr.indexOf('({');
-        if (startIdx !== -1) {
-          const jsonStr = dataStr.substring(startIdx + 1, dataStr.length - 1);
-          const json = JSON.parse(jsonStr);
-          if (json && json.data) {
-            const klineList = json.data.split(';');
-            
-            // 先尝试找指定日期，找不到则使用最新
-            let targetIdx = klineList.findIndex((item: string) => item.split(',')[0] === dateStr);
-            if (targetIdx === -1 && klineList.length > 0) {
-              console.log(`[BuySignal] 大盘数据未找到 ${dateStr}，使用最新数据`);
-              targetIdx = klineList.length - 1;
-            }
-            
-            if (targetIdx >= 0) {
-              const parts = klineList[targetIdx].split(',');
-              if (parts[1]) {
-                const open = parseFloat(parts[1]) || 0;
-                const close = parseFloat(parts[4]) || 0;
-                
-                let prevClose = 0;
-                if (targetIdx > 0) {
-                  const prevParts = klineList[targetIdx - 1].split(',');
-                  prevClose = parseFloat(prevParts[4]) || 0;
+        
+        if (response.data && typeof response.data === 'string') {
+          const dataStr = response.data;
+          const startIdx = dataStr.indexOf('({');
+          if (startIdx !== -1) {
+            const jsonStr = dataStr.substring(startIdx + 1, dataStr.length - 1);
+            const json = JSON.parse(jsonStr);
+            if (json && json.data) {
+              const klineList = json.data.split(';');
+              
+              let targetIdx = klineList.findIndex((item: string) => item.split(',')[0] === dateStr);
+              if (targetIdx === -1 && klineList.length > 0) {
+                targetIdx = klineList.length - 1;
+              }
+              
+              if (targetIdx >= 0) {
+                const parts = klineList[targetIdx].split(',');
+                if (parts[1]) {
+                  const open = parseFloat(parts[1]) || 0;
+                  const close = parseFloat(parts[4]) || 0;
+                  
+                  let prevClose = 0;
+                  if (targetIdx > 0) {
+                    const prevParts = klineList[targetIdx - 1].split(',');
+                    prevClose = parseFloat(prevParts[4]) || 0;
+                  }
+                  
+                  const indexOpenChange = prevClose > 0 ? ((open - prevClose) / prevClose) * 100 : 0;
+                  const indexMorningTrend: 'up' | 'down' | 'flat' = 
+                    close > open * 1.001 ? 'up' : (close < open * 0.999 ? 'down' : 'flat');
+                  
+                  return {
+                    indexOpenChange: Math.round(indexOpenChange * 100) / 100,
+                    indexMorningTrend,
+                  };
                 }
-                
-                const indexOpenChange = prevClose > 0 ? ((open - prevClose) / prevClose) * 100 : 0;
-                const indexMorningTrend: 'up' | 'down' | 'flat' = 
-                  close > open * 1.001 ? 'up' : (close < open * 0.999 ? 'down' : 'flat');
-                
-                // 市场情绪（基于当日涨跌）
-                const dayChange = prevClose > 0 ? ((close - prevClose) / prevClose) * 100 : 0;
-                const marketMood = Math.max(0, Math.min(100, 50 + dayChange * 10));
-                
-                return {
-                  indexOpenChange: Math.round(indexOpenChange * 100) / 100,
-                  indexMorningTrend,
-                  marketMood: Math.round(marketMood),
-                };
               }
             }
           }
         }
+      } catch (error) {
+        // 继续尝试下一个版本
       }
-      
-      return defaultResult;
-    } catch (error) {
-      console.error('[BuySignal] 获取大盘环境失败:', error);
-      return defaultResult;
     }
+    
+    return defaultResult;
+  }
+  
+  /**
+   * 从K线数据计算市场环境（原有降级逻辑）
+   */
+  private async calculateMarketEnvironmentFromKline(
+    dateStr: string,
+    defaultResult: { indexOpenChange: number; indexMorningTrend: 'up' | 'down' | 'flat'; marketMood: number }
+  ): Promise<{
+    indexOpenChange: number;
+    indexMorningTrend: 'up' | 'down' | 'flat';
+    marketMood: number;
+  }> {
+    // 优先使用v6，再从v1-v5中随机挑选2个版本，共3次重试
+    const otherVersions = ['v1', 'v2', 'v3', 'v4', 'v5'].sort(() => Math.random() - 0.5).slice(0, 2);
+    const versions = ['v6', ...otherVersions];
+    
+    for (const version of versions) {
+      try {
+        // 获取上证指数K线（市场代码17，股票代码000001）
+        const url = `https://d.10jqka.com.cn/${version}/line/17_000001/01/last30.js`;
+        
+        const response = await axios.get(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': 'http://www.10jqka.com.cn/',
+          },
+          timeout: 10000,
+        });
+        
+        if (response.data && typeof response.data === 'string') {
+          const dataStr = response.data;
+          const startIdx = dataStr.indexOf('({');
+          if (startIdx !== -1) {
+            const jsonStr = dataStr.substring(startIdx + 1, dataStr.length - 1);
+            const json = JSON.parse(jsonStr);
+            if (json && json.data) {
+              const klineList = json.data.split(';');
+              
+              // 先尝试找指定日期，找不到则使用最新
+              let targetIdx = klineList.findIndex((item: string) => item.split(',')[0] === dateStr);
+              if (targetIdx === -1 && klineList.length > 0) {
+                console.log(`[BuySignal] 大盘数据未找到 ${dateStr}，使用最新数据`);
+                targetIdx = klineList.length - 1;
+              }
+              
+              if (targetIdx >= 0) {
+                const parts = klineList[targetIdx].split(',');
+                if (parts[1]) {
+                  const open = parseFloat(parts[1]) || 0;
+                  const close = parseFloat(parts[4]) || 0;
+                  
+                  let prevClose = 0;
+                  if (targetIdx > 0) {
+                    const prevParts = klineList[targetIdx - 1].split(',');
+                    prevClose = parseFloat(prevParts[4]) || 0;
+                  }
+                  
+                  const indexOpenChange = prevClose > 0 ? ((open - prevClose) / prevClose) * 100 : 0;
+                  const indexMorningTrend: 'up' | 'down' | 'flat' = 
+                    close > open * 1.001 ? 'up' : (close < open * 0.999 ? 'down' : 'flat');
+                  
+                  // 市场情绪（基于当日涨跌，原有计算逻辑）
+                  const dayChange = prevClose > 0 ? ((close - prevClose) / prevClose) * 100 : 0;
+                  const marketMood = Math.max(0, Math.min(100, 50 + dayChange * 10));
+                  
+                  // 成功获取数据，返回结果
+                  return {
+                    indexOpenChange: Math.round(indexOpenChange * 100) / 100,
+                    indexMorningTrend,
+                    marketMood: Math.round(marketMood),
+                  };
+                }
+              }
+            }
+          }
+        }
+        
+        // 数据格式异常，尝试下一个版本
+        console.warn(`[BuySignal] 大盘接口 ${version} 返回数据异常，尝试下一版本`);
+        
+      } catch (error) {
+        const errMsg = (error as Error).message;
+        console.warn(`[BuySignal] 大盘接口 ${version} 请求失败: ${errMsg}，尝试下一版本`);
+      }
+    }
+    
+    // 所有版本都失败，使用默认值
+    console.warn('[BuySignal] 大盘接口所有版本均失败，使用默认市场情绪');
+    return defaultResult;
   }
   
   /**
@@ -1089,10 +1198,10 @@ class BuySignalService {
     if (totalScore >= 80) {
       signal = 'strong_buy';
       position = 30;  // 3成仓
-    } else if (totalScore >= 60) {
+    } else if (totalScore >= 70) {
       signal = 'buy';
       position = 20;  // 2成仓
-    } else if (totalScore >= 40) {
+    } else if (totalScore >= 50) {
       signal = 'hold';
       position = 10;  // 1成仓观望
     } else {

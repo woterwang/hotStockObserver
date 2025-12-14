@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Layout } from '../components';
+import { Layout, MarketSentimentCard } from '../components';
+import type { MarketSentiment } from '../types';
 
 // 入场条件
 interface EntryConditions {
@@ -97,21 +98,6 @@ interface TradingSignal {
   marketSentimentScore?: number;
 }
 
-// 市场情绪
-interface MarketSentiment {
-  dateStr: string;
-  limitUpCount: number;
-  limitDownCount: number;
-  upCount: number;
-  downCount: number;
-  upDownRatio: number;
-  maxContinuousBoard: number;
-  blastRate: number;
-  score: number;
-  level: string;
-  advice: string;
-}
-
 // 状态样式
 const statusStyles: Record<string, { bg: string; text: string; label: string }> = {
   ready: { bg: 'bg-green-100', text: 'text-green-800', label: '可入场 ✓' },
@@ -121,22 +107,6 @@ const statusStyles: Record<string, { bg: string; text: string; label: string }> 
   entered: { bg: 'bg-purple-100', text: 'text-purple-800', label: '已入场' },
   exited: { bg: 'bg-gray-100', text: 'text-gray-800', label: '已退出' },
   expired: { bg: 'bg-gray-100', text: 'text-gray-500', label: '已过期' },
-};
-
-// 情绪等级样式
-const sentimentStyles: Record<string, { bg: string; text: string; label: string }> = {
-  high: { bg: 'bg-green-500', text: 'text-white', label: '情绪高涨' },
-  medium: { bg: 'bg-blue-500', text: 'text-white', label: '情绪正常' },
-  low: { bg: 'bg-yellow-500', text: 'text-white', label: '情绪偏弱' },
-  extreme_low: { bg: 'bg-red-500', text: 'text-white', label: '情绪极弱' },
-};
-
-// 建议样式
-const adviceStyles: Record<string, { color: string; label: string }> = {
-  aggressive: { color: 'text-green-600', label: '可加仓' },
-  normal: { color: 'text-blue-600', label: '正常操作' },
-  reduce: { color: 'text-yellow-600', label: '降低仓位' },
-  pause: { color: 'text-red-600', label: '暂停交易' },
 };
 
 export default function SignalPage() {
@@ -405,62 +375,14 @@ export default function SignalPage() {
         </div>
 
         {/* 市场情绪卡片 */}
-        <div className="bg-white rounded-lg shadow p-4 mb-6">
-          <h2 className="text-lg font-semibold mb-3 flex items-center">
-            🎯 市场情绪
-            {day2Date && (
-              <span className="ml-2 text-sm font-normal text-gray-500">
-                （Day2: {day2Date.slice(0, 4)}-{day2Date.slice(4, 6)}-{day2Date.slice(6, 8)}）
-              </span>
-            )}
-            {sentimentLoading && <span className="ml-2 text-sm text-gray-400">加载中...</span>}
-          </h2>
-          
-          {sentiment ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{sentiment.score}</div>
-                <div className="text-xs text-gray-500">综合评分</div>
-              </div>
-              <div className="text-center">
-                <div className={`inline-block px-2 py-1 rounded text-sm ${sentimentStyles[sentiment.level]?.bg || 'bg-gray-500'} ${sentimentStyles[sentiment.level]?.text || 'text-white'}`}>
-                  {sentimentStyles[sentiment.level]?.label || sentiment.level}
-                </div>
-                <div className="text-xs text-gray-500 mt-1">情绪等级</div>
-              </div>
-              <div className="text-center">
-                <div className={`text-lg font-semibold ${adviceStyles[sentiment.advice]?.color || 'text-gray-600'}`}>
-                  {adviceStyles[sentiment.advice]?.label || sentiment.advice}
-                </div>
-                <div className="text-xs text-gray-500">交易建议</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-semibold text-red-500">{sentiment.limitUpCount}</div>
-                <div className="text-xs text-gray-500">涨停数</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-semibold text-green-500">{sentiment.limitDownCount}</div>
-                <div className="text-xs text-gray-500">跌停数</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-semibold">{sentiment.upDownRatio}</div>
-                <div className="text-xs text-gray-500">涨跌比</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-semibold text-purple-600">{sentiment.maxContinuousBoard}板</div>
-                <div className="text-xs text-gray-500">最高连板</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-semibold text-orange-500">{sentiment.blastRate}%</div>
-                <div className="text-xs text-gray-500">炸板率</div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-gray-400 text-center py-4">
-              暂无情绪数据，点击"获取情绪"按钮获取
-            </div>
-          )}
-        </div>
+        <MarketSentimentCard
+          dateStr={day2Date || ''}
+          title="市场情绪"
+          showDate={!!day2Date}
+          externalData={sentiment}
+          externalLoading={sentimentLoading}
+          className="mb-6"
+        />
 
         {/* 统计和筛选 */}
         <div className="bg-white rounded-lg shadow p-4 mb-6">

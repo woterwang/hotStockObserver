@@ -19,6 +19,8 @@ export interface BuySignalBacktestConfig {
   // 买入信号类型过滤（strong_buy 或 buy，默认回测两者）
   // 注意：策略来源固定为 volume_surge，不再支持配置
   signalFilter: 'strong_buy' | 'buy' | 'all';
+  // 最低信号评分门槛（0-100，低于此分数的信号不参与回测）
+  minSignalScore: number;
   // 标准仓位（元）
   basePosition: number;
   // 市场情绪不好时的仓位比例（0-1）
@@ -121,6 +123,7 @@ class BuySignalBacktestService {
   // 默认配置（策略来源固定为 volume_surge）
   private defaultConfig: BuySignalBacktestConfig = {
     signalFilter: 'all',            // 默认回测 strong_buy 和 buy
+    minSignalScore: 70,             // 默认信号评分门槛 70 分
     basePosition: 50000,
     lowMoodPositionRatio: 0.5,
     marketMoodThreshold: 50,
@@ -602,16 +605,11 @@ class BuySignalBacktestService {
         return null;
       }
 
-      // 买入日为信号日的次一个交易日（次日开盘买入）
-      const buyIdx = signalIdx + 1;
-      if (buyIdx >= klineData.length) {
-        logger.info(`[回测] ${stockCode} 信号日=${signalDateStr} 后无交易日数据，无法执行买入`);
-        return null;
-      }
-
+      // 买入日即为信号日（信号日期本身就是 T+1，当天开盘买入）
+      const buyIdx = signalIdx;
       const buyKline = klineData[buyIdx];
       const buyDateStr = buyKline.date;
-      const buyPrice = buyKline.open;  // 次日开盘价买入
+      const buyPrice = buyKline.open;  // 信号日开盘价买入
       
       logger.info(`[回测] ${stockCode} 信号日=${signalDateStr}, 买入日=${buyDateStr}, 买入价=${buyPrice}`);
       
@@ -789,7 +787,7 @@ class BuySignalBacktestService {
 
     // 将 BuySignal 数据转换为回测需要的格式
     // 仓位规则：strong_buy = 标准仓，buy = 标准仓的一半
-    const signals = buySignalRecords.map(bs => ({
+    const allSignals = buySignalRecords.map(bs => ({
       stockCode: bs.stockCode,
       stockName: bs.stockName,
       date: bs.date,
@@ -801,6 +799,10 @@ class BuySignalBacktestService {
       positionRatio: bs.buySignal === 'strong_buy' ? 1 : 0.5,
       buySignalType: bs.buySignal,
     }));
+
+    // 根据 minSignalScore 过滤信号
+    const signals = allSignals.filter(s => s.totalBuyScore >= finalConfig.minSignalScore);
+    logger.info(`应用信号评分门槛 (>= ${finalConfig.minSignalScore}分) 后剩余 ${signals.length} 条记录`);
 
     // 保存计算出的 K 线天数，供 backtestSingleStock 使用
     this.currentKlineDays = klineDays;

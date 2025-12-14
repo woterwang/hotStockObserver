@@ -16,6 +16,7 @@ interface BacktestConfig {
 interface BuySignalBacktestConfig {
   // 策略来源固定为 volume_surge，不再支持配置
   signalFilter: 'strong_buy' | 'buy' | 'all';
+  minSignalScore: number;
   basePosition: number;
   lowMoodPositionRatio: number;
   marketMoodThreshold: number;
@@ -153,6 +154,7 @@ const BacktestPage: React.FC = () => {
   const [buySignalConfig, setBuySignalConfig] = useState<BuySignalBacktestConfig>({
     // 策略来源固定为 volume_surge，不再支持前端配置
     signalFilter: 'strong_buy',
+    minSignalScore: 70,
     basePosition: 50000,
     lowMoodPositionRatio: 0.5,
     marketMoodThreshold: 50,
@@ -412,6 +414,17 @@ const BacktestPage: React.FC = () => {
                   type="number"
                   value={buySignalConfig.marketPanicThreshold}
                   onChange={(e) => setBuySignalConfig({ ...buySignalConfig, marketPanicThreshold: Number(e.target.value) })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">信号评分门槛</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={buySignalConfig.minSignalScore}
+                  onChange={(e) => setBuySignalConfig({ ...buySignalConfig, minSignalScore: Number(e.target.value) })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>

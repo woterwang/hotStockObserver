@@ -85,11 +85,11 @@ const VolumeSurgePage: React.FC = () => {
     }
   };
 
-  // 手动触发扫描
+  // 手动触发扫描（使用当前选中的日期）
   const handleScan = async () => {
     setScanning(true);
     try {
-      const response = await volumeSurgeApi.scan();
+      const response = await volumeSurgeApi.scan(selectedDate);
       if (response.success) {
         const count = response.data.count || 0;
         alert(`扫描完成，发现 ${count} 只放量大涨股票`);

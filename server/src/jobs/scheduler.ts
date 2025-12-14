@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, volumeSurgeService, tradingCalendarService } from '../services';
+import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, volumeSurgeService, tradingCalendarService, marketMoodService } from '../services';
 import { logger } from '../utils';
 import { formatDate } from '../utils/dateUtils';
 
@@ -21,6 +21,8 @@ export class JobScheduler {
   async start() {
     // 初始化交易日历服务
     await tradingCalendarService.init();
+    // 初始化市场情绪服务
+    await marketMoodService.init();
     
     this.startTradingCalendarJob();
     this.startHotStockUpdateJob();
@@ -78,18 +80,27 @@ export class JobScheduler {
     
     this.tradingCalendarJob = cron.schedule(cronExpression, async () => {
       try {
+        // 1. 更新交易日历
         logger.info('开始更新交易日历缓存');
-        
-        const success = await tradingCalendarService.updateCache();
-        
-        if (success) {
+        const calendarSuccess = await tradingCalendarService.updateCache();
+        if (calendarSuccess) {
           const status = tradingCalendarService.getCacheStatus();
           logger.info(`交易日历更新成功，共缓存 ${status.count} 个交易日`);
         } else {
           logger.warn('交易日历更新失败，将继续使用旧缓存');
         }
+        
+        // 2. 更新市场情绪数据
+        logger.info('开始更新市场情绪缓存');
+        const moodSuccess = await marketMoodService.updateCache();
+        if (moodSuccess) {
+          const moodStatus = marketMoodService.getCacheStatus();
+          logger.info(`市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
+        } else {
+          logger.warn('市场情绪更新失败，将继续使用旧缓存');
+        }
       } catch (error) {
-        logger.error(`交易日历更新任务失败: ${(error as Error).message}`);
+        logger.error(`交易日历/市场情绪更新任务失败: ${(error as Error).message}`);
       }
     }, {
       timezone: 'Asia/Shanghai',
@@ -98,11 +109,20 @@ export class JobScheduler {
     logger.info(`交易日历更新任务已配置，Cron表达式: ${cronExpression}`);
     
     // 如果缓存为空，立即更新一次
-    const status = tradingCalendarService.getCacheStatus();
-    if (status.count === 0) {
+    const calendarStatus = tradingCalendarService.getCacheStatus();
+    if (calendarStatus.count === 0) {
       logger.info('交易日历缓存为空，立即执行一次更新');
       tradingCalendarService.updateCache().catch(err => {
         logger.error(`初始化交易日历失败: ${err.message}`);
+      });
+    }
+    
+    // 如果市场情绪缓存为空，立即更新一次
+    const moodStatus = marketMoodService.getCacheStatus();
+    if (moodStatus.count === 0) {
+      logger.info('市场情绪缓存为空，立即执行一次更新');
+      marketMoodService.updateCache().catch(err => {
+        logger.error(`初始化市场情绪失败: ${err.message}`);
       });
     }
   }

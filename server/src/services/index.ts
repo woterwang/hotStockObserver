@@ -6,3 +6,4 @@ export { tradingSignalService } from './tradingSignalService';
 export { backtestService, BacktestConfig, BacktestResult, TradeRecord } from './backtestService';
 export { marketSentimentService } from './marketSentimentService';
 export { tradingCalendarService } from './tradingCalendarService';
+export { marketMoodService, MarketMoodData } from './marketMoodService';

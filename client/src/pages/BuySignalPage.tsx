@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Loading, ErrorMessage, Empty, DatePicker } from '../components';
+import { Layout, Loading, ErrorMessage, Empty, DatePicker, MarketSentimentCard } from '../components';
 import { buySignalApi } from '../services/api';
 import type { BuySignal, BuySignalStats } from '../types';
 import dayjs from 'dayjs';
@@ -301,6 +301,12 @@ const BuySignalPage: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* 市场情绪卡片 - 使用选股日期(T日)的情绪数据 */}
+        <MarketSentimentCard 
+          dateStr={signals.length > 0 ? dayjs(signals[0].selectionDate).format('YYYYMMDD') : ''} 
+          title={`市场情绪${signals.length > 0 ? '（选股日 T日）' : ''}`}
+        />
 
         {/* 统计卡片 */}
         {stats && (

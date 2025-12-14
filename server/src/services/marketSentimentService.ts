@@ -1,6 +1,7 @@
 import { logger } from '../utils';
 import { MarketSentiment, IMarketSentiment, calculateSentimentScore, SentimentLevel, TradingAdvice } from '../models/MarketSentiment';
 import { formatDate, parseDate } from '../utils/dateUtils';
+import { marketMoodService } from './marketMoodService';
 import axios from 'axios';
 
 // 导入同花顺工具
@@ -236,8 +237,17 @@ export class MarketSentimentService {
 
       // 3. 获取连板数据
       logger.debug('获取连板数据...');
-      const { maxContinuousBoard, board2Count, board3Count } = await this.fetchBoardData(dateStr);
+      let { maxContinuousBoard, board2Count, board3Count } = await this.fetchBoardData(dateStr);
       await this.randomDelay(3000, 6000);
+
+      // 获取本地缓存的情绪数据（用于补充连板高度和综合评分）
+      const moodData = marketMoodService.getMoodData(dateStr);
+
+      // 如果连板数据为0，尝试从本地缓存获取
+      if (maxContinuousBoard === 0 && moodData && moodData.lbgd > 0) {
+        logger.info(`从本地缓存获取连板高度: ${moodData.lbgd}`);
+        maxContinuousBoard = moodData.lbgd;
+      }
 
       // 4. 获取炸板数据
       logger.debug('获取炸板数据...');
@@ -247,14 +257,43 @@ export class MarketSentimentService {
       // 5. 计算涨跌比
       const upDownRatio = downCount > 0 ? Number((upCount / downCount).toFixed(2)) : upCount;
 
-      // 6. 计算评分
-      const { score, level, advice } = calculateSentimentScore({
-        limitUpCount,
-        limitDownCount,
-        upDownRatio,
-        maxContinuousBoard,
-        blastRate,
-      });
+      // 6. 计算评分 - 优先使用本地缓存的 strong 值
+      let score: number;
+      let level: SentimentLevel;
+      let advice: TradingAdvice;
+      
+      if (moodData && typeof moodData.strong === 'number') {
+        // 使用第三方API已计算好的综合评分
+        score = moodData.strong;
+        // 根据 score 确定 level 和 advice
+        if (score >= 70) {
+          level = 'high';
+          advice = 'aggressive';
+        } else if (score >= 55) {
+          level = 'medium';
+          advice = 'normal';
+        } else if (score >= 40) {
+          level = 'low';
+          advice = 'reduce';
+        } else {
+          level = 'extreme_low';
+          advice = 'pause';
+        }
+        logger.info(`使用本地缓存的综合评分: ${score}`);
+      } else {
+        // 回退到自己计算
+        const calculated = calculateSentimentScore({
+          limitUpCount,
+          limitDownCount,
+          upDownRatio,
+          maxContinuousBoard,
+          blastRate,
+        });
+        score = calculated.score;
+        level = calculated.level;
+        advice = calculated.advice;
+        logger.info(`使用计算的综合评分: ${score}`);
+      }
 
       // 7. 构建情绪数据
       const sentiment: Partial<IMarketSentiment> = {
@@ -297,7 +336,39 @@ export class MarketSentimentService {
    */
   async getSentimentByDate(dateStr: string): Promise<IMarketSentiment | null> {
     const sentiment = await MarketSentiment.findOne({ dateStr });
-    return sentiment ? (sentiment.toObject() as unknown as IMarketSentiment) : null;
+    if (!sentiment) return null;
+    
+    const result = sentiment.toObject() as unknown as IMarketSentiment;
+    
+    // 尝试从本地缓存补充数据
+    const moodData = marketMoodService.getMoodData(dateStr);
+    if (moodData) {
+      // 如果最高连板数为0，使用本地缓存的 lbgd
+      if (result.maxContinuousBoard === 0 && moodData.lbgd > 0) {
+        logger.debug(`补充 ${dateStr} 的连板高度: ${moodData.lbgd}`);
+        result.maxContinuousBoard = moodData.lbgd;
+      }
+      // 使用本地缓存的 strong 作为综合评分（第三方API已计算好）
+      if (typeof moodData.strong === 'number') {
+        result.score = moodData.strong;
+        // 根据新评分更新 level 和 advice
+        if (result.score >= 70) {
+          result.level = 'high';
+          result.advice = 'aggressive';
+        } else if (result.score >= 55) {
+          result.level = 'medium';
+          result.advice = 'normal';
+        } else if (result.score >= 40) {
+          result.level = 'low';
+          result.advice = 'reduce';
+        } else {
+          result.level = 'extreme_low';
+          result.advice = 'pause';
+        }
+      }
+    }
+    
+    return result;
   }
 
   /**
@@ -307,7 +378,41 @@ export class MarketSentimentService {
     const sentiments = await MarketSentiment.find({})
       .sort({ date: -1 })
       .limit(days);
-    return sentiments.map(s => s.toObject() as unknown as IMarketSentiment);
+    
+    return sentiments.map(s => {
+      const result = s.toObject() as unknown as IMarketSentiment;
+      
+      // 尝试从本地缓存补充数据
+      if (result.dateStr) {
+        const moodData = marketMoodService.getMoodData(result.dateStr);
+        if (moodData) {
+          // 如果最高连板数为0，使用本地缓存的 lbgd
+          if (result.maxContinuousBoard === 0 && moodData.lbgd > 0) {
+            result.maxContinuousBoard = moodData.lbgd;
+          }
+          // 使用本地缓存的 strong 作为综合评分（第三方API已计算好）
+          if (typeof moodData.strong === 'number') {
+            result.score = moodData.strong;
+            // 根据新评分更新 level 和 advice
+            if (result.score >= 70) {
+              result.level = 'high';
+              result.advice = 'aggressive';
+            } else if (result.score >= 55) {
+              result.level = 'medium';
+              result.advice = 'normal';
+            } else if (result.score >= 40) {
+              result.level = 'low';
+              result.advice = 'reduce';
+            } else {
+              result.level = 'extreme_low';
+              result.advice = 'pause';
+            }
+          }
+        }
+      }
+      
+      return result;
+    });
   }
 
   /**

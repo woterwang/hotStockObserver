@@ -8,6 +8,7 @@ const thsUtils = require('../utils/thsUtils');
 
 // 导入市场情绪服务
 import { marketSentimentService } from './marketSentimentService';
+import { marketMoodService } from './marketMoodService';
 
 export class VolumeSurgeService {
   
@@ -175,6 +176,9 @@ export class VolumeSurgeService {
     // 【基础过滤】
     // 5. 非ST/新股/北交所/退市
     //
+    // 【额外返回字段】
+    // 6. 量比、换手率、振幅、下影线、5日均量比 - 用于评分计算
+    //
     // 注：其他条件（20日新高、量能放大、底部抬升等）
     //     在代码中通过评分体系处理，避免过滤掉太多股票
     // ========================================
@@ -191,6 +195,12 @@ export class VolumeSurgeService {
       `${dateStr}非新股`,
       `${dateStr}非北交所`,
       `非退市`,
+      // 额外请求的字段（用于评分计算）
+      `${dateStr}量比`,
+      `${dateStr}换手率`,
+      `${dateStr}振幅`,
+      `${dateStr}下影线`,
+      `成交量/${dateStr}5日平均成交量`,
     ].join('，');
     
     logger.info(`[问财查询] ${question}`);
@@ -205,25 +215,42 @@ export class VolumeSurgeService {
     // 🔥 进阶优化：获取市场环境数据
     // ========================================
     
-    // 1. 获取市场情绪数据
+    // 1. 获取市场情绪数据（优先从 marketMoodService 获取）
     let marketSentimentScore = 50;
     let marketLimitUpCount = 0;
     let marketAdvice = 'normal';
     
     try {
-      let sentiment = await marketSentimentService.getSentimentByDate(targetDate);
-      if (!sentiment) {
-        // 未找到情绪数据，自动获取并保存
-        logger.info(`[市场情绪] 未找到 ${targetDate} 的数据，尝试自动获取...`);
-        sentiment = await marketSentimentService.fetchAndCalculateSentiment(targetDate);
-      }
-      if (sentiment) {
-        marketSentimentScore = sentiment.score || 50;
-        marketLimitUpCount = sentiment.limitUpCount || 0;
-        marketAdvice = sentiment.advice || 'normal';
-        logger.info(`[市场情绪] 评分=${marketSentimentScore}, 涨停数=${marketLimitUpCount}, 建议=${marketAdvice}`);
+      // 优先从龙虎榜市场情绪缓存获取 strong 值
+      const moodData = marketMoodService.getMoodData(targetDate);
+      if (moodData) {
+        marketSentimentScore = moodData.strong;
+        marketLimitUpCount = moodData.ztjs || 0;  // 涨跌家数作为参考
+        // 根据 strong 值生成建议
+        if (moodData.strong >= 70) {
+          marketAdvice = 'aggressive';
+        } else if (moodData.strong >= 40) {
+          marketAdvice = 'normal';
+        } else {
+          marketAdvice = 'cautious';
+        }
+        logger.info(`[市场情绪] 从缓存获取: 评分=${marketSentimentScore}, 涨跌家数=${marketLimitUpCount}, 建议=${marketAdvice}`);
       } else {
-        logger.info(`[市场情绪] 无法获取 ${targetDate} 的数据，使用默认值`);
+        // 缓存未命中，降级使用原有的 marketSentimentService
+        logger.info(`[市场情绪] 缓存未命中 ${targetDate}，使用 marketSentimentService`);
+        let sentiment = await marketSentimentService.getSentimentByDate(targetDate);
+        if (!sentiment) {
+          logger.info(`[市场情绪] 未找到 ${targetDate} 的数据，尝试自动获取...`);
+          sentiment = await marketSentimentService.fetchAndCalculateSentiment(targetDate);
+        }
+        if (sentiment) {
+          marketSentimentScore = sentiment.score || 50;
+          marketLimitUpCount = sentiment.limitUpCount || 0;
+          marketAdvice = sentiment.advice || 'normal';
+          logger.info(`[市场情绪] 评分=${marketSentimentScore}, 涨停数=${marketLimitUpCount}, 建议=${marketAdvice}`);
+        } else {
+          logger.info(`[市场情绪] 无法获取 ${targetDate} 的数据，使用默认值`);
+        }
       }
     } catch (error) {
       logger.warn(`获取市场情绪失败: ${(error as Error).message}`);
@@ -544,14 +571,35 @@ export class VolumeSurgeService {
       high: all.filter(s => s.riskLevel === 'high').length,
     };
     
-    // 获取市场信息（取第一条记录的数据）
+    // 获取第一条记录（用于获取 indexAboveMa20 等字段）
     const first = all[0];
-    const marketInfo = {
-      sentiment: first.marketSentimentScore || 0,
-      limitUpCount: first.marketLimitUpCount || 0,
-      indexAboveMa20: first.indexAboveMa20 || false,
-      advice: first.marketAdvice || 'normal',
-    };
+    
+    // 获取市场信息（优先从 marketMoodService 获取，降级使用数据库记录）
+    const moodData = marketMoodService.getMoodData(dateStr);
+    let marketInfo;
+    if (moodData) {
+      // 从缓存获取
+      let advice = 'normal';
+      if (moodData.strong >= 70) {
+        advice = 'aggressive';
+      } else if (moodData.strong < 40) {
+        advice = 'cautious';
+      }
+      marketInfo = {
+        sentiment: moodData.strong,
+        limitUpCount: moodData.ztjs || 0,
+        indexAboveMa20: first.indexAboveMa20 || false,  // 这个字段仍从数据库取
+        advice,
+      };
+    } else {
+      // 降级从数据库记录获取
+      marketInfo = {
+        sentiment: first.marketSentimentScore || 0,
+        limitUpCount: first.marketLimitUpCount || 0,
+        indexAboveMa20: first.indexAboveMa20 || false,
+        advice: first.marketAdvice || 'normal',
+      };
+    }
     
     // 按行业分组统计
     const industryMap = new Map<string, number>();

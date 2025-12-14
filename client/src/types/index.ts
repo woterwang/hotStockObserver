@@ -294,6 +294,21 @@ export interface BuySignalStats {
   avgScore: number;
 }
 
+// 市场情绪
+export interface MarketSentiment {
+  dateStr: string;
+  limitUpCount: number;
+  limitDownCount: number;
+  upCount: number;
+  downCount: number;
+  upDownRatio: number;
+  maxContinuousBoard: number;
+  blastRate: number;
+  score: number;
+  level: 'high' | 'medium' | 'low' | 'extreme_low';
+  advice: 'aggressive' | 'normal' | 'reduce' | 'pause';
+}
+
 // 市场概览
 export interface MarketOverview {
   indices: MarketIndex[];
