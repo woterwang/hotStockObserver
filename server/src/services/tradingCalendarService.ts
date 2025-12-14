@@ -288,6 +288,83 @@ class TradingCalendarService {
       .filter(d => d >= start && d <= end)
       .sort();
   }
+
+  /**
+   * 扩展缓存：获取更长时间范围的交易日（最多三年）
+   * 通过多次调用接口，逐步往前获取历史交易日
+   * @param years 往前获取几年，默认3年
+   */
+  async extendCache(years: number = 3): Promise<{ success: boolean; count: number; range: { start: string; end: string } }> {
+    const allTradingDays = new Set<string>(this.tradingDaysSet);
+    const today = formatDate(new Date(), 'YYYYMMDD');
+    
+    // 每次获取约120个交易日（约半年），分批获取
+    // 三年约730个交易日，需要调用约6-7次
+    const batchSize = 120;
+    const totalBatches = Math.ceil((years * 243) / batchSize);
+    
+    let currentDate = today;
+    let successCount = 0;
+    
+    logger.info(`开始扩展交易日历缓存，目标: ${years}年，预计批次: ${totalBatches}`);
+    
+    for (let i = 0; i < totalBatches; i++) {
+      try {
+        // 获取当前日期往前 batchSize 个交易日
+        const tradingDays = await this.fetchTradingDays(currentDate, batchSize, 30);
+        
+        if (tradingDays && tradingDays.length > 0) {
+          tradingDays.forEach(d => allTradingDays.add(d));
+          successCount++;
+          
+          // 下一次从最早的日期开始
+          const sortedDays = tradingDays.sort();
+          currentDate = sortedDays[0];
+          
+          logger.info(`批次 ${i + 1}/${totalBatches}: 获取到 ${tradingDays.length} 个交易日，最早日期: ${currentDate}`);
+        } else {
+          logger.warn(`批次 ${i + 1} 获取失败，跳过`);
+        }
+        
+        // 添加延迟避免请求过快
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      } catch (error) {
+        logger.error(`批次 ${i + 1} 出错: ${(error as Error).message}`);
+      }
+    }
+    
+    // 更新内存缓存
+    this.tradingDaysSet = allTradingDays;
+    this.lastUpdated = new Date();
+    
+    // 排序后持久化
+    const sortedAll = Array.from(allTradingDays).sort();
+    
+    const cacheData = {
+      updatedAt: this.lastUpdated.toISOString(),
+      tradingDays: sortedAll
+    };
+    
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      const CACHE_FILE_PATH = path.join(__dirname, '../../data/trading_calendar.json');
+      
+      fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(cacheData, null, 2));
+      logger.info(`交易日历缓存扩展完成，共 ${sortedAll.length} 个交易日，范围: ${sortedAll[0]} ~ ${sortedAll[sortedAll.length - 1]}`);
+    } catch (error) {
+      logger.error(`保存扩展缓存失败: ${(error as Error).message}`);
+    }
+    
+    return {
+      success: successCount > 0,
+      count: sortedAll.length,
+      range: {
+        start: sortedAll[0] || '',
+        end: sortedAll[sortedAll.length - 1] || ''
+      }
+    };
+  }
 }
 
 // 导出单例
