@@ -15,7 +15,8 @@ import type {
   VolumeSurgeStats,
   BuySignal,
   BuySignalStats,
-  MarketSentiment
+  MarketSentiment,
+  MarketMood
 } from '../types';
 
 // 创建axios实例
@@ -106,6 +107,21 @@ export const marketApi = {
   // 获取热门板块
   getHotSectors: (limit: number = 10): Promise<ApiResponse<Sector[]>> => {
     return api.get('/market/sectors', { params: { limit } });
+  },
+};
+
+/**
+ * 市场情绪数据API
+ */
+export const moodApi = {
+  // 获取指定日期的情绪数据
+  getByDate: (dateStr: string): Promise<ApiResponse<MarketMood>> => {
+    return api.get(`/market/mood/${dateStr}`);
+  },
+
+  // 获取最新的情绪数据
+  getLatest: (): Promise<ApiResponse<MarketMood>> => {
+    return api.get('/market/mood');
   },
 };
 
@@ -216,6 +232,7 @@ export const buySignalApi = {
 export const sentimentApi = {
   // 获取指定日期情绪数据
   getByDate: (dateStr: string): Promise<ApiResponse<MarketSentiment>> => {
+    console.log('Fetching sentiment for date:', dateStr);
     return api.get(`/sentiment/date/${dateStr}`);
   },
 

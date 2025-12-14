@@ -7,6 +7,7 @@
 import { logger } from '../utils';
 import { BuySignal, VolumeSurge } from '../models';
 import { formatDate, parseDate } from '../utils/dateUtils';
+import { marketMoodService } from './marketMoodService';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import * as fs from 'fs';
@@ -121,23 +122,25 @@ interface KlineData {
 class BuySignalBacktestService {
   
   // 默认配置（策略来源固定为 volume_surge）
+  // 阈值标准：>= 70 高涨, >= 50 正常, >= 30 偏弱, < 30 极弱
   private defaultConfig: BuySignalBacktestConfig = {
     signalFilter: 'all',            // 默认回测 strong_buy 和 buy
     minSignalScore: 70,             // 默认信号评分门槛 70 分
     basePosition: 50000,
-    lowMoodPositionRatio: 0.5,
-    marketMoodThreshold: 50,
+    lowMoodPositionRatio: 0.5,      // 情绪偏弱时仓位减半
+    marketMoodThreshold: 50,        // 低于50（情绪偏弱）时降低仓位
     stopLossPercent: 0.05,
     takeProfitPercent: 0.20,
     maxHoldDays: 3,
-    marketPanicThreshold: 40,
+    marketPanicThreshold: 40,       // 低于30（情绪极弱）时暂停交易
   };
 
   // K线缓存
   private klineCache: Map<string, KlineData[]> = new Map();
   
-  // 当前回测需要的 K 线天数
-  private currentKlineDays: number = 120;
+  // 默认 K 线天数（仅用于预加载，实际回测时根据信号日期动态计算）
+  // 动态计算公式：klineDays = (今日日期 - 信号日期) + maxHoldDays + 缓冲天数
+  private defaultKlineDays: number = 120;
 
   /**
    * 获取股票的市场ID（同花顺格式）
@@ -556,9 +559,16 @@ class BuySignalBacktestService {
 
   /**
    * 计算某日市场情绪（0-100）
-   * 基于大盘涨跌幅
+   * 优先从 marketMoodService 获取 strong 值，降级使用大盘涨跌幅计算
    */
   private calculateMarketMood(indexKline: KlineData[], dateStr: string): number {
+    // 优先从 market_mood.json 获取 strong 值
+    const moodData = marketMoodService.getMoodData(dateStr);
+    if (moodData && typeof moodData.strong === 'number') {
+      return moodData.strong;
+    }
+
+    // 降级：基于大盘涨跌幅计算
     const idx = indexKline.findIndex(k => k.date === dateStr);
     if (idx <= 0) return 50;
 
@@ -589,8 +599,15 @@ class BuySignalBacktestService {
       const stockCode = signal.stockCode;
       const signalDateStr = formatDate(signal.date, 'YYYYMMDD');
       
+      // 动态计算需要的 K 线天数
+      // 公式：klineDays = (今日日期 - 信号日期) + maxHoldDays + 缓冲天数(10天)
+      const today = new Date();
+      const signalDate = parseDate(signalDateStr);
+      const daysDiff = Math.ceil((today.getTime() - signalDate.getTime()) / (1000 * 60 * 60 * 24));
+      const klineDays = Math.max(30, daysDiff + config.maxHoldDays + 10);  // 至少30天，加上持仓天数和10天缓冲
+      
       // 获取K线数据（使用动态计算的天数）
-      const klineData = await this.fetchKlineFromThs(stockCode, this.currentKlineDays);
+      const klineData = await this.fetchKlineFromThs(stockCode, klineDays);
       if (klineData.length === 0) {
         logger.info(`[回测] ${stockCode} 无K线数据`);
         return null;
@@ -803,9 +820,6 @@ class BuySignalBacktestService {
     // 根据 minSignalScore 过滤信号
     const signals = allSignals.filter(s => s.totalBuyScore >= finalConfig.minSignalScore);
     logger.info(`应用信号评分门槛 (>= ${finalConfig.minSignalScore}分) 后剩余 ${signals.length} 条记录`);
-
-    // 保存计算出的 K 线天数，供 backtestSingleStock 使用
-    this.currentKlineDays = klineDays;
 
     // === 预加载 K 线数据 ===
     if (signals.length > 0) {

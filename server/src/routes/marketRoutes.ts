@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { marketController } from '../controllers';
 import { tradingCalendarService } from '../services/tradingCalendarService';
+import { marketMoodService } from '../services/marketMoodService';
 
 const router = Router();
 
@@ -32,6 +33,54 @@ router.post('/trading-calendar/extend', async (req, res) => {
       data: result,
       message: `交易日历缓存已扩展，共 ${result.count} 个交易日`
     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: (error as Error).message
+    });
+  }
+});
+
+// 市场情绪 - 获取指定日期的 mood 数据
+router.get('/mood/:dateStr', (req, res) => {
+  try {
+    const { dateStr } = req.params;
+    const moodData = marketMoodService.getMoodData(dateStr);
+    if (moodData) {
+      res.json({
+        success: true,
+        data: moodData
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: `未找到 ${dateStr} 的情绪数据`
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: (error as Error).message
+    });
+  }
+});
+
+// 市场情绪 - 获取最新的 mood 数据
+router.get('/mood', (req, res) => {
+  try {
+    const latestMood = marketMoodService.getLatestMood();
+    if (latestMood) {
+      const moodData = marketMoodService.getMoodData(latestMood.day);
+      res.json({
+        success: true,
+        data: moodData
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: '暂无情绪数据'
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,

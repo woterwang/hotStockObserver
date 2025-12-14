@@ -226,13 +226,15 @@ export class VolumeSurgeService {
       if (moodData) {
         marketSentimentScore = moodData.strong;
         marketLimitUpCount = moodData.ztjs || 0;  // 涨跌家数作为参考
-        // 根据 strong 值生成建议
+        // 根据 strong 值生成建议（统一阈值标准）
         if (moodData.strong >= 70) {
-          marketAdvice = 'aggressive';
-        } else if (moodData.strong >= 40) {
-          marketAdvice = 'normal';
+          marketAdvice = 'aggressive';  // 情绪高涨
+        } else if (moodData.strong >= 50) {
+          marketAdvice = 'normal';      // 情绪正常
+        } else if (moodData.strong >= 30) {
+          marketAdvice = 'cautious';    // 情绪偏弱
         } else {
-          marketAdvice = 'cautious';
+          marketAdvice = 'pause';       // 情绪极弱
         }
         logger.info(`[市场情绪] 从缓存获取: 评分=${marketSentimentScore}, 涨跌家数=${marketLimitUpCount}, 建议=${marketAdvice}`);
       } else {
@@ -578,12 +580,16 @@ export class VolumeSurgeService {
     const moodData = marketMoodService.getMoodData(dateStr);
     let marketInfo;
     if (moodData) {
-      // 从缓存获取
+      // 从缓存获取（统一阈值标准）
       let advice = 'normal';
       if (moodData.strong >= 70) {
-        advice = 'aggressive';
-      } else if (moodData.strong < 40) {
-        advice = 'cautious';
+        advice = 'aggressive';  // 情绪高涨
+      } else if (moodData.strong >= 50) {
+        advice = 'normal';      // 情绪正常
+      } else if (moodData.strong >= 30) {
+        advice = 'cautious';    // 情绪偏弱
+      } else {
+        advice = 'pause';       // 情绪极弱
       }
       marketInfo = {
         sentiment: moodData.strong,

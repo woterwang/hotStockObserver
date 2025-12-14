@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Layout, MarketSentimentCard } from '../components';
-import type { MarketSentiment } from '../types';
+import type { MarketMood } from '../types';
 
 // 入场条件
 interface EntryConditions {
@@ -111,9 +111,9 @@ const statusStyles: Record<string, { bg: string; text: string; label: string }> 
 
 export default function SignalPage() {
   const [signals, setSignals] = useState<TradingSignal[]>([]);
-  const [sentiment, setSentiment] = useState<MarketSentiment | null>(null);
+  const [mood, setMood] = useState<MarketMood | null>(null);
   const [loading, setLoading] = useState(false);
-  const [sentimentLoading, setSentimentLoading] = useState(false);
+  const [moodLoading, setMoodLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().slice(0, 10).replace(/-/g, '')
   );
@@ -155,28 +155,28 @@ export default function SignalPage() {
   }, [selectedDate, selectedStrategy]);
 
   // 加载情绪数据（使用 Day2 日期）
-  const fetchSentiment = useCallback(async () => {
+  const fetchMood = useCallback(async () => {
     // 如果没有 Day2 日期，不获取情绪
     if (!day2Date) {
-      setSentiment(null);
+      setMood(null);
       return;
     }
     
-    setSentimentLoading(true);
+    setMoodLoading(true);
     try {
-      const response = await fetch(`/api/sentiment/date/${day2Date}`);
+      const response = await fetch(`/api/market/mood/${day2Date}`);
       const data = await response.json();
       
       if (data.success) {
-        setSentiment(data.data);
+        setMood(data.data);
       } else {
-        setSentiment(null);
+        setMood(null);
       }
     } catch (error) {
       console.error('获取情绪失败:', error);
-      setSentiment(null);
+      setMood(null);
     } finally {
-      setSentimentLoading(false);
+      setMoodLoading(false);
     }
   }, [day2Date]);
 
@@ -238,29 +238,25 @@ export default function SignalPage() {
   };
 
   // 手动获取情绪数据（获取 Day2 的情绪）
-  const handleFetchSentiment = async () => {
+  const handleFetchMood = async () => {
     // 如果没有 day2Date，需要先有信号才能知道 Day2
     const dateToFetch = day2Date || selectedDate;
     
-    setSentimentLoading(true);
+    setMoodLoading(true);
     try {
-      const response = await fetch('/api/sentiment/fetch', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date: dateToFetch }),
-      });
+      const response = await fetch(`/api/market/mood/${dateToFetch}`);
       const data = await response.json();
       
       if (data.success) {
-        setSentiment(data.data);
-        alert(`情绪数据获取成功（${dateToFetch}），评分: ${data.data.score}`);
+        setMood(data.data);
+        alert(`情绪数据获取成功（${dateToFetch}），大盘情绪: ${data.data.strong}`);
       } else {
         alert(`获取失败: ${data.message}`);
       }
     } catch (error) {
       alert('获取情绪数据失败');
     } finally {
-      setSentimentLoading(false);
+      setMoodLoading(false);
     }
   };
 
@@ -271,8 +267,8 @@ export default function SignalPage() {
 
   // 当 day2Date 变化时加载情绪
   useEffect(() => {
-    fetchSentiment();
-  }, [fetchSentiment]);
+    fetchMood();
+  }, [fetchMood]);
 
   // 过滤信号
   const filteredSignals = signals.filter(s => {
@@ -365,8 +361,8 @@ export default function SignalPage() {
             </button>
 
             <button
-              onClick={handleFetchSentiment}
-              disabled={sentimentLoading}
+              onClick={handleFetchMood}
+              disabled={moodLoading}
               className="px-4 py-1.5 bg-purple-500 text-white rounded text-sm hover:bg-purple-600 disabled:opacity-50"
             >
               获取情绪
@@ -379,8 +375,8 @@ export default function SignalPage() {
           dateStr={day2Date || ''}
           title="市场情绪"
           showDate={!!day2Date}
-          externalData={sentiment}
-          externalLoading={sentimentLoading}
+          externalData={mood}
+          externalLoading={moodLoading}
           className="mb-6"
         />
 

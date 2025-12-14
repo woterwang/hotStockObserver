@@ -309,6 +309,15 @@ export interface MarketSentiment {
   advice: 'aggressive' | 'normal' | 'reduce' | 'pause';
 }
 
+// 市场情绪数据（来自 market_mood.json）
+export interface MarketMood {
+  day: string;      // 日期 YYYYMMDD
+  strong: number;   // 大盘情绪（综合强度）0-100
+  ztjs: number;     // 涨停家数
+  lbgd: number;     // 连板高度
+  dfNum: number;    // 大幅回撤数量
+}
+
 // 市场概览
 export interface MarketOverview {
   indices: MarketIndex[];
