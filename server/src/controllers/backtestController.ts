@@ -137,9 +137,9 @@ export const backtestController = {
    */
   async getBuySignalDefaultConfig(req: Request, res: Response) {
     const defaultConfig: BuySignalBacktestConfig = {
-      strategyType: 'volume_surge',
+      // 注：strategyType 已移除，固定使用 volume_surge
       signalFilter: 'strong_buy',
-      minStrategyScore: 0,            // 最低策略评分（0=不过滤）
+      minSignalScore: 0,              // 最低信号评分（0=不过滤）
       basePosition: 50000,
       lowMoodPositionRatio: 0.5,
       marketMoodThreshold: 50,

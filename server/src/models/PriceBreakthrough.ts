@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 // 价格突破记录接口
 export interface IPriceBreakthrough {
   _id?: string;
-  date: Date;                    // 突破日期
+  date: string;                  // 突破日期 YYYYMMDD 格式
   stockCode: string;             // 股票代码
   stockName: string;             // 股票名称
   currentPrice: number;          // 突破时价格
@@ -23,7 +23,7 @@ export interface PriceBreakthroughDocument extends Omit<IPriceBreakthrough, '_id
 const PriceBreakthroughSchema = new Schema<PriceBreakthroughDocument>(
   {
     date: {
-      type: Date,
+      type: String,  // YYYYMMDD 格式
       required: true,
       index: true,
     },

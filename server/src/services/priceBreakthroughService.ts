@@ -1,13 +1,20 @@
 import { logger } from '../utils';
 import { PriceBreakthrough, HotStock } from '../models';
 import { dataFetchService, HistoryKline } from './dataFetchService';
-import { getToday, formatDate, parseDate, getDaysAgo } from '../utils/dateUtils';
+import { getToday, formatDate, getDaysAgo } from '../utils/dateUtils';
+import dayjs from 'dayjs';
 import axios from 'axios';
 import { tradingCalendarService } from './tradingCalendarService';
 
 // 导入同花顺 Hexin-V 生成器
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const thsUtils = require('../utils/thsUtils');
+
+// 工具函数：格式化日期字符串为 YYYYMMDD
+function formatDateStr(dateStr: string): string {
+  // 支持多种格式：YYYYMMDD、YYYY-MM-DD、YYYY/MM/DD
+  return dateStr.replace(/[-\/]/g, '');
+}
 
 /**
  * 价格突破服务
@@ -42,15 +49,14 @@ export class PriceBreakthroughService {
     
     // 降级：如果交易日历缓存为空，使用简单的周末判断
     logger.warn('交易日历缓存为空，降级为周末判断');
-    const date = parseDate(dateStr);
-    let prevDate = new Date(date.getTime() - 24 * 60 * 60 * 1000);
+    let prevDate = dayjs(dateStr).subtract(1, 'day');
     
     // 跳过周末
-    while (prevDate.getDay() === 0 || prevDate.getDay() === 6) {
-      prevDate = new Date(prevDate.getTime() - 24 * 60 * 60 * 1000);
+    while (prevDate.day() === 0 || prevDate.day() === 6) {
+      prevDate = prevDate.subtract(1, 'day');
     }
     
-    return formatDate(prevDate, 'YYYYMMDD');
+    return prevDate.format('YYYYMMDD');
   }
 
   /**
@@ -68,15 +74,15 @@ export class PriceBreakthroughService {
     // 降级：如果交易日历缓存为空，使用简单的周末判断
     logger.warn('交易日历缓存为空，降级为周末判断');
     const result: string[] = [];
-    let currentDate = parseDate(dateStr);
+    let currentDate = dayjs(dateStr);
     
     for (let i = 0; i < n; i++) {
-      currentDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
+      currentDate = currentDate.subtract(1, 'day');
       // 跳过周末
-      while (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
-        currentDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
+      while (currentDate.day() === 0 || currentDate.day() === 6) {
+        currentDate = currentDate.subtract(1, 'day');
       }
-      result.push(formatDate(currentDate, 'YYYYMMDD'));
+      result.push(currentDate.format('YYYYMMDD'));
     }
     
     return result;
@@ -96,7 +102,8 @@ export class PriceBreakthroughService {
     const day3 = day3Str;
     
     // 构建问财查询条件（三天模式）
-    const question = `${day1}涨幅>8%，${day1}股价创188日新高，${day2}涨跌幅大于-3%且<3%，${day2}最高价>${day1}最高价，${day3}开盘价>${day2}当日均价，${day3}开盘涨幅<3%且>-5%，非ST，非新股，非北交所，近二年未被立案`;
+    // 添加成交额、量比字段到查询中
+    const question = `${day1}涨幅>8%，${day1}股价创188日新高，${day2}涨跌幅大于-3%且<3%，${day2}最高价>${day1}最高价，${day3}开盘价>${day2}当日均价，${day3}开盘涨幅<3%且>-5%，${day1}成交额，${day2}量比，非ST，非新股，非北交所，近二年未被立案`;
     const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
     
     // 动态生成 Hexin-V
@@ -120,8 +127,8 @@ export class PriceBreakthroughService {
       'Content-Type': 'application/json',
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       'Accept': '*/*',
-      'Referer': 'http://www.iwencai.com/',
-      'Cookie': `other_uid=Ths_iwencai_Xuangu_0k9ulnwt96k6xiozeacd2z20dhuy0s9b; ta_random_userid=mkoh08tein; v=${hexinV}`,
+      'Referer': `http://www.iwencai.com/unifiedwap/result?w=${encodeURIComponent(question)}&querytype=stock`,
+      'Cookie': `other_uid=Ths_iwencai_Xuangu_0k9ulnwt96k6xiozeacd2z20dhuy0s9b; guideState=1; wencai_pc_version=1; ta_random_userid=mkoh08tein; v=${hexinV}`,
       'Hexin-V': hexinV,
       'Host': 'www.iwencai.com',
       'Origin': 'http://www.iwencai.com',
@@ -158,25 +165,52 @@ export class PriceBreakthroughService {
       const datas = components[0].data.datas;
       logger.info(`问财查询成功，共找到 ${datas.length} 只股票`);
       
+      // 调试：打印第一条数据的所有字段名
+      if (datas.length > 0) {
+        logger.info(`问财返回字段: ${Object.keys(datas[0]).join(', ')}`);
+        logger.debug(`问财第一条数据: ${JSON.stringify(datas[0])}`);
+      }
+      
       // 转换为统一格式
+      // 注意：问财返回的字段名带日期后缀，如 "涨跌幅:前复权[20251210]"
       return datas.map((v: any) => {
         // 提取股票代码和名称
         const stockCode = v['code'] || v['股票代码'];
         const stockName = v['股票简称'] || v['name'] || '';
-        const changePercent = v['涨跌幅:前复权'] || v['涨幅'] || 0;
-        const currentPrice = v['最新价'] || v['收盘价:前复权'] || 0;
-        const turnover = v['成交额'] || 0;
-        const high188 = v['188日最高'] || v['188日最高价'] || 0;
+        
+        // 当前涨幅使用 "最新涨跌幅" 字段
+        const changePercent = v['最新涨跌幅'] || 0;
+        
+        // 当前价格使用 "最新价" 字段
+        const currentPrice = v['最新价'] || 0;
+        
+        // 动态查找带日期后缀的字段
+        // 查找 day1 涨幅（用于记录突破当天的涨幅）
+        const day1ChangeKey = Object.keys(v).find(k => k.startsWith('涨跌幅:前复权[') && k.includes(day1));
+        const day1ChangePercent = day1ChangeKey ? v[day1ChangeKey] : 0;
+        
+        // 查找 day3 收盘价
+        const day3CloseKey = Object.keys(v).find(k => k.startsWith('收盘价:不复权[') && k.includes(day3));
+        const day3Close = day3CloseKey ? v[day3CloseKey] : currentPrice;
+        
+        // 查找成交额（格式：成交额[20251212] 或 成交额:不复权[20251212]）
+        const turnoverKey = Object.keys(v).find(k => k.includes('成交额') && k.includes(`[${day1}]`));
+        const turnover = turnoverKey ? v[turnoverKey] : 0;
+        
+        // 查找量比（格式：量比[20251212]）
+        const volumeRatioKey = Object.keys(v).find(k => k.includes('量比') && k.includes(`[${day2}]`));
+        const turnoverRatio = volumeRatioKey ? v[volumeRatioKey] : 0;
         
         return {
           stockCode,
           stockName,
-          currentPrice: Number(currentPrice) || 0,
+          currentPrice: Number(currentPrice) || Number(day3Close) || 0,
           changePercent: Number(changePercent) || 0,
+          day1ChangePercent: Number(day1ChangePercent) || 0, // 记录 day1 涨幅
           turnover: Number(turnover) || 0,
-          high188: Number(high188) || 0,
+          high188: 0,  // 问财当前查询未返回 188 日最高价
           prevDayTurnover: 0,
-          turnoverRatio: 0,
+          turnoverRatio: Number(turnoverRatio) || 0,
           breakTime: '',
           riseReason: '',
           sector: '',
@@ -255,12 +289,10 @@ export class PriceBreakthroughService {
       // 计算188个交易日前的日期（约9个月）
       const endDate = targetDate;
       // 往前推280天（覆盖188个交易日）
-      const targetDateObj = parseDate(targetDate);
-      const startDateObj = new Date(targetDateObj.getTime() - 280 * 24 * 60 * 60 * 1000);
-      const startDate = formatDate(startDateObj, 'YYYYMMDD');
+      const startDateStr = dayjs(targetDate).subtract(280, 'day').format('YYYYMMDD');
 
       // 获取历史K线（188日）
-      const klines = await dataFetchService.fetchHistoryKline(stockCode, startDate, endDate);
+      const klines = await dataFetchService.fetchHistoryKline(stockCode, startDateStr, endDate);
       
       if (!klines || klines.length < 2) {
         return null;
@@ -308,10 +340,7 @@ export class PriceBreakthroughService {
       
       const hotRecord = await HotStock.findOne({
         stockCode,
-        date: {
-          $gte: parseDate(targetDate),
-          $lt: new Date(parseDate(targetDate).getTime() + 24 * 60 * 60 * 1000)
-        }
+        date: targetDate
       }).lean();
 
       if (hotRecord) {
@@ -344,16 +373,13 @@ export class PriceBreakthroughService {
    * 使用热搜数据补充股票的上涨原因、板块、概念等信息
    */
   private async enrichWithHotData(stocks: any[], targetDate: string): Promise<any[]> {
-    const targetDateObj = parseDate(targetDate);
-    const nextDay = new Date(targetDateObj.getTime() + 24 * 60 * 60 * 1000);
-
     const enrichedStocks = [];
 
     for (const stock of stocks) {
       try {
         const hotRecord = await HotStock.findOne({
           stockCode: stock.stockCode,
-          date: { $gte: targetDateObj, $lt: nextDay }
+          date: targetDate
         }).lean();
 
         if (hotRecord) {
@@ -379,7 +405,6 @@ export class PriceBreakthroughService {
    */
   async scanAndSave(dateStr?: string): Promise<number> {
     const targetDate = dateStr || formatDate(getToday(), 'YYYYMMDD');
-    const dateObj = parseDate(targetDate);
 
     // 扫描突破股票
     const breakthroughList = await this.scanPriceBreakthrough(targetDate);
@@ -394,10 +419,10 @@ export class PriceBreakthroughService {
     for (const item of breakthroughList) {
       try {
         await PriceBreakthrough.findOneAndUpdate(
-          { date: dateObj, stockCode: item.stockCode },
+          { date: targetDate, stockCode: item.stockCode },
           {
             ...item,
-            date: dateObj,
+            date: targetDate,
           },
           { upsert: true, new: true }
         );
@@ -415,11 +440,10 @@ export class PriceBreakthroughService {
    * 获取指定日期的突破列表
    */
   async getBreakthroughByDate(dateStr: string, limit: number = 50): Promise<any[]> {
-    const dateObj = parseDate(dateStr);
-    const nextDay = new Date(dateObj.getTime() + 24 * 60 * 60 * 1000);
+    const targetDate = formatDateStr(dateStr);
 
     const list = await PriceBreakthrough.find({
-      date: { $gte: dateObj, $lt: nextDay }
+      date: targetDate
     })
       .sort({ changePercent: -1 })
       .limit(limit)
@@ -443,7 +467,8 @@ export class PriceBreakthroughService {
     // 按日期分组
     const grouped = new Map<string, any[]>();
     for (const item of list) {
-      const dateKey = formatDate(item.date, 'YYYY-MM-DD');
+      // item.date 现在是 YYYYMMDD 字符串，转换为 YYYY-MM-DD 格式
+      const dateKey = item.date.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
       if (!grouped.has(dateKey)) {
         grouped.set(dateKey, []);
       }
@@ -461,10 +486,8 @@ export class PriceBreakthroughService {
    * 获取所有有记录的日期列表
    */
   async getAvailableDates(): Promise<string[]> {
-    const dates = await PriceBreakthrough.distinct('date');
-    return dates
-      .map(d => formatDate(d, 'YYYY-MM-DD'))
-      .sort((a, b) => b.localeCompare(a)); // 降序
+    const dates = await PriceBreakthrough.distinct('date') as string[];
+    return dates.sort((a, b) => b.localeCompare(a)); // 降序
   }
 
   /**
@@ -487,17 +510,16 @@ export class PriceBreakthroughService {
    */
   private getTradingDays(startDate: string, endDate: string): string[] {
     const days: string[] = [];
-    const start = parseDate(startDate);
-    const end = parseDate(endDate);
+    let current = dayjs(startDate);
+    const end = dayjs(endDate);
     
-    const current = new Date(start);
-    while (current <= end) {
-      const dayOfWeek = current.getDay();
+    while (current.isBefore(end) || current.isSame(end, 'day')) {
+      const dayOfWeek = current.day();
       // 排除周六(6)和周日(0)
       if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-        days.push(formatDate(current, 'YYYYMMDD'));
+        days.push(current.format('YYYYMMDD'));
       }
-      current.setDate(current.getDate() + 1);
+      current = current.add(1, 'day');
     }
     
     return days;
@@ -530,10 +552,7 @@ export class PriceBreakthroughService {
       try {
         // 检查该日期是否已有数据
         const existing = await PriceBreakthrough.countDocuments({
-          date: {
-            $gte: parseDate(day),
-            $lt: new Date(parseDate(day).getTime() + 24 * 60 * 60 * 1000)
-          }
+          date: day
         });
 
         if (existing > 0) {

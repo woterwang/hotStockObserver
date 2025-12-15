@@ -1,6 +1,6 @@
 import { logger } from '../utils';
 import { VolumeSurge } from '../models';
-import { getToday, formatDate, parseDate } from '../utils/dateUtils';
+import { getToday, formatDate } from '../utils/dateUtils';
 import axios from 'axios';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -9,6 +9,7 @@ const thsUtils = require('../utils/thsUtils');
 // 导入市场情绪服务
 import { marketSentimentService } from './marketSentimentService';
 import { marketMoodService } from './marketMoodService';
+import { tradingCalendarService } from './tradingCalendarService';
 
 export class VolumeSurgeService {
   
@@ -209,6 +210,13 @@ export class VolumeSurgeService {
 
   async scanAndSave(dateStr?: string): Promise<number> {
     const targetDate = dateStr || formatDate(getToday(), 'YYYYMMDD');
+    
+    // 🔒 检查目标日期是否为交易日，防止在非交易日存储错误数据
+    if (!tradingCalendarService.isTradingDay(targetDate)) {
+      logger.warn(`[VolumeSurge] ${targetDate} 不是交易日，跳过扫描`);
+      return 0;
+    }
+    
     logger.info(`开始扫描放量大涨股票: ${targetDate}`);
     
     // ========================================
@@ -279,7 +287,7 @@ export class VolumeSurgeService {
       return 0;
     }
 
-    const dateObj = parseDate(targetDate);
+    // 直接使用字符串日期 YYYYMMDD 格式
     let count = 0;
 
     for (const item of rawData) {
@@ -448,9 +456,9 @@ export class VolumeSurgeService {
         }
 
         await VolumeSurge.findOneAndUpdate(
-          { date: dateObj, stockCode },
+          { date: targetDate, stockCode },
           {
-            date: dateObj,
+            date: targetDate,
             stockCode,
             stockName,
             price,
@@ -498,9 +506,8 @@ export class VolumeSurgeService {
   }
 
   async getList(dateStr: string): Promise<any[]> {
-    const dateObj = parseDate(dateStr);
-    // 按策略评分降序排列，评分相同则按涨幅排序
-    return VolumeSurge.find({ date: dateObj }).sort({ strategyScore: -1, changePercent: -1 });
+    // 直接使用字符串日期查询
+    return VolumeSurge.find({ date: dateStr }).sort({ strategyScore: -1, changePercent: -1 });
   }
 
   /**
@@ -508,9 +515,8 @@ export class VolumeSurgeService {
    * 这些是策略认为最优质的突破标的
    */
   async getHighQualitySignals(dateStr: string): Promise<any[]> {
-    const dateObj = parseDate(dateStr);
     return VolumeSurge.find({ 
-      date: dateObj,
+      date: dateStr,
       strategyScore: { $gte: 70 }  // 评分>=70分
     }).sort({ strategyScore: -1 });
   }
@@ -535,8 +541,7 @@ export class VolumeSurgeService {
       advice: string;
     };
   }> {
-    const dateObj = parseDate(dateStr);
-    const all = await VolumeSurge.find({ date: dateObj });
+    const all = await VolumeSurge.find({ date: dateStr });
     
     if (all.length === 0) {
       return {
@@ -637,9 +642,8 @@ export class VolumeSurgeService {
    * 获取首板股票列表
    */
   async getFirstBoardStocks(dateStr: string): Promise<any[]> {
-    const dateObj = parseDate(dateStr);
     return VolumeSurge.find({ 
-      date: dateObj,
+      date: dateStr,
       isFirstBoard: true
     }).sort({ strategyScore: -1 });
   }
@@ -648,9 +652,8 @@ export class VolumeSurgeService {
    * 获取低风险股票列表
    */
   async getLowRiskStocks(dateStr: string): Promise<any[]> {
-    const dateObj = parseDate(dateStr);
     return VolumeSurge.find({ 
-      date: dateObj,
+      date: dateStr,
       riskLevel: 'low'
     }).sort({ strategyScore: -1 });
   }
@@ -686,9 +689,9 @@ export class VolumeSurgeService {
   }
 
   async getAvailableDates(): Promise<string[]> {
-    const result = await VolumeSurge.distinct('date');
+    const result = await VolumeSurge.distinct('date') as string[];
     return result
-      .map((d: Date) => formatDate(d, 'YYYY-MM-DD'))
+      .map((d: string) => d.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3'))
       .sort((a, b) => b.localeCompare(a));
   }
 

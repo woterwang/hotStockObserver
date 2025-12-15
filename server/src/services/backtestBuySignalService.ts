@@ -795,7 +795,7 @@ class BuySignalBacktestService {
       // 策略来源固定为 volume_surge
       strategyType: 'volume_surge',
       // 只回测 "强烈买入" 和 "建议买入" 的标的
-      buySignal: { $in: ['strong_buy', 'buy'] },
+      // buySignal: { $in: ['strong_buy', 'buy'] },
     };
 
     // 从 BuySignal 集合查询数据
@@ -813,7 +813,7 @@ class BuySignalBacktestService {
       totalBuyScore: bs.totalBuyScore || 0,
       marketMood: bs.marketMood || 50,
       // 根据 buySignal 类型决定仓位比例
-      positionRatio: bs.buySignal === 'strong_buy' ? 1 : 0.5,
+      positionRatio: 1,
       buySignalType: bs.buySignal,
     }));
 

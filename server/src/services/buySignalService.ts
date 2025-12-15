@@ -40,7 +40,7 @@ interface StrategyCandidate {
   _id: string;
   stockCode: string;
   stockName: string;
-  date: Date;
+  date: string;            // 日期字符串 YYYYMMDD
   strategyType: StrategyType;
   strategyName: string;
   score: number;           // 策略得分
@@ -48,16 +48,11 @@ interface StrategyCandidate {
   changePercent?: number;  // 当日涨幅
 }
 
-// 解析日期
-function parseDate(dateStr: string): Date {
-  if (dateStr.includes('-')) {
-    return dayjs(dateStr).startOf('day').toDate();
+// 格式化日期为 YYYYMMDD 字符串
+function formatDateStr(date: Date | string): string {
+  if (typeof date === 'string') {
+    return date.replace(/-/g, '').slice(0, 8);
   }
-  return dayjs(dateStr, 'YYYYMMDD').startOf('day').toDate();
-}
-
-// 格式化日期
-function formatDate(date: Date): string {
   return dayjs(date).format('YYYYMMDD');
 }
 
@@ -319,10 +314,10 @@ class BuySignalService {
   
   /**
    * 从放量突破策略获取候选股票
-   * @param selectionDate 选股日期
+   * @param selectionDate 选股日期 YYYYMMDD
    * @param minScore 最低分数门槛，默认50
    */
-  private async getVolumeSurgeCandidates(selectionDate: Date, minScore: number = 50): Promise<StrategyCandidate[]> {
+  private async getVolumeSurgeCandidates(selectionDate: string, minScore: number = 50): Promise<StrategyCandidate[]> {
     const records = await VolumeSurge.find({
       date: selectionDate,
       strategyScore: { $gte: minScore },
@@ -344,7 +339,7 @@ class BuySignalService {
   /**
    * 从价格突破策略获取候选股票
    */
-  private async getBreakthroughCandidates(selectionDate: Date): Promise<StrategyCandidate[]> {
+  private async getBreakthroughCandidates(selectionDate: string): Promise<StrategyCandidate[]> {
     const records = await PriceBreakthrough.find({
       date: selectionDate,
       turnoverRatio: { $gte: 1.5 },  // 放量突破
@@ -365,12 +360,12 @@ class BuySignalService {
   
   /**
    * 获取所有策略的候选股票
-   * @param selectionDate 选股日期
+   * @param selectionDate 选股日期 YYYYMMDD
    * @param strategies 策略类型列表，默认只使用 volume_surge
    * @param minScore 最低分数门槛，默认50
    */
   private async getAllCandidates(
-    selectionDate: Date, 
+    selectionDate: string, 
     strategies?: StrategyType[],
     minScore: number = 50
   ): Promise<StrategyCandidate[]> {
@@ -417,7 +412,8 @@ class BuySignalService {
       return [];
     }
     
-    const signalDate = parseDate(dateStr);
+    // 直接使用字符串日期
+    const signalDate = formatDateStr(dateStr);
     
     // 获取前一个交易日（使用交易日历服务，支持节假日）
     const prevTradingDay = tradingCalendarService.getPrevTradingDay(dateStr);
@@ -425,13 +421,24 @@ class BuySignalService {
       console.log(`[BuySignal] 无法获取 ${dateStr} 的前一个交易日，跳过生成`);
       return [];
     }
-    const selectionDate = parseDate(prevTradingDay);
+    // 选股日期就是前一交易日（字符串格式）
+    const selectionDate = prevTradingDay;
+    
+    // 🔒 检查前一交易日的 VolumeSurge 数据是否存在
+    // 避免在选股数据未生成时使用错误的历史数据
+    const volumeSurgeCount = await VolumeSurge.countDocuments({ date: selectionDate });
+    if (volumeSurgeCount === 0) {
+      console.log(`[BuySignal] ⚠️ ${prevTradingDay} 的 VolumeSurge 数据尚未生成，无法为 ${dateStr} 生成买入信号`);
+      console.log(`[BuySignal] 请等待 ${prevTradingDay} 收盘后数据更新，或手动触发选股扫描`);
+      return [];
+    }
+    console.log(`[BuySignal] ${prevTradingDay} 有 ${volumeSurgeCount} 条 VolumeSurge 数据`);
     
     // 获取前一天的选股结果（支持多策略）
     const candidates = await this.getAllCandidates(selectionDate, strategies, minScore);
     
     if (candidates.length === 0) {
-      console.log(`[BuySignal] ${dateStr} 无可处理的候选标的`);
+      console.log(`[BuySignal] ${dateStr} 无可处理的候选标的（可能分数低于阈值 ${minScore}）`);
       return [];
     }
     
@@ -477,7 +484,7 @@ class BuySignalService {
    */
   async generateSignalForStock(
     candidate: StrategyCandidate,
-    signalDate: Date
+    signalDate: string  // YYYYMMDD 格式
   ): Promise<IBuySignal | null> {
     // 获取开盘数据（这里模拟，实际需要对接实时行情API）
     const openData = await this.getOpeningData(candidate.stockCode, signalDate);
@@ -612,7 +619,7 @@ class BuySignalService {
    * 获取开盘数据
    * 从同花顺K线接口获取，不调用问财避免被封
    */
-  async getOpeningData(stockCode: string, date: Date): Promise<{
+  async getOpeningData(stockCode: string, dateStr: string): Promise<{
     openPrice: number;
     openChangePercent: number;
     openVolumeRatio: number;
@@ -624,7 +631,7 @@ class BuySignalService {
     openTimes?: number;
   } | null> {
     try {
-      const dateStr = formatDate(date);
+      const targetDateStr = formatDateStr(dateStr);
       const klineData = await this.fetchKlineData(stockCode, 30);
       
       if (!klineData || klineData.length === 0) {
@@ -633,11 +640,11 @@ class BuySignalService {
       }
       
       // 找到目标日期的K线
-      let targetIdx = klineData.findIndex(k => k.date === dateStr);
+      let targetIdx = klineData.findIndex(k => k.date === targetDateStr);
       
       // 如果找不到指定日期，使用最新的K线（可能是盘中或当天数据尚未更新）
       if (targetIdx === -1) {
-        console.log(`[BuySignal] ${stockCode} 未找到 ${dateStr} 的K线，使用最新K线`);
+        console.log(`[BuySignal] ${stockCode} 未找到 ${targetDateStr} 的K线，使用最新K线`);
         targetIdx = klineData.length - 1;
       }
       
@@ -687,20 +694,20 @@ class BuySignalService {
    * 优先从市场情绪服务获取 strong 值，失败则用原有逻辑计算
    * 原有逻辑：从同花顺获取上证指数K线，基于涨跌幅计算情绪值
    */
-  async getMarketEnvironment(date: Date): Promise<{
+  async getMarketEnvironment(dateStr: string): Promise<{
     indexOpenChange: number;
     indexMorningTrend: 'up' | 'down' | 'flat';
     marketMood: number;
   }> {
     const defaultResult = { indexOpenChange: 0, indexMorningTrend: 'flat' as const, marketMood: 50 };
-    const dateStr = formatDate(date);
+    const targetDateStr = formatDateStr(dateStr);
     
     // 1. 优先从市场情绪服务获取 strong 值
-    const cachedMood = marketMoodService.getMood(dateStr);
+    const cachedMood = marketMoodService.getMood(targetDateStr);
     if (cachedMood !== null) {
-      console.log(`[BuySignal] 使用缓存的市场情绪: ${dateStr} -> ${cachedMood}`);
+      console.log(`[BuySignal] 使用缓存的市场情绪: ${targetDateStr} -> ${cachedMood}`);
       // 仍需获取指数开盘数据，但情绪值用缓存的
-      const indexData = await this.fetchIndexData(dateStr);
+      const indexData = await this.fetchIndexData(targetDateStr);
       return {
         indexOpenChange: indexData.indexOpenChange,
         indexMorningTrend: indexData.indexMorningTrend,
@@ -709,8 +716,8 @@ class BuySignalService {
     }
     
     // 2. 缓存没有，使用原有逻辑（从同花顺K线计算）
-    console.log(`[BuySignal] 市场情绪缓存未命中 ${dateStr}，使用K线计算`);
-    return this.calculateMarketEnvironmentFromKline(dateStr, defaultResult);
+    console.log(`[BuySignal] 市场情绪缓存未命中 ${targetDateStr}，使用K线计算`);
+    return this.calculateMarketEnvironmentFromKline(targetDateStr, defaultResult);
   }
   
   /**
@@ -879,14 +886,14 @@ class BuySignalService {
    * 获取板块数据
    * 简化版：基于已有的行业信息返回估算值
    */
-  async getSectorData(sectorName: string, date: Date): Promise<{
+  async getSectorData(sectorName: string, dateStr: string): Promise<{
     sectorOpenChange: number;
     sectorLimitUpCount: number;
     sectorLeader: boolean;
   }> {
     // 由于板块数据需要单独接口，这里返回基于大盘的估算值
     // 可以后续对接板块接口
-    const marketEnv = await this.getMarketEnvironment(date);
+    const marketEnv = await this.getMarketEnvironment(dateStr);
     
     return {
       sectorOpenChange: marketEnv.indexOpenChange * (0.8 + Math.random() * 0.4),  // 大盘涨跌附近波动
@@ -1274,7 +1281,8 @@ class BuySignalService {
    * 获取今日买入信号列表
    */
   async getTodaySignals(dateStr?: string): Promise<IBuySignal[]> {
-    const targetDate = dateStr ? parseDate(dateStr) : dayjs().startOf('day').toDate();
+    // 直接使用字符串日期查询
+    const targetDate = dateStr ? formatDateStr(dateStr) : dayjs().format('YYYYMMDD');
     
     const results = await BuySignal.find({ date: targetDate })
       .sort({ totalBuyScore: -1 })
@@ -1294,7 +1302,8 @@ class BuySignalService {
     pass: number;
     avgScore: number;
   }> {
-    const date = parseDate(dateStr);
+    // 直接使用字符串日期查询
+    const date = formatDateStr(dateStr);
     const signals = await BuySignal.find({ date }).lean();
     
     if (signals.length === 0) {
@@ -1317,12 +1326,12 @@ class BuySignalService {
    * 更新收益跟踪数据
    */
   async updateProfitTracking(dateStr: string): Promise<void> {
-    const signalDate = parseDate(dateStr);
-    const today = dayjs().startOf('day').toDate();
+    const targetDateStr = formatDateStr(dateStr);
+    const yesterdayStr = dayjs().subtract(1, 'day').format('YYYYMMDD');
     
     // 获取需要更新的信号（已过1-3天的）
     const signals = await BuySignal.find({
-      date: { $lte: dayjs(today).subtract(1, 'day').toDate() },
+      date: { $lte: yesterdayStr },
       resultStatus: 'pending',
     });
     
@@ -1341,25 +1350,24 @@ class BuySignalService {
    * 返回有 VolumeSurge 数据但没有 BuySignal 数据的日期
    */
   async getAvailableDatesForGeneration(): Promise<{ date: string; hasSignal: boolean; surgeCount: number }[]> {
-    // 获取 VolumeSurge 的所有日期
-    const surgeDates = await VolumeSurge.distinct('date');
+    // 获取 VolumeSurge 的所有日期 (现在已经是 YYYYMMDD 字符串)
+    const surgeDates = await VolumeSurge.distinct('date') as string[];
     
-    // 获取已有 BuySignal 的日期
-    const signalDates = await BuySignal.distinct('date');
-    const signalDateSet = new Set(signalDates.map(d => dayjs(d).format('YYYY-MM-DD')));
+    // 获取已有 BuySignal 的日期 (现在也是 YYYYMMDD 字符串)
+    const signalDates = await BuySignal.distinct('date') as string[];
+    const signalDateSet = new Set(signalDates);
     
     // 构建结果
     const result: { date: string; hasSignal: boolean; surgeCount: number }[] = [];
     
     for (const surgeDate of surgeDates) {
-      const dateStr = dayjs(surgeDate).format('YYYY-MM-DD');
-      const hasSignal = signalDateSet.has(dateStr);
+      const hasSignal = signalDateSet.has(surgeDate);
       
       // 统计该日期的 VolumeSurge 数量
       const surgeCount = await VolumeSurge.countDocuments({ date: surgeDate });
       
       result.push({
-        date: dateStr,
+        date: surgeDate,
         hasSignal,
         surgeCount,
       });

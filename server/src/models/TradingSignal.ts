@@ -97,12 +97,12 @@ export interface ITradingSignal {
   strategy: StrategyType;              // 策略类型
   
   // 基本信息
-  signalDate: Date;                    // 信号生成日期（Day3）
+  signalDate: string;                  // 信号生成日期（Day3），YYYYMMDD 字符串
   stockCode: string;                   // 股票代码
   stockName: string;                   // 股票名称
   
   // 三天数据
-  day1Date: Date;                      // Day1 突破日
+  day1Date: string;                    // Day1 突破日，YYYYMMDD 字符串
   day1Open: number;                    // Day1 开盘价
   day1Close: number;                   // Day1 收盘价
   day1High: number;                    // Day1 最高价
@@ -111,7 +111,7 @@ export interface ITradingSignal {
   day1Volume: number;                  // Day1 成交量
   day1Turnover: number;                // Day1 成交额
   
-  day2Date: Date;                      // Day2 确认日
+  day2Date: string;                    // Day2 确认日，YYYYMMDD 字符串
   day2Open: number;                    // Day2 开盘价
   day2Close: number;                   // Day2 收盘价
   day2High: number;                    // Day2 最高价
@@ -139,9 +139,9 @@ export interface ITradingSignal {
   
   // 交易结果（如果已入场）
   entryPrice?: number;                 // 实际入场价
-  entryTime?: Date;                    // 入场时间
+  entryTime?: Date;                    // 入场时间（保持 Date 类型，因为需要精确时间）
   exitPrice?: number;                  // 实际退出价
-  exitTime?: Date;                     // 退出时间
+  exitTime?: Date;                     // 退出时间（保持 Date 类型）
   exitReason?: string;                 // 退出原因
   profitPercent?: number;              // 收益率 %
   
@@ -175,7 +175,7 @@ const TradingSignalSchema = new Schema<TradingSignalDocument>(
       index: true,
     },
     signalDate: {
-      type: Date,
+      type: String,
       required: true,
       index: true,
     },
@@ -190,7 +190,7 @@ const TradingSignalSchema = new Schema<TradingSignalDocument>(
     },
     
     // Day1 数据
-    day1Date: { type: Date, required: true },
+    day1Date: { type: String, required: true },
     day1Open: { type: Number, default: 0 },
     day1Close: { type: Number, default: 0 },
     day1High: { type: Number, default: 0 },
@@ -200,7 +200,7 @@ const TradingSignalSchema = new Schema<TradingSignalDocument>(
     day1Turnover: { type: Number, default: 0 },
     
     // Day2 数据
-    day2Date: { type: Date, required: true },
+    day2Date: { type: String, required: true },
     day2Open: { type: Number, default: 0 },
     day2Close: { type: Number, default: 0 },
     day2High: { type: Number, default: 0 },

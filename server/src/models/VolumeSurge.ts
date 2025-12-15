@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IVolumeSurge {
   _id?: string;
-  date: Date;
+  date: string;  // 日期字符串 YYYYMMDD 格式，避免时区问题
   stockCode: string;
   stockName: string;
   price: number;
@@ -68,7 +68,7 @@ export interface VolumeSurgeDocument extends Omit<IVolumeSurge, '_id'>, Document
 
 const VolumeSurgeSchema = new Schema<VolumeSurgeDocument>(
   {
-    date: { type: Date, required: true, index: true },
+    date: { type: String, required: true, index: true },  // YYYYMMDD 格式
     stockCode: { type: String, required: true, index: true },
     stockName: { type: String, required: true },
     price: { type: Number, required: true },

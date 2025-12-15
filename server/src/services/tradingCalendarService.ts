@@ -94,14 +94,16 @@ class TradingCalendarService {
         let tradingDays: string[] = [];
         const innerData = resData.data;
         
-        // 合并 prev_dates 和 next_dates，并加入当前日期
+        // 合并 prev_dates 和 next_dates
         if (innerData.prev_dates && Array.isArray(innerData.prev_dates)) {
           tradingDays = tradingDays.concat(innerData.prev_dates);
         }
         
-        // 注意：接口返回的 prev_dates 和 next_dates 已经是完整的交易日列表
-        // 如果 date 在 lastPrev 和 firstNext 之间但不在列表中，说明 date 不是交易日
-        // 不需要额外添加当前日期，直接使用接口返回的数据即可
+        // 注意：接口返回的 prev_dates 和 next_dates 不包含当天日期
+        // 需要根据 trade_day 字段判断当天是否为交易日，如果是则加入列表
+        if (innerData.trade_day === true) {
+          tradingDays.push(date);
+        }
         
         if (innerData.next_dates && Array.isArray(innerData.next_dates)) {
           tradingDays = tradingDays.concat(innerData.next_dates);

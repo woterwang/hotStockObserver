@@ -145,9 +145,11 @@ export const tradingSignalController = {
       };
 
       // 从信号中提取 Day2 日期（用于获取市场情绪）
+      // day2Date 现在是 YYYYMMDD 字符串格式，直接使用
       let day2DateStr: string | null = null;
       if (signals.length > 0 && signals[0].day2Date) {
-        day2DateStr = formatDate(new Date(signals[0].day2Date), 'YYYYMMDD');
+        // day2Date 已经是 YYYYMMDD 格式的字符串，直接使用
+        day2DateStr = String(signals[0].day2Date).replace(/-/g, '');
       }
 
       res.json({

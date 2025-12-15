@@ -6,7 +6,7 @@ import mongoose, { Schema, Document } from 'mongoose';
  */
 export interface IBuySignal {
   _id?: string;
-  date: Date;                     // 信号日期（T+1日）
+  date: string;                   // 信号日期（T+1日）YYYYMMDD 格式
   stockCode: string;
   stockName: string;
   
@@ -16,7 +16,7 @@ export interface IBuySignal {
   strategyType: 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover';  // 策略类型
   strategyName: string;           // 策略名称
   sourceId?: string;              // 关联的源记录ID（VolumeSurge/Breakthrough等）
-  selectionDate: Date;            // 选股日期（T日）
+  selectionDate: string;          // 选股日期（T日）YYYYMMDD 格式
   selectionScore: number;         // 选股策略得分
   
   // ========================================
@@ -118,7 +118,7 @@ export interface BuySignalDocument extends Omit<IBuySignal, '_id'>, Document {}
 
 const BuySignalSchema = new Schema<BuySignalDocument>(
   {
-    date: { type: Date, required: true, index: true },
+    date: { type: String, required: true, index: true },  // YYYYMMDD 格式
     stockCode: { type: String, required: true, index: true },
     stockName: { type: String, required: true },
     
@@ -131,7 +131,7 @@ const BuySignalSchema = new Schema<BuySignalDocument>(
     },
     strategyName: { type: String, required: true },
     sourceId: { type: String },
-    selectionDate: { type: Date, required: true },
+    selectionDate: { type: String, required: true },  // YYYYMMDD 格式
     selectionScore: { type: Number, default: 0 },
     
     // 开盘信号指标

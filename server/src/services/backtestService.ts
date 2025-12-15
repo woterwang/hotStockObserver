@@ -937,7 +937,8 @@ export class BacktestService {
     let processedCount = 0;
 
     for (const record of breakthroughRecords) {
-      const day3Date = formatDate(record.date, 'YYYYMMDD');
+      // record.date 现在是 YYYYMMDD 字符串格式
+      const day3Date = record.date as string;
       
       const trade = await this.backtestSingleStock(
         record.stockCode,

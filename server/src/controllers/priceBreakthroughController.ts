@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { priceBreakthroughService } from '../services';
+import { tradingCalendarService } from '../services/tradingCalendarService';
 import { logger } from '../utils';
 import { formatDate, getToday } from '../utils/dateUtils';
 
@@ -14,10 +15,23 @@ export class PriceBreakthroughController {
   async scan(req: Request, res: Response, next: NextFunction) {
     try {
       const { date } = req.body;
+      const targetDate = date || formatDate(getToday(), 'YYYYMMDD');
       
-      logger.info(`手动触发价格突破扫描，日期: ${date || '今天'}`);
+      // 检查是否为交易日
+      if (!tradingCalendarService.isTradingDay(targetDate)) {
+        logger.warn(`价格突破扫描跳过: ${targetDate} 非交易日`);
+        return res.json({
+          success: true,
+          message: '非交易日，无需扫描',
+          reason: '非交易日期',
+          count: 0,
+          data: [],
+        });
+      }
       
-      const count = await priceBreakthroughService.scanAndSave(date);
+      logger.info(`手动触发价格突破扫描，日期: ${targetDate}`);
+      
+      const count = await priceBreakthroughService.scanAndSave(targetDate);
       
       res.json({
         success: true,

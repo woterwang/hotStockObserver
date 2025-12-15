@@ -1,7 +1,8 @@
 import { logger } from '../utils';
 import { TradingSignal, ITradingSignal, EntryConditions, ExitConditions } from '../models/TradingSignal';
 import { PriceBreakthrough } from '../models';
-import { formatDate, parseDate } from '../utils/dateUtils';
+import { formatDate } from '../utils/dateUtils';
+import dayjs from 'dayjs';
 import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -11,6 +12,11 @@ import { tradingCalendarService } from './tradingCalendarService';
 // 导入同花顺工具
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const thsUtils = require('../utils/thsUtils');
+
+// 工具函数：格式化日期字符串为 YYYYMMDD
+function formatDateStr(dateStr: string): string {
+  return dateStr.replace(/[-\/]/g, '');
+}
 
 /**
  * K线数据
@@ -23,6 +29,29 @@ interface KlineData {
   close: number;
   volume: number;
   turnover: number;
+}
+
+/**
+ * 实时行情数据（新浪接口）
+ */
+interface RealtimeQuote {
+  stockCode: string;
+  stockName: string;
+  open: number;           // 今开
+  preClose: number;       // 昨收
+  current: number;        // 当前价
+  high: number;           // 最高
+  low: number;            // 最低
+  volume: number;         // 成交量（手）
+  turnover: number;       // 成交额
+  date: string;           // 日期 YYYY-MM-DD
+  time: string;           // 时间 HH:MM:SS
+  changePercent: number;  // 涨跌幅
+  // 买卖盘数据
+  bid1Price: number;
+  bid1Volume: number;
+  ask1Price: number;
+  ask1Volume: number;
 }
 
 /**
@@ -131,14 +160,14 @@ export class TradingSignalService {
     // 降级：如果交易日历缓存为空，使用简单的周末判断
     logger.warn('交易日历缓存为空，降级为周末判断');
     const result: string[] = [];
-    let currentDate = parseDate(dateStr);
+    let currentDate = dayjs(dateStr);
     
     for (let i = 0; i < n; i++) {
-      currentDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
-      while (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
-        currentDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
+      currentDate = currentDate.subtract(1, 'day');
+      while (currentDate.day() === 0 || currentDate.day() === 6) {
+        currentDate = currentDate.subtract(1, 'day');
       }
-      result.push(formatDate(currentDate, 'YYYYMMDD'));
+      result.push(currentDate.format('YYYYMMDD'));
     }
     
     return result;
@@ -207,11 +236,11 @@ export class TradingSignalService {
         // 创建信号记录
         const signal: Partial<ITradingSignal> = {
           strategy: 'breakthrough_3day',  // 突破三天确认策略
-          signalDate: parseDate(validDay3Str),
+          signalDate: validDay3Str,
           stockCode: stock.code,
           stockName: stock.name,
           
-          day1Date: parseDate(day1Str),
+          day1Date: day1Str,
           day1Open: day1Kline.open,
           day1Close: day1Kline.close,
           day1High: day1Kline.high,
@@ -220,7 +249,7 @@ export class TradingSignalService {
           day1Volume: day1Kline.volume,
           day1Turnover: day1Kline.turnover,
           
-          day2Date: parseDate(day2Str),
+          day2Date: day2Str,
           day2Open: day2Kline.open,
           day2Close: day2Kline.close,
           day2High: day2Kline.high,
@@ -383,11 +412,11 @@ export class TradingSignalService {
         // 创建信号记录
         const signal: Partial<ITradingSignal> = {
           strategy: 'volume_surge',  // 放量大涨策略
-          signalDate: parseDate(validDay3Str),
+          signalDate: validDay3Str,
           stockCode: stock.code,
           stockName: stock.name,
           
-          day1Date: parseDate(day1Str),
+          day1Date: day1Str,
           day1Open: day1Kline.open,
           day1Close: day1Kline.close,
           day1High: day1Kline.high,
@@ -396,7 +425,7 @@ export class TradingSignalService {
           day1Volume: day1Kline.volume,
           day1Turnover: day1Kline.turnover,
           
-          day2Date: parseDate(day2Str),
+          day2Date: day2Str,
           day2Open: day2Kline.open,
           day2Close: day2Kline.close,
           day2High: day2Kline.high,
@@ -565,16 +594,11 @@ export class TradingSignalService {
   }> {
     logger.info(`开始更新 ${day3Str} 的入场条件...`);
     
-    // 获取今日待处理的信号（使用日期范围查询，避免时区问题）
-    const day3Date = parseDate(day3Str);
-    const nextDay = new Date(day3Date);
-    nextDay.setDate(nextDay.getDate() + 1);
+    // 获取今日待处理的信号（使用字符串日期直接查询）
+    const targetDate = formatDateStr(day3Str);
     
     const signals = await TradingSignal.find({
-      signalDate: {
-        $gte: day3Date,
-        $lt: nextDay,
-      },
+      signalDate: targetDate,
       status: 'pending',
     });
 
@@ -762,11 +786,225 @@ export class TradingSignalService {
         return kline?.open || null;
       }
 
+      // 3. 同花顺也没有（可能是当天盘中），尝试使用新浪实时行情
+      const todayStr = formatDate(new Date(), 'YYYYMMDD');
+      if (dateStr === todayStr) {
+        logger.debug(`同花顺无当天数据，尝试新浪实时行情获取 ${stockCode} 开盘价...`);
+        const quote = await this.fetchRealtimeQuote(stockCode);
+        if (quote && quote.open > 0) {
+          logger.info(`从新浪实时行情获取 ${stockCode} 开盘价: ${quote.open}`);
+          
+          // 保存到缓存
+          const klineData: KlineData = {
+            date: dateStr,
+            open: quote.open,
+            high: quote.high,
+            low: quote.low,
+            close: quote.current,
+            volume: quote.volume * 100, // 手转股
+            turnover: quote.turnover,
+          };
+          const klineMap = new Map<string, KlineData>();
+          klineMap.set(dateStr, klineData);
+          this.saveKlineToCache(stockCode, klineMap);
+          
+          return quote.open;
+        }
+      }
+
       return null;
     } catch (error) {
       logger.debug(`获取历史开盘价失败 ${stockCode} ${dateStr}: ${(error as Error).message}`);
       return null;
     }
+  }
+
+  /**
+   * 从腾讯获取实时行情数据（备用接口，更稳定）
+   * 接口支持盘中实时数据，可获取当天开盘价
+   */
+  async fetchRealtimeQuote(stockCode: string): Promise<RealtimeQuote | null> {
+    try {
+      // 构建腾讯股票代码格式: sh600693 或 sz002544
+      const qqCode = this.getQQStockCode(stockCode);
+      const url = `https://qt.gtimg.cn/q=${qqCode}`;
+      
+      const response = await axios.get(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Referer': 'https://finance.qq.com/',
+        },
+        responseType: 'arraybuffer',
+        timeout: 10000,
+      });
+      
+      // 腾讯返回 GBK 编码
+      const iconv = require('iconv-lite');
+      const dataStr = iconv.decode(response.data, 'gbk');
+      
+      // 解析数据格式: v_sh600693="1~股票名称~代码~当前价~昨收~今开~成交量~...";
+      const match = dataStr.match(/="([^"]+)"/);
+      if (!match || !match[1]) {
+        logger.debug(`腾讯行情解析失败 ${stockCode}: 数据格式错误`);
+        return null;
+      }
+      
+      const parts = match[1].split('~');
+      if (parts.length < 45) {
+        logger.debug(`腾讯行情解析失败 ${stockCode}: 数据字段不足 (${parts.length})`);
+        return null;
+      }
+      
+      // 腾讯数据格式（以 ~ 分隔，索引从0开始）:
+      // 0:未知 1:名称 2:代码 3:当前价 4:昨收 5:今开 6:成交量(手) 7:外盘 8:内盘
+      // 9:买一价 10:买一量 11:买二价 ... 19:卖一价 20:卖一量 ...
+      // 30:时间戳(YYYYMMDDHHMMSS) 31:涨跌额 32:涨跌幅 33:最高 34:最低
+      // 35:当前价/成交量/成交额 36:成交量(手) 37:成交额(万)
+      
+      const current = parseFloat(parts[3]) || 0;
+      const preClose = parseFloat(parts[4]) || 0;
+      const open = parseFloat(parts[5]) || 0;
+      const high = parseFloat(parts[33]) || 0;
+      const low = parseFloat(parts[34]) || 0;
+      const volume = parseFloat(parts[6]) || 0;      // 成交量（手）
+      const turnover = (parseFloat(parts[37]) || 0) * 10000; // 成交额（元）
+      
+      // 如果开盘价为0，说明可能还未开盘
+      if (open === 0) {
+        logger.debug(`${stockCode} 今日开盘价为0，可能未开盘`);
+        return null;
+      }
+      
+      // 解析日期时间 (格式: 20251215161428)
+      const timeStr = parts[30] || '';
+      const date = timeStr.length >= 8 ? `${timeStr.substring(0,4)}-${timeStr.substring(4,6)}-${timeStr.substring(6,8)}` : '';
+      const time = timeStr.length >= 14 ? `${timeStr.substring(8,10)}:${timeStr.substring(10,12)}:${timeStr.substring(12,14)}` : '';
+      
+      const quote: RealtimeQuote = {
+        stockCode,
+        stockName: parts[1],
+        open,
+        preClose,
+        current,
+        high,
+        low,
+        volume,
+        turnover,
+        date,
+        time,
+        changePercent: parseFloat(parts[32]) || 0,
+        bid1Price: parseFloat(parts[9]) || 0,
+        bid1Volume: parseFloat(parts[10]) || 0,
+        ask1Price: parseFloat(parts[19]) || 0,
+        ask1Volume: parseFloat(parts[20]) || 0,
+      };
+      
+      return quote;
+    } catch (error) {
+      logger.debug(`获取腾讯实时行情失败 ${stockCode}: ${(error as Error).message}`);
+      return null;
+    }
+  }
+
+  /**
+   * 批量获取实时行情（腾讯接口）
+   */
+  async fetchRealtimeQuotes(stockCodes: string[]): Promise<Map<string, RealtimeQuote>> {
+    const result = new Map<string, RealtimeQuote>();
+    
+    try {
+      // 构建批量请求代码
+      const qqCodes = stockCodes.map(code => this.getQQStockCode(code)).join(',');
+      const url = `https://qt.gtimg.cn/q=${qqCodes}`;
+      
+      const response = await axios.get(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Referer': 'https://finance.qq.com/',
+        },
+        responseType: 'arraybuffer',
+        timeout: 10000,
+      });
+      
+      const iconv = require('iconv-lite');
+      const dataStr = iconv.decode(response.data, 'gbk');
+      
+      // 按行分割
+      const lines = dataStr.split(';').filter((line: string) => line.trim());
+      
+      for (const line of lines) {
+        // 提取股票代码
+        const codeMatch = line.match(/v_(\w+)=/);
+        if (!codeMatch) continue;
+        
+        const qqCode = codeMatch[1];
+        const stockCode = qqCode.substring(2); // 去掉 sh/sz 前缀
+        
+        const dataMatch = line.match(/="([^"]+)"/);
+        if (!dataMatch || !dataMatch[1]) continue;
+        
+        const parts = dataMatch[1].split('~');
+        if (parts.length < 45) continue;
+        
+        const current = parseFloat(parts[3]) || 0;
+        const preClose = parseFloat(parts[4]) || 0;
+        const open = parseFloat(parts[5]) || 0;
+        
+        if (open === 0) continue;
+        
+        const timeStr = parts[30] || '';
+        const date = timeStr.length >= 8 ? `${timeStr.substring(0,4)}-${timeStr.substring(4,6)}-${timeStr.substring(6,8)}` : '';
+        const time = timeStr.length >= 14 ? `${timeStr.substring(8,10)}:${timeStr.substring(10,12)}:${timeStr.substring(12,14)}` : '';
+        
+        const quote: RealtimeQuote = {
+          stockCode,
+          stockName: parts[1],
+          open,
+          preClose,
+          current,
+          high: parseFloat(parts[33]) || 0,
+          low: parseFloat(parts[34]) || 0,
+          volume: parseFloat(parts[6]) || 0,
+          turnover: (parseFloat(parts[37]) || 0) * 10000,
+          date,
+          time,
+          changePercent: parseFloat(parts[32]) || 0,
+          bid1Price: parseFloat(parts[9]) || 0,
+          bid1Volume: parseFloat(parts[10]) || 0,
+          ask1Price: parseFloat(parts[19]) || 0,
+          ask1Volume: parseFloat(parts[20]) || 0,
+        };
+        
+        result.set(stockCode, quote);
+      }
+    } catch (error) {
+      logger.error(`批量获取腾讯实时行情失败: ${(error as Error).message}`);
+    }
+    
+    return result;
+  }
+
+  /**
+   * 获取腾讯股票代码格式
+   */
+  private getQQStockCode(stockCode: string): string {
+    if (stockCode.startsWith('6')) {
+      return `sh${stockCode}`;
+    } else if (stockCode.startsWith('0') || stockCode.startsWith('3')) {
+      return `sz${stockCode}`;
+    } else if (stockCode.startsWith('688')) {
+      return `sh${stockCode}`; // 科创板
+    } else if (stockCode.startsWith('8') || stockCode.startsWith('4')) {
+      return `bj${stockCode}`; // 北交所
+    }
+    return `sh${stockCode}`;
+  }
+
+  /**
+   * 获取新浪股票代码格式（备用）
+   */
+  private getSinaStockCode(stockCode: string): string {
+    return this.getQQStockCode(stockCode); // 格式相同
   }
 
   /**
@@ -867,12 +1105,11 @@ export class TradingSignalService {
     
     // 降级：如果交易日历缓存为空，使用简单的周末判断
     logger.warn('交易日历缓存为空，降级为周末判断');
-    let currentDate = parseDate(dateStr);
-    currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-    while (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
-      currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+    let currentDate = dayjs(dateStr).add(1, 'day');
+    while (currentDate.day() === 0 || currentDate.day() === 6) {
+      currentDate = currentDate.add(1, 'day');
     }
-    return formatDate(currentDate, 'YYYYMMDD');
+    return currentDate.format('YYYYMMDD');
   }
 
   /**
@@ -893,11 +1130,11 @@ export class TradingSignalService {
     
     // 降级：如果交易日历缓存为空，使用简单的周末判断
     logger.warn('交易日历缓存为空，降级为周末判断');
-    let currentDate = parseDate(dateStr);
-    while (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
-      currentDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
+    let currentDate = dayjs(dateStr);
+    while (currentDate.day() === 0 || currentDate.day() === 6) {
+      currentDate = currentDate.subtract(1, 'day');
     }
-    return formatDate(currentDate, 'YYYYMMDD');
+    return currentDate.format('YYYYMMDD');
   }
 
   /**
@@ -905,8 +1142,8 @@ export class TradingSignalService {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getTodaySignals(dateStr: string): Promise<any[]> {
-    const date = parseDate(dateStr);
-    const signals = await TradingSignal.find({ signalDate: date })
+    const targetDate = formatDateStr(dateStr);
+    const signals = await TradingSignal.find({ signalDate: targetDate })
       .sort({ entryScore: -1, status: 1 })
       .lean();
     return signals;
@@ -921,10 +1158,12 @@ export class TradingSignalService {
     endDate: string,
     status?: string
   ): Promise<any[]> {
+    const startDateStr = formatDateStr(startDate);
+    const endDateStr = formatDateStr(endDate);
     const query: any = {
       signalDate: {
-        $gte: parseDate(startDate),
-        $lte: parseDate(endDate),
+        $gte: startDateStr,
+        $lte: endDateStr,
       },
     };
     
@@ -948,8 +1187,9 @@ export class TradingSignalService {
     signalDate: string,
     entryPrice: number
   ): Promise<any> {
+    const targetDate = formatDateStr(signalDate);
     const signal = await TradingSignal.findOneAndUpdate(
-      { stockCode, signalDate: parseDate(signalDate) },
+      { stockCode, signalDate: targetDate },
       {
         status: 'entered',
         entryPrice,
@@ -970,9 +1210,10 @@ export class TradingSignalService {
     exitPrice: number,
     exitReason: string
   ): Promise<any> {
+    const targetDate = formatDateStr(signalDate);
     const signal = await TradingSignal.findOne({
       stockCode,
-      signalDate: parseDate(signalDate),
+      signalDate: targetDate,
     });
     
     if (!signal || !signal.entryPrice) {
