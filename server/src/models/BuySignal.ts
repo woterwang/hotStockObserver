@@ -118,7 +118,7 @@ export interface BuySignalDocument extends Omit<IBuySignal, '_id'>, Document {}
 
 const BuySignalSchema = new Schema<BuySignalDocument>(
   {
-    date: { type: String, required: true, index: true },  // YYYYMMDD 格式
+    date: { type: Schema.Types.Mixed, required: true, index: true },  // 支持 Date 对象和 YYYYMMDD 字符串
     stockCode: { type: String, required: true, index: true },
     stockName: { type: String, required: true },
     

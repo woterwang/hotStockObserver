@@ -11,10 +11,19 @@ import type { PriceBreakthrough, BreakthroughHistory } from '../types';
  * day3: 开盘价>day2当日均价，开盘涨幅<3%且>-5%
  */
 const BreakthroughPage: React.FC = () => {
+  // 获取今天的日期（YYYYMMDD格式）
+  const getTodayStr = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}${month}${day}`;
+  };
+
   const [breakthroughList, setBreakthroughList] = useState<PriceBreakthrough[]>([]);
   const [history, setHistory] = useState<BreakthroughHistory[]>([]);
   const [availableDates, setAvailableDates] = useState<string[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>(getTodayStr());
   const [loading, setLoading] = useState(true);
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,9 +35,6 @@ const BreakthroughPage: React.FC = () => {
       const response = await breakthroughApi.getDates();
       if (response.success) {
         setAvailableDates(response.data);
-        if (response.data.length > 0 && !selectedDate) {
-          setSelectedDate(response.data[0].replace(/-/g, ''));
-        }
       }
     } catch (err) {
       console.error('获取日期列表失败:', err);
@@ -75,8 +81,14 @@ const BreakthroughPage: React.FC = () => {
   const handleScan = async () => {
     setScanning(true);
     try {
-      const response = await breakthroughApi.scan();
+      const response = await breakthroughApi.scan(selectedDate);
       if (response.success) {
+        // 检查是否为非交易日
+        const reason = (response as any).reason;
+        if (reason) {
+          alert(reason);
+          return;
+        }
         // 注意：count 直接在 response 上，不是 response.data.count
         const count = (response as any).count || 0;
         alert(`扫描完成，发现 ${count} 只突破股票`);
@@ -182,18 +194,16 @@ const BreakthroughPage: React.FC = () => {
             </button>
           </div>
 
-          {viewMode === 'today' && availableDates.length > 0 && (
-            <select
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
+          {viewMode === 'today' && (
+            <input
+              type="date"
+              value={selectedDate ? `${selectedDate.slice(0, 4)}-${selectedDate.slice(4, 6)}-${selectedDate.slice(6, 8)}` : ''}
+              onChange={(e) => {
+                const dateValue = e.target.value.replace(/-/g, '');
+                setSelectedDate(dateValue);
+              }}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {availableDates.map((date) => (
-                <option key={date} value={date.replace(/-/g, '')}>
-                  {date}
-                </option>
-              ))}
-            </select>
+            />
           )}
         </div>
 
