@@ -446,7 +446,13 @@ export default function SignalPage() {
                     return (
                     <tr key={signal._id} className={`hover:bg-gray-50 ${signal.status === 'ready' ? 'bg-green-50' : ''} ${signal.riskLevel === 'high' ? 'bg-red-50' : ''}`}>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="flex items-center">
+                        <a 
+                          href={`https://www.iwencai.com/unifiedwap/result?w=${signal.stockCode}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center hover:bg-blue-50 rounded -m-1 p-1 transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-medium text-gray-900">{signal.stockName}</span>
@@ -464,7 +470,7 @@ export default function SignalPage() {
                               )}
                             </div>
                           </div>
-                        </div>
+                        </a>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <span className={`px-2 py-1 text-xs rounded ${statusStyles[signal.status]?.bg} ${statusStyles[signal.status]?.text}`}>

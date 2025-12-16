@@ -1,5 +1,7 @@
 import cron from 'node-cron';
 import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, volumeSurgeService, tradingCalendarService, marketMoodService } from '../services';
+import { buySignalService } from '../services/buySignalService';
+
 import { logger } from '../utils';
 import { formatDate } from '../utils/dateUtils';
 
@@ -282,8 +284,8 @@ export class JobScheduler {
       // 2. 放量大涨策略
       try {
         logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
-        const volumeSurgeResult = await tradingSignalService.generateVolumeSurgeAfterMarketClose(today);
-        logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.count} 个信号，入场日=${volumeSurgeResult.signalDate}`);
+        const volumeSurgeResult = await buySignalService.generateBuySignals(today,undefined,50);
+        logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.length} 个信号，入场日=${volumeSurgeResult[0].date}`);
       } catch (error) {
         logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
       }

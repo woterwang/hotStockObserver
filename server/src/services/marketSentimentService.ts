@@ -3,10 +3,71 @@ import { MarketSentiment, IMarketSentiment, calculateSentimentScore, SentimentLe
 import { formatDate, parseDate } from '../utils/dateUtils';
 import { marketMoodService } from './marketMoodService';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 // 导入同花顺工具
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const thsUtils = require('../utils/thsUtils');
+
+/**
+ * 龙虎榜API返回的涨幅分布数据
+ */
+interface LongHuBangResponse {
+  info: {
+    // 涨幅分布: key为涨幅区间(-10到10)，value为股票数量
+    [key: string]: string | number;
+    // 实际涨停数（过滤ST）
+    SJZT: string;
+    // 实际跌停数（过滤ST）
+    SJDT: string;
+    // 涨停数
+    ZT: string;
+    // 跌停数
+    DT: string;
+    // 上涨家数
+    SZJS: string;
+    // 下跌家数
+    XDJS: string;
+    // 大盘情绪综合强度
+    sign: string;
+  };
+  date: string;
+  errcode: string;
+}
+
+/**
+ * 解析后的市场数据
+ */
+interface ParsedMarketData {
+  // 涨停数（过滤ST）
+  limitUpCount: number;
+  // 跌停数（过滤ST）
+  limitDownCount: number;
+  // 上涨家数
+  upCount: number;
+  // 下跌家数
+  downCount: number;
+  // 平盘家数
+  flatCount: number;
+  // 涨幅>7%
+  up7Count: number;
+  // 涨幅5%-7%
+  up5to7Count: number;
+  // 涨幅2%-5%
+  up2to5Count: number;
+  // 涨幅0%-2%
+  up0to2Count: number;
+  // 跌幅0%-2%
+  down0to2Count: number;
+  // 跌幅2%-5%
+  down2to5Count: number;
+  // 跌幅5%-7%
+  down5to7Count: number;
+  // 跌幅<-7%
+  down7Count: number;
+  // 大盘情绪描述
+  sentimentDesc: string;
+}
 
 /**
  * 市场情绪服务
@@ -16,6 +77,110 @@ const thsUtils = require('../utils/thsUtils');
  * 3. 生成交易建议
  */
 export class MarketSentimentService {
+
+  /**
+   * 从龙虎榜API获取市场涨跌分布数据
+   * 接口来源: apphis.longhuvip.com
+   * @param dateStr 日期 YYYYMMDD 或 YYYY-MM-DD
+   */
+  private async fetchMarketDataFromLongHuBang(dateStr: string): Promise<ParsedMarketData | null> {
+    try {
+      // 转换日期格式为 YYYY-MM-DD
+      const formattedDate = dayjs(dateStr).format('YYYY-MM-DD');
+      
+      const url = 'https://apphis.longhuvip.com/w1/api/index.php';
+      const params = new URLSearchParams({
+        Day: formattedDate,
+        PhoneOSNew: '2',
+        VerSion: '5.20.0.9',
+        a: 'HisZhangFuDetail',
+        apiv: 'w41',
+        c: 'HisHomeDingPan',
+      });
+
+      const response = await axios.post<LongHuBangResponse>(url, params.toString(), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+          'User-Agent': 'lhb/5.20.9 (com.kaipanla.www; build:1; iOS 18.2.1) Alamofire/4.9.1',
+          'Accept': '*/*',
+          'Accept-Language': 'zh-Hans-CN;q=1.0',
+          'Accept-Encoding': 'gzip, deflate',
+        },
+        timeout: 15000,
+      });
+
+      const data = response.data;
+      if (data.errcode !== '0' || !data.info) {
+        logger.warn(`龙虎榜API返回错误: errcode=${data.errcode}`);
+        return null;
+      }
+
+      const info = data.info;
+      
+      // 解析涨幅分布数据
+      // key: -10 到 10 表示涨跌幅区间，0 表示平盘
+      // 涨幅>7%: 7,8,9,10 (不含涨停)
+      // 涨幅5%-7%: 5,6
+      // 涨幅2%-5%: 2,3,4
+      // 涨幅0%-2%: 1
+      // 平盘: 0
+      // 跌幅0%-2%: -1
+      // 跌幅2%-5%: -2,-3,-4
+      // 跌幅5%-7%: -5,-6
+      // 跌幅<-7%: -7,-8,-9,-10 (不含跌停)
+      
+      const getNum = (key: string): number => parseInt(String(info[key] || '0'), 10);
+      
+      // 涨幅统计
+      const up7Count = getNum('7') + getNum('8') + getNum('9'); // 不含10（涨停单独统计）
+      const up5to7Count = getNum('5') + getNum('6');
+      const up2to5Count = getNum('2') + getNum('3') + getNum('4');
+      const up0to2Count = getNum('1');
+      
+      // 跌幅统计
+      const down0to2Count = getNum('-1');
+      const down2to5Count = getNum('-2') + getNum('-3') + getNum('-4');
+      const down5to7Count = getNum('-5') + getNum('-6');
+      const down7Count = getNum('-7') + getNum('-8') + getNum('-9'); // 不含-10（跌停单独统计）
+      
+      // 平盘
+      const flatCount = getNum('0');
+      
+      // 涨停跌停（过滤ST）
+      const limitUpCount = parseInt(String(info.SJZT || info.ZT || '0'), 10);
+      const limitDownCount = parseInt(String(info.SJDT || info.DT || '0'), 10);
+      
+      // 上涨下跌家数
+      const upCount = parseInt(String(info.SZJS || '0'), 10);
+      const downCount = parseInt(String(info.XDJS || '0'), 10);
+      
+      // 情绪描述
+      const sentimentDesc = info.sign || '';
+
+      const result: ParsedMarketData = {
+        limitUpCount,
+        limitDownCount,
+        upCount,
+        downCount,
+        flatCount,
+        up7Count,
+        up5to7Count,
+        up2to5Count,
+        up0to2Count,
+        down0to2Count,
+        down2to5Count,
+        down5to7Count,
+        down7Count,
+        sentimentDesc,
+      };
+
+      logger.info(`[龙虎榜API] ${formattedDate} 数据: 涨停=${limitUpCount}, 跌停=${limitDownCount}, 上涨=${upCount}, 下跌=${downCount}, 情绪=${sentimentDesc}`);
+      return result;
+    } catch (error) {
+      logger.error(`龙虎榜API请求失败: ${(error as Error).message}`);
+      return null;
+    }
+  }
 
   /**
    * 生成动态 Hexin-V
@@ -47,7 +212,7 @@ export class MarketSentimentService {
   }
 
   /**
-   * 使用问财查询市场数据
+   * 使用问财查询市场数据（备用）
    */
   private async queryWencai(question: string): Promise<any[]> {
     try {
@@ -214,50 +379,86 @@ export class MarketSentimentService {
   }
 
   /**
-   * 获取并计算市场情绪
+   * 获取并计算市场情绪（使用龙虎榜API）
    * @param dateStr 日期 YYYYMMDD
    */
   async fetchAndCalculateSentiment(dateStr: string): Promise<IMarketSentiment | null> {
     logger.info(`开始获取 ${dateStr} 市场情绪数据...`);
 
     try {
-      // 1. 获取涨停跌停数
-      logger.debug('获取涨停数...');
-      const limitUpCount = await this.fetchLimitUpCount(dateStr);
-      await this.randomDelay(3000, 6000);
-
-      logger.debug('获取跌停数...');
-      const limitDownCount = await this.fetchLimitDownCount(dateStr);
-      await this.randomDelay(3000, 6000);
-
-      // 2. 获取涨跌家数
-      logger.debug('获取涨跌家数...');
-      const { upCount, downCount, flatCount } = await this.fetchUpDownCount(dateStr);
-      await this.randomDelay(3000, 6000);
-
-      // 3. 获取连板数据
-      logger.debug('获取连板数据...');
-      let { maxContinuousBoard, board2Count, board3Count } = await this.fetchBoardData(dateStr);
-      await this.randomDelay(3000, 6000);
-
       // 获取本地缓存的情绪数据（用于补充连板高度和综合评分）
       const moodData = marketMoodService.getMoodData(dateStr);
 
-      // 如果连板数据为0，尝试从本地缓存获取
-      if (maxContinuousBoard === 0 && moodData && moodData.lbgd > 0) {
-        logger.info(`从本地缓存获取连板高度: ${moodData.lbgd}`);
-        maxContinuousBoard = moodData.lbgd;
+      // 1. 优先使用龙虎榜API获取市场数据
+      logger.debug('从龙虎榜API获取市场数据...');
+      const lhbData = await this.fetchMarketDataFromLongHuBang(dateStr);
+
+      let limitUpCount: number | undefined;
+      let limitDownCount: number;
+      let upCount: number;
+      let downCount: number;
+      let flatCount: number;
+
+      if (lhbData) {
+        // 使用龙虎榜API数据
+        limitUpCount = lhbData.limitUpCount;
+        limitDownCount = lhbData.limitDownCount;
+        upCount = lhbData.upCount;
+        downCount = lhbData.downCount;
+        flatCount = lhbData.flatCount;
+        //跌停数
+        
+        logger.info(`使用龙虎榜API数据: 涨停=${limitUpCount}, 跌停=${limitDownCount}, 上涨=${upCount}, 下跌=${downCount}`);
+      } else {
+        // 龙虎榜API失败，回退到问财接口
+        logger.warn('龙虎榜API获取失败，回退到问财接口...');
+        
+        limitUpCount = moodData?.ztjs??0;
+
+        limitDownCount = await this.fetchLimitDownCount(dateStr);
+        await this.randomDelay(3000, 6000);
+
+        const upDownData = await this.fetchUpDownCount(dateStr);
+        upCount = upDownData.upCount;
+        downCount = upDownData.downCount;
+        flatCount = upDownData.flatCount;
       }
 
-      // 4. 获取炸板数据
-      logger.debug('获取炸板数据...');
-      const { limitUpOpenCount, blastRate } = await this.fetchBlastData(dateStr);
-      await this.randomDelay(2000, 4000);
+      // 2. 获取连板数据（龙虎榜API不提供，需要问财或本地缓存）
+      let maxContinuousBoard = 0;
+      let board2Count = 0;
+      let board3Count = 0;
 
-      // 5. 计算涨跌比
+      // 优先使用本地缓存的连板高度
+      if (moodData && moodData.lbgd > 0) {
+        maxContinuousBoard = moodData.lbgd;
+        logger.info(`从本地缓存获取连板高度: ${maxContinuousBoard}`);
+      } else if (!lhbData) {
+        // 只有龙虎榜API失败时才调用问财获取连板数据
+        logger.debug('获取连板数据...');
+        const boardData = await this.fetchBoardData(dateStr);
+        maxContinuousBoard = boardData.maxContinuousBoard;
+        board2Count = boardData.board2Count;
+        board3Count = boardData.board3Count;
+        await this.randomDelay(3000, 6000);
+      }
+
+      // 3. 炸板数据（龙虎榜API不提供，跳过或使用默认值）
+      let limitUpOpenCount = 0;
+      let blastRate = 0;
+
+      // 如果龙虎榜API失败，才从问财获取炸板数据
+      if (!lhbData) {
+        logger.debug('获取炸板数据...');
+        const blastData = await this.fetchBlastData(dateStr);
+        limitUpOpenCount = blastData.limitUpOpenCount;
+        blastRate = blastData.blastRate;
+      }
+
+      // 4. 计算涨跌比
       const upDownRatio = downCount > 0 ? Number((upCount / downCount).toFixed(2)) : upCount;
 
-      // 6. 计算评分 - 优先使用本地缓存的 strong 值
+      // 5. 计算评分 - 优先使用本地缓存的 strong 值
       let score: number;
       let level: SentimentLevel;
       let advice: TradingAdvice;
@@ -295,7 +496,7 @@ export class MarketSentimentService {
         logger.info(`使用计算的综合评分: ${score}`);
       }
 
-      // 7. 构建情绪数据
+      // 6. 构建情绪数据
       const sentiment: Partial<IMarketSentiment> = {
         date: parseDate(dateStr),
         dateStr,
@@ -315,7 +516,7 @@ export class MarketSentimentService {
         advice,
       };
 
-      // 8. 保存到数据库
+      // 7. 保存到数据库
       const saved = await MarketSentiment.findOneAndUpdate(
         { dateStr },
         sentiment,

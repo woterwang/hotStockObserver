@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { marketController } from '../controllers';
 import { tradingCalendarService } from '../services/tradingCalendarService';
 import { marketMoodService } from '../services/marketMoodService';
+import { marketSentimentService } from '../services/marketSentimentService';
 
 const router = Router();
 
@@ -42,21 +43,51 @@ router.post('/trading-calendar/extend', async (req, res) => {
 });
 
 // 市场情绪 - 获取指定日期的 mood 数据
-router.get('/mood/:dateStr', (req, res) => {
+// 优先从本地缓存获取，如果没有则从数据库获取
+router.get('/mood/:dateStr', async (req, res) => {
   try {
     const { dateStr } = req.params;
+    
+    // 1. 优先从本地缓存获取
     const moodData = marketMoodService.getMoodData(dateStr);
     if (moodData) {
-      res.json({
+      return res.json({
         success: true,
+        source: 'cache',
         data: moodData
       });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: `未找到 ${dateStr} 的情绪数据`
+    }
+    
+    // 2. 本地缓存没有，尝试从数据库获取（由 fetchAndCalculateSentiment 保存）
+    const sentiment = await marketSentimentService.getSentimentByDate(dateStr);
+    if (sentiment) {
+      // 转换为 mood 数据格式
+      const dbMoodData = {
+        day: sentiment.dateStr,
+        strong: sentiment.score,
+        ztjs: sentiment.limitUpCount || 0,
+        lbgd: sentiment.maxContinuousBoard || 0,
+        dfNum: sentiment.limitDownCount || 0,
+        // 额外字段
+        upCount: sentiment.upCount,
+        downCount: sentiment.downCount,
+        flatCount: sentiment.flatCount,
+        upDownRatio: sentiment.upDownRatio,
+        level: sentiment.level,
+        advice: sentiment.advice,
+      };
+      return res.json({
+        success: true,
+        source: 'database',
+        data: dbMoodData
       });
     }
+    
+    // 3. 都没有，返回404
+    res.status(404).json({
+      success: false,
+      message: `未找到 ${dateStr} 的情绪数据`
+    });
   } catch (error) {
     res.status(500).json({
       success: false,

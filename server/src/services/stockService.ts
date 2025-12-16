@@ -1,6 +1,6 @@
 import { HotStock, MarketIndex, Sector, StockNews } from '../models';
 import { logger } from '../utils';
-import { formatDate, getToday, getDaysAgo, parseDate } from '../utils/dateUtils';
+import { formatDate, getToday, getDaysAgo, parseDate, toDateStr, toDisplayDate } from '../utils/dateUtils';
 import { PeriodStats } from '../types';
 import { dataFetchService } from './dataFetchService';
 
@@ -12,11 +12,11 @@ export class StockService {
    * 获取今日热搜股票列表
    */
   async getTodayHotStocks(limit: number = 20) {
-    const today = getToday();
-    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+    // 数据库日期格式已统一为字符串 "YYYYMMDD"
+    const todayStr = toDateStr(new Date());
 
     const stocks = await HotStock.find({
-      date: { $gte: today, $lt: tomorrow },
+      date: todayStr,
     })
       .sort({ rank: 1 })
       .limit(limit)
@@ -48,15 +48,15 @@ export class StockService {
    * @param allDatesInRange 指定范围内所有有数据的日期集合
    */
   private calculateMaxConsecutiveDays(
-    records: Array<{ date: Date }>,
+    records: Array<{ date: string | Date }>,
     allDatesInRange: Set<string>
   ): number {
     if (records.length === 0) return 0;
     if (records.length === 1) return 1;
 
-    // 将记录按日期排序，并转换为日期字符串
+    // 将记录按日期排序，并转换为日期字符串（数据库已统一为字符串格式）
     const sortedDates = records
-      .map(r => formatDate(new Date(r.date)))
+      .map(r => toDisplayDate(toDateStr(r.date)))  // 转换为 YYYY-MM-DD 格式用于比较
       .sort();
 
     // 将范围内所有日期转换为有序数组
@@ -86,7 +86,7 @@ export class StockService {
    */
   async getPeriodHotStocks(days: number = 7): Promise<PeriodStats[]> {
     // 获取数据库中最新的数据日期，而不是使用今天的日期
-    // 这样可以确保即使没有最新数据，也能正确统计历史数据
+    // 数据库日期已统一为字符串格式 "YYYYMMDD"
     const latestRecord = await HotStock.findOne().sort({ date: -1 }).select('date').lean();
     
     if (!latestRecord) {
@@ -94,37 +94,38 @@ export class StockService {
       return [];
     }
     
-    const endDate = new Date(latestRecord.date);
-    // 将结束日期设置为当天的23:59:59，确保包含当天的所有数据
-    endDate.setHours(23, 59, 59, 999);
-    
+    // 日期已经是字符串格式 YYYYMMDD，直接使用
+    const endDateStr = toDateStr(latestRecord.date);
+    const endDate = parseDate(endDateStr);
     const startDate = new Date(endDate);
     startDate.setDate(startDate.getDate() - days + 1);
-    startDate.setHours(0, 0, 0, 0);
+    const startDateStr = toDateStr(startDate);
 
-    logger.info(`阶段统计查询范围: ${formatDate(startDate)} ~ ${formatDate(endDate)}, 天数: ${days}`);
+    logger.info(`阶段统计查询范围: ${toDisplayDate(startDateStr)} ~ ${toDisplayDate(endDateStr)}, 天数: ${days}`);
 
     // 首先获取指定范围内所有有数据的日期（用于计算连续天数）
+    // 由于日期已经是字符串格式，使用字符串比较
     const allDatesResult = await HotStock.aggregate([
       {
         $match: {
-          date: { $gte: startDate, $lte: endDate },
+          date: { $gte: startDateStr, $lte: endDateStr },
         },
       },
       {
         $group: {
-          _id: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
+          _id: '$date',  // 直接使用字符串日期
         },
       },
     ]);
-    const allDatesInRange = new Set<string>(allDatesResult.map((d: any) => d._id));
+    // 将 YYYYMMDD 转换为 YYYY-MM-DD 格式用于后续比较
+    const allDatesInRange = new Set<string>(allDatesResult.map((d: any) => toDisplayDate(d._id)));
     logger.info(`范围内有数据的日期数: ${allDatesInRange.size}`);
 
     // 聚合查询：统计每只股票在这段时间内的出现次数
     const stats = await HotStock.aggregate([
       {
         $match: {
-          date: { $gte: startDate, $lte: endDate },
+          date: { $gte: startDateStr, $lte: endDateStr },
         },
       },
       {
@@ -184,9 +185,12 @@ export class StockService {
         maxChangePercent: item.maxChangePercent,
         minChangePercent: item.minChangePercent,
         avgRank: Math.round(item.avgRank * 10) / 10,
-        trendData: item.records.sort((a: any, b: any) => 
-          new Date(a.date).getTime() - new Date(b.date).getTime()
-        ),
+        // 按日期字符串排序（YYYYMMDD 格式可以直接比较）
+        trendData: item.records.sort((a: any, b: any) => {
+          const dateA = toDateStr(a.date);
+          const dateB = toDateStr(b.date);
+          return dateA.localeCompare(dateB);
+        }),
       };
     });
   }
@@ -195,12 +199,14 @@ export class StockService {
    * 获取单只股票的历史热搜记录
    */
   async getStockHistory(stockCode: string, days: number = 30) {
-    const endDate = getToday();
+    // 使用字符串日期格式
+    const endDateStr = toDateStr(new Date());
     const startDate = getDaysAgo(days);
+    const startDateStr = toDateStr(startDate);
 
     const records = await HotStock.find({
       stockCode,
-      date: { $gte: startDate, $lte: endDate },
+      date: { $gte: startDateStr, $lte: endDateStr },
     })
       .sort({ date: 1 })
       .lean();
