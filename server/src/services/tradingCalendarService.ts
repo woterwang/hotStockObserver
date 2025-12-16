@@ -137,7 +137,7 @@ class TradingCalendarService {
     const today = formatDate(new Date(), 'YYYYMMDD');
     
     // 获取前60个交易日 + 后30个交易日
-    const tradingDays = await this.fetchTradingDays(today, 60, 30);
+    const tradingDays = await this.fetchTradingDays(today, 780, 30);
     
     if (!tradingDays || tradingDays.length === 0) {
       logger.warn('获取交易日历失败，保持使用旧缓存');
@@ -229,7 +229,7 @@ class TradingCalendarService {
     const normalized = dateStr.replace(/-/g, '');
     
     if (this.tradingDaysSet.size === 0) {
-      logger.warn('交易日历缓存为空，无法获取前一个交易日');
+      logger.warn('getPrevTradingDay 交易日历缓存为空，无法获取前一个交易日');
       return null;
     }
 

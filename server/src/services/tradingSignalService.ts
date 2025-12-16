@@ -4,10 +4,9 @@ import { PriceBreakthrough } from '../models';
 import { formatDate } from '../utils/dateUtils';
 import dayjs from 'dayjs';
 import axios from 'axios';
-import * as fs from 'fs';
-import * as path from 'path';
 import { marketSentimentService } from './marketSentimentService';
 import { tradingCalendarService } from './tradingCalendarService';
+import { klineCacheService, CachedKline } from './klineCacheService';
 
 // 导入同花顺工具
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -21,15 +20,7 @@ function formatDateStr(dateStr: string): string {
 /**
  * K线数据
  */
-interface KlineData {
-  date: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-  turnover: number;
-}
+type KlineData = CachedKline;
 
 /**
  * 实时行情数据（新浪接口）
@@ -63,15 +54,7 @@ interface RealtimeQuote {
  */
 export class TradingSignalService {
   
-  // K线缓存目录
-  private cacheDir: string;
-
-  constructor() {
-    this.cacheDir = path.join(__dirname, '../../data/kline_cache');
-    if (!fs.existsSync(this.cacheDir)) {
-      fs.mkdirSync(this.cacheDir, { recursive: true });
-    }
-  }
+  // 默认构造函数
 
   /**
    * 生成动态 Hexin-V
@@ -92,59 +75,6 @@ export class TradingSignalService {
       return 17; // 上海
     }
     return 33; // 深圳
-  }
-
-  /**
-   * 从同花顺获取K线数据
-   */
-  private async fetchKlineFromTHS(stockCode: string, days: number = 30): Promise<Map<string, KlineData>> {
-    const result = new Map<string, KlineData>();
-    try {
-      const marketId = this.getMarketId(stockCode);
-      const url = `https://d.10jqka.com.cn/v6/line/${marketId}_${stockCode}/01/last${days}.js`;
-      
-      const response = await axios.get(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-          'Referer': 'http://www.10jqka.com.cn/',
-          'hexin-v': String(Date.now()),
-        },
-        timeout: 10000,
-      });
-
-      if (response.data && typeof response.data === 'string') {
-        // 解析同花顺K线数据
-        const dataStr = response.data;
-        const startIdx = dataStr.indexOf('({');
-        if (startIdx !== -1) {
-          const jsonStr = dataStr.substring(startIdx + 1, dataStr.length - 1);
-          const data = JSON.parse(jsonStr);
-          if (data && data.data) {
-            const klineList = data.data.split(';');
-            for (const item of klineList) {
-              const parts = item.split(',');
-              if (parts.length >= 7) {
-                const [day, openPrice, highPrice, lowPrice, closePrice, vol, total] = parts;
-                if (day && day.length === 8) {
-                  result.set(day, {
-                    date: day,
-                    open: parseFloat(openPrice) || 0,
-                    high: parseFloat(highPrice) || 0,
-                    low: parseFloat(lowPrice) || 0,
-                    close: parseFloat(closePrice) || 0,
-                    volume: parseFloat(vol) || 0,
-                    turnover: parseFloat(total) || 0,
-                  });
-                }
-              }
-            }
-          }
-        }
-      }
-    } catch (error) {
-      logger.debug(`获取K线失败 ${stockCode}: ${(error as Error).message}`);
-    }
-    return result;
   }
 
   /**
@@ -210,8 +140,8 @@ export class TradingSignalService {
     let savedCount = 0;
     for (const stock of candidates) {
       try {
-        // 获取K线数据
-        const klines = await this.fetchKlineFromTHS(stock.code, 10);
+        // 获取K线数据（包含缓存补全）
+        const klines = await klineCacheService.getKlines(stock.code, [day1Str, day2Str]);
         const day1Kline = klines.get(day1Str);
         const day2Kline = klines.get(day2Str);
         
@@ -351,8 +281,8 @@ export class TradingSignalService {
     let savedCount = 0;
     for (const stock of candidates) {
       try {
-        // 获取K线数据
-        const klines = await this.fetchKlineFromTHS(stock.code, 10);
+        // 获取K线数据（包含缓存补全）
+        const klines = await klineCacheService.getKlines(stock.code, [day1Str, day2Str]);
         const day1Kline = klines.get(day1Str);
         const day2Kline = klines.get(day2Str);
         
@@ -762,39 +692,21 @@ export class TradingSignalService {
    */
   private async fetchOpenPriceFromKline(stockCode: string, dateStr: string): Promise<number | null> {
     try {
-      // 1. 先尝试从缓存文件读取
-      const cacheFile = path.join(this.cacheDir, `${stockCode}.json`);
-      if (fs.existsSync(cacheFile)) {
-        const cacheData = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
-        if (cacheData.klines && cacheData.klines[dateStr]) {
-          const kline = cacheData.klines[dateStr];
-          logger.debug(`从缓存获取 ${stockCode} ${dateStr} 开盘价: ${kline.open}`);
-          return kline.open;
-        }
+      // 优先使用共享K线缓存，缺口会自动补全，不覆盖已有数据
+      // 1. 先尝试从缓存读取（会触发缺口自动补全）
+      const kline = await klineCacheService.getKline(stockCode, dateStr);
+      if (kline) {
+        logger.debug(`从缓存获取 ${stockCode} ${dateStr} 开盘价: ${kline.open}`);
+        return kline.open;
       }
 
-      // 2. 缓存中没有，从同花顺获取
-      logger.debug(`缓存未命中，从同花顺获取 ${stockCode} K线...`);
-      const klines = await this.fetchKlineFromTHS(stockCode, 100);
-      
-      if (klines.has(dateStr)) {
-        const kline = klines.get(dateStr);
-        
-        // 保存到缓存
-        this.saveKlineToCache(stockCode, klines);
-        
-        return kline?.open || null;
-      }
-
-      // 3. 同花顺也没有（可能是当天盘中），尝试使用新浪实时行情
+      // 2. 缓存/补全后仍无数据（可能为当日盘中），尝试使用实时行情兜底
       const todayStr = formatDate(new Date(), 'YYYYMMDD');
       if (dateStr === todayStr) {
-        logger.debug(`同花顺无当天数据，尝试新浪实时行情获取 ${stockCode} 开盘价...`);
+        logger.debug(`缓存补全后仍未命中，尝试实时行情获取 ${stockCode} 开盘价...`);
         const quote = await this.fetchRealtimeQuote(stockCode);
         if (quote && quote.open > 0) {
-          logger.info(`从新浪实时行情获取 ${stockCode} 开盘价: ${quote.open}`);
-          
-          // 保存到缓存
+          logger.info(`从实时行情获取 ${stockCode} 开盘价: ${quote.open}`);
           const klineData: KlineData = {
             date: dateStr,
             open: quote.open,
@@ -806,8 +718,7 @@ export class TradingSignalService {
           };
           const klineMap = new Map<string, KlineData>();
           klineMap.set(dateStr, klineData);
-          this.saveKlineToCache(stockCode, klineMap);
-          
+          klineCacheService.mergeAndSave(stockCode, klineMap);
           return quote.open;
         }
       }
@@ -1005,31 +916,6 @@ export class TradingSignalService {
    */
   private getSinaStockCode(stockCode: string): string {
     return this.getQQStockCode(stockCode); // 格式相同
-  }
-
-  /**
-   * 保存K线数据到缓存
-   */
-  private saveKlineToCache(stockCode: string, klines: Map<string, KlineData>): void {
-    try {
-      const cacheFile = path.join(this.cacheDir, `${stockCode}.json`);
-      let existingData: any = { stockCode, cacheTime: Date.now(), klines: {} };
-      
-      // 读取现有缓存
-      if (fs.existsSync(cacheFile)) {
-        existingData = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
-      }
-      
-      // 合并新数据
-      for (const [date, kline] of klines) {
-        existingData.klines[date] = kline;
-      }
-      existingData.cacheTime = Date.now();
-      
-      fs.writeFileSync(cacheFile, JSON.stringify(existingData), 'utf-8');
-    } catch (error) {
-      logger.debug(`保存K线缓存失败 ${stockCode}: ${(error as Error).message}`);
-    }
   }
 
   /**
