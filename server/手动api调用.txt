@@ -3,4 +3,6 @@
  curl -s "http://localhost:8080/api/volume-surge/scan" -X POST -H "Content-Type: application/json" -d '{"date": "20251215"}' 2>&1 | head -c 500
 
 
+ // 交易日历 - 扩展缓存（获取更长历史）
  
+ curl -s "http://localhost:8080/api/market/trading-calendar/extend" -X POST -H "Content-Type: application/json" -d '{"years": 3}' 2>&1 | head -c 500
