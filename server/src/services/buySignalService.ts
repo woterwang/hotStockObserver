@@ -16,13 +16,12 @@
 
 import dayjs from 'dayjs';
 import axios from 'axios';
-import * as fs from 'fs';
-import * as path from 'path';
 import { BuySignal, IBuySignal } from '../models/BuySignal';
 import { VolumeSurge } from '../models/VolumeSurge';
 import { PriceBreakthrough } from '../models/PriceBreakthrough';
 import { tradingCalendarService } from './tradingCalendarService';
 import { marketMoodService } from './marketMoodService';
+import { klineCacheService, CachedKline } from './klineCacheService';
 
 // 策略类型定义
 type StrategyType = 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover';
@@ -954,11 +953,6 @@ class BuySignalService {
   }
   
   /**
-   * K线缓存目录
-   */
-  private readonly KLINE_CACHE_DIR = path.join(__dirname, '../../data/kline_cache');
-  
-  /**
    * 内存缓存（用于减少文件IO）
    */
   private klineMemCache: Map<string, { data: any[]; time: number }> = new Map();
@@ -1009,88 +1003,6 @@ class BuySignalService {
   }
   
   /**
-   * 从同花顺接口获取K线数据（带重试机制）
-   * @param stockCode 股票代码
-   * @param days 请求天数
-   * @returns K线数据对象
-   */
-  private async fetchFromThs(stockCode: string, days: number): Promise<Record<string, any>> {
-    const marketId = stockCode.startsWith('6') ? '17' : 
-                     stockCode.startsWith('0') || stockCode.startsWith('3') ? '33' : '17';
-    
-    // v1-v6 版本号列表，用于重试
-    const versions = ['v6', 'v5', 'v4', 'v3', 'v2', 'v1'];
-    
-    for (const version of versions) {
-      try {
-        // 等待适当间隔
-        await this.waitForRateLimit();
-        
-        const url = `https://d.10jqka.com.cn/${version}/line/${marketId}_${stockCode}/01/last${days}.js`;
-        console.log(`[BuySignal] 请求K线: ${stockCode} (${version})`);
-        
-        const response = await axios.get(url, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Referer': 'http://www.10jqka.com.cn/',
-            'Accept': '*/*',
-          },
-          timeout: 15000,
-        });
-        
-        // 更新最后请求时间
-        this.lastThsRequestTime = Date.now();
-        
-        if (response.data && typeof response.data === 'string') {
-          const dataStr = response.data;
-          const startIdx = dataStr.indexOf('({');
-          if (startIdx !== -1) {
-            const jsonStr = dataStr.substring(startIdx + 1, dataStr.length - 1);
-            const json = JSON.parse(jsonStr);
-            if (json && json.data) {
-              const newKlines: Record<string, any> = {};
-              const klineList = json.data.split(';');
-              for (const item of klineList) {
-                const parts = item.split(',');
-                if (parts.length >= 7 && parts[0] && parts[1]) {
-                  const dateStr = parts[0];
-                  newKlines[dateStr] = {
-                    date: dateStr,
-                    open: parseFloat(parts[1]) || 0,
-                    high: parseFloat(parts[2]) || 0,
-                    low: parseFloat(parts[3]) || 0,
-                    close: parseFloat(parts[4]) || 0,
-                    volume: parseFloat(parts[5]) || 0,
-                    turnover: parseFloat(parts[6]) || 0,
-                  };
-                }
-              }
-              
-              if (Object.keys(newKlines).length > 0) {
-                console.log(`[BuySignal] ${stockCode} 获取成功，${Object.keys(newKlines).length} 条K线`);
-                return newKlines;
-              }
-            }
-          }
-        }
-        
-        // 数据格式异常，尝试下一个版本
-        console.warn(`[BuySignal] ${stockCode} ${version} 返回数据异常，尝试下一版本`);
-        
-      } catch (error) {
-        const errMsg = (error as Error).message;
-        console.warn(`[BuySignal] ${stockCode} ${version} 请求失败: ${errMsg}，尝试下一版本`);
-        // 更新最后请求时间（即使失败也要记录，避免频繁重试）
-        this.lastThsRequestTime = Date.now();
-      }
-    }
-    
-    // 所有版本都失败
-    console.error(`[BuySignal] ${stockCode} 所有版本接口均失败`);
-    return {};
-  }
-  
-  /**
    * 获取K线数据（优先本地文件缓存，其次同花顺接口）
    * @param stockCode 股票代码
    * @param days 请求天数（用于接口调用）
@@ -1105,80 +1017,26 @@ class BuySignalService {
     turnover: number;
   }[] | null> {
     try {
-      // 1. 检查内存缓存（5分钟有效，减少文件IO）
-      const memCacheKey = stockCode;
+      // 1. 检查内存缓存（5分钟有效，减少重复计算）
+      const memCacheKey = `${stockCode}_${days}`;
       const memCached = this.klineMemCache.get(memCacheKey);
       if (memCached && Date.now() - memCached.time < 5 * 60 * 1000) {
         return memCached.data;
       }
       
-      // 2. 检查本地文件缓存
-      const cacheFilePath = path.join(this.KLINE_CACHE_DIR, `${stockCode}.json`);
-      let fileCache: { stockCode: string; cacheTime: number; klines: Record<string, any> } | null = null;
-      
-      if (fs.existsSync(cacheFilePath)) {
-        try {
-          const fileContent = fs.readFileSync(cacheFilePath, 'utf-8');
-          fileCache = JSON.parse(fileContent);
-          
-          // 如果缓存文件存在且数据足够（至少有days条），直接使用本地缓存
-          if (fileCache && fileCache.klines && Object.keys(fileCache.klines).length >= days) {
-            const result = Object.values(fileCache.klines).sort((a: any, b: any) => 
-              a.date.localeCompare(b.date)
-            );
-            // 更新内存缓存
-            this.klineMemCache.set(memCacheKey, { data: result, time: Date.now() });
-            console.log(`[BuySignal] ${stockCode} 使用本地缓存 (${result.length}条)`);
-            return result;
-          }
-        } catch (e) {
-          console.warn(`[BuySignal] 读取K线缓存文件失败: ${stockCode}`);
-        }
+      // 2. 调用共享 K 线缓存服务
+      const klines = await klineCacheService.getRecentKlines(stockCode, days);
+      if (!klines || klines.length === 0) {
+        console.warn(`[BuySignal] ${stockCode} 无K线数据`);
+        return null;
       }
+
+      const result: CachedKline[] = [...klines].sort((a, b) => a.date.localeCompare(b.date));
+
+      // 3. 更新内存缓存
+      this.klineMemCache.set(memCacheKey, { data: result, time: Date.now() });
       
-      // 3. 从同花顺接口获取最新数据
-      const newKlines = await this.fetchFromThs(stockCode, days);
-      
-      // 4. 合并本地缓存和新数据
-      let mergedKlines: Record<string, any> = {};
-      
-      if (fileCache && fileCache.klines) {
-        mergedKlines = { ...fileCache.klines };
-      }
-      
-      // 新数据覆盖旧数据（更新最新K线）
-      if (Object.keys(newKlines).length > 0) {
-        mergedKlines = { ...mergedKlines, ...newKlines };
-        
-        // 5. 保存到本地文件缓存
-        try {
-          // 确保目录存在
-          if (!fs.existsSync(this.KLINE_CACHE_DIR)) {
-            fs.mkdirSync(this.KLINE_CACHE_DIR, { recursive: true });
-          }
-          
-          const cacheData = {
-            stockCode,
-            cacheTime: Date.now(),
-            klines: mergedKlines,
-          };
-          fs.writeFileSync(cacheFilePath, JSON.stringify(cacheData));
-        } catch (e) {
-          console.warn(`[BuySignal] 保存K线缓存失败: ${stockCode}`);
-        }
-      }
-      
-      // 6. 转换为数组格式并排序
-      const result = Object.values(mergedKlines).sort((a: any, b: any) => 
-        a.date.localeCompare(b.date)
-      );
-      
-      // 7. 更新内存缓存
-      if (result.length > 0) {
-        this.klineMemCache.set(memCacheKey, { data: result, time: Date.now() });
-      }
-      
-      return result.length > 0 ? result : null;
+      return result;
     } catch (error) {
       console.error(`[BuySignal] 获取 ${stockCode} K线失败:`, error);
       return null;

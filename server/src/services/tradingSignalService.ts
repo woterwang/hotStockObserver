@@ -624,67 +624,35 @@ export class TradingSignalService {
 
   /**
    * 获取股票开盘价（集合竞价后）
-   * 优先从问财获取实时数据，如果是历史日期则从K线缓存获取
+   * 如果是今天，优先从腾讯实时行情获取（数据更及时，避免同花顺K线延迟）
+   * 如果是历史日期则从K线缓存获取
    */
   private async fetchOpenPrice(stockCode: string, dateStr?: string): Promise<number | null> {
     const today = formatDate(new Date(), 'YYYYMMDD');
-    const now = new Date();
-    const currentHour = now.getHours();
+    const targetDate = dateStr ? formatDateStr(dateStr) : today;
     
-    // 如果是历史日期，或者是今天但已经收盘（15点后），从K线缓存获取
-    if (dateStr && (dateStr !== today || currentHour >= 15)) {
-      const openPrice = await this.fetchOpenPriceFromKline(stockCode, dateStr);
+    // 如果是今天，优先使用腾讯实时行情（数据更及时，避免同花顺K线延迟）
+    if (targetDate === today) {
+      try {
+        const quote = await this.fetchRealtimeQuote(stockCode);
+        if (quote && quote.open > 0) {
+          logger.debug(`从腾讯实时行情获取 ${stockCode} 今日开盘价: ${quote.open}`);
+          return quote.open;
+        }
+      } catch (error) {
+        logger.debug(`腾讯实时行情获取失败 ${stockCode}: ${(error as Error).message}`);
+      }
+      
+      // 腾讯接口失败，降级到K线缓存
+      const openPrice = await this.fetchOpenPriceFromKline(stockCode, targetDate);
       if (openPrice) {
         return openPrice;
       }
-      // 如果K线缓存没有，继续尝试实时获取
+      return null;
     }
     
-    // 实时获取今日开盘价
-    try {
-      // 使用问财获取今日开盘价
-      const question = `${stockCode} 今日开盘价`;
-      const hexinV = this.getHexinV();
-      
-      const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
-      const data = {
-        question,
-        perpage: 10,
-        page: 1,
-        source: 'Ths_iwencai_Xuangu',
-        version: '2.0',
-        query_area: '',
-        block_list: '',
-        add_info: JSON.stringify({ urp: { scene: 1, company: 1, business: 1 }, contentType: 'json', searchInfo: true }),
-        secondary_intent: 'stock',
-        log_info: JSON.stringify({ input_type: 'typewrite' }),
-      };
-      
-      const headers = {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Hexin-V': hexinV,
-        'Cookie': `v=${hexinV}`,
-        'Host': 'www.iwencai.com',
-        'Origin': 'http://www.iwencai.com',
-        'Referer': 'http://www.iwencai.com/',
-      };
-
-      const response = await axios.post(url, data, { headers, timeout: 10000 });
-      const resData = response.data;
-      
-      if (resData.status_code === 0) {
-        const datas = resData.data?.answer?.[0]?.txt?.[0]?.content?.components?.[0]?.data?.datas;
-        if (datas && datas.length > 0) {
-          const item = datas[0];
-          return Number(item['开盘价:不复权'] || item['开盘价'] || item['今开'] || 0);
-        }
-      }
-      return null;
-    } catch (error) {
-      logger.debug(`获取开盘价失败 ${stockCode}: ${(error as Error).message}`);
-      return null;
-    }
+    // 历史日期，从K线缓存获取
+    return this.fetchOpenPriceFromKline(stockCode, targetDate);
   }
 
   /**
