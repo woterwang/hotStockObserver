@@ -772,6 +772,7 @@ const BacktestPage: React.FC = () => {
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">代码</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">名称</th>
                         <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">策略</th>
+                        <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">评分</th>
                         <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">买入日</th>
                         <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">买入价</th>
                         <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">卖出日</th>
@@ -790,6 +791,15 @@ const BacktestPage: React.FC = () => {
                           <td className="px-4 py-3 text-sm text-center">
                             <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
                               强势资金突破
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-center">
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${
+                              trade.buySignalScore >= 80 ? 'bg-red-100 text-red-800' :
+                              trade.buySignalScore >= 70 ? 'bg-orange-100 text-orange-800' :
+                              'bg-gray-100 text-gray-800'
+                            }`}>
+                              {trade.buySignalScore}
                             </span>
                           </td>
                           <td className="px-4 py-3 text-sm text-center text-gray-600">{trade.buyDate}</td>
