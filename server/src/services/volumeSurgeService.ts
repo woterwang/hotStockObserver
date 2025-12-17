@@ -109,56 +109,52 @@ export class VolumeSurgeService {
   }
 
   /**
-   * 获取首板股票列表（用于判断是否首板）
+   * 获取涨停股票信息（包含首板和连板）
+   * 合并原 getFirstBoardList 和 getContinuousBoardInfo，减少API调用
+   * @returns { firstBoardSet: 首板股票集合, continuousBoardMap: 连板股票->连板数 }
    */
-  private async getFirstBoardList(dateStr: string): Promise<Set<string>> {
+  private async getLimitUpBoardInfo(dateStr: string): Promise<{
+    firstBoardSet: Set<string>;
+    continuousBoardMap: Map<string, number>;
+  }> {
+    const firstBoardSet = new Set<string>();
+    const continuousBoardMap = new Map<string, number>();
+    
     try {
-      // 首板 = 今日涨停 且 昨日未涨停
-      const question = `${dateStr}涨停，非${dateStr}连板，非ST，非北交所`;
-      const result = await this.queryWencai(question);
-      const codes = new Set<string>();
-      result.forEach((item: any) => {
-        const code = String(item.code || item['股票代码'] || '').replace(/[^0-9]/g, '');
-        if (code.length === 6) codes.add(code);
-      });
-      logger.info(`[首板检测] ${dateStr} 首板数量: ${codes.size}`);
-      return codes;
-    } catch (error) {
-      logger.warn('获取首板列表失败');
-      return new Set();
-    }
-  }
-
-  /**
-   * 获取连板股票信息
-   */
-  private async getContinuousBoardInfo(dateStr: string): Promise<Map<string, number>> {
-    const boardMap = new Map<string, number>();
-    try {
-      // 查询连板股
-      const question = `${dateStr}连板，非ST，非北交所`;
+      // 一次查询获取所有涨停股及连板天数
+      const question = `${dateStr}涨停，非ST，非北交所，${dateStr}连续涨停天数`;
       const result = await this.queryWencai(question);
       
       result.forEach((item: any) => {
         const code = String(item.code || item['股票代码'] || '').replace(/[^0-9]/g, '');
-        if (code.length === 6) {
-          // 尝试从字段中获取连板数
-          let boardCount = 2; // 默认2连板
-          for (const key in item) {
-            if (key.includes('连板') && key.includes('天')) {
-              const match = String(item[key]).match(/(\d+)/);
-              if (match) boardCount = parseInt(match[1], 10);
+        if (code.length !== 6) return;
+        
+        // 尝试从字段中获取连板天数
+        let boardCount = 1; // 默认1天（首板）
+        for (const key in item) {
+          if (key.includes('连续涨停') && key.includes('天')) {
+            const val = parseFloat(item[key]);
+            if (!isNaN(val) && val >= 1) {
+              boardCount = Math.floor(val);
             }
           }
-          boardMap.set(code, boardCount);
+        }
+        
+        if (boardCount === 1) {
+          // 首板
+          firstBoardSet.add(code);
+        } else {
+          // 连板（2板及以上）
+          continuousBoardMap.set(code, boardCount);
         }
       });
       
-      logger.info(`[连板检测] ${dateStr} 连板股数量: ${boardMap.size}`);
+      logger.info(`[涨停检测] ${dateStr} 首板数量: ${firstBoardSet.size}, 连板数量: ${continuousBoardMap.size}`);
     } catch (error) {
-      logger.warn('获取连板信息失败');
+      logger.warn(`获取涨停信息失败: ${(error as Error).message}`);
     }
-    return boardMap;
+    
+    return { firstBoardSet, continuousBoardMap };
   }
 
   private async fetchFromWencai(dateStr: string): Promise<any[]> {
@@ -270,13 +266,10 @@ export class VolumeSurgeService {
     const indexAboveMa20 = await this.checkIndexAboveMa20(targetDate);
     logger.info(`[大盘趋势] 上证指数${indexAboveMa20 ? '站上' : '跌破'}20日均线`);
     
-    // 3. 获取首板列表
+    // 3. 获取涨停股信息（首板+连板，合并为一次API调用）
     await this.randomDelay();
-    const firstBoardSet = await this.getFirstBoardList(targetDate);
-    
-    // 4. 获取连板信息
-    await this.randomDelay();
-    const continuousBoardMap = await this.getContinuousBoardInfo(targetDate);
+    const { firstBoardSet, continuousBoardMap } = await this.getLimitUpBoardInfo(targetDate);
+    logger.info(`[涨停检测] 首板数量: ${firstBoardSet.size}, 连板数量: ${continuousBoardMap.size}`);
     
     // 获取选股数据
     await this.randomDelay();

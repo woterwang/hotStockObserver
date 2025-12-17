@@ -379,39 +379,22 @@ class KlineCacheService {
    * @returns 按日期升序排列的K线数组
    */
   async getRecentKlines(stockCode: string, days: number = 60): Promise<CachedKline[]> {
-    // 生成最近 days 个交易日的日期列表
-    const today = dayjs();
-    const targetDates: string[] = [];
-    
-    // 往前推 days * 2 天作为搜索范围（考虑非交易日）
-    let cursor = today;
-    let tradingDaysFound = 0;
-    const maxSearchDays = days * 2;
-    let searchedDays = 0;
-    
-    while (tradingDaysFound < days && searchedDays < maxSearchDays) {
-      const dateStr = cursor.format('YYYYMMDD');
-      if (tradingCalendarService.isTradingDay(dateStr)) {
-        targetDates.push(dateStr);
-        tradingDaysFound++;
-      }
-      cursor = cursor.subtract(1, 'day');
-      searchedDays++;
-    }
-
-    // 如果交易日历不完整，使用更大范围的 preferDays 来获取
-    const preferDays = Math.max(days * 3, 1800);
-    const klinesMap = await this.ensureKlines(stockCode, { 
-      targetDates: targetDates.reverse(), // 日期从早到晚
-      preferDays 
-    });
-
-    // 转换为数组并按日期排序
-    const result = Array.from(klinesMap.values())
-      .sort((a, b) => a.date.localeCompare(b.date));
-
+    const klinesMap = this.loadCache(stockCode).map; // 读取缓存
     // 返回最近 days 条数据
-    return result.slice(-days);
+    return Array.from(klinesMap.values()).sort((a, b) => a.date.localeCompare(b.date)).slice(-days);
+  }
+  getKlinesByStartDay(stockCode:string,startDay:string,klineDays:number){
+      const allCachedKlines = this.loadCache(stockCode).map;
+      const resultKlines: CachedKline | [] = [];
+      const startDayNormalized = this.normalizeDate(startDay);
+      const targetDates: string[] = [];
+      let cursor = dayjs(startDayNormalized);
+      const startDateIndex = Array.from(allCachedKlines.keys()).sort().indexOf(startDayNormalized);
+      if(startDateIndex < 0){
+          logger.warn(`[K线缓存] ${stockCode} 起始日期 ${startDayNormalized} 不在缓存中`);
+          return resultKlines;
+      }
+      return Array.from(allCachedKlines.values()).sort((a,b)=>a.date.localeCompare(b.date)).slice(startDateIndex,startDateIndex + klineDays);
   }
 }
 

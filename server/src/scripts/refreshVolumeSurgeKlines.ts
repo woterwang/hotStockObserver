@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { logger } from '../utils';
 
 const CACHE_DIR = path.join(__dirname, '../../data/kline_cache');
-const DEFAULT_DAYS = 1800;
+const DEFAULT_DAYS = 200;
 
 interface CachedKline {
   date: string;

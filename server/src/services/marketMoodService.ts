@@ -38,6 +38,9 @@ interface MarketMoodCache {
   data: MarketMoodData[];      // 按日期降序排列
 }
 
+// 默认情绪值（当无缓存数据时使用）
+const DEFAULT_MOOD_STRONG = 50;
+
 class MarketMoodService {
   // 内存缓存：日期 -> 情绪数据
   private moodMap: Map<string, MarketMoodData> = new Map();
@@ -208,27 +211,38 @@ class MarketMoodService {
   /**
    * 获取指定日期的完整市场情绪数据
    * @param dateStr 日期 YYYYMMDD 或 YYYY-MM-DD
+   * @returns 完整的市场情绪数据，如果没有缓存数据则返回默认值（strong=50）
    */
-  getMoodData(dateStr: string): MarketMoodData | null {
+  getMoodData(dateStr: string): MarketMoodData {
     const normalized = dateStr.replace(/-/g, '');
-    return this.moodMap.get(normalized) || null;
+    return this.moodMap.get(normalized) || {
+      day: normalized,
+      strong: DEFAULT_MOOD_STRONG,
+      ztjs: 0,
+      lbgd: 0,
+      dfNum: 0,
+    };
   }
 
   /**
    * 获取最新的市场情绪值
-   * @returns 最新情绪值，如果没有数据返回 null
+   * @returns 最新情绪值，如果没有数据返回默认值（strong=50）
    */
-  getLatestMood(): { day: string; strong: number } | null {
-    if (this.moodMap.size === 0) return null;
+  getLatestMood(): { day: string; strong: number } {
+    if (this.moodMap.size === 0) {
+      return { day: '', strong: DEFAULT_MOOD_STRONG };
+    }
     
     // 找到最新日期
     const sortedDays = Array.from(this.moodMap.keys()).sort().reverse();
-    if (sortedDays.length === 0) return null;
+    if (sortedDays.length === 0) {
+      return { day: '', strong: DEFAULT_MOOD_STRONG };
+    }
     
     const latestDay = sortedDays[0];
     const data = this.moodMap.get(latestDay);
     
-    return data ? { day: data.day, strong: data.strong } : null;
+    return data ? { day: data.day, strong: data.strong } : { day: '', strong: DEFAULT_MOOD_STRONG };
   }
 
   /**

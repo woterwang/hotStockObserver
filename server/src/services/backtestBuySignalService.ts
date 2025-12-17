@@ -64,13 +64,13 @@ export interface BuySignalBacktestResult {
   startDate: string;
   endDate: string;
   config: BuySignalBacktestConfig;
-  
+
   // 统计数据
   totalTrades: number;      // 总交易次数
   winTrades: number;        // 盈利次数
   lossTrades: number;       // 亏损次数
   winRate: number;          // 胜率 %
-  
+
   // 收益统计
   totalProfitAmount: number;    // 总收益金额（元）
   totalProfitPercent: number;   // 总收益率 %（相对总投入）
@@ -78,24 +78,24 @@ export interface BuySignalBacktestResult {
   avgWinPercent: number;        // 平均盈利 %
   avgLossPercent: number;       // 平均亏损 %
   profitLossRatio: number;      // 盈亏比
-  
+
   // 资金统计
   totalInvested: number;        // 总投入资金（元）
   maxDrawdown: number;          // 最大回撤（元）
   maxDrawdownPercent: number;   // 最大回撤 %
-  
+
   // 极值
   maxProfit: number;        // 最大单笔盈利 %
   maxLoss: number;          // 最大单笔亏损 %
   maxConsecutiveWins: number;   // 最大连续盈利次数
   maxConsecutiveLosses: number; // 最大连续亏损次数
-  
+
   // 持仓统计
   avgHoldDays: number;      // 平均持仓天数
-  
+
   // 资金曲线（用于绘图）
   equityCurve: { date: string; equity: number }[];
-  
+
   // 交易明细
   trades: BuySignalTradeRecord[];
 }
@@ -107,7 +107,7 @@ type KlineData = CachedKline;
  * 买入信号回测服务
  */
 class BuySignalBacktestService {
-  
+
   // 默认配置（策略来源固定为 volume_surge）
   // 阈值标准：>= 70 高涨, >= 50 正常, >= 30 偏弱, < 30 极弱
   private defaultConfig: BuySignalBacktestConfig = {
@@ -168,50 +168,37 @@ class BuySignalBacktestService {
     klineDays: number,
     maxHoldDays: number
   ): Promise<{ loaded: number; failed: number; skipped: number }> {
-    const uniqueStocks = [...new Set(stockCodes)];
-    const requiredDaysAfter = maxHoldDays + 5; // 额外5天缓冲
-    
     let loaded = 0;
     let failed = 0;
     let skipped = 0;
+    const uniqueStocks = [...new Set(stockCodes)];
 
     logger.info(`开始预加载 K 线数据: ${uniqueStocks.length} 只股票 (使用 klineCacheService)`);
 
     for (let i = 0; i < uniqueStocks.length; i++) {
       const stockCode = uniqueStocks[i];
       const signalDate = signalDates[stockCodes.indexOf(stockCode)];
-      
+
       try {
-        // 使用 klineCacheService.getRecentKlines 获取最近N天K线数据
-        const klineData = await klineCacheService.getRecentKlines(stockCode, klineDays);
-        
+        // 使用 klineCacheService.getKlinesByStartDay 获取需要的K线数据
+        const klineData = klineCacheService.getKlinesByStartDay(stockCode, signalDate, klineDays);
+
         if (klineData && klineData.length > 0) {
           // 检查数据是否足够
-          if (this.isKlineDataSufficient(klineData, signalDate, requiredDaysAfter)) {
-            this.klineCache.set(stockCode, klineData);
+          if (klineData.length < klineDays) {
+            logger.warn(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 获取的 K 线数据不足: 需要 ${klineDays} 天，实际 ${klineData.length} 天`);
             skipped++;
-            logger.debug(`[${i + 1}/${uniqueStocks.length}] ${stockCode} K线数据足够: ${klineData.length} 条`);
-          } else {
-            // 数据不够，尝试获取更多
-            const moreData = await klineCacheService.getRecentKlines(stockCode, klineDays * 2);
-            if (moreData && moreData.length > 0) {
-              this.klineCache.set(stockCode, moreData);
-              loaded++;
-              logger.info(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 获取更多K线成功: ${moreData.length} 条`);
-            } else {
-              // 仍然使用已有数据
-              this.klineCache.set(stockCode, klineData);
-              loaded++;
-              logger.info(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 使用已有数据: ${klineData.length} 条`);
-            }
+          }else{
+            loaded++;
+            this.klineCache.set(stockCode, klineData);
           }
         } else {
-          failed++;
           logger.warn(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 获取失败: 无数据`);
+          skipped++;
         }
       } catch (error) {
-        failed++;
         logger.warn(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 获取失败: ${(error as Error).message}`);
+        failed++;
       }
     }
 
@@ -219,112 +206,35 @@ class BuySignalBacktestService {
     return { loaded, failed, skipped };
   }
 
-  /**
-   * 从缓存获取K线数据（优先使用内存缓存，其次使用 klineCacheService）
-   */
-  private async fetchKlineFromThs(
-    stockCode: string,
-    days: number = 60
-  ): Promise<KlineData[]> {
-    try {
-      // 检查内存缓存
-      if (this.klineCache.has(stockCode)) {
-        return this.klineCache.get(stockCode)!;
-      }
-
-      // 使用 klineCacheService.getRecentKlines 获取最近N天K线数据
-      const klineData = await klineCacheService.getRecentKlines(stockCode, days);
-      
-      if (klineData && klineData.length > 0) {
-        this.klineCache.set(stockCode, klineData);
-        return klineData;
-      }
-
-      return [];
-    } catch (error) {
-      logger.debug(`获取 ${stockCode} K线失败: ${(error as Error).message}`);
-      return [];
-    }
-  }
-
-  /**
-   * 获取上证指数K线（用于计算市场情绪）
-   * 使用 klineCacheService
-   */
-  private async fetchIndexKline(days: number = 60): Promise<KlineData[]> {
-    try {
-      const cacheKey = 'index_000001';
-      if (this.klineCache.has(cacheKey)) {
-        return this.klineCache.get(cacheKey)!;
-      }
-
-      // 使用 klineCacheService.getRecentKlines 获取上证指数K线
-      const klineData = await klineCacheService.getRecentKlines('000001', days);
-      
-      if (klineData && klineData.length > 0) {
-        this.klineCache.set(cacheKey, klineData);
-        return klineData;
-      }
-
-      return [];
-    } catch (error) {
-      logger.debug(`获取上证指数K线失败: ${(error as Error).message}`);
-      return [];
-    }
-  }
-
-  /**
-   * 计算某日市场情绪（0-100）
-   * 优先从 marketMoodService 获取 strong 值，降级使用大盘涨跌幅计算
-   */
-  private calculateMarketMood(indexKline: KlineData[], dateStr: string): number {
-    // 优先从 market_mood.json 获取 strong 值
-    const moodData = marketMoodService.getMoodData(dateStr);
-    if (moodData && typeof moodData.strong === 'number') {
-      return moodData.strong;
-    }
-
-    // 降级：基于大盘涨跌幅计算
-    const idx = indexKline.findIndex(k => k.date === dateStr);
-    if (idx <= 0) return 50;
-
-    const today = indexKline[idx];
-    const prev = indexKline[idx - 1];
-    const dayChange = ((today.close - prev.close) / prev.close) * 100;
-
-    // 情绪 = 50 + 涨跌幅 * 10，限制在 0-100
-    return Math.max(0, Math.min(100, 50 + dayChange * 10));
-  }
 
   /**
    * 延时函数
    */
-  private delay(ms: number): Promise<void> {
+  private delay (ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
    * 回测单只股票
    */
-  private async backtestSingleStock(
+  private async backtestSingleStock (
     signal: any,
-    config: BuySignalBacktestConfig,
-    indexKline: KlineData[]
+    config: BuySignalBacktestConfig
   ): Promise<BuySignalTradeRecord | null> {
     try {
       const stockCode = signal.stockCode;
       // 使用 toDateStr 规范化日期（支持 Date 和 String 两种格式）
       const signalDateStr = toDateStr(signal.date) || formatDate(new Date(signal.date), 'YYYYMMDD');
-      
+
       // 动态计算需要的 K 线天数
       // 公式：klineDays = (今日日期 - 信号日期) + maxHoldDays + 缓冲天数(10天)
       const today = new Date();
       const signalDate = parseDate(signalDateStr);
       const daysDiff = Math.ceil((today.getTime() - signalDate.getTime()) / (1000 * 60 * 60 * 24));
       const klineDays = Math.max(30, daysDiff + config.maxHoldDays + 10);  // 至少30天，加上持仓天数和10天缓冲
-      
+
       // 获取K线数据（使用动态计算的天数）
-      const klineData = await this.fetchKlineFromThs(stockCode, klineDays);
+      const klineData = klineCacheService.getKlinesByStartDay(stockCode, signalDateStr, klineDays);
       if (klineData.length === 0) {
         logger.info(`[回测] ${stockCode} 无K线数据`);
         return null;
@@ -344,9 +254,9 @@ class BuySignalBacktestService {
       const buyKline = klineData[buyIdx];
       const buyDateStr = buyKline.date;
       const buyPrice = buyKline.open;  // 信号日开盘价买入
-      
+
       logger.info(`[回测] ${stockCode} 信号日=${signalDateStr}, 买入日=${buyDateStr}, 买入价=${buyPrice}`);
-      
+
       if (buyPrice <= 0) {
         logger.debug(`${stockCode} 买入价为0`);
         return null;
@@ -355,10 +265,10 @@ class BuySignalBacktestService {
       // 确定仓位
       // 规则1: strong_buy = 标准仓, buy = 标准仓的一半 (通过 signal.positionRatio 传入)
       // 规则2: 市场情绪不好时再降低仓位
-      const buyDayMood = this.calculateMarketMood(indexKline, buyDateStr);
+      const buyDayMood = marketMoodService.getMood(buyDateStr) ?? 50;
       const signalPositionRatio = (signal as any).positionRatio || 1;  // 默认为1（标准仓）
       let position = config.basePosition * signalPositionRatio;
-      
+
       // 市场情绪不好时，再乘以 lowMoodPositionRatio
       if (buyDayMood < config.marketMoodThreshold) {
         position = position * config.lowMoodPositionRatio;
@@ -388,7 +298,7 @@ class BuySignalBacktestService {
         }
 
         const dayKline = klineData[holdIdx];
-        const dayMood = this.calculateMarketMood(indexKline, dayKline.date);
+        const dayMood = marketMoodService.getMood(dayKline.date) ?? 50;
 
         // 买入当天（i=0）跳过卖出检查，因为刚买入
         if (i === 0) {
@@ -465,13 +375,13 @@ class BuySignalBacktestService {
   /**
    * 执行回测
    */
-  async runBacktest(
+  async runBacktest (
     startDate: string,
     endDate: string,
     config?: Partial<BuySignalBacktestConfig>
   ): Promise<BuySignalBacktestResult> {
     const finalConfig: BuySignalBacktestConfig = { ...this.defaultConfig, ...config };
-    
+
     logger.info(`开始买入信号回测: ${startDate} - ${endDate}`);
     logger.info(`传入的 config: ${JSON.stringify(config)}`);
     logger.info(`合并后 finalConfig: ${JSON.stringify(finalConfig)}`);
@@ -480,27 +390,17 @@ class BuySignalBacktestService {
     // 清空缓存
     this.klineCache.clear();
 
-    // 计算需要获取的 K 线天数（从回测开始日期到今天的交易日数 + 缓冲）
-    const startDateObj = parseDate(startDate);
-    const today = new Date();
-    const daysDiff = Math.ceil((today.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24));
-    // 交易日大约是自然日的 5/7，再加上 30 天缓冲
-    const klineDays = Math.max(120, Math.ceil(daysDiff * 5 / 7) + 30);
+    // 计算需要获取的 K 线天数
+    const klineDays = finalConfig.maxHoldDays; // 直接使用自然日差，加上持仓天数和10天缓冲
     logger.info(`根据回测日期范围，需要获取 ${klineDays} 天 K 线数据`);
-
-    // 获取上证指数K线
-    const indexKline = await this.fetchIndexKline(klineDays);
-    if (indexKline.length === 0) {
-      logger.warn('无法获取上证指数K线');
-    }
 
     // 构建查询条件
     // 数据库日期格式已统一为字符串 "YYYYMMDD"，直接使用字符串比较
     const startDateStr = formatDate(parseDate(startDate), 'YYYYMMDD');
     const endDateStr = formatDate(parseDate(endDate), 'YYYYMMDD');
-    
+
     logger.info(`日期查询范围: ${startDateStr} ~ ${endDateStr}`);
-    
+
     // 从 BuySignal 集合查询数据，只查询 strong_buy 和 buy 的信号
     const buySignalQuery: any = {
       date: { $gte: startDateStr, $lte: endDateStr },
@@ -538,7 +438,7 @@ class BuySignalBacktestService {
       const stockCodes = signals.map(s => s.stockCode);
       // 使用 toDateStr 统一日期格式（数据库已迁移为字符串格式）
       const signalDates = signals.map(s => toDateStr(s.date));
-      
+
       await this.preloadKlineData(stockCodes, signalDates, klineDays, finalConfig.maxHoldDays);
     }
 
@@ -547,7 +447,7 @@ class BuySignalBacktestService {
     let processedCount = 0;
 
     for (const signal of signals) {
-      const trade = await this.backtestSingleStock(signal, finalConfig, indexKline);
+      const trade = await this.backtestSingleStock(signal, finalConfig);
 
       if (trade) {
         trades.push(trade);
@@ -563,7 +463,7 @@ class BuySignalBacktestService {
 
     // 计算统计数据
     const result = this.calculateStatistics(startDate, endDate, finalConfig, trades);
-    
+
     logger.info(`回测完成: 总交易 ${result.totalTrades} 笔, 胜率 ${result.winRate.toFixed(1)}%, 总收益 ${result.totalProfitAmount.toFixed(2)} 元`);
 
     return result;
@@ -572,14 +472,14 @@ class BuySignalBacktestService {
   /**
    * 计算统计数据
    */
-  private calculateStatistics(
+  private calculateStatistics (
     startDate: string,
     endDate: string,
     config: BuySignalBacktestConfig,
     trades: BuySignalTradeRecord[]
   ): BuySignalBacktestResult {
     const totalTrades = trades.length;
-    
+
     if (totalTrades === 0) {
       return {
         startDate,
@@ -625,11 +525,11 @@ class BuySignalBacktestService {
     // 盈利/亏损平均值
     const winningTrades = trades.filter(t => t.profitPercent > 0);
     const losingTrades = trades.filter(t => t.profitPercent < 0);
-    const avgWinPercent = winningTrades.length > 0 
-      ? winningTrades.reduce((sum, t) => sum + t.profitPercent, 0) / winningTrades.length 
+    const avgWinPercent = winningTrades.length > 0
+      ? winningTrades.reduce((sum, t) => sum + t.profitPercent, 0) / winningTrades.length
       : 0;
-    const avgLossPercent = losingTrades.length > 0 
-      ? losingTrades.reduce((sum, t) => sum + t.profitPercent, 0) / losingTrades.length 
+    const avgLossPercent = losingTrades.length > 0
+      ? losingTrades.reduce((sum, t) => sum + t.profitPercent, 0) / losingTrades.length
       : 0;
     const profitLossRatio = avgLossPercent !== 0 ? Math.abs(avgWinPercent / avgLossPercent) : 0;
 
@@ -660,11 +560,11 @@ class BuySignalBacktestService {
     let maxEquity = 0;
     let maxDrawdown = 0;
     const equityCurve: { date: string; equity: number }[] = [];
-    
+
     for (const trade of trades) {
       equity += trade.profitAmount;
       equityCurve.push({ date: trade.sellDate, equity });
-      
+
       if (equity > maxEquity) {
         maxEquity = equity;
       }
