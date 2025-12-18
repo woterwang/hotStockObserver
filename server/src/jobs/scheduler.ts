@@ -16,6 +16,7 @@ export class JobScheduler {
   private sentimentJob: cron.ScheduledTask | null = null;
   private volumeSurgeJob: cron.ScheduledTask | null = null;
   private tradingCalendarJob: cron.ScheduledTask | null = null;
+  private morningMoodJob: cron.ScheduledTask | null = null;
 
   /**
    * 启动所有定时任务
@@ -33,6 +34,7 @@ export class JobScheduler {
     this.startSignalGenerateJob();
     this.startSentimentJob();
     this.startVolumeSurgeScanJob();
+    this.startMorningMoodJob();
     logger.info('定时任务已启动');
   }
 
@@ -67,6 +69,10 @@ export class JobScheduler {
     if (this.tradingCalendarJob) {
       this.tradingCalendarJob.stop();
       this.tradingCalendarJob = null;
+    }
+    if (this.morningMoodJob) {
+      this.morningMoodJob.stop();
+      this.morningMoodJob = null;
     }
     logger.info('定时任务已停止');
   }
@@ -297,6 +303,33 @@ export class JobScheduler {
     });
 
     logger.info(`集合竞价更新任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /**
+   * 早间市场情绪数据更新任务
+   * 每天 08:18 执行，独立于集合竞价任务
+   */
+  private startMorningMoodJob () {
+    const cronExpression = '18 8 * * *';
+
+    this.morningMoodJob = cron.schedule(cronExpression, async () => {
+      try {
+        logger.info('早间市场情绪缓存更新开始');
+        const moodSuccess = await marketMoodService.updateCache();
+        if (moodSuccess) {
+          const moodStatus = marketMoodService.getCacheStatus();
+          logger.info(`早间市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
+        } else {
+          logger.warn('早间市场情绪更新失败，将继续使用旧缓存');
+        }
+      } catch (error) {
+        logger.error(`早间市场情绪更新任务失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`早间市场情绪任务已配置，Cron表达式: ${cronExpression}`);
   }
 
   /**
