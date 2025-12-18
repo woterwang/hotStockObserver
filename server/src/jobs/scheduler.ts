@@ -91,16 +91,6 @@ export class JobScheduler {
         } else {
           logger.warn('交易日历更新失败，将继续使用旧缓存');
         }
-
-        // 2. 更新市场情绪数据
-        logger.info('开始更新市场情绪缓存');
-        const moodSuccess = await marketMoodService.updateCache();
-        if (moodSuccess) {
-          const moodStatus = marketMoodService.getCacheStatus();
-          logger.info(`市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
-        } else {
-          logger.warn('市场情绪更新失败，将继续使用旧缓存');
-        }
       } catch (error) {
         logger.error(`交易日历/市场情绪更新任务失败: ${(error as Error).message}`);
       }
@@ -218,7 +208,7 @@ export class JobScheduler {
    * 交易日收盘后执行（15:35），生成次日备选标的
    * 包含多个策略：价格突破、放量大涨等
    */
-  private startSignalGenerateJob() {
+  private startSignalGenerateJob () {
     // 每个交易日15:35执行 价格突破策略
     const cronExpression = '35 15 * * 1-5';
 
@@ -284,11 +274,23 @@ export class JobScheduler {
       // 2. 放量大涨策略
       try {
         logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
-        const volumeSurgeResult = await buySignalService.generateBuySignals(today,undefined,50);
+        const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
         logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.length} 个信号，入场日=${volumeSurgeResult[0].date}`);
       } catch (error) {
         logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
       }
+
+
+      // 3. 更新市场情绪数据
+      logger.info('开始更新市场情绪缓存');
+      const moodSuccess = await marketMoodService.updateCache();
+      if (moodSuccess) {
+        const moodStatus = marketMoodService.getCacheStatus();
+        logger.info(`市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
+      } else {
+        logger.warn('市场情绪更新失败，将继续使用旧缓存');
+      }
+
 
     }, {
       timezone: 'Asia/Shanghai',
