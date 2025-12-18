@@ -127,7 +127,7 @@ const BreakthroughPage: React.FC = () => {
   // 跳转到同花顺个股页面（外部链接）
   const goToDetail = (stockCode: string) => {
     // 同花顺个股页面链接
-    const url = `https://stockpage.10jqka.com.cn/${stockCode}/`;
+    const url = `https://www.iwencai.com/unifiedwap/result?querytype=stock&w=${stockCode}`;
     window.open(url, '_blank');
   };
 
