@@ -2,7 +2,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import * as fs from 'fs';
 import * as path from 'path';
-import { logger } from '../utils';
+import { logger, sleep } from '../utils';
 import { tradingCalendarService } from './tradingCalendarService';
 
 export interface CachedKline {
@@ -46,16 +46,16 @@ class KlineCacheService {
     }
   }
 
-  private normalizeDate(dateStr: string): string {
+  private normalizeDate (dateStr: string): string {
     return dateStr.replace(/[-/]/g, '');
   }
 
-  private getCacheFile(stockCode: string): string {
+  private getCacheFile (stockCode: string): string {
     return path.join(this.cacheDir, `${stockCode}.json`);
   }
 
   // 读取磁盘缓存为 Map，保留原 cacheTime 方便上层记录更新时间
-  private loadCache(stockCode: string): { map: Map<string, CachedKline>; cacheTime: number } {
+  private loadCache (stockCode: string): { map: Map<string, CachedKline>; cacheTime: number } {
     const cacheFile = this.getCacheFile(stockCode);
     const map = new Map<string, CachedKline>();
     let cacheTime = Date.now();
@@ -80,7 +80,7 @@ class KlineCacheService {
   }
 
   // 将 Map 落盘，保持 cacheTime 以标识最新写入时间
-  private persistCache(stockCode: string, map: Map<string, CachedKline>, cacheTime: number = Date.now()): void {
+  private persistCache (stockCode: string, map: Map<string, CachedKline>, cacheTime: number = Date.now()): void {
     const cacheFile = this.getCacheFile(stockCode);
     const cacheData: CacheFileSchema = {
       stockCode,
@@ -96,14 +96,14 @@ class KlineCacheService {
   }
 
   // 返回当前缓存的日期边界，用于日志提示补全方向
-  private getCacheRange(map: Map<string, CachedKline>): { min?: string; max?: string } {
+  private getCacheRange (map: Map<string, CachedKline>): { min?: string; max?: string } {
     if (map.size === 0) return {};
     const dates = Array.from(map.keys()).sort();
     return { min: dates[0], max: dates[dates.length - 1] };
   }
 
   // 根据交易日历生成区间日期列表，可附加额外目标日期
-  private buildRequiredDates(startDate: string, endDate: string, extra: string[] = []): string[] {
+  private buildRequiredDates (startDate: string, endDate: string, extra: string[] = []): string[] {
     const dates = new Set<string>(extra.map(date => this.normalizeDate(date)));
     const start = dayjs(startDate);
     const end = dayjs(endDate);
@@ -121,7 +121,7 @@ class KlineCacheService {
   }
 
   // 从同花顺拉取最近 N 天日K（不写入缓存，调用方决定合并）
-  private async fetchKlineFromTHS(stockCode: string, days: number): Promise<Map<string, CachedKline>> {
+  private async fetchKlineFromTHS (stockCode: string, days: number): Promise<Map<string, CachedKline>> {
     const result = new Map<string, CachedKline>();
     try {
       const marketId = stockCode.startsWith('6') ? 17 : 33;
@@ -172,7 +172,7 @@ class KlineCacheService {
   }
 
   // 增量合并：已有则跳过，确保不覆盖本地历史
-  private mergeWithoutOverwrite(existing: Map<string, CachedKline>, incoming: Map<string, CachedKline>): Map<string, CachedKline> {
+  private mergeWithoutOverwrite (existing: Map<string, CachedKline>, incoming: Map<string, CachedKline>): Map<string, CachedKline> {
     for (const [date, kline] of incoming) {
       if (!existing.has(date)) {
         existing.set(date, kline);
@@ -181,17 +181,17 @@ class KlineCacheService {
     return existing;
   }
 
-  async getKline(stockCode: string, dateStr: string, preferDays: number = 1800): Promise<CachedKline | null> {
+  async getKline (stockCode: string, dateStr: string, preferDays: number = 1800): Promise<CachedKline | null> {
     const normalizedDate = this.normalizeDate(dateStr);
     const klines = await this.ensureKlines(stockCode, { targetDates: [normalizedDate], preferDays });
     return klines.get(normalizedDate) || null;
   }
 
-  async getKlines(stockCode: string, targetDates: string[], preferDays: number = 1800): Promise<Map<string, CachedKline>> {
+  async getKlines (stockCode: string, targetDates: string[], preferDays: number = 1800): Promise<Map<string, CachedKline>> {
     return this.ensureKlines(stockCode, { targetDates: targetDates.map(date => this.normalizeDate(date)), preferDays });
   }
 
-  async getRange(stockCode: string, startDate: string, endDate: string, preferDays: number = 1800): Promise<Map<string, CachedKline>> {
+  async getRange (stockCode: string, startDate: string, endDate: string, preferDays: number = 1800): Promise<Map<string, CachedKline>> {
     const requiredDates = this.buildRequiredDates(this.normalizeDate(startDate), this.normalizeDate(endDate));
     const fullMap = await this.ensureKlines(stockCode, { targetDates: requiredDates, preferDays });
     const filtered = new Map<string, CachedKline>();
@@ -204,61 +204,20 @@ class KlineCacheService {
     return filtered;
   }
 
-  // 确保目标日期的K线齐全；缺口时默认抓取 preferDays（1800）并增量合并
-  // 如果是当天数据且THS历史接口无数据，则使用腾讯实时行情兜底
-  async ensureKlines(
+  // 确保目标日期的K线齐全；缺口时默认抓取 preferDays（1800）
+  async ensureKlines (
     stockCode: string,
     options: { targetDates: string[]; preferDays?: number }
   ): Promise<Map<string, CachedKline>> {
     const preferDays = options.preferDays ?? 1800; // 默认拉取约7年数据，填补缺口
-    const normalizedTargets = options.targetDates.map(date => this.normalizeDate(date)).filter(d => d.length === 8);
-    const { map } = this.loadCache(stockCode);
-
-    if (normalizedTargets.length === 0) {
-      return map;
-    }
-
-    const missingDates = normalizedTargets.filter(date => !map.has(date));
-    if (missingDates.length === 0) {
-      return map;
-    }
-
-    const sortedMissing = [...missingDates].sort();
-    const earliestNeed = sortedMissing[0];
-    const latestNeed = sortedMissing[sortedMissing.length - 1];
-    const { min: minCached, max: maxCached } = this.getCacheRange(map);
-
-    if (!minCached || earliestNeed < minCached) {
-      logger.info(`[K线缓存] ${stockCode} 需要向前补全: ${earliestNeed} -> ${minCached || 'none'}`);
-    }
-    if (!maxCached || latestNeed > maxCached) {
-      logger.info(`[K线缓存] ${stockCode} 需要向后补全: ${maxCached || 'none'} -> ${latestNeed}`);
-    }
 
     const fetched = await this.fetchKlineFromTHS(stockCode, preferDays);
-    let merged = this.mergeWithoutOverwrite(map, fetched);
-
-    // 检查是否仍有缺失的目标日期，如果是当天则使用腾讯实时行情兜底
-    const today = dayjs().format('YYYYMMDD');
-    const stillMissingDates = normalizedTargets.filter(date => !merged.has(date));
-    
-    if (stillMissingDates.includes(today)) {
-      logger.info(`[K线缓存] ${stockCode} THS未返回今日(${today})数据，尝试腾讯实时行情兜底...`);
-      const realtimeKline = await this.fetchRealtimeKline(stockCode);
-      if (realtimeKline && realtimeKline.date === today) {
-        merged.set(today, realtimeKline);
-        logger.info(`[K线缓存] ${stockCode} 从腾讯实时行情获取今日K线成功: open=${realtimeKline.open}, close=${realtimeKline.close}`);
-      } else {
-        logger.warn(`[K线缓存] ${stockCode} 腾讯实时行情也未能获取今日数据`);
-      }
-    }
-
-    this.persistCache(stockCode, merged, Date.now());
-    return merged;
+    this.persistCache(stockCode, fetched, Date.now());
+    return fetched;
   }
 
   // 从腾讯获取实时行情并转换为 CachedKline 格式（用于当日数据兜底）
-  private async fetchRealtimeKline(stockCode: string): Promise<CachedKline | null> {
+  private async fetchRealtimeKline (stockCode: string): Promise<CachedKline | null> {
     try {
       const quote = await this.fetchRealtimeQuote(stockCode);
       if (!quote || quote.open === 0) {
@@ -284,7 +243,7 @@ class KlineCacheService {
   }
 
   // 从腾讯获取实时行情数据（盘中/收盘后均可获取当日数据）
-  private async fetchRealtimeQuote(stockCode: string): Promise<RealtimeQuote | null> {
+  private async fetchRealtimeQuote (stockCode: string): Promise<RealtimeQuote | null> {
     try {
       const qqCode = this.getQQStockCode(stockCode);
       const url = `https://qt.gtimg.cn/q=${qqCode}`;
@@ -352,7 +311,7 @@ class KlineCacheService {
   }
 
   // 将6位股票代码转为腾讯格式: sh600693 / sz002544
-  private getQQStockCode(stockCode: string): string {
+  private getQQStockCode (stockCode: string): string {
     const code = stockCode.replace(/\D/g, '');
     if (code.startsWith('6')) {
       return `sh${code}`;
@@ -365,7 +324,7 @@ class KlineCacheService {
   }
 
   // 对外合并写入入口，复用"缺什么补什么，不覆盖已有"的策略
-  mergeAndSave(stockCode: string, klines: Map<string, CachedKline>): void {
+  mergeAndSave (stockCode: string, klines: Map<string, CachedKline>): void {
     const { map } = this.loadCache(stockCode);
     const merged = this.mergeWithoutOverwrite(map, klines); // 增量合并入库
     this.persistCache(stockCode, merged, Date.now());
@@ -378,23 +337,22 @@ class KlineCacheService {
    * @param days 需要的交易日数量
    * @returns 按日期升序排列的K线数组
    */
-  async getRecentKlines(stockCode: string, days: number = 60): Promise<CachedKline[]> {
+  async getRecentKlines (stockCode: string, days: number = 60): Promise<CachedKline[]> {
     const klinesMap = this.loadCache(stockCode).map; // 读取缓存
     // 返回最近 days 条数据
     return Array.from(klinesMap.values()).sort((a, b) => a.date.localeCompare(b.date)).slice(-days);
   }
-  getKlinesByStartDay(stockCode:string,startDay:string,klineDays:number){
-      const allCachedKlines = this.loadCache(stockCode).map;
-      const resultKlines: CachedKline | [] = [];
-      const startDayNormalized = this.normalizeDate(startDay);
-      const targetDates: string[] = [];
-      let cursor = dayjs(startDayNormalized);
-      const startDateIndex = Array.from(allCachedKlines.keys()).sort().indexOf(startDayNormalized);
-      if(startDateIndex < 0){
-          logger.warn(`[K线缓存] ${stockCode} 起始日期 ${startDayNormalized} 不在缓存中`);
-          return resultKlines;
-      }
-      return Array.from(allCachedKlines.values()).sort((a,b)=>a.date.localeCompare(b.date)).slice(startDateIndex,startDateIndex + klineDays);
+  async getKlinesByStartDay (stockCode: string, startDay: string, klineDays: number) {
+    let allCachedKlines = this.loadCache(stockCode).map;
+    const startDayNormalized = this.normalizeDate(startDay);
+    console.log(`[K线缓存] ${stockCode} 获取从 ${startDayNormalized} 开始的 ${klineDays} 天K线`);
+    const startDateIndex = Array.from(allCachedKlines.keys()).sort().indexOf(startDayNormalized);
+    if (startDateIndex < 0) {
+      logger.warn(`[K线缓存] ${stockCode} 起始日期 ${startDayNormalized} 不在缓存中，从远端拉取数据中...`);
+      allCachedKlines = await this.ensureKlines(stockCode, { targetDates: [startDayNormalized] });
+      await sleep(8, 2); // 简单节流
+    }
+    return Array.from(allCachedKlines.values()).sort((a, b) => a.date.localeCompare(b.date))
   }
 }
 

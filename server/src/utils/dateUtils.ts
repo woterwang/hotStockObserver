@@ -288,6 +288,18 @@ export function getDateStrRange(startStr: string, endStr: string): string[] {
   return result;
 }
 
+/**
+ * 异步睡眠，支持上下浮动的随机延迟
+ * @param minSeconds 基础延迟（秒）
+ * @param jitterSeconds 上下浮动值（秒），默认 0 表示无浮动
+ */
+export function sleep(minSeconds: number, jitterSeconds: number = 0): Promise<void> {
+  const baseMs = Math.max(0, minSeconds) * 1000;
+  const jitterMs = jitterSeconds > 0 ? (Math.random() * 2 - 1) * jitterSeconds * 1000 : 0;
+  const totalMs = Math.max(0, Math.round(baseMs + jitterMs));
+  return new Promise(resolve => setTimeout(resolve, totalMs));
+}
+
 // ============= MongoDB 日期查询兼容函数 =============
 // 这些函数用于解决数据库中 Date 和 String 格式混存的问题
 // 在数据迁移完成后，这些函数可以简化

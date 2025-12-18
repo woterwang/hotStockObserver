@@ -9,7 +9,7 @@ import { BuySignal, VolumeSurge } from '../models';
 import { formatDate, parseDate, toDateStr } from '../utils/dateUtils';
 import { marketMoodService } from './marketMoodService';
 import { klineCacheService, CachedKline } from './klineCacheService';
-
+import { tradingCalendarService } from '../services/tradingCalendarService';
 /**
  * 回测配置参数
  */
@@ -131,7 +131,7 @@ class BuySignalBacktestService {
    * @param signalDate 信号日期（YYYYMMDD格式）
    * @param requiredDaysAfter 信号后需要的交易日数（默认maxHoldDays+5）
    */
-  private isKlineDataSufficient(
+  private isKlineDataSufficient (
     klineData: KlineData[],
     signalDate: string,
     requiredDaysAfter: number = 10
@@ -162,11 +162,10 @@ class BuySignalBacktestService {
    * @param klineDays 需要获取的K线天数
    * @param maxHoldDays 最大持仓天数
    */
-  async preloadKlineData(
+  async preloadKlineData (
     stockCodes: string[],
     signalDates: string[],
-    klineDays: number,
-    maxHoldDays: number
+    klineDays: number
   ): Promise<{ loaded: number; failed: number; skipped: number }> {
     let loaded = 0;
     let failed = 0;
@@ -178,17 +177,22 @@ class BuySignalBacktestService {
     for (let i = 0; i < uniqueStocks.length; i++) {
       const stockCode = uniqueStocks[i];
       const signalDate = signalDates[stockCodes.indexOf(stockCode)];
-
+      // 不是交易日跳过
+      if (!tradingCalendarService.isTradingDay(signalDate)) {
+        logger.info(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 信号日期=${signalDate} 不是交易日，跳过`);
+        skipped++;
+        continue;
+      }
       try {
         // 使用 klineCacheService.getKlinesByStartDay 获取需要的K线数据
-        const klineData = klineCacheService.getKlinesByStartDay(stockCode, signalDate, klineDays);
+        const klineData = await klineCacheService.getKlinesByStartDay(stockCode, signalDate, klineDays);
 
         if (klineData && klineData.length > 0) {
           // 检查数据是否足够
           if (klineData.length < klineDays) {
             logger.warn(`[${i + 1}/${uniqueStocks.length}] ${stockCode} 获取的 K 线数据不足: 需要 ${klineDays} 天，实际 ${klineData.length} 天`);
             skipped++;
-          }else{
+          } else {
             loaded++;
             this.klineCache.set(stockCode, klineData);
           }
@@ -225,16 +229,16 @@ class BuySignalBacktestService {
       const stockCode = signal.stockCode;
       // 使用 toDateStr 规范化日期（支持 Date 和 String 两种格式）
       const signalDateStr = toDateStr(signal.date) || formatDate(new Date(signal.date), 'YYYYMMDD');
-
-      // 动态计算需要的 K 线天数
-      // 公式：klineDays = (今日日期 - 信号日期) + maxHoldDays + 缓冲天数(10天)
-      const today = new Date();
-      const signalDate = parseDate(signalDateStr);
-      const daysDiff = Math.ceil((today.getTime() - signalDate.getTime()) / (1000 * 60 * 60 * 24));
-      const klineDays = Math.max(30, daysDiff + config.maxHoldDays + 10);  // 至少30天，加上持仓天数和10天缓冲
+      console.log('signalDateStr:', signalDateStr);
+      // 如果不是交易日，跳过
+      if (!tradingCalendarService.isTradingDay(signalDateStr)) {
+        logger.info(`[回测] ${stockCode} 信号日期=${signalDateStr} 不是交易日，跳过`);
+        return null;
+      }
+      const klineDays = config.maxHoldDays
 
       // 获取K线数据（使用动态计算的天数）
-      const klineData = klineCacheService.getKlinesByStartDay(stockCode, signalDateStr, klineDays);
+      const klineData = await klineCacheService.getKlinesByStartDay(stockCode, signalDateStr, klineDays);
       if (klineData.length === 0) {
         logger.info(`[回测] ${stockCode} 无K线数据`);
         return null;
@@ -435,11 +439,12 @@ class BuySignalBacktestService {
 
     // === 预加载 K 线数据 ===
     if (signals.length > 0) {
+      console.log('预加载 K 线数据:', signals.length, '只股票');
       const stockCodes = signals.map(s => s.stockCode);
       // 使用 toDateStr 统一日期格式（数据库已迁移为字符串格式）
       const signalDates = signals.map(s => toDateStr(s.date));
 
-      await this.preloadKlineData(stockCodes, signalDates, klineDays, finalConfig.maxHoldDays);
+      await this.preloadKlineData(stockCodes, signalDates, klineDays);
     }
 
     // 对每条记录执行回测
