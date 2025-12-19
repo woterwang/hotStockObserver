@@ -21,6 +21,9 @@ router.get('/search', stockController.searchStocks.bind(stockController));
 // 个股概念
 router.get('/:code/concepts', stockController.getStockConcepts.bind(stockController));
 
+// 个股概念详情（同花顺数据源，更详细的概念信息和联动个股）
+router.get('/:code/concepts/detail', stockController.getStockConceptsDetail.bind(stockController));
+
 // 股票详情
 router.get('/:code', stockController.getStockDetail.bind(stockController));
 

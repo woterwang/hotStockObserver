@@ -10,3 +10,5 @@ export { tradingCalendarService } from './tradingCalendarService';
 export { marketMoodService, MarketMoodData } from './marketMoodService';
 export { stockConceptService, StockConceptResult } from './stockConceptService';
 export { conceptRankingService, ConceptRankingResult, ConceptRankingItem } from './conceptRankingService';
+export { thsStockConceptService, ThsStockConceptResult, ThsConceptInfo, ThsRelatedStock } from './thsStockConceptService';
+export { thsConceptHotRankService, ThsConceptHotRankResult, ThsConceptHotItem, ThsPlateType } from './thsConceptHotRankService';

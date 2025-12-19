@@ -83,7 +83,7 @@ out
 dist
 
 # Local caches
-server/data/klne_cache
+server/data/kline_cache/
 
 # Gatsby files
 .cache/

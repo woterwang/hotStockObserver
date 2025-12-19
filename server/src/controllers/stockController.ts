@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { stockService, dataFetchService, stockConceptService } from '../services';
+import { stockService, dataFetchService, stockConceptService, thsStockConceptService } from '../services';
 import { logger } from '../utils';
 
 /**
@@ -48,6 +48,39 @@ export class StockController {
       }
 
       const concepts = await stockConceptService.fetchConcepts(code, includeRaw);
+
+      res.json({
+        success: true,
+        data: concepts,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 个股概念详情查询（同花顺数据源）
+   * GET /api/stocks/:code/concepts/detail
+   * 返回更详细的概念信息，包括联动个股、龙头股、涨跌家数等
+   */
+  async getStockConceptsDetail(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { code } = req.params;
+      const { market_id, raw } = req.query;
+      const includeRaw = raw === '1';
+
+      if (!code) {
+        return res.status(400).json({
+          success: false,
+          message: '股票代码不能为空',
+        });
+      }
+
+      const concepts = await thsStockConceptService.fetchConcepts(
+        code,
+        market_id as string | undefined,
+        includeRaw
+      );
 
       res.json({
         success: true,

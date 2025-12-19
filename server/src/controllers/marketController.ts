@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { stockService, dataFetchService, conceptRankingService } from '../services';
+import { stockService, dataFetchService, conceptRankingService, thsConceptHotRankService, ThsPlateType } from '../services';
 import { logger } from '../utils';
 
 /**
@@ -105,6 +105,30 @@ export class MarketController {
       res.json({
         success: true,
         data: ranking,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 获取板块热度排行（同花顺数据源）
+   * GET /api/market/concepts/hot
+   * 返回实时板块热度排行，包括热度值、涨停数、ETF信息等
+   */
+  async getConceptHotRank(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { type = 'concept', raw } = req.query;
+      const includeRaw = raw === '1';
+      
+      // 验证 type 参数
+      const plateType = (type === 'industry' ? 'industry' : 'concept') as ThsPlateType;
+
+      const hotRank = await thsConceptHotRankService.fetchHotRank(plateType, includeRaw);
+
+      res.json({
+        success: true,
+        data: hotRank,
       });
     } catch (error) {
       next(error);

@@ -1,0 +1,33 @@
+>> 本文件内容为 https://apphis.longhuvip.com/w1/api/index.php 的请求抓包详情，供您分析和定位问题。
+
+1. 请求内容 Request:
+
+POST /w1/api/index.php HTTP/1.1
+Host: apphis.longhuvip.com
+Content-Type: application/x-www-form-urlencoded; charset=utf-8
+Connection: keep-alive
+Accept: */*
+User-Agent: lhb/5.20.9 (com.kaipanla.www; build:1; iOS 18.2.1) Alamofire/4.9.1
+Accept-Language: zh-Hans-CN;q=1.0
+Content-Length: 118
+Accept-Encoding: gzip;q=1.0, compress;q=0.5
+
+Date=2025-12-17&PhoneOSNew=2&PlateID=801074&REnd=&RStart=&VerSion=5.20.0.9&a=GetPlate_Info_QJ&apiv=w41&c=ZhiShuRanking
+
+2. 响应内容 Response:
+
+HTTP/1.1 200 OK
+Server: nginx
+Date: Fri, 19 Dec 2025 14:08:56 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: X-Requested-With,X_Requested_With
+Content-Encoding: gzip
+
+{"List":[11,944,167791702817,282126476,0.622,2,117951673,64845640],"Time":1766073943,"Date":"2025-12-17","Min":"0925","Max":"1500","MinDay":"2017-10-12","ttag":0.0009039999999999881,"errcode":"0"}
+
+====
+该记录由 Stream 抓取，仅用于分析和学习，可 AppStore 搜索『抓包』下载，面向开发者永久免费使用。

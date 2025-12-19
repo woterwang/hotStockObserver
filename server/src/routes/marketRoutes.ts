@@ -15,6 +15,9 @@ router.get('/sectors', marketController.getHotSectors.bind(marketController));
 // 每日概念/板块强度排名
 router.get('/concepts/rank', marketController.getConceptRanking.bind(marketController));
 
+// 实时板块热度排行（同花顺数据源）
+router.get('/concepts/hot', marketController.getConceptHotRank.bind(marketController));
+
 // 市场概览
 router.get('/overview', marketController.getOverview.bind(marketController));
 
