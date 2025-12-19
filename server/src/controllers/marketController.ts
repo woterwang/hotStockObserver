@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { stockService, dataFetchService } from '../services';
+import { stockService, dataFetchService, conceptRankingService } from '../services';
 import { logger } from '../utils';
 
 /**
@@ -81,6 +81,30 @@ export class MarketController {
           strongStocks,
           updateTime: new Date().toISOString(),
         },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 获取每日概念/板块强度排名
+   * GET /api/market/concepts/rank
+   */
+  async getConceptRanking(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { date, limit = 20, raw } = req.query;
+      const includeRaw = raw === '1';
+
+      const ranking = await conceptRankingService.fetchDailyConceptRanking(
+        typeof date === 'string' ? date : undefined,
+        Number(limit),
+        includeRaw,
+      );
+
+      res.json({
+        success: true,
+        data: ranking,
       });
     } catch (error) {
       next(error);
