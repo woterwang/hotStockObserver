@@ -8,3 +8,5 @@ export { backtestService, BacktestConfig, BacktestResult, TradeRecord } from './
 export { marketSentimentService } from './marketSentimentService';
 export { tradingCalendarService } from './tradingCalendarService';
 export { marketMoodService, MarketMoodData } from './marketMoodService';
+export { stockConceptService, StockConceptResult } from './stockConceptService';
+export { conceptRankingService, ConceptRankingResult, ConceptRankingItem } from './conceptRankingService';

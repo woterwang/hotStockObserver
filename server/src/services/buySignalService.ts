@@ -634,7 +634,7 @@ class BuySignalService {
       const klineData = await this.fetchKlineData(stockCode, 30);
       
       if (!klineData || klineData.length === 0) {
-        console.log(`[BuySignal] ${stockCode} 无K线数据`);
+        console.log(`[BuySignal] getOpeningData ${stockCode} 无K线数据`);
         return null;
       }
       
@@ -1027,7 +1027,7 @@ class BuySignalService {
       // 2. 调用共享 K 线缓存服务
       const klines = await klineCacheService.getRecentKlines(stockCode, days);
       if (!klines || klines.length === 0) {
-        console.warn(`[BuySignal] ${stockCode} 无K线数据`);
+        console.warn(`[BuySignal] fetchKlineData ${stockCode} 无K线数据`);
         return null;
       }
 

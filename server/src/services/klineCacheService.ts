@@ -337,7 +337,7 @@ class KlineCacheService {
    * @param days 需要的交易日数量
    * @returns 按日期升序排列的K线数组
    */
-  async getRecentKlines (stockCode: string, days: number = 60): Promise<CachedKline[]> {
+  async getRecentKlines (stockCode: string, days: number = 1800): Promise<CachedKline[]> {
     const klinesMap = this.loadCache(stockCode).map; // 读取缓存
     // 返回最近 days 条数据
     return Array.from(klinesMap.values()).sort((a, b) => a.date.localeCompare(b.date)).slice(-days);

@@ -18,6 +18,9 @@ router.get('/strong', stockController.getStrongStocks.bind(stockController));
 // 搜索股票
 router.get('/search', stockController.searchStocks.bind(stockController));
 
+// 个股概念
+router.get('/:code/concepts', stockController.getStockConcepts.bind(stockController));
+
 // 股票详情
 router.get('/:code', stockController.getStockDetail.bind(stockController));
 

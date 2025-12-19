@@ -255,13 +255,30 @@ export class StockService {
   async getStrongStocks(minChangePercent: number = 5, limit: number = 10) {
     const todayStr = toDateStr(getToday());
 
-    const stocks = await HotStock.find({
-      date: todayStr,
+    const queryByDate = async (dateStr: string) => HotStock.find({
+      date: dateStr,
       changePercent: { $gte: minChangePercent },
     })
       .sort({ turnover: -1 })
       .limit(limit)
       .lean();
+
+    let stocks = await queryByDate(todayStr);
+
+    if (stocks.length === 0) {
+      const latest = await HotStock.findOne().sort({ date: -1 }).select('date').lean();
+      const latestDateStr = latest?.date ? toDateStr(latest.date) : null;
+
+      if (!latestDateStr) {
+        logger.warn('强势股：今日无数据且数据库为空');
+        return [];
+      }
+
+      if (latestDateStr !== todayStr) {
+        logger.warn(`强势股：今日(${todayStr})无数据，回退使用最新日期 ${latestDateStr}`);
+        stocks = await queryByDate(latestDateStr);
+      }
+    }
 
     return stocks;
   }

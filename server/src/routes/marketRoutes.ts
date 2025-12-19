@@ -12,6 +12,9 @@ router.get('/indices', marketController.getIndices.bind(marketController));
 // 热门板块
 router.get('/sectors', marketController.getHotSectors.bind(marketController));
 
+// 每日概念/板块强度排名
+router.get('/concepts/rank', marketController.getConceptRanking.bind(marketController));
+
 // 市场概览
 router.get('/overview', marketController.getOverview.bind(marketController));
 
