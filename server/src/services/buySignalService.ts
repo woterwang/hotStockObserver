@@ -19,12 +19,13 @@ import axios from 'axios';
 import { BuySignal, IBuySignal } from '../models/BuySignal';
 import { VolumeSurge } from '../models/VolumeSurge';
 import { PriceBreakthrough } from '../models/PriceBreakthrough';
+import { ConceptResonance } from '../models/ConceptResonance';
 import { tradingCalendarService } from './tradingCalendarService';
 import { marketMoodService } from './marketMoodService';
 import { klineCacheService, CachedKline } from './klineCacheService';
 
 // 策略类型定义
-type StrategyType = 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover';
+type StrategyType = 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover' | 'concept_resonance';
 
 // 策略名称映射
 const STRATEGY_NAMES: Record<StrategyType, string> = {
@@ -32,6 +33,7 @@ const STRATEGY_NAMES: Record<StrategyType, string> = {
   breakthrough: '价格突破',
   limit_up: '涨停板',
   ma_crossover: '均线金叉',
+  concept_resonance: '主线共振',
 };
 
 // 候选标的接口（统一各策略的数据结构）
@@ -356,6 +358,34 @@ class BuySignalService {
       changePercent: r.changePercent,
     }));
   }
+
+  /**
+   * 从主线共振策略获取候选股票
+   * @param selectionDate 选股日期 YYYYMMDD
+   * @param minScore 最低分数门槛，默认60（主线共振策略评分范围更大）
+   */
+  private async getConceptResonanceCandidates(selectionDate: string, minScore: number = 60): Promise<StrategyCandidate[]> {
+    const records = await ConceptResonance.find({
+      date: selectionDate,
+      strategyScore: { $gte: minScore },
+    }).sort({ strategyScore: -1 });
+    
+    return records.map(r => ({
+      _id: r._id.toString(),
+      stockCode: r.stockCode,
+      stockName: r.stockName,
+      date: r.date,
+      strategyType: 'concept_resonance' as StrategyType,
+      strategyName: STRATEGY_NAMES.concept_resonance,
+      score: r.strategyScore || 0,
+      industry: r.industry || '',
+      changePercent: r.changePercent,
+      // 扩展字段，供后续使用
+      primaryConcept: r.primaryConcept,
+      isConceptLeader: r.isConceptLeader,
+      conceptScore: r.conceptScore,
+    }));
+  }
   
   /**
    * 获取所有策略的候选股票
@@ -378,6 +408,10 @@ class BuySignalService {
     }
     if (allStrategies.includes('breakthrough')) {
       candidatePromises.push(this.getBreakthroughCandidates(selectionDate));
+    }
+    if (allStrategies.includes('concept_resonance')) {
+      // 主线共振策略评分范围更大，适当提高门槛
+      candidatePromises.push(this.getConceptResonanceCandidates(selectionDate, Math.max(minScore, 60)));
     }
     // 可以继续添加更多策略...
     

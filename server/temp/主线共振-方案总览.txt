@@ -253,7 +253,7 @@ class VolumeSurgeService {
 
   /**
    * 获取板块共振数据（前置准备）
-   * 缓存时间：热度榜3分钟，强度榜1天
+   * 缓存时间：热度榜每天缓存为本地文件，强度榜无需缓存直接第三方接口;
    */
   private async fetchConceptContext(dateStr: string): Promise<{
     hotConceptMap: Map<string, { rank: number; item: ThsConceptHotItem }>;

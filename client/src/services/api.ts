@@ -16,7 +16,12 @@ import type {
   BuySignal,
   BuySignalStats,
   MarketSentiment,
-  MarketMood
+  MarketMood,
+  ConceptResonance,
+  ConceptResonanceStats,
+  ConceptLeader,
+  ConceptResonanceBacktestResult,
+  ConceptResonanceBacktestConfig
 } from '../types';
 
 // 创建axios实例
@@ -254,6 +259,55 @@ export const sentimentApi = {
   // 手动触发获取情绪数据
   fetch: (date?: string): Promise<ApiResponse<MarketSentiment>> => {
     return api.post('/sentiment/fetch', { date });
+  },
+};
+
+/**
+ * 主线共振策略API (Concept Resonance)
+ */
+export const conceptResonanceApi = {
+  // 手动触发扫描
+  scan: (date?: string, deep?: boolean): Promise<ApiResponse<{ count: number; leaders: number }>> => {
+    return api.post('/concept-resonance/scan', { date, deep });
+  },
+
+  // 获取候选标的列表
+  getList: (date?: string, leaderOnly?: boolean): Promise<ApiResponse<ConceptResonance[]>> => {
+    return api.get('/concept-resonance/list', { params: { date, leaderOnly } });
+  },
+
+  // 获取统计数据
+  getStats: (date?: string): Promise<ApiResponse<ConceptResonanceStats>> => {
+    return api.get('/concept-resonance/stats', { params: { date } });
+  },
+
+  // 获取概念龙头
+  getLeaders: (date?: string): Promise<ApiResponse<ConceptLeader[]>> => {
+    return api.get('/concept-resonance/leaders', { params: { date } });
+  },
+
+  // 获取可用日期列表
+  getDates: (): Promise<ApiResponse<string[]>> => {
+    return api.get('/concept-resonance/dates');
+  },
+
+  // 获取配置
+  getConfig: (): Promise<ApiResponse<any>> => {
+    return api.get('/concept-resonance/config');
+  },
+
+  // 清除数据
+  clear: (date?: string): Promise<ApiResponse<{ deleted: number }>> => {
+    return api.delete('/concept-resonance/clear', { params: { date } });
+  },
+
+  // 回测
+  backtest: (
+    startDate: string, 
+    endDate: string, 
+    config: Partial<ConceptResonanceBacktestConfig>
+  ): Promise<ApiResponse<ConceptResonanceBacktestResult>> => {
+    return api.post('/concept-resonance/backtest', { startDate, endDate, config });
   },
 };
 

@@ -343,3 +343,151 @@ export interface ApiResponse<T> {
   page?: number;
   pageSize?: number;
 }
+
+// ==========================================
+// 主线共振策略 (Concept Resonance)
+// ==========================================
+
+// 概念信息
+export interface ConceptInfo {
+  code: string;
+  name: string;
+  changePercent: number;
+  rank?: number;
+  limitUpCount?: number;
+  components?: { code: string; name: string }[];
+}
+
+// 主线共振候选标的
+export interface ConceptResonance {
+  _id?: string;
+  date: string;
+  stockCode: string;
+  stockName: string;
+  industry: string;
+  concept: string;
+  price: number;
+  changePercent: number;
+  volumeRatio: number;
+  turnover: number;
+  turnoverRate: number;
+  
+  // 概念共振字段
+  hitHotConcepts: string[];           // 命中的热门概念列表
+  primaryConcept?: string;            // 主概念名称
+  isConceptLeader: boolean;           // 是否为概念龙头
+  conceptScore: number;               // 概念共振得分
+  conceptScoreDetail?: {              // 评分明细
+    hotScore: number;                 // 热度分
+    strengthScore: number;            // 强度分
+    positionScore: number;            // 地位分
+  };
+  
+  // 继承自 VolumeSurge 的字段
+  amplitude?: number;
+  upperShadow?: number;
+  lowerShadow?: number;
+  volumeRatioTo5Day?: number;
+  isLimitUp?: boolean;
+  isFirstBoard?: boolean;
+  continuousBoardCount?: number;
+  limitUpReason?: string;
+  strategyScore?: number;
+  baseScore?: number;
+  marketBonus?: number;
+  boardBonus?: number;
+  riskLevel?: 'low' | 'medium' | 'high';
+  
+  // 状态
+  status: 'pending' | 'success' | 'failed';
+  nextDayOpen?: number;
+  nextDayHigh?: number;
+  nextDayLow?: number;
+  nextDayClose?: number;
+  profit?: number;
+}
+
+// 主线共振统计
+export interface ConceptResonanceStats {
+  total: number;
+  leaderCount: number;               // 龙头数量
+  avgConceptScore: number;           // 平均概念分
+  avgTotalScore: number;             // 平均总分
+  conceptDistribution: { name: string; count: number }[];  // 概念分布
+  riskDistribution: {
+    low: number;
+    medium: number;
+    high: number;
+  };
+}
+
+// 概念龙头
+export interface ConceptLeader {
+  stockCode: string;
+  stockName: string;
+  conceptName: string;
+  conceptScore: number;
+  totalScore: number;
+  changePercent: number;
+  isLimitUp: boolean;
+}
+
+// 主线共振回测配置
+export interface ConceptResonanceBacktestConfig {
+  signalFilter: 'leader_only' | 'high_score' | 'all';  // 过滤条件
+  minConceptScore: number;           // 最低概念分
+  minTotalScore: number;             // 最低总分
+  basePosition: number;              // 基础仓位
+  stopLossPercent: number;           // 止损比例
+  takeProfitPercent: number;         // 止盈比例
+  maxHoldDays: number;               // 最大持仓天数
+  leaderBonus: number;               // 龙头加仓比例
+}
+
+// 主线共振回测结果
+export interface ConceptResonanceBacktestResult {
+  startDate: string;
+  endDate: string;
+  config: ConceptResonanceBacktestConfig;
+  totalTrades: number;
+  winTrades: number;
+  lossTrades: number;
+  winRate: number;
+  totalProfitAmount: number;
+  totalProfitPercent: number;
+  avgProfitPercent: number;
+  avgWinPercent: number;
+  avgLossPercent: number;
+  profitLossRatio: number;
+  totalInvested: number;
+  maxDrawdown: number;
+  maxDrawdownPercent: number;
+  maxProfit: number;
+  maxLoss: number;
+  maxConsecutiveWins: number;
+  maxConsecutiveLosses: number;
+  avgHoldDays: number;
+  leaderWinRate?: number;            // 龙头胜率
+  conceptWinRates?: { concept: string; winRate: number; count: number }[];  // 各概念胜率
+  trades: ConceptResonanceTradeRecord[];
+}
+
+// 主线共振交易记录
+export interface ConceptResonanceTradeRecord {
+  stockCode: string;
+  stockName: string;
+  conceptName: string;
+  isLeader: boolean;
+  conceptScore: number;
+  totalScore: number;
+  buyDate: string;
+  buyPrice: number;
+  sellDate: string;
+  sellPrice: number;
+  holdDays: number;
+  position: number;
+  profitPercent: number;
+  profitAmount: number;
+  exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'data_end';
+}
+

@@ -1,3 +1,5 @@
+export * from './conceptEnhancement';
+
 export interface Stock {
   code: string;
   name: string;

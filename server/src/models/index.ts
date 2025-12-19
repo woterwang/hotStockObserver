@@ -6,3 +6,4 @@ export * from './PriceBreakthrough';
 export * from './TradingSignal';
 export * from './VolumeSurge';
 export * from './BuySignal';
+export * from './ConceptResonance';
