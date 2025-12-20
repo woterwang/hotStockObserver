@@ -665,7 +665,7 @@ class BuySignalService {
   } | null> {
     try {
       const targetDateStr = formatDateStr(dateStr);
-      const klineData = await this.fetchKlineData(stockCode, 30);
+      const klineData = await klineCacheService.getKlinesByStartDay(stockCode, targetDateStr,3);
       
       if (!klineData || klineData.length === 0) {
         console.log(`[BuySignal] getOpeningData ${stockCode} 无K线数据`);

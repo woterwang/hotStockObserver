@@ -1,0 +1,206 @@
+{
+  "startDate": "20251101",
+  "endDate": "20251128",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 50,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 3,
+    "marketPanicThreshold": 40,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 8,
+  "winTrades": 6,
+  "lossTrades": 2,
+  "winRate": 75,
+  "totalProfitAmount": 6114.39,
+  "totalProfitPercent": 1.53,
+  "avgProfitPercent": 1.53,
+  "avgWinPercent": 3.71,
+  "avgLossPercent": -5,
+  "profitLossRatio": 0.74,
+  "totalInvested": 400000,
+  "maxDrawdown": 3877.16,
+  "maxDrawdownPercent": 44.95,
+  "maxProfit": 6.58,
+  "maxLoss": -5,
+  "maxConsecutiveWins": 4,
+  "maxConsecutiveLosses": 1,
+  "avgHoldDays": 2.9,
+  "equityCurve": [
+    {
+      "date": "20251105",
+      "equity": 3289.47
+    },
+    {
+      "date": "20251112",
+      "equity": 5372.799999999999
+    },
+    {
+      "date": "20251117",
+      "equity": 8288.369999999999
+    },
+    {
+      "date": "20251119",
+      "equity": 8624.589999999998
+    },
+    {
+      "date": "20251119",
+      "equity": 6124.589999999998
+    },
+    {
+      "date": "20251127",
+      "equity": 7247.4299999999985
+    },
+    {
+      "date": "20251203",
+      "equity": 4747.4299999999985
+    },
+    {
+      "date": "20251127",
+      "equity": 6114.3899999999985
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "300290",
+      "stockName": "荣科科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251103",
+      "buyPrice": 27.36,
+      "sellDate": "20251105",
+      "sellPrice": 29.16,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": 6.58,
+      "profitAmount": 3289.47,
+      "exitReason": "max_days",
+      "buySignalScore": 72,
+      "marketMood": 60
+    },
+    {
+      "stockCode": "603612",
+      "stockName": "索通发展",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251110",
+      "buyPrice": 27.84,
+      "sellDate": "20251112",
+      "sellPrice": 29,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": 4.17,
+      "profitAmount": 2083.33,
+      "exitReason": "max_days",
+      "buySignalScore": 72,
+      "marketMood": 60
+    },
+    {
+      "stockCode": "301307",
+      "stockName": "美利信",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251113",
+      "buyPrice": 37.9,
+      "sellDate": "20251117",
+      "sellPrice": 40.11,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": 5.83,
+      "profitAmount": 2915.57,
+      "exitReason": "max_days",
+      "buySignalScore": 70,
+      "marketMood": 78
+    },
+    {
+      "stockCode": "688559",
+      "stockName": "海目星",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251117",
+      "buyPrice": 52.05,
+      "sellDate": "20251119",
+      "sellPrice": 52.4,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": 0.67,
+      "profitAmount": 336.22,
+      "exitReason": "max_days",
+      "buySignalScore": 76,
+      "marketMood": 73
+    },
+    {
+      "stockCode": "000090",
+      "stockName": "天健集团",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251117",
+      "buyPrice": 4.51,
+      "sellDate": "20251119",
+      "sellPrice": 4.2844999999999995,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 71,
+      "marketMood": 73
+    },
+    {
+      "stockCode": "688787",
+      "stockName": "海天瑞声",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251125",
+      "buyPrice": 110.88,
+      "sellDate": "20251127",
+      "sellPrice": 113.37,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": 2.25,
+      "profitAmount": 1122.84,
+      "exitReason": "max_days",
+      "buySignalScore": 85,
+      "marketMood": 69
+    },
+    {
+      "stockCode": "301073",
+      "stockName": "君亭酒店",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251125",
+      "buyPrice": 26.58,
+      "sellDate": "20251203",
+      "sellPrice": 25.250999999999998,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 81,
+      "marketMood": 69
+    },
+    {
+      "stockCode": "300940",
+      "stockName": "南极光",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251125",
+      "buyPrice": 25.97,
+      "sellDate": "20251127",
+      "sellPrice": 26.68,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": 2.73,
+      "profitAmount": 1366.96,
+      "exitReason": "max_days",
+      "buySignalScore": 74,
+      "marketMood": 69
+    }
+  ]
+}

@@ -3,7 +3,8 @@
  * 支持多种策略来源：强势资金突破、突破三天确认等
  * 回测买入信号中"强烈买入"标的的实际收益
  */
-
+import path from 'path';
+import fs from 'fs/promises';
 import { logger } from '../utils';
 import { BuySignal, VolumeSurge } from '../models';
 import { formatDate, parseDate, toDateStr } from '../utils/dateUtils';
@@ -495,6 +496,11 @@ class BuySignalBacktestService {
 
     // 计算统计数据
     const result = this.calculateStatistics(startDate, endDate, finalConfig, trades);
+//${finalConfig.stopLossPercent * 100}%, 止盈=${finalConfig.takeProfitPercent * 100}%, 最大持仓=${finalConfig.maxHoldDays}
+    // 回测结果写入缓存 data/backtest_cache/xxx.json
+    const fileName = `${startDate}_${endDate}_${finalConfig.maxHoldDays}_${finalConfig.stopLossPercent * 100}_${finalConfig.takeProfitPercent * 100}.json`;
+    const filePath = path.join(__dirname, `../../data/backtest_cache/${fileName}`);
+    fs.writeFile(filePath, JSON.stringify(result, null, 2));
 
     logger.info(`回测完成: 总交易 ${result.totalTrades} 笔, 胜率 ${result.winRate.toFixed(1)}%, 总收益 ${result.totalProfitAmount.toFixed(2)} 元`);
 
