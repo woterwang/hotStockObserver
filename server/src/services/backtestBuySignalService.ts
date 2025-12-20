@@ -33,6 +33,8 @@ export interface BuySignalBacktestConfig {
   maxHoldDays: number;
   // 市场情绪恶化阈值（低于此值全部卖出）
   marketPanicThreshold: number;
+  // 每天最多买入股票数量
+  maxBuyCount?: number;
 }
 
 /**
@@ -434,11 +436,36 @@ class BuySignalBacktestService {
     }));
 
     // 根据 minSignalScore 过滤信号
-    const signals = allSignals.filter(s => s.totalBuyScore >= finalConfig.minSignalScore);
+    let signals = allSignals.filter(s => s.totalBuyScore >= finalConfig.minSignalScore);
     logger.info(`应用信号评分门槛 (>= ${finalConfig.minSignalScore}分) 后剩余 ${signals.length} 条记录`);
+    
+    // 限制每天最多买入4只股票（选出每天totalBuyScore最大的前四支股票）
+    if (signals.length > 0) {
+      // 按日期分组信号
+      const signalsByDate: { [date: string]: any[] } = {};
+      signals.forEach(signal => {
+        if (!signalsByDate[signal.date]) {
+          signalsByDate[signal.date] = [];
+        }
+        signalsByDate[signal.date].push(signal);
+      });
 
+      // 对每天的信号按totalBuyScore排序，并只保留前4个
+      const filteredSignals: any[] = [];
+      Object.keys(signalsByDate).forEach(date => {
+        const dailySignals = signalsByDate[date]
+          .sort((a, b) => b.totalBuyScore - a.totalBuyScore)
+          .slice(0, finalConfig.maxBuyCount || 4); // 默认每天最多买4只股票
+        filteredSignals.push(...dailySignals);
+      });
+
+      signals = filteredSignals;
+      logger.info(`限制每天最多买入4只股票后剩余 ${signals.length} 条记录`);
+    }
+    
     // === 预加载 K 线数据 ===
     if (signals.length > 0) {
+      // 取出分值最高的前4条记录（每天最多买入4只股票）
       console.log('预加载 K 线数据:', signals.length, '只股票');
       const stockCodes = signals.map(s => s.stockCode);
       // 使用 toDateStr 统一日期格式（数据库已迁移为字符串格式）

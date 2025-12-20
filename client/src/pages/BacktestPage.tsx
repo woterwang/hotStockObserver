@@ -24,6 +24,7 @@ interface BuySignalBacktestConfig {
   takeProfitPercent: number;
   maxHoldDays: number;
   marketPanicThreshold: number;
+  maxBuyCount: number;
 }
 
 // 交易记录接口
@@ -162,6 +163,7 @@ const BacktestPage: React.FC = () => {
     takeProfitPercent: 0.20,
     maxHoldDays: 3,
     marketPanicThreshold: 40,
+    maxBuyCount:4,
   });
 
   // 日期格式转换：YYYY-MM-DD -> YYYYMMDD
@@ -425,6 +427,17 @@ const BacktestPage: React.FC = () => {
                   max="100"
                   value={buySignalConfig.minSignalScore}
                   onChange={(e) => setBuySignalConfig({ ...buySignalConfig, minSignalScore: Number(e.target.value) })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">每日最多买入数量</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={buySignalConfig.maxBuyCount}
+                  onChange={(e) => setBuySignalConfig({ ...buySignalConfig, maxBuyCount: Number(e.target.value) })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
