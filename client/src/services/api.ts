@@ -21,7 +21,8 @@ import type {
   ConceptResonanceStats,
   ConceptLeader,
   ConceptResonanceBacktestResult,
-  ConceptResonanceBacktestConfig
+  ConceptResonanceBacktestConfig,
+  ThsConceptHotRankResult
 } from '../types';
 
 // 创建axios实例
@@ -113,6 +114,32 @@ export const marketApi = {
   getHotSectors: (limit: number = 10): Promise<ApiResponse<Sector[]>> => {
     return api.get('/market/sectors', { params: { limit } });
   },
+  
+  /**
+   * 获取历史概念热度排行
+   */
+  getHistoryConceptRank: async (date: string, type: 'concept' | 'industry' = 'concept') => {
+    try {
+      const response = await axios.get(`/api/market/concepts/history/${date}/${type}`);
+      return response.data;
+    } catch (error) {
+      return [];
+      console.error('获取历史概念热度排行失败:', error);
+      // throw new Error(`获取历史概念热度排行失败: ${error.response?.data?.message || error.message}`);
+    }
+  },
+
+  /**
+   * 获取可用的历史数据日期列表
+   */
+  getHistoryConceptDates: async () => {
+    try {
+      const response = await axios.get('/api/market/concepts/history/dates');
+      return response.data;
+    } catch (error) {
+      throw new Error(`获取历史数据日期列表失败: ${error.response?.data?.message || error.message}`);
+    }
+  }
 };
 
 /**

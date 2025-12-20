@@ -2,11 +2,12 @@
  * @Author: hp.com
  * @Date: 2025-12-06 11:54:09
  * @LastEditors: WRG
- * @LastEditTime: 2025-12-20 13:11:23
+ * @LastEditTime: 2025-12-20 22:03:26
  * @😍: 😃😃
  */
 import React, { useEffect, useState } from 'react';
-import { Layout, IndexList, HotStockTable, HotConceptTable,SectorList, Loading, ErrorMessage, Empty } from '../components';
+import { Layout, IndexList, HotStockTable, HotConceptTable, SectorList, Loading, ErrorMessage, Empty } from '../components';
+import HistoryConcept from '../components/stock/HistoryConceptTable';
 import { stockApi } from '../services/api';
 import type { MarketOverview } from '../types';
 
@@ -17,7 +18,7 @@ const HomePage: React.FC = () => {
   const [data, setData] = useState<MarketOverview | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'stocks' | 'concepts'>('stocks');
+  const [activeTab, setActiveTab] = useState<'stocks' | 'concepts' | 'history'>('stocks');
 
   const fetchData = async () => {
     if(!data?.updateTime){
@@ -105,6 +106,16 @@ const HomePage: React.FC = () => {
                   >
                     🔥 热搜板块 Top 20
                   </button>
+                  <button
+                    onClick={() => setActiveTab('history')}
+                    className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${
+                      activeTab === 'history'
+                        ? 'border-blue-500 text-blue-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    📅 历史热搜
+                  </button>
                 </nav>
               </div>
               {activeTab === 'stocks' ? (
@@ -119,6 +130,8 @@ const HomePage: React.FC = () => {
                 ) : (
                   <Empty message="暂无热搜板块数据" />
                 )
+              ) : activeTab === 'history' ? (
+                <HistoryConcept />
               ) : null}
             </div>
           </div>

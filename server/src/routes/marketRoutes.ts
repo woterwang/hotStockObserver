@@ -3,6 +3,9 @@ import { marketController } from '../controllers';
 import { tradingCalendarService } from '../services/tradingCalendarService';
 import { marketMoodService } from '../services/marketMoodService';
 import { marketSentimentService } from '../services/marketSentimentService';
+import { thsConceptHotRankService } from '../services/thsConceptHotRankService';
+import fs from 'fs';
+import path from 'path';
 
 const router = Router();
 
@@ -17,6 +20,74 @@ router.get('/concepts/rank', marketController.getConceptRanking.bind(marketContr
 
 // 实时板块热度排行（同花顺数据源）
 router.get('/concepts/hot', marketController.getConceptHotRank.bind(marketController));
+
+// 历史概念热度排行
+router.get('/concepts/history/:date/:type', async (req, res) => {
+  try {
+    const { date, type } = req.params;
+    
+    // 验证 type 参数
+    if (type !== 'concept' && type !== 'industry') {
+      return res.status(400).json({
+        success: false,
+        message: '类型参数必须是 concept 或 industry'
+      });
+    }
+
+    // 从缓存中读取数据
+    const cacheKey = `${date}_${type}`;
+    const cachedData = thsConceptHotRankService.readFromCache(cacheKey);
+
+    if (cachedData) {
+      return res.json({
+        success: true,
+        data: cachedData,
+        source: 'cache'
+      });
+    }
+
+    res.status(404).json({
+      success: false,
+      message: `未找到 ${date} 的 ${type} 类型数据`
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: (error as Error).message
+    });
+  }
+});
+
+// 获取可用的历史数据日期列表
+router.get('/concepts/history/dates', async (req, res) => {
+  try {
+    const cacheDir = path.join(__dirname, '../../data/concept_cache');
+    
+    if (!fs.existsSync(cacheDir)) {
+      return res.json({
+        success: true,
+        data: []
+      });
+    }
+
+    const files = fs.readdirSync(cacheDir);
+    const dates = files
+      .filter(file => file.endsWith('.json'))
+      .map(file => file.replace('.json', ''))
+      .sort()
+      .reverse();
+
+    res.json({
+      success: true,
+      data: dates
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: (error as Error).message
+    });
+  }
+});
 
 // 市场概览
 router.get('/overview', marketController.getOverview.bind(marketController));

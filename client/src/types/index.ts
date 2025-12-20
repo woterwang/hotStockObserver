@@ -492,3 +492,51 @@ export interface ConceptResonanceTradeRecord {
   exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'data_end';
 }
 
+export interface ThsConceptEtfInfo {
+  /** ETF产品ID */
+  productId: string;
+  /** ETF名称 */
+  name: string;
+  /** ETF涨跌幅(%) */
+  changeRatio: number;
+  /** ETF市场ID */
+  marketId: number;
+}
+
+export interface ThsConceptHotItem {
+  /** 板块代码 */
+  code: string;
+  /** 板块名称 */
+  name: string;
+  /** 涨跌幅(%) */
+  changeRatio: number;
+  /** 热度值 */
+  hotRate: number;
+  /** 排名 */
+  order: number;
+  /** 市场ID */
+  marketId: number;
+  /** 热度标签，如"连续39天上榜"、"首次上榜" */
+  hotTag: string | null;
+  /** 涨停信息，如"5家涨停" */
+  limitUpTag: string | null;
+  /** 排名变化，正数为上升，负数为下降 */
+  rankChange: number;
+  /** 相关ETF信息 */
+  etf: ThsConceptEtfInfo | null;
+  /** 显示用的排名 */
+  rank?: number;
+}
+
+export interface ThsConceptHotRankResult {
+  /** 板块类型 */
+  type: 'concept' | 'industry';
+  /** 板块热度列表 */
+  items: ThsConceptHotItem[];
+  /** 数据来源 */
+  source: 'ths';
+  /** 查询时间 */
+  queryTime: string;
+  /** 原始数据(可选) */
+  raw?: any;
+}

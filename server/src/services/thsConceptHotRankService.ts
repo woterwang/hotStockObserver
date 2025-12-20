@@ -203,7 +203,7 @@ class ThsConceptHotRankService {
   /**
    * 从缓存中读取数据
    */
-  private readFromCache(cacheKey: string): ThsConceptHotRankResult | null {
+  public readFromCache(cacheKey: string): ThsConceptHotRankResult | null {
     const cacheFile = path.join(this.cacheDir, `${cacheKey}.json`);
     if (fs.existsSync(cacheFile)) {
       try {
