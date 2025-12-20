@@ -339,6 +339,7 @@ const ConceptResonancePage: React.FC = () => {
                           <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">龙头</th>
                           <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">涨幅</th>
                           <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">成交额</th>
+                          <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">策略分</th>
                           <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">概念分</th>
                           <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">总分</th>
                           <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">风险</th>
@@ -376,6 +377,14 @@ const ConceptResonancePage: React.FC = () => {
                                 'bg-gray-100 text-gray-800'
                               }`}>
                                 {item.conceptScore?.toFixed(0) || '-'}
+                              </span>
+                            </td><td className="px-4 py-3 text-center">
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                (Number(item.strategyScore) - item.conceptScore) >= 40 ? 'bg-red-100 text-red-800' :
+                                (Number(item.strategyScore) - item.conceptScore) >= 25 ? 'bg-orange-100 text-orange-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {(Number(item.strategyScore) - item.conceptScore) || '-'}
                               </span>
                             </td>
                             <td className="px-4 py-3 text-center">
