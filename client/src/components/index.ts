@@ -5,4 +5,5 @@ export * from './common/MarketSentimentCard';
 export * from './layout/Layout';
 export * from './market/IndexCard';
 export * from './stock/HotStockTable';
+export * from './stock/HotConceptTable';
 export * from './stock/SectorList';

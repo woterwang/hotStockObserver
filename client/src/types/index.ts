@@ -322,6 +322,7 @@ export interface MarketMood {
 export interface MarketOverview {
   indices: MarketIndex[];
   hotStocks: HotStock[];
+  hotConcepts: any[];
   sectors: Sector[];
   strongStocks: HotStock[];
   updateTime: string;

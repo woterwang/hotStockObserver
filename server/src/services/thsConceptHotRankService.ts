@@ -4,7 +4,10 @@
  * @Description: 同花顺概念板块热度排行服务 - 获取实时板块热度数据
  */
 import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
 import { logger } from '../utils';
+import { toDateStr } from '../utils/dateUtils';
 
 /** ETF相关信息 */
 export interface ThsConceptEtfInfo {
@@ -64,6 +67,7 @@ export interface ThsConceptHotRankResult {
  */
 class ThsConceptHotRankService {
   private readonly baseUrl = 'https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/plate';
+  private readonly cacheDir = path.join(__dirname, '../../data/concept');
 
   /**
    * 获取板块热度排行
@@ -74,6 +78,21 @@ class ThsConceptHotRankService {
     type: ThsPlateType = 'concept',
     includeRaw = false
   ): Promise<ThsConceptHotRankResult> {
+    const today = toDateStr(new Date());
+    const cacheKey = `${today}_${type}`;
+    const cacheFile = path.join(this.cacheDir, `${cacheKey}.json`);
+    
+    // 尝试从缓存读取
+    if (fs.existsSync(cacheFile)) {
+      try {
+        const cachedData = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
+        logger.info(`[concept-hot-rank] 使用缓存数据: ${cacheKey}`);
+        return cachedData;
+      } catch (err) {
+        logger.warn(`[concept-hot-rank] 缓存读取失败: ${cacheKey}`, err);
+      }
+    }
+    
     try {
       const response = await axios.get(this.baseUrl, {
         params: {
@@ -110,6 +129,9 @@ class ThsConceptHotRankService {
         result.raw = response.data;
       }
 
+      // 保存到缓存
+      this.saveToCache(cacheKey, result);
+      
       return result;
     } catch (error) {
       logger.error(`获取同花顺板块热度排行失败: ${(error as Error).message}`);
@@ -158,6 +180,40 @@ class ThsConceptHotRankService {
       rankChange: item.hot_rank_chg || 0,
       etf,
     };
+  }
+  
+  /**
+   * 保存数据到缓存
+   */
+  private saveToCache(cacheKey: string, data: ThsConceptHotRankResult): void {
+    try {
+      // 确保缓存目录存在
+      if (!fs.existsSync(this.cacheDir)) {
+        fs.mkdirSync(this.cacheDir, { recursive: true });
+      }
+      
+      const cacheFile = path.join(this.cacheDir, `${cacheKey}.json`);
+      fs.writeFileSync(cacheFile, JSON.stringify(data, null, 2), 'utf-8');
+      logger.info(`[concept-hot-rank] 数据已缓存: ${cacheFile}`);
+    } catch (err) {
+      logger.warn(`[concept-hot-rank] 缓存保存失败: ${cacheKey}`, err);
+    }
+  }
+
+  /**
+   * 从缓存中读取数据
+   */
+  private readFromCache(cacheKey: string): ThsConceptHotRankResult | null {
+    const cacheFile = path.join(this.cacheDir, `${cacheKey}.json`);
+    if (fs.existsSync(cacheFile)) {
+      try {
+        const cachedData = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
+        return cachedData;
+      } catch (err) {
+        logger.warn(`[concept-hot-rank] 缓存读取失败: ${cacheKey}`, err);
+      }
+    }
+    return null;
   }
 }
 
