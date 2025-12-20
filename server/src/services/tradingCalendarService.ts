@@ -29,7 +29,7 @@ class TradingCalendarService {
   /**
    * 初始化服务，从文件加载缓存
    */
-  async init(): Promise<void> {
+  async init (): Promise<void> {
     if (this.initialized) return;
 
     try {
@@ -67,9 +67,9 @@ class TradingCalendarService {
    * @param prev 往前取几天（交易日）
    * @param next 往后取几天（交易日）
    */
-  async fetchTradingDays(date: string, prev: number = 60, next: number = 30): Promise<string[] | null> {
+  async fetchTradingDays (date: string, prev: number = 60, next: number = 30): Promise<string[] | null> {
     const url = 'https://data.10jqka.com.cn/dataapi/limit_up/trade_day';
-    
+
     try {
       const response = await axios.get(url, {
         params: {
@@ -87,31 +87,31 @@ class TradingCalendarService {
       });
 
       const resData = response.data;
-      
+
       if (resData.status_code === 0 && resData.data) {
         // 接口实际返回格式:
         // { "status_code": 0, "data": { "code": 0, "msg": "请求成功", "next_dates": [...], "prev_dates": [...] } }
         let tradingDays: string[] = [];
         const innerData = resData.data;
-        
+
         // 合并 prev_dates 和 next_dates
         if (innerData.prev_dates && Array.isArray(innerData.prev_dates)) {
           tradingDays = tradingDays.concat(innerData.prev_dates);
         }
-        
+
         // 注意：接口返回的 prev_dates 和 next_dates 不包含当天日期
         // 需要根据 trade_day 字段判断当天是否为交易日，如果是则加入列表
         if (innerData.trade_day === true) {
           tradingDays.push(date);
         }
-        
+
         if (innerData.next_dates && Array.isArray(innerData.next_dates)) {
           tradingDays = tradingDays.concat(innerData.next_dates);
         }
-        
+
         // 去重并排序
         tradingDays = [...new Set(tradingDays)].sort();
-        
+
         if (tradingDays.length > 0) {
           logger.info(`从接口获取到 ${tradingDays.length} 个交易日`);
           return tradingDays;
@@ -133,12 +133,12 @@ class TradingCalendarService {
    * 更新交易日历缓存
    * 建议在收盘后调用（如 15:30）
    */
-  async updateCache(): Promise<boolean> {
+  async updateCache (): Promise<boolean> {
     const today = formatDate(new Date(), 'YYYYMMDD');
-    
+
     // 获取前60个交易日 + 后30个交易日
     const tradingDays = await this.fetchTradingDays(today, 780, 30);
-    
+
     if (!tradingDays || tradingDays.length === 0) {
       logger.warn('获取交易日历失败，保持使用旧缓存');
       return false;
@@ -160,7 +160,7 @@ class TradingCalendarService {
       if (!fs.existsSync(dataDir)) {
         fs.mkdirSync(dataDir, { recursive: true });
       }
-      
+
       fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(cacheData, null, 2));
       logger.info(`交易日历缓存已更新，共 ${tradingDays.length} 个交易日`);
       return true;
@@ -174,10 +174,10 @@ class TradingCalendarService {
    * 判断指定日期是否为交易日
    * @param dateStr 日期 YYYYMMDD 或 YYYY-MM-DD
    */
-  isTradingDay(dateStr: string): boolean {
+  isTradingDay (dateStr: string): boolean {
     // 标准化日期格式为 YYYYMMDD
     const normalized = dateStr.replace(/-/g, '');
-    
+
     // 如果缓存中有数据，使用缓存
     if (this.tradingDaysSet.size > 0) {
       return this.tradingDaysSet.has(normalized);
@@ -193,7 +193,7 @@ class TradingCalendarService {
   /**
    * 判断 Date 对象是否为交易日
    */
-  isTradingDayByDate(date: Date = new Date()): boolean {
+  isTradingDayByDate (date: Date = new Date()): boolean {
     const dateStr = formatDate(date, 'YYYYMMDD');
     return this.isTradingDay(dateStr);
   }
@@ -202,9 +202,9 @@ class TradingCalendarService {
    * 获取下一个交易日
    * @param dateStr 当前日期 YYYYMMDD
    */
-  getNextTradingDay(dateStr: string): string | null {
+  getNextTradingDay (dateStr: string): string | null {
     const normalized = dateStr.replace(/-/g, '');
-    
+
     if (this.tradingDaysSet.size === 0) {
       logger.warn('交易日历缓存为空，无法获取下一个交易日');
       return null;
@@ -213,11 +213,11 @@ class TradingCalendarService {
     // 将缓存转换为排序数组
     const sortedDays = Array.from(this.tradingDaysSet).sort();
     const index = sortedDays.findIndex(d => d > normalized);
-    
+
     if (index !== -1) {
       return sortedDays[index];
     }
-    
+
     return null;
   }
 
@@ -225,9 +225,9 @@ class TradingCalendarService {
    * 获取前一个交易日
    * @param dateStr 当前日期 YYYYMMDD
    */
-  getPrevTradingDay(dateStr: string): string | null {
+  getPrevTradingDay (dateStr: string): string | null {
     const normalized = dateStr.replace(/-/g, '');
-    
+
     if (this.tradingDaysSet.size === 0) {
       logger.warn('getPrevTradingDay 交易日历缓存为空，无法获取前一个交易日');
       return null;
@@ -235,14 +235,14 @@ class TradingCalendarService {
 
     // 将缓存转换为排序数组
     const sortedDays = Array.from(this.tradingDaysSet).sort();
-    
+
     // 找到小于当前日期的最后一个交易日
     for (let i = sortedDays.length - 1; i >= 0; i--) {
       if (sortedDays[i] < normalized) {
         return sortedDays[i];
       }
     }
-    
+
     return null;
   }
 
@@ -251,7 +251,7 @@ class TradingCalendarService {
    * @param dateStr 起始日期 YYYYMMDD
    * @param n 往前推几个交易日
    */
-  getPrevTradingDays(dateStr: string, n: number): string[] {
+  getPrevTradingDays (dateStr: string, n: number): string[] {
     const result: string[] = [];
     let currentDate = dateStr.replace(/-/g, '');
 
@@ -269,9 +269,31 @@ class TradingCalendarService {
   }
 
   /**
+   * 获取后 N 个交易日
+   * 例如：传入参数：（20251201，2）返回 20251203
+   * @param dateStr 起始日期 YYYYMMDD
+   * @param n 往后推几个交易日
+   */
+  getNextTradingDays (dateStr: string, n: number): string | null {
+    let result: string | null = null;
+    let currentDate = dateStr.replace(/-/g, '');
+
+    for (let i = 0; i < n; i++) {
+      const nextDay = this.getNextTradingDay(currentDate);
+      if (nextDay) {
+        result = nextDay;
+        currentDate = nextDay;
+      } else {
+        break;
+      }
+    }
+    return result;
+  }
+
+  /**
    * 获取缓存状态信息
    */
-  getCacheStatus(): { initialized: boolean; count: number; lastUpdated: string | null } {
+  getCacheStatus (): { initialized: boolean; count: number; lastUpdated: string | null } {
     return {
       initialized: this.initialized,
       count: this.tradingDaysSet.size,
@@ -282,82 +304,83 @@ class TradingCalendarService {
   /**
    * 手动获取指定范围的交易日列表
    */
-  getTradingDaysInRange(startDate: string, endDate: string): string[] {
+  getTradingDaysInRange (startDate: string, endDate: string): string[] {
     const start = startDate.replace(/-/g, '');
     const end = endDate.replace(/-/g, '');
-    
+
     return Array.from(this.tradingDaysSet)
       .filter(d => d >= start && d <= end)
       .sort();
   }
+
 
   /**
    * 扩展缓存：获取更长时间范围的交易日（最多三年）
    * 通过多次调用接口，逐步往前获取历史交易日
    * @param years 往前获取几年，默认3年
    */
-  async extendCache(years: number = 3): Promise<{ success: boolean; count: number; range: { start: string; end: string } }> {
+  async extendCache (years: number = 3): Promise<{ success: boolean; count: number; range: { start: string; end: string } }> {
     const allTradingDays = new Set<string>(this.tradingDaysSet);
     const today = formatDate(new Date(), 'YYYYMMDD');
-    
+
     // 每次获取约120个交易日（约半年），分批获取
     // 三年约730个交易日，需要调用约6-7次
     const batchSize = 120;
     const totalBatches = Math.ceil((years * 243) / batchSize);
-    
+
     let currentDate = today;
     let successCount = 0;
-    
+
     logger.info(`开始扩展交易日历缓存，目标: ${years}年，预计批次: ${totalBatches}`);
-    
+
     for (let i = 0; i < totalBatches; i++) {
       try {
         // 获取当前日期往前 batchSize 个交易日
         const tradingDays = await this.fetchTradingDays(currentDate, batchSize, 30);
-        
+
         if (tradingDays && tradingDays.length > 0) {
           tradingDays.forEach(d => allTradingDays.add(d));
           successCount++;
-          
+
           // 下一次从最早的日期开始
           const sortedDays = tradingDays.sort();
           currentDate = sortedDays[0];
-          
+
           logger.info(`批次 ${i + 1}/${totalBatches}: 获取到 ${tradingDays.length} 个交易日，最早日期: ${currentDate}`);
         } else {
           logger.warn(`批次 ${i + 1} 获取失败，跳过`);
         }
-        
+
         // 添加延迟避免请求过快
         await new Promise(resolve => setTimeout(resolve, 1000));
       } catch (error) {
         logger.error(`批次 ${i + 1} 出错: ${(error as Error).message}`);
       }
     }
-    
+
     // 更新内存缓存
     this.tradingDaysSet = allTradingDays;
     this.lastUpdated = new Date();
-    
+
     // 排序后持久化
     const sortedAll = Array.from(allTradingDays).sort();
-    
+
     const cacheData = {
       updatedAt: this.lastUpdated.toISOString(),
       tradingDays: sortedAll
     };
-    
+
     try {
       const fs = await import('fs');
       const path = await import('path');
       const CACHE_FILE_PATH = path.join(__dirname, '../../data/trading_calendar.json');
-      
+
       fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(cacheData, null, 2));
       logger.info(`交易日历缓存扩展完成，共 ${sortedAll.length} 个交易日，范围: ${sortedAll[0]} ~ ${sortedAll[sortedAll.length - 1]}`);
     } catch (error) {
       logger.error(`保存扩展缓存失败: ${(error as Error).message}`);
     }
-    
+
     return {
       success: successCount > 0,
       count: sortedAll.length,

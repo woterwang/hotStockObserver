@@ -2,7 +2,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import * as fs from 'fs';
 import * as path from 'path';
-import { logger, sleep } from '../utils';
+import { logger, sleep, toDateStr, getToday } from '../utils';
 import { tradingCalendarService } from './tradingCalendarService';
 
 export interface CachedKline {
@@ -343,16 +343,35 @@ class KlineCacheService {
     return Array.from(klinesMap.values()).sort((a, b) => a.date.localeCompare(b.date)).slice(-days);
   }
   async getKlinesByStartDay (stockCode: string, startDay: string, klineDays: number) {
+    startDay = toDateStr(startDay);
+    // 计算结束日期
+    const endDateStr = tradingCalendarService.getNextTradingDays(startDay, klineDays);
+    // 如果结束日期 >= 今天，则返回空数组
+    if (!endDateStr || toDateStr(getToday()) <= endDateStr) {
+      logger.warn(`[K线缓存] ${stockCode} 结束日期 ${endDateStr} 不在历史范围内，直接跳过`);
+      return [];
+    }
+    let endDateIndex: number = -1;
+    // 确保缓存中有足够数据
     let allCachedKlines = this.loadCache(stockCode).map;
-    const startDayNormalized = this.normalizeDate(startDay);
-    console.log(`[K线缓存] ${stockCode} 获取从 ${startDayNormalized} 开始的 ${klineDays} 天K线`);
-    const startDateIndex = Array.from(allCachedKlines.keys()).sort().indexOf(startDayNormalized);
+    console.log(`[K线缓存] ${stockCode} 获取从 ${startDay} 开始的 ${klineDays} 天K线`);
+    // 如果缓存中没有起始日期，则从远端拉取数据
+    const startDateIndex = Array.from(allCachedKlines.keys()).indexOf(startDay);
     if (startDateIndex < 0) {
-      logger.warn(`[K线缓存] ${stockCode} 起始日期 ${startDayNormalized} 不在缓存中，从远端拉取数据中...`);
-      allCachedKlines = await this.ensureKlines(stockCode, { targetDates: [startDayNormalized] });
+      logger.warn(`[K线缓存] ${stockCode} 起始日期 ${startDay} 不在缓存中，从远端拉取数据中...`);
+      allCachedKlines = await this.ensureKlines(stockCode, { targetDates: [startDay] });
       await sleep(8, 2); // 简单节流
     }
-    return Array.from(allCachedKlines.values()).sort((a, b) => a.date.localeCompare(b.date))
+    // 计算结束日期是否在缓存中
+    if (endDateStr) {
+      endDateIndex = Array.from(allCachedKlines.keys()).indexOf(endDateStr);
+      if (endDateIndex < 0) {
+        allCachedKlines = await this.ensureKlines(stockCode, { targetDates: [endDateStr] });
+        await sleep(8, 2); // 简单节流
+      }
+    }
+    // 从起始日期开始，获取后续 klineDays 个交易日的日期列表
+    return Array.from(allCachedKlines.values()).slice(startDateIndex, endDateIndex);
   }
 }
 
