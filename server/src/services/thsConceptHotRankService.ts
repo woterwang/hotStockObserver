@@ -67,7 +67,7 @@ export interface ThsConceptHotRankResult {
  */
 class ThsConceptHotRankService {
   private readonly baseUrl = 'https://dq.10jqka.com.cn/fuyao/hot_list_data/out/hot_list/v1/plate';
-  private readonly cacheDir = path.join(__dirname, '../../data/concept');
+  private readonly cacheDir = path.join(__dirname, '../../data/concept_cache');
 
   /**
    * 获取板块热度排行
@@ -82,16 +82,16 @@ class ThsConceptHotRankService {
     const cacheKey = `${today}_${type}`;
     const cacheFile = path.join(this.cacheDir, `${cacheKey}.json`);
     
-    // 尝试从缓存读取
-    if (fs.existsSync(cacheFile)) {
-      try {
-        const cachedData = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
-        logger.info(`[concept-hot-rank] 使用缓存数据: ${cacheKey}`);
-        return cachedData;
-      } catch (err) {
-        logger.warn(`[concept-hot-rank] 缓存读取失败: ${cacheKey}`, err);
-      }
-    }
+    // // 尝试从缓存读取
+    // if (fs.existsSync(cacheFile)) {
+    //   try {
+    //     const cachedData = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
+    //     logger.info(`[concept-hot-rank] 使用缓存数据: ${cacheKey}`);
+    //     return cachedData;
+    //   } catch (err) {
+    //     logger.warn(`[concept-hot-rank] 缓存读取失败: ${cacheKey}`, err);
+    //   }
+    // }
     
     try {
       const response = await axios.get(this.baseUrl, {

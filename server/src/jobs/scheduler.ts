@@ -1,22 +1,59 @@
 import cron from 'node-cron';
 import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, volumeSurgeService, tradingCalendarService, marketMoodService } from '../services';
 import { buySignalService } from '../services/buySignalService';
+import { thsConceptHotRankService } from '../services/thsConceptHotRankService';
 
 import { logger } from '../utils';
 import { formatDate } from '../utils/dateUtils';
 
 /**
  * 定时任务管理
+ * 
+ * 任务按时间段分类:
+ * =================== 开盘前任务 (上午9点前) ===================
+ * 1. 早间市场情绪数据更新任务 - 每天 08:18 执行
+ *    更新市场情绪缓存，独立于集合竞价任务
+ * 
+ * =================== 竞价后任务 (上午9:25:18) ===================
+ * 1. 集合竞价后更新入场信号任务 - 每个交易日 09:25:18 执行
+ *    更新今日信号的入场条件，包括价格突破策略与放量大涨策略，并更新市场情绪数据
+ * 
+ * =================== 盘中任务 (上午9:30-下午15:00) ===================
+ * 1. 热搜股票更新任务 - 交易日每15分钟执行一次（9:30-15:00）
+ *    定期获取并保存热搜股票数据
+ * 
+ * =================== 收盘后任务 (下午15:16之后) ===================
+ * 1. 交易日历更新任务 - 每天 15:20 执行
+ *    更新交易日历缓存，明确次日是否为交易日
+ * 2. 强势资金突破（放量大涨）扫描任务 - 每个交易日 15:31 执行
+ *    扫描当天的放量大涨股票
+ * 3. 市场情绪数据获取任务 - 每个交易日 15:32 执行
+ *    获取当日市场情绪数据
+ * 4. 价格突破扫描任务 - 每个交易日 15:30 执行
+ *    扫描当天的价格突破股票
+ * 5. 盘后信号生成任务 - 每个交易日 15:35 执行
+ *    生成次日备选标的，包含多个策略（价格突破、放量大涨等）
+ * 
+ * =================== 晚间任务 (晚上23:58) ===================
+ * 1. 每日热搜板块更新任务 - 每天 23:58 执行
+ *    更新并缓存每日热搜概念和行业板块数据
  */
 export class JobScheduler {
-  private updateJob: cron.ScheduledTask | null = null;
-  private breakthroughJob: cron.ScheduledTask | null = null;
-  private auctionJob: cron.ScheduledTask | null = null;
-  private signalGenerateJob: cron.ScheduledTask | null = null;
-  private sentimentJob: cron.ScheduledTask | null = null;
-  private volumeSurgeJob: cron.ScheduledTask | null = null;
-  private tradingCalendarJob: cron.ScheduledTask | null = null;
+  // 开盘前任务
   private morningMoodJob: cron.ScheduledTask | null = null;
+  
+  // 竞价后任务
+  private auctionJob: cron.ScheduledTask | null = null;
+  
+  // 盘中任务
+  private updateJob: cron.ScheduledTask | null = null;
+  
+  // 收盘后任务
+  private tradingCalendarJob: cron.ScheduledTask | null = null;
+  private afterMarketJob: cron.ScheduledTask | null = null;
+  
+  // 晚间任务
+  private dailyConceptUpdateJob: cron.ScheduledTask | null = null;
 
   /**
    * 启动所有定时任务
@@ -27,14 +64,13 @@ export class JobScheduler {
     // 初始化市场情绪服务
     await marketMoodService.init();
 
-    this.startTradingCalendarJob();
-    this.startHotStockUpdateJob();
-    this.startBreakthroughScanJob();
-    this.startAuctionUpdateJob();
-    this.startSignalGenerateJob();
-    this.startSentimentJob();
-    this.startVolumeSurgeScanJob();
-    this.startMorningMoodJob();
+    // 按时间段启动各类任务
+    this.startPreMarketJobs();
+    this.startPostAuctionJobs();
+    this.startMarketHoursJobs();
+    this.startAfterMarketJobs();
+    this.startNightJobs();
+    
     logger.info('定时任务已启动');
   }
 
@@ -42,45 +78,260 @@ export class JobScheduler {
    * 停止所有定时任务
    */
   stop () {
-    if (this.updateJob) {
-      this.updateJob.stop();
-      this.updateJob = null;
-    }
-    if (this.breakthroughJob) {
-      this.breakthroughJob.stop();
-      this.breakthroughJob = null;
-    }
-    if (this.auctionJob) {
-      this.auctionJob.stop();
-      this.auctionJob = null;
-    }
-    if (this.signalGenerateJob) {
-      this.signalGenerateJob.stop();
-      this.signalGenerateJob = null;
-    }
-    if (this.sentimentJob) {
-      this.sentimentJob.stop();
-      this.sentimentJob = null;
-    }
-    if (this.volumeSurgeJob) {
-      this.volumeSurgeJob.stop();
-      this.volumeSurgeJob = null;
-    }
-    if (this.tradingCalendarJob) {
-      this.tradingCalendarJob.stop();
-      this.tradingCalendarJob = null;
-    }
+    // 停止开盘前任务
     if (this.morningMoodJob) {
       this.morningMoodJob.stop();
       this.morningMoodJob = null;
     }
+    
+    // 停止竞价后任务
+    if (this.auctionJob) {
+      this.auctionJob.stop();
+      this.auctionJob = null;
+    }
+    
+    // 停止盘中任务
+    if (this.updateJob) {
+      this.updateJob.stop();
+      this.updateJob = null;
+    }
+    
+    // 停止收盘后任务
+    if (this.tradingCalendarJob) {
+      this.tradingCalendarJob.stop();
+      this.tradingCalendarJob = null;
+    }
+    
+    if (this.afterMarketJob) {
+      this.afterMarketJob.stop();
+      this.afterMarketJob = null;
+    }
+    
+    // 停止晚间任务
+    if (this.dailyConceptUpdateJob) {
+      this.dailyConceptUpdateJob.stop();
+      this.dailyConceptUpdateJob = null;
+    }
+    
     logger.info('定时任务已停止');
   }
 
   /**
+   * 开盘前任务 (上午9点前)
+   * ==================================================
+   */
+  private startPreMarketJobs() {
+    // 早间市场情绪数据更新任务
+    this.startMorningMoodJob();
+  }
+
+  /**
+   * 竞价后任务 (上午9:25:18)
+   * ==================================================
+   */
+  private startPostAuctionJobs() {
+    // 集合竞价后更新入场信号任务
+    this.startAuctionUpdateJob();
+  }
+
+  /**
+   * 盘中任务 (上午9:30-下午15:00)
+   * ==================================================
+   */
+  private startMarketHoursJobs() {
+    // 热搜股票更新任务
+    this.startHotStockUpdateJob();
+  }
+
+  /**
+   * 收盘后任务 (下午15:16之后)
+   * ==================================================
+   */
+  private startAfterMarketJobs() {
+    // 交易日历更新任务
+    this.startTradingCalendarJob();
+    
+    // 收盘后串行任务 (按顺序执行)
+    this.startAfterMarketSequentialJobs();
+  }
+
+  /**
+   * 晚间任务 (晚上23:58)
+   * ==================================================
+   */
+  private startNightJobs() {
+    // 每日热搜板块更新任务
+    this.startDailyConceptUpdateJob();
+  }
+
+  /**
+   * 手动触发更新
+   */
+  async manualUpdate (): Promise<number> {
+    try {
+      logger.info('手动触发热搜股票更新');
+
+      const hotStocks = await dataFetchService.fetchHotStocks();
+      const savedCount = await dataFetchService.saveHotStocks(hotStocks);
+
+      logger.info(`手动更新完成，共保存 ${savedCount} 条数据`);
+      return savedCount;
+    } catch (error) {
+      logger.error(`手动更新失败: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * 每日热搜板块更新任务
+   * 时间: 每天 23:58 执行
+   * 功能: 更新并缓存每日热搜概念和行业板块数据
+   */
+  private startDailyConceptUpdateJob() {
+    // 每天 23:58 执行
+    const cronExpression = '58 23 * * *';
+
+    this.dailyConceptUpdateJob = cron.schedule(cronExpression, async () => {
+      try {
+        logger.info('开始执行每日热搜板块更新任务');
+        
+        // 更新概念板块热度排行
+        logger.info('正在获取并缓存概念板块热度排行...');
+        await thsConceptHotRankService.fetchConceptHotRank();
+        
+        // 更新行业板块热度排行
+        logger.info('正在获取并缓存行业板块热度排行...');
+        await thsConceptHotRankService.fetchIndustryHotRank();
+        
+        logger.info('每日热搜板块更新任务完成');
+      } catch (error) {
+        logger.error(`每日热搜板块更新任务失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`每日热搜板块更新任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /**
+   * 早间市场情绪数据更新任务
+   * 时间: 每天 08:18 执行
+   */
+  private startMorningMoodJob () {
+    const cronExpression = '18 8 * * *';
+
+    this.morningMoodJob = cron.schedule(cronExpression, async () => {
+      try {
+        logger.info('早间市场情绪缓存更新开始');
+        const moodSuccess = await marketMoodService.updateCache();
+        if (moodSuccess) {
+          const moodStatus = marketMoodService.getCacheStatus();
+          logger.info(`早间市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
+        } else {
+          logger.warn('早间市场情绪更新失败，将继续使用旧缓存');
+        }
+      } catch (error) {
+        logger.error(`早间市场情绪更新任务失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`早间市场情绪任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /**
+   * 集合竞价后更新入场信号任务
+   * 时间: 每个交易日09:25:18执行
+   */
+  private startAuctionUpdateJob () {
+    // 每个交易日09:25:18执行（集合竞价结束后18秒）
+    // node-cron 支持6位表达式：秒 分 时 日 月 周
+    const cronExpression = '18 25 9 * * 1-5';
+    const today = formatDate(new Date(), 'YYYYMMDD');
+
+    this.auctionJob = cron.schedule(cronExpression, async () => {
+      // 1. 价格突破策略
+      try {
+        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
+        if (!tradingCalendarService.isTradingDayByDate()) {
+          logger.info('非交易日，跳过入场条件更新');
+          return;
+        }
+
+        logger.info('开始执行集合竞价后【价格突破策略】入场条件更新');
+
+        const result = await tradingSignalService.updateSignalsAfterAuction(today);
+
+        logger.info(`入场条件更新完成: 可入场=${result.ready}, 部分满足=${result.partial}, 不满足=${result.rejected}`);
+      } catch (error) {
+        logger.error(`入场条件更新失败: ${(error as Error).message}`);
+      }
+
+      // 2. 放量大涨策略
+      try {
+        logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
+        const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
+        logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.length} 个信号，入场日=${volumeSurgeResult[0].date}`);
+      } catch (error) {
+        logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
+      }
+
+      // 3. 更新市场情绪数据
+      logger.info('开始更新市场情绪缓存');
+      const moodSuccess = await marketMoodService.updateCache();
+      if (moodSuccess) {
+        const moodStatus = marketMoodService.getCacheStatus();
+        logger.info(`市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
+      } else {
+        logger.warn('市场情绪更新失败，将继续使用旧缓存');
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`集合竞价更新任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /**
+   * 热搜股票更新任务
+   * 时间: 交易日每15分钟更新一次（9:30-15:00）
+   */
+  private startHotStockUpdateJob () {
+    // 每15分钟执行一次
+    const cronExpression = process.env.CRON_UPDATE_INTERVAL || '*/15 9-15 * * 1-5';
+
+    this.updateJob = cron.schedule(cronExpression, async () => {
+      try {
+        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
+        if (!tradingCalendarService.isTradingDayByDate()) {
+          logger.info('非交易日，跳过更新');
+          return;
+        }
+
+        logger.info('开始执行热搜股票更新任务');
+
+        // 获取热搜数据
+        const hotStocks = await dataFetchService.fetchHotStocks();
+
+        // 保存到数据库
+        const savedCount = await dataFetchService.saveHotStocks(hotStocks);
+
+        logger.info(`热搜股票更新任务完成，共保存 ${savedCount} 条数据`);
+      } catch (error) {
+        logger.error(`热搜股票更新任务失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`热搜股票更新任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /**
    * 交易日历更新任务
-   * 每天 15:20 执行（收盘后），获取最新的交易日历
-   * 这样可以明确知道次日是否为交易日
+   * 时间: 每天 15:20 执行（收盘后）
    */
   private startTradingCalendarJob () {
     // 每天15:20执行（收盘后20分钟，确保数据稳定）
@@ -126,276 +377,75 @@ export class JobScheduler {
   }
 
   /**
-   * 热搜股票更新任务
-   * 交易日每15分钟更新一次（9:30-15:00）
+   * 收盘后串行任务 (按顺序执行各项任务)
+   * 时间: 每个交易日15:30之后
    */
-  private startHotStockUpdateJob () {
-    // 每15分钟执行一次
-    const cronExpression = process.env.CRON_UPDATE_INTERVAL || '*/15 9-15 * * 1-5';
-
-    this.updateJob = cron.schedule(cronExpression, async () => {
-      try {
-        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
-        if (!tradingCalendarService.isTradingDayByDate()) {
-          logger.info('非交易日，跳过更新');
-          return;
-        }
-
-        logger.info('开始执行热搜股票更新任务');
-
-        // 获取热搜数据
-        const hotStocks = await dataFetchService.fetchHotStocks();
-
-        // 保存到数据库
-        const savedCount = await dataFetchService.saveHotStocks(hotStocks);
-
-        logger.info(`热搜股票更新任务完成，共保存 ${savedCount} 条数据`);
-      } catch (error) {
-        logger.error(`热搜股票更新任务失败: ${(error as Error).message}`);
-      }
-    }, {
-      timezone: 'Asia/Shanghai',
-    });
-
-    logger.info(`热搜股票更新任务已配置，Cron表达式: ${cronExpression}`);
-  }
-
-  /**
-   * 手动触发更新
-   */
-  async manualUpdate (): Promise<number> {
-    try {
-      logger.info('手动触发热搜股票更新');
-
-      const hotStocks = await dataFetchService.fetchHotStocks();
-      const savedCount = await dataFetchService.saveHotStocks(hotStocks);
-
-      logger.info(`手动更新完成，共保存 ${savedCount} 条数据`);
-      return savedCount;
-    } catch (error) {
-      logger.error(`手动更新失败: ${(error as Error).message}`);
-      throw error;
-    }
-  }
-
-  /**
-   * 价格突破扫描任务
-   * 交易日收盘后执行（15:30）
-   */
-  private startBreakthroughScanJob () {
-    // 每个交易日15:30执行
+  private startAfterMarketSequentialJobs() {
+    // 在15:30执行，将各项收盘后任务串行执行
     const cronExpression = '30 15 * * 1-5';
 
-    this.breakthroughJob = cron.schedule(cronExpression, async () => {
+    this.afterMarketJob = cron.schedule(cronExpression, async () => {
       try {
         // 检查是否是交易日（使用交易日历服务，支持节假日判断）
         if (!tradingCalendarService.isTradingDayByDate()) {
-          logger.info('非交易日，跳过价格突破扫描');
+          logger.info('非交易日，跳过收盘后任务');
           return;
         }
 
-        logger.info('开始执行价格突破扫描任务');
+        logger.info('开始执行收盘后串行任务');
 
-        const count = await priceBreakthroughService.scanAndSave();
-
-        logger.info(`价格突破扫描任务完成，共发现 ${count} 只突破股票`);
-      } catch (error) {
-        logger.error(`价格突破扫描任务失败: ${(error as Error).message}`);
-      }
-    }, {
-      timezone: 'Asia/Shanghai',
-    });
-
-    logger.info(`价格突破扫描任务已配置，Cron表达式: ${cronExpression}`);
-  }
-
-  /**
-   * 盘后信号生成任务
-   * 交易日收盘后执行（15:35），生成次日备选标的
-   * 包含多个策略：价格突破、放量大涨等
-   */
-  private startSignalGenerateJob () {
-    // 每个交易日15:35执行 价格突破策略
-    const cronExpression = '35 15 * * 1-5';
-
-    this.signalGenerateJob = cron.schedule(cronExpression, async () => {
-      try {
-        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
-        if (!tradingCalendarService.isTradingDayByDate()) {
-          logger.info('非交易日，跳过信号生成');
-          return;
-        }
-
-        logger.info('开始执行集合竞价后信号生成任务（多策略）');
-
-        // 当天是 Day2，生成 Day3 的入场信号
-        const today = formatDate(new Date(), 'YYYYMMDD');
-
+        // 1. 强势资金突破（放量大涨）扫描任务 (原15:31)
         try {
-          const breakthroughResult = await tradingSignalService.generateSignalsAfterMarketClose(today);
-          logger.info(`[价格突破] 生成完成，共 ${breakthroughResult.count} 个信号，入场日=${breakthroughResult.signalDate}`);
+          logger.info('【第1步】开始执行强势资金突破（放量大涨）扫描任务');
+          const today = formatDate(new Date(), 'YYYYMMDD');
+          const count = await volumeSurgeService.scanAndSave(today);
+          logger.info(`【第1步完成】强势资金突破扫描任务完成，共发现 ${count} 只符合条件的股票`);
         } catch (error) {
-          logger.error(`[价格突破] 生成失败: ${(error as Error).message}`);
+          logger.error(`【第1步失败】强势资金突破扫描任务失败: ${(error as Error).message}`);
         }
 
-        logger.info('盘后信号生成任务（多策略）完成');
+        // 2. 市场情绪数据获取任务 (原15:32)
+        try {
+          logger.info('【第2步】开始获取市场情绪数据');
+          const today = formatDate(new Date(), 'YYYYMMDD');
+          const sentiment = await marketSentimentService.fetchAndCalculateSentiment(today);
+          if (sentiment) {
+            logger.info(`【第2步完成】市场情绪获取完成: 评分=${sentiment.score}, 建议=${sentiment.advice}`);
+          }
+        } catch (error) {
+          logger.error(`【第2步失败】市场情绪获取失败: ${(error as Error).message}`);
+        }
+
+        // 3. 价格突破扫描任务 (原15:30)
+        try {
+          logger.info('【第3步】开始执行价格突破扫描任务');
+          const count = await priceBreakthroughService.scanAndSave();
+          logger.info(`【第3步完成】价格突破扫描任务完成，共发现 ${count} 只突破股票`);
+        } catch (error) {
+          logger.error(`【第3步失败】价格突破扫描任务失败: ${(error as Error).message}`);
+        }
+
+        // 4. 盘后信号生成任务 (原15:35)
+        try {
+          logger.info('【第4步】开始执行集合竞价后信号生成任务（多策略）');
+          // 当天是 Day2，生成 Day3 的入场信号
+          const today = formatDate(new Date(), 'YYYYMMDD');
+
+          const breakthroughResult = await tradingSignalService.generateSignalsAfterMarketClose(today);
+          logger.info(`【第4步完成】[价格突破] 生成完成，共 ${breakthroughResult.count} 个信号，入场日=${breakthroughResult.signalDate}`);
+        } catch (error) {
+          logger.error(`【第4步失败】[价格突破] 生成失败: ${(error as Error).message}`);
+        }
+
+        logger.info('所有收盘后串行任务执行完毕');
       } catch (error) {
-        logger.error(`盘后信号生成失败: ${(error as Error).message}`);
+        logger.error(`收盘后串行任务执行失败: ${(error as Error).message}`);
       }
     }, {
       timezone: 'Asia/Shanghai',
     });
 
-    logger.info(`盘后信号生成任务已配置，Cron表达式: ${cronExpression}`);
-  }
-
-  /**
-   * 集合竞价后更新入场信号任务 包括 价格突破策略 与 放量大涨策略
-   * 交易日09:25:18执行，更新今日信号的入场条件
-   */
-  private startAuctionUpdateJob () {
-    // 每个交易日09:25:18执行（集合竞价结束后18秒）
-    // node-cron 支持6位表达式：秒 分 时 日 月 周
-    const cronExpression = '18 25 9 * * 1-5';
-    const today = formatDate(new Date(), 'YYYYMMDD');
-
-    this.auctionJob = cron.schedule(cronExpression, async () => {
-      // 1. 价格突破策略
-      try {
-        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
-        if (!tradingCalendarService.isTradingDayByDate()) {
-          logger.info('非交易日，跳过入场条件更新');
-          return;
-        }
-
-        logger.info('开始执行集合竞价后【价格突破策略】入场条件更新');
-
-        const result = await tradingSignalService.updateSignalsAfterAuction(today);
-
-        logger.info(`入场条件更新完成: 可入场=${result.ready}, 部分满足=${result.partial}, 不满足=${result.rejected}`);
-      } catch (error) {
-        logger.error(`入场条件更新失败: ${(error as Error).message}`);
-      }
-
-      // 2. 放量大涨策略
-      try {
-        logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
-        const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
-        logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.length} 个信号，入场日=${volumeSurgeResult[0].date}`);
-      } catch (error) {
-        logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
-      }
-
-
-      // 3. 更新市场情绪数据
-      logger.info('开始更新市场情绪缓存');
-      const moodSuccess = await marketMoodService.updateCache();
-      if (moodSuccess) {
-        const moodStatus = marketMoodService.getCacheStatus();
-        logger.info(`市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
-      } else {
-        logger.warn('市场情绪更新失败，将继续使用旧缓存');
-      }
-
-
-    }, {
-      timezone: 'Asia/Shanghai',
-    });
-
-    logger.info(`集合竞价更新任务已配置，Cron表达式: ${cronExpression}`);
-  }
-
-  /**
-   * 早间市场情绪数据更新任务
-   * 每天 08:18 执行，独立于集合竞价任务
-   */
-  private startMorningMoodJob () {
-    const cronExpression = '18 8 * * *';
-
-    this.morningMoodJob = cron.schedule(cronExpression, async () => {
-      try {
-        logger.info('早间市场情绪缓存更新开始');
-        const moodSuccess = await marketMoodService.updateCache();
-        if (moodSuccess) {
-          const moodStatus = marketMoodService.getCacheStatus();
-          logger.info(`早间市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
-        } else {
-          logger.warn('早间市场情绪更新失败，将继续使用旧缓存');
-        }
-      } catch (error) {
-        logger.error(`早间市场情绪更新任务失败: ${(error as Error).message}`);
-      }
-    }, {
-      timezone: 'Asia/Shanghai',
-    });
-
-    logger.info(`早间市场情绪任务已配置，Cron表达式: ${cronExpression}`);
-  }
-
-  /**
-   * 市场情绪数据获取任务
-   * 交易日收盘后执行（15:32），获取当日市场情绪
-   */
-  private startSentimentJob () {
-    // 每个交易日15:32执行（在突破扫描之前）
-    const cronExpression = '32 15 * * 1-5';
-
-    this.sentimentJob = cron.schedule(cronExpression, async () => {
-      try {
-        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
-        if (!tradingCalendarService.isTradingDayByDate()) {
-          logger.info('非交易日，跳过市场情绪获取');
-          return;
-        }
-
-        logger.info('开始获取市场情绪数据');
-
-        const today = formatDate(new Date(), 'YYYYMMDD');
-        const sentiment = await marketSentimentService.fetchAndCalculateSentiment(today);
-
-        if (sentiment) {
-          logger.info(`市场情绪获取完成: 评分=${sentiment.score}, 建议=${sentiment.advice}`);
-        }
-      } catch (error) {
-        logger.error(`市场情绪获取失败: ${(error as Error).message}`);
-      }
-    }, {
-      timezone: 'Asia/Shanghai',
-    });
-
-    logger.info(`市场情绪获取任务已配置，Cron表达式: ${cronExpression}`);
-  }
-
-  /**
-   * 强势资金突破（放量大涨）扫描任务
-   * 交易日收盘后执行（15:31），扫描当天的放量大涨股票
-   */
-  private startVolumeSurgeScanJob () {
-    // 每个交易日15:31执行（在市场情绪获取之前，信号生成之前）
-    const cronExpression = '31 15 * * 1-5';
-
-    this.volumeSurgeJob = cron.schedule(cronExpression, async () => {
-      try {
-        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
-        if (!tradingCalendarService.isTradingDayByDate()) {
-          logger.info('非交易日，跳过强势资金突破扫描');
-          return;
-        }
-
-        logger.info('开始执行强势资金突破（放量大涨）扫描任务');
-
-        const today = formatDate(new Date(), 'YYYYMMDD');
-        const count = await volumeSurgeService.scanAndSave(today);
-
-        logger.info(`强势资金突破扫描任务完成，共发现 ${count} 只符合条件的股票`);
-      } catch (error) {
-        logger.error(`强势资金突破扫描任务失败: ${(error as Error).message}`);
-      }
-    }, {
-      timezone: 'Asia/Shanghai',
-    });
-
-    logger.info(`强势资金突破扫描任务已配置，Cron表达式: ${cronExpression}`);
+    logger.info(`收盘后串行任务已配置，Cron表达式: ${cronExpression}`);
   }
 }
 
