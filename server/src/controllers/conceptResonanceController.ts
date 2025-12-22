@@ -34,6 +34,7 @@ export class ConceptResonanceController {
   async getList(req: Request, res: Response, next: NextFunction) {
     try {
       const { date, quality, filter } = req.query;
+      logger.info(`[ConceptResonance] 获取选股列表，日期: ${date}${quality}${filter}`);
       let targetDate: string;
       
       if (date && typeof date === 'string') {
@@ -60,6 +61,8 @@ export class ConceptResonanceController {
         list = await conceptResonanceService.getLeaderStocks(targetDate);
       } else if (filter === 'hotConcept') {
         list = await conceptResonanceService.getHotConceptStocks(targetDate);
+      }  else if (filter === 'buySignal') {
+        list = await conceptResonanceService.getBuySignalList({dateStr: targetDate});
       } else {
         list = await conceptResonanceService.getList(targetDate);
       }

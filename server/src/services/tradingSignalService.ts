@@ -529,7 +529,8 @@ export class TradingSignalService {
     
     const signals = await TradingSignal.find({
       signalDate: targetDate,
-      status: 'pending',
+      //TODO: 只处理未完成的信号
+      // status: 'pending',
     });
 
     if (signals.length === 0) {

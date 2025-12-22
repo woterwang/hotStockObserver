@@ -110,3 +110,14 @@ export interface StrengthConceptCacheItem {
   turnover: number;
   mainNet: number;
 }
+
+/**
+ * 查询条件配置
+ * 用于获取板块共振选股列表
+ */
+export interface ConceptResonanceQueryConfig {
+  dateStr: string;          // 目标日期 YYYYMMDD 格式
+  strategyScore?: number; // 最小策略评分筛选
+  changePercent?: number; //  涨跌幅筛选
+  limitUpCount?: number;  // 涨停家数筛选
+}

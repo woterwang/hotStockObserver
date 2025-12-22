@@ -299,8 +299,8 @@ export const conceptResonanceApi = {
   },
 
   // 获取候选标的列表
-  getList: (date?: string, leaderOnly?: boolean): Promise<ApiResponse<ConceptResonance[]>> => {
-    return api.get('/concept-resonance/list', { params: { date, leaderOnly } });
+  getList: (date?: string, leaderOnly?: boolean,filter?:string): Promise<ApiResponse<ConceptResonance[]>> => {
+    return api.get('/concept-resonance/list', { params: { date, leaderOnly ,filter} });
   },
 
   // 获取统计数据

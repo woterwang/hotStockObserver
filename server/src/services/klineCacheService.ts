@@ -133,7 +133,7 @@ class KlineCacheService {
           'Referer': 'http://www.10jqka.com.cn/',
           'hexin-v': String(Date.now()),
         },
-        timeout: 10000,
+        timeout: 30000,
       });
 
       if (response.data && typeof response.data === 'string') {
@@ -168,6 +168,8 @@ class KlineCacheService {
     } catch (error) {
       logger.debug(`获取K线失败 ${stockCode}: ${(error as Error).message}`);
     }
+    // 防刷新过快
+    await sleep(1, 2);
     return result;
   }
 
@@ -210,17 +212,17 @@ class KlineCacheService {
     options: { targetDates: string[]; preferDays?: number }
   ): Promise<Map<string, CachedKline>> {
     const preferDays = options.preferDays ?? 1800; // 默认拉取约7年数据，填补缺口
-
     const fetched = await this.fetchKlineFromTHS(stockCode, preferDays);
     this.persistCache(stockCode, fetched, Date.now());
     return fetched;
   }
 
   // 从腾讯获取实时行情并转换为 CachedKline 格式（用于当日数据兜底）
-  private async fetchRealtimeKline (stockCode: string): Promise<CachedKline | null> {
+  public async fetchRealtimeKline (stockCode: string): Promise<CachedKline | null> {
     try {
       const quote = await this.fetchRealtimeQuote(stockCode);
       if (!quote || quote.open === 0) {
+        logger.debug(`[K线缓存] 从腾讯获取实时行情失败 ${stockCode}: 无数据或开盘价为0`);
         return null;
       }
 
@@ -285,6 +287,8 @@ class KlineCacheService {
       const turnover = (parseFloat(parts[37]) || 0) * 10000;
 
       if (open === 0) {
+        // 开盘价为0表示数据无效
+        console.log(`[K线缓存] 腾讯实时行情数据无效 ${stockCode}`);
         return null;
       }
 
@@ -372,6 +376,47 @@ class KlineCacheService {
     }
     // 从起始日期开始，获取后续 klineDays 个交易日的日期列表
     return Array.from(allCachedKlines.values()).slice(startDateIndex, endDateIndex);
+  }
+
+  // 获取某个日期的K线数据
+  async getKlineByDate (stockCode: string, date: string): Promise<CachedKline | null> {
+    const klinesMap = this.loadCache(stockCode).map;
+    return klinesMap.get(toDateStr(date)) || null;
+  }
+
+  // 从远端强制拉取某个日期的K线数据并合并写入缓存
+  async fetchKlineByDate (stockCode: string, date: string): Promise<CachedKline | null> {
+    const targetDate = toDateStr(date);
+    let localKline = this.loadCache(stockCode).map;
+    // targetDate 是否为交易日
+    if (!tradingCalendarService.isTradingDay(targetDate)) {
+      logger.warn(`[K线缓存] ${stockCode} ${targetDate} 不是交易日，无法获取K线`);
+      return localKline.get(targetDate) || null;
+    }
+    if (!localKline.has(targetDate)) {
+      // 缓存中没有目标日期的K线数据，从远端拉取
+      console.log(`[K线缓存] ${stockCode} 缓存中不存在 ${targetDate}，从远端拉取`);
+      localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
+    }
+    let klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
+    if (!klineDates) {
+      logger.warn(`[K线缓存] fetchKlineFromTHS ${stockCode} 获取失败`);
+      return null;
+    }
+    // 查找目标日期的K线数据
+    if (!localKline.has(targetDate)) {
+      logger.warn(`[K线缓存] ${stockCode} ${targetDate} 缓存中不存在，尝试从腾讯接口获取实时行情`);
+      const realtimeKline = await this.fetchRealtimeKline(stockCode);
+      if (realtimeKline && realtimeKline.date === targetDate) {
+        klineDates.push(realtimeKline);
+      } else {
+        logger.warn(`[K线缓存] ${stockCode} ${targetDate} 腾讯接口也无法获取实时行情`);
+        this.persistCache(stockCode, new Map(klineDates.map(k => [k.date, k])), Date.now()); // 更新缓存
+        return klineDates.find(k => k.date === targetDate) || null;
+      }
+    }
+    this.persistCache(stockCode, new Map(klineDates.map(k => [k.date, k])), Date.now()); // 更新缓存
+    return klineDates.find(k => k.date === targetDate) || null;
   }
 }
 

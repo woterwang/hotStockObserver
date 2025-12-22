@@ -398,6 +398,11 @@ export interface ConceptResonance {
   marketBonus?: number;
   boardBonus?: number;
   riskLevel?: 'low' | 'medium' | 'high';
+  // 竞价抢筹评分
+  auctionScore?: number;
+  // 开盘强度评分
+  openStrengthScore?: number;
+
   
   // 状态
   status: 'pending' | 'success' | 'failed';

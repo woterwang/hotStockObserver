@@ -13278,3 +13278,21 @@ curl 'https://www.iwencai.com/diag/block-detail?pid=10751&codes=603130&codeType=
         "title": "\u8fd1\u671f\u91cd\u8981\u4e8b\u4ef6"
     }
 }
+
+
+技术风向标
+curl 'https://www.iwencai.com/diag/block-detail?pid=8073&codes=603130&codeType=stock&info=%7B%22view%22%3A%7B%22nolazy%22%3A1%2C%22parseArr%22%3A%7B%22_v%22%3A%22new%22%2C%22dateRange%22%3A%5B%5D%2C%22staying%22%3A%5B%5D%2C%22queryCompare%22%3A%5B%5D%2C%22comparesOfIndex%22%3A%5B%5D%7D%2C%22asyncParams%22%3A%7B%22tid%22%3A137%7D%7D%7D' \
+  -H 'accept: application/json, text/javascript, */*; q=0.01' \
+  -H 'accept-language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7' \
+  -b 'ta_random_userid=fmsau6ssdu; cid=8051543de747810c6b18e1511545b5591743217068; ComputerID=8051543de747810c6b18e1511545b5591743217068; WafStatus=0; other_uid=Ths_iwencai_Xuangu_go8ew34uqq340dbjhh6xnv2psf74gzhu; guideState=1; wencai_pc_version=0; v=A-RmplzzURNpmaXfulWly3yctenTfQjnyqGcK_4FcK9yqYrXJo3YdxqxbPpN' \
+  -H 'hexin-v: A8VHxbWsAAAg7iTcI3p0-CUL1Ar6gnkUwzZdaMcqgfwLXut0j9KJ5FOGbXhU' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.iwencai.com/stockpick/search?w=603130&querytype=stock' \
+  -H 'sec-ch-ua: "Google Chrome";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'x-requested-with: XMLHttpRequest'

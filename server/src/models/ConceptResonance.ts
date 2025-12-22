@@ -98,6 +98,16 @@ export interface IConceptResonance {
   riskTags?: string[];
   
   // ========================================
+  // 开盘数据相关字段
+  // ========================================
+  /** 开盘强度评分 */
+  openStrengthScore?: number;
+  /** 竞价抢筹评分 */
+  auctionScore?: number;
+  /** 开盘总评分 */
+  openingTotalScore?: number;
+  
+  // ========================================
   // 跟踪相关
   // ========================================
   nextDay1Change?: number;    // T+1 涨跌幅
@@ -171,6 +181,11 @@ const ConceptResonanceSchema = new Schema<ConceptResonanceDocument>(
     betaCoefficient: { type: Number, default: 0.5 },
     riskLevel: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },
     riskTags: { type: [String], default: [] },
+    
+    // 开盘数据相关字段
+    openStrengthScore: { type: Number, default: 0 },
+    auctionScore: { type: Number, default: 0 },
+    openingTotalScore: { type: Number, default: 0 },
     
     // 跟踪相关
     nextDay1Change: { type: Number },

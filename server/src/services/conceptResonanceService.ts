@@ -24,6 +24,7 @@ import { tradingCalendarService } from './tradingCalendarService';
 import { thsConceptHotRankService, ThsConceptHotItem } from './thsConceptHotRankService';
 import { thsStockConceptService } from './thsStockConceptService';
 import { conceptRankingService, ConceptRankingItem } from './conceptRankingService';
+import { buySignalService } from './buySignalService';
 
 // 导入类型
 import {
@@ -31,6 +32,7 @@ import {
   ConceptCandidate,
   ConceptResonanceConfig,
   DEFAULT_CONCEPT_RESONANCE_CONFIG,
+  ConceptResonanceQueryConfig,
 } from '../types/conceptEnhancement';
 
 /**
@@ -795,6 +797,99 @@ export class ConceptResonanceService {
   async getList(dateStr: string): Promise<any[]> {
     return ConceptResonance.find({ date: dateStr }).sort({ strategyScore: -1, changePercent: -1 });
   }
+
+  /**
+ * 获取指定日期 且 strategyScore >= config.minstrategyScore 的选股列表
+ */
+  async getBuySignalList (config: ConceptResonanceQueryConfig): Promise<any[]> {
+    const prevDateStr = tradingCalendarService.getPrevTradingDay(config.dateStr);
+    const list = await ConceptResonance.find({ date: prevDateStr, strategyScore: { $gte: config?.strategyScore ?? -1 } }).sort({ strategyScore: -1, changePercent: -1 });
+    // 为每一支股票获取开盘数据
+    for (const stock of list) {
+      try {
+        // 获取开盘数据
+        const openData = await buySignalService.getOpeningData(stock.stockCode, config.dateStr);
+
+        // ### 2.1 开盘强度（满分30分）⭐最重要
+
+        //     | 开盘涨幅 | 得分 | 说明 |
+        //     |---------|------|------|
+        //     | 1% ~ 3% | 30分 | 🌟 最佳区间：强势延续但不追高 |
+        //     | 3% ~ 5% | 25分 | 偏高，需注意风险 |
+        //     | 5% ~ 7% | 15分 | 追高风险较大 |
+        //     | > 7%    | -5分  | ❌ 不建议追高 |
+        //     | 0% ~ 1% | 20分 | 资金态度中性，可观察 |
+        //     | -2% ~ 0% | 15分 | 可能有低吸机会 |
+        //     | < -2%   | 5分  | ❌ 资金不认可 |
+
+        //     **理由**：
+        //     - 开盘过高（>5%）意味着追高风险，获利盘抛压大
+        //     - 开盘过低（<0%）说明资金不认可，昨日的"强势"可能是假象
+        //     - 理想的开盘是1%-3%，既表明资金延续，又留有上涨空间
+
+        if (openData) {
+          // 计算开盘强度评分
+          let openStrengthScore = 0;
+          if (openData.openChangePercent >= 1 && openData.openChangePercent <= 3) {
+            openStrengthScore = 30;
+          } else if (openData.openChangePercent > 3 && openData.openChangePercent <= 5) {
+            openStrengthScore = 25;
+          } else if (openData.openChangePercent > 5 && openData.openChangePercent <= 7) {
+            openStrengthScore = 15;
+          } else if (openData.openChangePercent > 7) {
+            openStrengthScore = -5;
+          } else if (openData.openChangePercent >= 0 && openData.openChangePercent < 1) {
+            openStrengthScore = 20;
+          } else if (openData.openChangePercent >= -2 && openData.openChangePercent < 0) {
+            openStrengthScore = 15;
+          } else if (openData.openChangePercent < -2) {
+            openStrengthScore = 5;
+          }
+
+          //   ### 2.2 竞价抢筹（满分15分）
+
+          //     | 竞价金额占比（相对昨日成交额） | 得分 | 说明 |
+          //     |------------------------------|------|------|
+          //     | ≥ 5%   | 15分 | 主力大幅抢筹 |
+          //     | 3% ~ 5% | 12分 | 有主力抢筹迹象 |
+          //     | 2% ~ 3% | 8分  | 正常水平 |
+          //     | 1% ~ 2% | 5分  | 一般 |
+          //     | < 1%   | 2分  | 竞价冷淡 |
+
+          //     **理由**：
+          //     - 集合竞价是主力资金的"投票"
+          //     - 竞价金额大说明主力在积极抢筹
+          //     - 竞价金额小说明主力观望或已完成布局
+          
+          // 计算竞价抢筹评分
+          let auctionScore = 0;
+          if (openData.auctionAmountRatio >= 5) {
+            auctionScore = 15;
+          } else if (openData.auctionAmountRatio >= 3) {
+            auctionScore = 12;
+          } else if (openData.auctionAmountRatio >= 2) {
+            auctionScore = 8;
+          } else if (openData.auctionAmountRatio >= 1) {
+            auctionScore = 5;
+          } else {
+            auctionScore = 2;
+          }
+          // 开盘强度评分
+          stock.openStrengthScore = openStrengthScore;
+          // 竞价抢筹评分
+          stock.auctionScore = auctionScore;
+          // 开盘总评分
+          stock.openingTotalScore = openStrengthScore + auctionScore;
+          // 更新策略总评分
+          stock.strategyScore = (stock.strategyScore || 0) + stock.openingTotalScore;
+        }
+     }catch (error) {
+        logger.warn(`[ConceptResonance] 获取开盘数据失败 ${stock.stockCode}: ${(error as Error).message}`);
+      }
+    }
+    return list.sort((a, b) => (b.strategyScore || 0) - (a.strategyScore || 0));
+  }
+  
 
   /**
    * 获取高质量信号（评分>=80分）

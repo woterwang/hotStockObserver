@@ -36,7 +36,7 @@ const ConceptResonancePage: React.FC = () => {
   
   // 信号筛选
   const [filterLeaderOnly, setFilterLeaderOnly] = useState(false);
-  const [filterMinScore, setFilterMinScore] = useState(60);
+  const [filterMinScore, setFilterMinScore] = useState(88);
   
   // 回测相关
   const [backtestConfig, setBacktestConfig] = useState<ConceptResonanceBacktestConfig>({
@@ -101,6 +101,22 @@ const ConceptResonancePage: React.FC = () => {
     }
   };
 
+  //获取买入信号列表
+  const fetchSignals = async (date?: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await conceptResonanceApi.getList(date,false,'buySignal');
+      if (response.success) {
+        setCandidates(response.data);
+      }
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   // 手动扫描
   const handleScan = async () => {
     setScanning(true);
@@ -152,7 +168,13 @@ const ConceptResonancePage: React.FC = () => {
   // 切换日期或筛选条件时重新加载
   useEffect(() => {
     if (activeTab !== 'backtest' && selectedDate) {
-      fetchList(selectedDate);
+      // fetchList(selectedDate);
+      if(activeTab==='scan'){
+        fetchList(selectedDate);
+      }
+      if(activeTab==='signal'){
+        fetchSignals();
+      }
     }
   }, [selectedDate, filterLeaderOnly, activeTab]);
 
@@ -333,6 +355,7 @@ const ConceptResonancePage: React.FC = () => {
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">排序</th>
                           <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">代码</th>
                           <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">名称</th>
                           <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">主概念</th>
@@ -348,6 +371,7 @@ const ConceptResonancePage: React.FC = () => {
                       <tbody className="bg-white divide-y divide-gray-200">
                         {candidates.map((item, idx) => (
                           <tr key={idx} className="hover:bg-gray-50 cursor-pointer" onClick={() => goToDetail(item.stockCode)}>
+                            <td className="px-4 py-3 text-sm font-medium">{idx+1}</td>
                             <td className="px-4 py-3 text-sm font-medium text-blue-600">{item.stockCode}</td>
                             <td className="px-4 py-3 text-sm text-gray-900">{item.stockName}</td>
                             <td className="px-4 py-3 text-sm text-center">
@@ -422,7 +446,7 @@ const ConceptResonancePage: React.FC = () => {
                   <DatePicker
                     value={selectedDate}
                     onChange={setSelectedDate}
-                    availableDates={availableDates}
+                    // availableDates={availableDates}
                     placeholder="选择日期"
                   />
                   
@@ -449,7 +473,7 @@ const ConceptResonancePage: React.FC = () => {
                   </div>
                   
                   <button
-                    onClick={() => fetchList(selectedDate)}
+                    onClick={() => fetchSignals(selectedDate)}
                     className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 flex items-center gap-2"
                   >
                     🔄 刷新
@@ -505,6 +529,7 @@ const ConceptResonancePage: React.FC = () => {
                           <div className="flex items-center gap-3">
                             <div>
                               <div className="flex items-center gap-2">
+                                <span className="">{idx + 1}.</span>
                                 <span className="font-bold text-lg text-gray-900">{item.stockName}</span>
                                 <span className="text-sm text-gray-500">{item.stockCode}</span>
                                 {item.isConceptLeader && (
@@ -542,6 +567,14 @@ const ConceptResonancePage: React.FC = () => {
                           <div className="flex items-center gap-1">
                             <span className="text-gray-500">概念分:</span>
                             <span className="font-medium text-blue-600">{item.conceptScore?.toFixed(0)}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-500">开盘强度分:</span>
+                            <span className="font-medium text-blue-600">{item.openStrengthScore?.toFixed(0)}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-gray-500">竞价抢筹分:</span>
+                            <span className="font-medium text-blue-600">{item.auctionScore?.toFixed(0)}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <span className="text-gray-500">量比:</span>
