@@ -314,7 +314,7 @@ const ConceptResonancePage: React.FC = () => {
                       <div className="text-sm text-gray-600">平均概念分</div>
                     </div>
                     <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4">
-                      <div className="text-3xl font-bold text-purple-600">{stats.avgTotalScore?.toFixed(1) || '-'}</div>
+                      <div className="text-3xl font-bold text-purple-600">{stats.avgScore?.toFixed(1) || '-'}</div>
                       <div className="text-sm text-gray-600">平均总分</div>
                     </div>
                   </div>
