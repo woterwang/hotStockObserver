@@ -526,12 +526,12 @@ class BuySignalService {
       console.log(`[BuySignal] ${candidate.stockCode} 无法获取开盘数据`);
       return null;
     }
-
+    const prevTradingDay = tradingCalendarService.getPrevTradingDay(signalDate);
     // 获取大盘环境
-    const marketEnv = await this.getMarketEnvironment(signalDate);
+    const marketEnv = await this.getMarketEnvironment(prevTradingDay as string);
 
     // 获取板块数据
-    const sectorData = await this.getSectorData(candidate.industry || '', signalDate);
+    const sectorData = await this.getSectorData(candidate.industry || '', prevTradingDay as string);
 
     // 获取技术位置
     const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice);
@@ -685,6 +685,7 @@ class BuySignalService {
 
       const target = klineData[targetIdx];
       const prev = targetIdx > 0 ? klineData[targetIdx - 1] : null;
+      console.log(`[BuySignal] ${stockCode}  ${target.date} 的开盘价 ${target.open}，开盘涨幅 ${prev ? ((target.open - prev.close) / prev.close) * 100 : 0}%`);
       console.log(`[BuySignal] ${stockCode} 使用 ${target.date} 的K线数据`);
 
       // 计算开盘涨幅
@@ -737,7 +738,7 @@ class BuySignalService {
   }> {
     const defaultResult = { indexOpenChange: 0, indexMorningTrend: 'flat' as const, marketMood: 50 };
     const targetDateStr = formatDateStr(dateStr);
-
+console.log(`[BuySignal] getMarketEnvironment: ${targetDateStr}`);
     // 1. 优先从市场情绪服务获取 strong 值
     const cachedMood = marketMoodService.getMood(targetDateStr);
     if (cachedMood !== null) {
