@@ -73,7 +73,7 @@ router.get('/concepts/history/dates', async (req, res) => {
     const files = fs.readdirSync(cacheDir);
     const dates = files
       .filter(file => file.endsWith('.json'))
-      .map(file => file.replace('.json', ''))
+      .map(file => file.split('_')[0]) // 提取日期部分
       .sort()
       .reverse();
 

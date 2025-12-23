@@ -300,17 +300,17 @@ export const conceptResonanceApi = {
 
   // 获取候选标的列表
   getList: (date?: string, leaderOnly?: boolean,filter?:string): Promise<ApiResponse<ConceptResonance[]>> => {
-    return api.get('/concept-resonance/list', { params: { date, leaderOnly ,filter} });
+    return api.get('/concept-resonance/list', { params: { date, leaderOnly ,filter, _t: Date.now() } });
   },
 
   // 获取统计数据
   getStats: (date?: string): Promise<ApiResponse<ConceptResonanceStats>> => {
-    return api.get('/concept-resonance/stats', { params: { date } });
+    return api.get('/concept-resonance/stats', { params: { date , _t: Date.now()} });
   },
 
   // 获取概念龙头
   getLeaders: (date?: string): Promise<ApiResponse<ConceptLeader[]>> => {
-    return api.get('/concept-resonance/leaders', { params: { date } });
+    return api.get('/concept-resonance/leaders', { params: { date , _t: Date.now()} });
   },
 
   // 获取可用日期列表

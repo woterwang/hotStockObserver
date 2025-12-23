@@ -34,7 +34,7 @@ export class ConceptResonanceController {
   async getList(req: Request, res: Response, next: NextFunction) {
     try {
       const { date, quality, filter } = req.query;
-      logger.info(`[ConceptResonance] 获取选股列表，日期: ${date}${quality}${filter}`);
+      logger.info(`[ConceptResonance] 获取选股列表，日期: ${date} ${quality} ${filter}`);
       let targetDate: string;
       
       if (date && typeof date === 'string') {

@@ -385,7 +385,7 @@ class KlineCacheService {
   }
 
   // 从远端强制拉取某个日期的K线数据并合并写入缓存
-  async fetchKlineByDate (stockCode: string, date: string): Promise<CachedKline | null> {
+  async fetchKlineByDate (stockCode: string, date: string,type?:number): Promise<CachedKline | null> {
     const targetDate = toDateStr(date);
     let localKline = this.loadCache(stockCode).map;
     // targetDate 是否为交易日
