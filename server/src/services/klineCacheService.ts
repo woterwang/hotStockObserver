@@ -369,7 +369,10 @@ class KlineCacheService {
     // 计算结束日期是否在缓存中
     if (endDateStr) {
       endDateIndex = Array.from(allCachedKlines.keys()).indexOf(endDateStr);
-      if (endDateIndex < 0) {
+      // 如果结束日期不在缓存 且 结束日期 <= 今天，则从远端拉取数据
+      console.log(`[K线缓存] ${stockCode} 计算结束日期 ${endDateStr} 在缓存中的索引为 ${endDateIndex}`);
+      if (endDateIndex < 0 && endDateStr <= toDateStr(getToday())) {
+        logger.warn(`[K线缓存] ${stockCode} 结束日期 ${endDateStr} 不在缓存中，从远端拉取数据中...`);
         allCachedKlines = await this.ensureKlines(stockCode, { targetDates: [endDateStr] });
         await sleep(8, 2); // 简单节流
       }
@@ -385,7 +388,7 @@ class KlineCacheService {
   }
 
   // 从远端强制拉取某个日期的K线数据并合并写入缓存
-  async fetchKlineByDate (stockCode: string, date: string,type?:number): Promise<CachedKline | null> {
+  async fetchKlineByDate (stockCode: string, date: string): Promise<CachedKline | null> {
     const targetDate = toDateStr(date);
     let localKline = this.loadCache(stockCode).map;
     // targetDate 是否为交易日
@@ -394,12 +397,16 @@ class KlineCacheService {
       return localKline.get(targetDate) || null;
     }
     if (!localKline.has(targetDate)) {
+      if (targetDate <= toDateStr(getToday())){
+        logger.warn(`[K线缓存] ${stockCode} ${targetDate} K线数据可能尚未生成，稍后重试`);
+        return null;
+      }
       // 缓存中没有目标日期的K线数据，从远端拉取
       console.log(`[K线缓存] ${stockCode} 缓存中不存在 ${targetDate}，从远端拉取`);
       localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
     }
     let klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
-    if (!klineDates) {
+    if (!klineDates || klineDates.length === 0) {
       logger.warn(`[K线缓存] fetchKlineFromTHS ${stockCode} 获取失败`);
       return null;
     }

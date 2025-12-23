@@ -667,7 +667,7 @@ class BuySignalService {
     try {
       const targetDateStr = formatDateStr(dateStr);
       const dateKline = await klineCacheService.fetchKlineByDate(stockCode, targetDateStr);
-      const klineData = await klineCacheService.getRecentKlines(stockCode, 10);
+      const klineData = await klineCacheService.getRecentKlines(stockCode);
 
       if (!klineData || klineData.length === 0) {
         console.log(`[BuySignal] getOpeningData ${stockCode} 无K线数据`);
@@ -679,13 +679,14 @@ class BuySignalService {
 
       // 如果找不到指定日期，使用最新的K线（可能是盘中或当天数据尚未更新）
       if (targetIdx === -1) {
-        console.log(`[BuySignal] ${stockCode} 未找到 ${targetDateStr} 的K线，使用最新K线`);
-        targetIdx = klineData.length - 1;
+        // console.log(`[BuySignal] ${stockCode} 未找到 ${targetDateStr} 的K线，使用最新K线`);
+        // targetIdx = klineData.length - 1;
+        console.log(`[BuySignal]  ${stockCode} 未找到 ${targetDateStr} 的K线不存在,无法获取开盘数据,请确认数据已更新`);
+        return null;
       }
 
       const target = klineData[targetIdx];
       const prev = targetIdx > 0 ? klineData[targetIdx - 1] : null;
-      console.log(`[BuySignal] ${stockCode}  ${target.date} 的开盘价 ${target.open}，开盘涨幅 ${prev ? ((target.open - prev.close) / prev.close) * 100 : 0}%`);
       console.log(`[BuySignal] ${stockCode} 使用 ${target.date} 的K线数据`);
 
       // 计算开盘涨幅
