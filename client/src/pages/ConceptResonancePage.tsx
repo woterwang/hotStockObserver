@@ -173,7 +173,7 @@ const ConceptResonancePage: React.FC = () => {
         fetchList(selectedDate);
       }
       if(activeTab==='signal'){
-        fetchSignals();
+        fetchSignals(selectedDate);
       }
     }
   }, [selectedDate, filterLeaderOnly, activeTab]);

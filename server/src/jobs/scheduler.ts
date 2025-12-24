@@ -41,17 +41,17 @@ import { formatDate } from '../utils/dateUtils';
 export class JobScheduler {
   // 开盘前任务
   private morningMoodJob: cron.ScheduledTask | null = null;
-  
+
   // 竞价后任务
   private auctionJob: cron.ScheduledTask | null = null;
-  
+
   // 盘中任务
   private updateJob: cron.ScheduledTask | null = null;
-  
+
   // 收盘后任务
   private tradingCalendarJob: cron.ScheduledTask | null = null;
   private afterMarketJob: cron.ScheduledTask | null = null;
-  
+
   // 晚间任务
   private dailyConceptUpdateJob: cron.ScheduledTask | null = null;
 
@@ -70,7 +70,7 @@ export class JobScheduler {
     this.startMarketHoursJobs();
     this.startAfterMarketJobs();
     this.startNightJobs();
-    
+
     logger.info('定时任务已启动');
   }
 
@@ -83,36 +83,36 @@ export class JobScheduler {
       this.morningMoodJob.stop();
       this.morningMoodJob = null;
     }
-    
+
     // 停止竞价后任务
     if (this.auctionJob) {
       this.auctionJob.stop();
       this.auctionJob = null;
     }
-    
+
     // 停止盘中任务
     if (this.updateJob) {
       this.updateJob.stop();
       this.updateJob = null;
     }
-    
+
     // 停止收盘后任务
     if (this.tradingCalendarJob) {
       this.tradingCalendarJob.stop();
       this.tradingCalendarJob = null;
     }
-    
+
     if (this.afterMarketJob) {
       this.afterMarketJob.stop();
       this.afterMarketJob = null;
     }
-    
+
     // 停止晚间任务
     if (this.dailyConceptUpdateJob) {
       this.dailyConceptUpdateJob.stop();
       this.dailyConceptUpdateJob = null;
     }
-    
+
     logger.info('定时任务已停止');
   }
 
@@ -120,7 +120,7 @@ export class JobScheduler {
    * 开盘前任务 (上午9点前)
    * ==================================================
    */
-  private startPreMarketJobs() {
+  private startPreMarketJobs () {
     // 早间市场情绪数据更新任务
     this.startMorningMoodJob();
   }
@@ -129,7 +129,7 @@ export class JobScheduler {
    * 竞价后任务 (上午9:25:18)
    * ==================================================
    */
-  private startPostAuctionJobs() {
+  private startPostAuctionJobs () {
     // 集合竞价后更新入场信号任务
     this.startAuctionUpdateJob();
   }
@@ -138,7 +138,7 @@ export class JobScheduler {
    * 盘中任务 (上午9:30-下午15:00)
    * ==================================================
    */
-  private startMarketHoursJobs() {
+  private startMarketHoursJobs () {
     // 热搜股票更新任务
     this.startHotStockUpdateJob();
   }
@@ -147,10 +147,10 @@ export class JobScheduler {
    * 收盘后任务 (下午15:16之后)
    * ==================================================
    */
-  private startAfterMarketJobs() {
+  private startAfterMarketJobs () {
     // 交易日历更新任务
     this.startTradingCalendarJob();
-    
+
     // 收盘后串行任务 (按顺序执行)
     this.startAfterMarketSequentialJobs();
   }
@@ -159,7 +159,7 @@ export class JobScheduler {
    * 晚间任务 (晚上23:58)
    * ==================================================
    */
-  private startNightJobs() {
+  private startNightJobs () {
     // 每日热搜板块更新任务
     this.startDailyConceptUpdateJob();
   }
@@ -187,22 +187,22 @@ export class JobScheduler {
    * 时间: 每天 23:58 执行
    * 功能: 更新并缓存每日热搜概念和行业板块数据
    */
-  private startDailyConceptUpdateJob() {
+  private startDailyConceptUpdateJob () {
     // 每天 23:58 执行
     const cronExpression = '58 23 * * *';
 
     this.dailyConceptUpdateJob = cron.schedule(cronExpression, async () => {
       try {
         logger.info('开始执行每日热搜板块更新任务');
-        
+
         // 更新概念板块热度排行
         logger.info('正在获取并缓存概念板块热度排行...');
         await thsConceptHotRankService.fetchConceptHotRank();
-        
+
         // 更新行业板块热度排行
         logger.info('正在获取并缓存行业板块热度排行...');
         await thsConceptHotRankService.fetchIndustryHotRank();
-        
+
         logger.info('每日热搜板块更新任务完成');
       } catch (error) {
         logger.error(`每日热搜板块更新任务失败: ${(error as Error).message}`);
@@ -265,24 +265,7 @@ export class JobScheduler {
         logger.warn('市场情绪更新失败，将继续使用旧缓存');
       }
 
-      // 2. 价格突破策略
-      try {
-        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
-        if (!tradingCalendarService.isTradingDayByDate()) {
-          logger.info('非交易日，跳过入场条件更新');
-          return;
-        }
-        
-        logger.info('开始执行集合竞价后【价格突破策略】入场条件更新');
-        
-        const result = await tradingSignalService.updateSignalsAfterAuction(today);
-
-        logger.info(`入场条件更新完成: 可入场=${result.ready}, 部分满足=${result.partial}, 不满足=${result.rejected}`);
-      } catch (error) {
-        logger.error(`入场条件更新失败: ${(error as Error).message}`);
-      }
-
-      // 3. 放量大涨策略
+      // 2. 放量大涨策略
       try {
         logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
         const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
@@ -294,11 +277,30 @@ export class JobScheduler {
       //3.更新 主线共振 入场条件
       try {
         logger.info('开始执行集合竞价后【主线共振策略】入场条件更新');
-        const conceptResonanceResult = await conceptResonanceService.getBuySignalList({dateStr: today});
+        const conceptResonanceResult = await conceptResonanceService.getBuySignalList({ dateStr: today });
         logger.info(`[主线共振] 生成完成，共 ${conceptResonanceResult.length} 个信号，入场日=${conceptResonanceResult[0].date}`);
       } catch (error) {
         logger.error(`[主线共振] 生成失败: ${(error as Error).message}`);
       }
+
+      // 4. 价格突破策略
+      try {
+        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
+        if (!tradingCalendarService.isTradingDayByDate()) {
+          logger.info('非交易日，跳过入场条件更新');
+          return;
+        }
+
+        logger.info('开始执行集合竞价后【价格突破策略】入场条件更新');
+        await tradingSignalService.generateSignalsForEntryDate(today);
+        const result = await tradingSignalService.updateSignalsAfterAuction(today);
+
+        logger.info(`入场条件更新完成: 可入场=${result.ready}, 部分满足=${result.partial}, 不满足=${result.rejected}`);
+      } catch (error) {
+        logger.error(`入场条件更新失败: ${(error as Error).message}`);
+      }
+
+
 
     }, {
       timezone: 'Asia/Shanghai',
@@ -378,22 +380,13 @@ export class JobScheduler {
         logger.error(`初始化交易日历失败: ${err.message}`);
       });
     }
-
-    // 如果市场情绪缓存为空，立即更新一次
-    const moodStatus = marketMoodService.getCacheStatus();
-    if (moodStatus.count === 0) {
-      logger.info('市场情绪缓存为空，立即执行一次更新');
-      marketMoodService.updateCache().catch(err => {
-        logger.error(`初始化市场情绪失败: ${err.message}`);
-      });
-    }
   }
 
   /**
    * 收盘后串行任务 (按顺序执行各项任务)
    * 时间: 每个交易日15:30之后
    */
-  private startAfterMarketSequentialJobs() {
+  private startAfterMarketSequentialJobs () {
     // 在15:30执行，将各项收盘后任务串行执行
     const cronExpression = '30 15 * * 1-5';
 
@@ -417,17 +410,17 @@ export class JobScheduler {
           logger.error(`【第1步失败】强势资金突破扫描任务失败: ${(error as Error).message}`);
         }
 
-        // 2. 市场情绪数据获取任务 (原15:32)
-        try {
-          logger.info('【第2步】开始获取市场情绪数据');
-          const today = formatDate(new Date(), 'YYYYMMDD');
-          const sentiment = await marketSentimentService.fetchAndCalculateSentiment(today);
-          if (sentiment) {
-            logger.info(`【第2步完成】市场情绪获取完成: 评分=${sentiment.score}, 建议=${sentiment.advice}`);
-          }
-        } catch (error) {
-          logger.error(`【第2步失败】市场情绪获取失败: ${(error as Error).message}`);
-        }
+        // // 2. 市场情绪数据获取任务 (原15:32)
+        // try {
+        //   logger.info('【第2步】开始获取市场情绪数据');
+        //   const today = formatDate(new Date(), 'YYYYMMDD');
+        //   const sentiment = await marketSentimentService.fetchAndCalculateSentiment(today);
+        //   if (sentiment) {
+        //     logger.info(`【第2步完成】市场情绪获取完成: 评分=${sentiment.score}, 建议=${sentiment.advice}`);
+        //   }
+        // } catch (error) {
+        //   logger.error(`【第2步失败】市场情绪获取失败: ${(error as Error).message}`);
+        // }
 
         // 3. 价格突破扫描任务 (原15:30)
         try {
@@ -442,10 +435,10 @@ export class JobScheduler {
         try {
           logger.info('【第4步】开始执行集合竞价后信号生成任务（多策略）');
           // 当天是 Day2，生成 Day3 的入场信号
-          const today = formatDate(new Date(), 'YYYYMMDD');
+          // const today = formatDate(new Date(), 'YYYYMMDD');
 
-          const breakthroughResult = await tradingSignalService.generateSignalsAfterMarketClose(today);
-          logger.info(`【第4步完成】[价格突破] 生成完成，共 ${breakthroughResult.count} 个信号，入场日=${breakthroughResult.signalDate}`);
+          // const breakthroughResult = await tradingSignalService.generateSignalsAfterMarketClose(today);
+          // logger.info(`【第4步完成】[价格突破] 生成完成，共 ${breakthroughResult.count} 个信号，入场日=${breakthroughResult.signalDate}`);
         } catch (error) {
           logger.error(`【第4步失败】[价格突破] 生成失败: ${(error as Error).message}`);
         }
@@ -456,7 +449,7 @@ export class JobScheduler {
           const today = formatDate(new Date(), 'YYYYMMDD');
           const count = await conceptResonanceService.scanAndSave(today);
           logger.info(`【第5步完成】主线共振扫描任务完成，共发现 ${count} 个共振信号`);
-        }catch (error) {
+        } catch (error) {
           logger.error(`【第5步失败】主线共振扫描任务失败: ${(error as Error).message}`);
         }
 

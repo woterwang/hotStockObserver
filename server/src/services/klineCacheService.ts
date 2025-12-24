@@ -397,7 +397,7 @@ class KlineCacheService {
       return localKline.get(targetDate) || null;
     }
     if (!localKline.has(targetDate)) {
-      if (targetDate <= toDateStr(getToday())){
+      if (targetDate < toDateStr(getToday())){
         logger.warn(`[K线缓存] ${stockCode} ${targetDate} K线数据可能尚未生成，稍后重试`);
         return null;
       }
