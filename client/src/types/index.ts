@@ -451,7 +451,7 @@ export interface ConceptResonanceBacktestConfig {
 }
 
 // 主线共振回测结果
-export interface ConceptResonanceBacktestResult {
+export interface fConceptResonanceBacktestResult {
   startDate: string;
   endDate: string;
   config: ConceptResonanceBacktestConfig;
@@ -488,8 +488,8 @@ export interface ConceptResonanceTradeRecord {
   totalScore: number;
   buyDate: string;
   buyPrice: number;
-  sellDate: string;
-  sellPrice: number;
+  exitDate: string;
+  exitPrice: number;
   holdDays: number;
   position: number;
   profitPercent: number;

@@ -350,8 +350,9 @@ class KlineCacheService {
     startDay = toDateStr(startDay);
     // 计算结束日期
     const endDateStr = tradingCalendarService.getNextTradingDays(startDay, klineDays);
+    console.log('🚀 ~ :353 ~ KlineCacheService ~ getKlinesByStartDay ~ endDateStr:', startDay,endDateStr);
     // 如果结束日期 >= 今天，则返回空数组
-    if (!endDateStr || toDateStr(getToday()) <= endDateStr) {
+    if (!endDateStr || toDateStr(getToday()) < endDateStr) {
       logger.warn(`[K线缓存] ${stockCode} 结束日期 ${endDateStr} 不在历史范围内，直接跳过`);
       return [];
     }

@@ -26,6 +26,9 @@ import { thsStockConceptService } from './thsStockConceptService';
 import { conceptRankingService, ConceptRankingItem } from './conceptRankingService';
 import { buySignalService } from './buySignalService';
 
+// 导入依赖服务
+import { klineCacheService } from './klineCacheService';
+
 // 导入类型
 import {
   ConceptEnhancementResult,
@@ -50,7 +53,7 @@ export class ConceptResonanceService {
   // 工具方法
   // ========================================
 
-  private getHexinV(): string {
+  private getHexinV (): string {
     try {
       return thsUtils.update();
     } catch (error) {
@@ -59,11 +62,11 @@ export class ConceptResonanceService {
     }
   }
 
-  private delay(ms: number): Promise<void> {
+  private delay (ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  private async randomDelay(): Promise<void> {
+  private async randomDelay (): Promise<void> {
     const minDelay = 8000;
     const maxDelay = 12000;
     const delayMs = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
@@ -74,7 +77,7 @@ export class ConceptResonanceService {
   /**
    * 规范化股票代码（统一为6位纯数字）
    */
-  private normalizeCode(code: string): string {
+  private normalizeCode (code: string): string {
     return code.replace(/[^0-9]/g, '').slice(-6);
   }
 
@@ -82,10 +85,10 @@ export class ConceptResonanceService {
   // 问财查询相关
   // ========================================
 
-  private async queryWencai(question: string): Promise<any[]> {
+  private async queryWencai (question: string): Promise<any[]> {
     const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
     const hexinV = this.getHexinV();
-    
+
     const data: Record<string, string | number> = {
       question,
       perpage: 200,
@@ -111,18 +114,18 @@ export class ConceptResonanceService {
       });
 
       const components = response.data?.data?.answer?.[0]?.txt?.[0]?.content?.components || [];
-      
+
       for (const comp of components) {
         if (comp?.data?.datas && Array.isArray(comp.data.datas) && comp.data.datas.length > 0) {
           logger.debug(`[ConceptResonance] 问财返回 ${comp.data.datas.length} 条数据`);
           return comp.data.datas;
         }
       }
-      
+
       if (response.data?.data?.answer?.[0]?.txt?.[0]?.content?.components?.[0]?.data?.datas) {
         return response.data.data.answer[0].txt[0].content.components[0].data.datas;
       }
-      
+
       logger.warn('[ConceptResonance] 问财未返回有效数据');
       return [];
     } catch (error) {
@@ -131,7 +134,7 @@ export class ConceptResonanceService {
     }
   }
 
-  private async checkIndexAboveMa20(dateStr: string): Promise<boolean> {
+  private async checkIndexAboveMa20 (dateStr: string): Promise<boolean> {
     try {
       const question = `上证指数${dateStr}收盘价>${dateStr}20日均线`;
       const result = await this.queryWencai(question);
@@ -142,21 +145,21 @@ export class ConceptResonanceService {
     }
   }
 
-  private async getLimitUpBoardInfo(dateStr: string): Promise<{
+  private async getLimitUpBoardInfo (dateStr: string): Promise<{
     firstBoardSet: Set<string>;
     continuousBoardMap: Map<string, number>;
   }> {
     const firstBoardSet = new Set<string>();
     const continuousBoardMap = new Map<string, number>();
-    
+
     try {
       const question = `${dateStr}涨停，非ST，非北交所，${dateStr}连续涨停天数`;
       const result = await this.queryWencai(question);
-      
+
       result.forEach((item: any) => {
         const code = String(item.code || item['股票代码'] || '').replace(/[^0-9]/g, '');
         if (code.length !== 6) return;
-        
+
         let boardCount = 1;
         for (const key in item) {
           if (key.includes('连续涨停') && key.includes('天')) {
@@ -166,23 +169,23 @@ export class ConceptResonanceService {
             }
           }
         }
-        
+
         if (boardCount === 1) {
           firstBoardSet.add(code);
         } else {
           continuousBoardMap.set(code, boardCount);
         }
       });
-      
+
       logger.info(`[ConceptResonance] ${dateStr} 首板: ${firstBoardSet.size}, 连板: ${continuousBoardMap.size}`);
     } catch (error) {
       logger.warn(`[ConceptResonance] 获取涨停信息失败: ${(error as Error).message}`);
     }
-    
+
     return { firstBoardSet, continuousBoardMap };
   }
 
-  private async fetchFromWencai(dateStr: string): Promise<any[]> {
+  private async fetchFromWencai (dateStr: string): Promise<any[]> {
     const question = [
       `${dateStr}涨幅>7%`,
       `${dateStr}成交额排名前200`,
@@ -197,8 +200,9 @@ export class ConceptResonanceService {
       `${dateStr}振幅`,
       `${dateStr}下影线`,
       `成交量/${dateStr}5日平均成交量`,
+      '近二年未被立案',
     ].join('，');
-    
+
     logger.info(`[ConceptResonance] 问财查询: ${question}`);
     return this.queryWencai(question);
   }
@@ -210,7 +214,7 @@ export class ConceptResonanceService {
   /**
    * 获取板块共振上下文数据（热度榜 + 强度榜）
    */
-  private async fetchConceptContext(dateStr: string): Promise<{
+  private async fetchConceptContext (dateStr: string): Promise<{
     hotConceptMap: Map<string, { rank: number; item: ThsConceptHotItem }>;
     strengthConceptMap: Map<string, ConceptRankingItem>;
   }> {
@@ -245,7 +249,7 @@ export class ConceptResonanceService {
   /**
    * 计算个股的板块共振评分
    */
-  private async calculateConceptScore(
+  private async calculateConceptScore (
     stockCode: string,
     hotConceptMap: Map<string, { rank: number; item: ThsConceptHotItem }>,
     strengthConceptMap: Map<string, ConceptRankingItem>
@@ -265,7 +269,7 @@ export class ConceptResonanceService {
     try {
       // 获取个股概念详情
       const conceptDetail = await thsStockConceptService.fetchConcepts(stockCode);
-      
+
       // 遍历个股所属概念，找出命中热点的
       const candidates: ConceptCandidate[] = [];
 
@@ -278,7 +282,7 @@ export class ConceptResonanceService {
 
         // 检查是否为龙头
         const normalizedCode = this.normalizeCode(stockCode);
-        const isLeader = concept.leading.some(l => 
+        const isLeader = concept.leading.some(l =>
           this.normalizeCode(l.code) === normalizedCode
         );
 
@@ -321,7 +325,7 @@ export class ConceptResonanceService {
 
       // 1. 热度分 (0-20) - 排名衰减
       let hotScore = Math.max(0, Math.min(20, 21 - primary.hotRank));
-      
+
       // 🛡️ 题材过热保护：热点板块涨幅为负，热度分归零
       if (primary.concept.changeRatio < 0) {
         hotScore = 0;
@@ -347,7 +351,7 @@ export class ConceptResonanceService {
 
       // 3. 地位分 (0-25)
       let positionScore = 0;
-      
+
       // 龙头加分
       if (primary.isLeader) {
         positionScore += 20;
@@ -361,17 +365,17 @@ export class ConceptResonanceService {
           positionScore += 8;
         }
       }
-      
+
       // 板块效应加分
       if ((primary.concept.limitUpCount || 0) >= 5) {
         positionScore += 5;
       }
-      
+
       // 板块整体偏强加分
       if (result.conceptRiseRatio > 0.7) {
         positionScore += 2;
       }
-      
+
       result.conceptScoreDetail.positionScore = positionScore;
 
       // 🛡️ 总分（设上限60分，防止喧宾夺主）
@@ -391,7 +395,7 @@ export class ConceptResonanceService {
   /**
    * 计算量价基础评分
    */
-  private calculateBaseScore(item: any): {
+  private calculateBaseScore (item: any): {
     baseScore: number;
     changePercent: number;
     turnoverRate: number;
@@ -504,24 +508,24 @@ export class ConceptResonanceService {
   /**
    * 扫描并保存主线共振策略选股结果
    */
-  async scanAndSave(dateStr?: string): Promise<number> {
+  async scanAndSave (dateStr?: string): Promise<number> {
     const targetDate = dateStr || formatDate(getToday(), 'YYYYMMDD');
-    
+
     // 检查是否为交易日
     if (!tradingCalendarService.isTradingDay(targetDate)) {
       logger.warn(`[ConceptResonance] ${targetDate} 不是交易日，跳过扫描`);
       return 0;
     }
-    
+
     logger.info(`[ConceptResonance] ========== 开始扫描 ${targetDate} ==========`);
-    
+
     // ========================================
     // Step 1: 获取市场环境数据
     // ========================================
     let marketSentimentScore = 50;
     let marketLimitUpCount = 0;
     let marketAdvice = 'normal';
-    
+
     try {
       const moodData = marketMoodService.getMoodData(targetDate);
       if (moodData) {
@@ -570,7 +574,7 @@ export class ConceptResonanceService {
     await this.randomDelay();
     const rawData = await this.fetchFromWencai(targetDate);
     logger.info(`[ConceptResonance] 量价初筛: ${rawData.length} 条数据`);
-    
+
     if (rawData.length === 0) {
       return 0;
     }
@@ -587,7 +591,7 @@ export class ConceptResonanceService {
       const stockCode = item.code || item['股票代码'];
       const stockName = item['股票简称'] || item['名称'];
       const scoreResult = this.calculateBaseScore(item);
-      
+
       return {
         item,
         stockCode,
@@ -605,7 +609,7 @@ export class ConceptResonanceService {
     // Step 7: 🆕 并发计算板块共振评分
     // ========================================
     const limit = pLimit(this.config.concurrencyLimit);
-    
+
     const enhancedCandidates = await Promise.all(
       topCandidates.map(candidate =>
         limit(async () => {
@@ -643,7 +647,7 @@ export class ConceptResonanceService {
     for (const candidate of enhancedCandidates) {
       try {
         const { item, stockCode, stockName, baseScore, conceptResult } = candidate;
-        
+
         const price = parseFloat(item['最新价'] || 0);
         let volumeRatio = 0;
         let turnover = 0;
@@ -700,7 +704,7 @@ export class ConceptResonanceService {
 
         // 🆕 计算最终策略评分（加入板块共振分数）
         const conceptScore = conceptResult.conceptScore || 0;
-        const strategyScore = Math.max(0, Math.min(160, 
+        const strategyScore = Math.max(0, Math.min(160,
           baseScore + marketBonus + boardBonus + conceptScore * this.config.beta
         ));
 
@@ -719,8 +723,8 @@ export class ConceptResonanceService {
         }
 
         // 🛡️ 题材过热标记
-        if (conceptResult.primaryConcept && conceptResult.conceptScoreDetail?.hotScore === 0 && 
-            conceptResult.hitHotConcepts.length > 0) {
+        if (conceptResult.primaryConcept && conceptResult.conceptScoreDetail?.hotScore === 0 &&
+          conceptResult.hitHotConcepts.length > 0) {
           riskTags.push('concept_cooling');
         }
 
@@ -794,7 +798,7 @@ export class ConceptResonanceService {
   /**
    * 获取指定日期的选股列表
    */
-  async getList(dateStr: string): Promise<any[]> {
+  async getList (dateStr: string): Promise<any[]> {
     return ConceptResonance.find({ date: dateStr }).sort({ strategyScore: -1, changePercent: -1 });
   }
 
@@ -803,7 +807,8 @@ export class ConceptResonanceService {
  */
   async getBuySignalList (config: ConceptResonanceQueryConfig): Promise<any[]> {
     const prevDateStr = tradingCalendarService.getPrevTradingDay(config.dateStr);
-    const list = await ConceptResonance.find({ date: prevDateStr, strategyScore: { $gte: config?.strategyScore ?? -1 } }).sort({ strategyScore: -1, changePercent: -1 });
+    // const list = await ConceptResonance.find({ date: prevDateStr, strategyScore: { $gte: config?.strategyScore ?? -1 } }).sort({ strategyScore: -1, changePercent: -1 });
+    const list = await ConceptResonance.find({ date: prevDateStr, strategyScore: { $gte: -1 } }).sort({ strategyScore: -1, changePercent: -1 });
     // 为每一支股票获取开盘数据
     for (const stock of list) {
       try {
@@ -860,7 +865,7 @@ export class ConceptResonanceService {
           //     - 集合竞价是主力资金的"投票"
           //     - 竞价金额大说明主力在积极抢筹
           //     - 竞价金额小说明主力观望或已完成布局
-          
+
           // 计算竞价抢筹评分
           let auctionScore = 0;
           if (openData.auctionAmountRatio >= 5) {
@@ -883,19 +888,19 @@ export class ConceptResonanceService {
           // 更新策略总评分
           stock.strategyScore = (stock.strategyScore || 0) + stock.openingTotalScore;
         }
-     }catch (error) {
+      } catch (error) {
         logger.warn(`[ConceptResonance] 获取开盘数据失败 ${stock.stockCode}: ${(error as Error).message}`);
       }
     }
-    return list.sort((a, b) => (b.strategyScore || 0) - (a.strategyScore || 0));
+    return list.filter(v => (v?.strategyScore??0) >= (config?.strategyScore ?? -1)).sort((a, b) => (b.strategyScore || 0) - (a.strategyScore || 0));
   }
-  
+
 
   /**
    * 获取高质量信号（评分>=80分）
    */
-  async getHighQualitySignals(dateStr: string): Promise<any[]> {
-    return ConceptResonance.find({ 
+  async getHighQualitySignals (dateStr: string): Promise<any[]> {
+    return ConceptResonance.find({
       date: dateStr,
       strategyScore: { $gte: 80 }
     }).sort({ strategyScore: -1 });
@@ -904,8 +909,8 @@ export class ConceptResonanceService {
   /**
    * 获取龙头股列表
    */
-  async getLeaderStocks(dateStr: string): Promise<any[]> {
-    return ConceptResonance.find({ 
+  async getLeaderStocks (dateStr: string): Promise<any[]> {
+    return ConceptResonance.find({
       date: dateStr,
       isConceptLeader: true
     }).sort({ strategyScore: -1 });
@@ -914,8 +919,8 @@ export class ConceptResonanceService {
   /**
    * 获取命中热点的股票
    */
-  async getHotConceptStocks(dateStr: string): Promise<any[]> {
-    return ConceptResonance.find({ 
+  async getHotConceptStocks (dateStr: string): Promise<any[]> {
+    return ConceptResonance.find({
       date: dateStr,
       'hitHotConcepts.0': { $exists: true }
     }).sort({ strategyScore: -1 });
@@ -924,7 +929,7 @@ export class ConceptResonanceService {
   /**
    * 获取统计数据
    */
-  async getStats(dateStr: string): Promise<{
+  async getStats (dateStr: string): Promise<{
     total: number;
     highQualityCount: number;
     leaderCount: number;
@@ -941,7 +946,7 @@ export class ConceptResonanceService {
     };
   }> {
     const all = await ConceptResonance.find({ date: dateStr });
-    
+
     if (all.length === 0) {
       return {
         total: 0,
@@ -981,7 +986,7 @@ export class ConceptResonanceService {
 
     const first = all[0];
     const moodData = marketMoodService.getMoodData(dateStr);
-    
+
     let marketInfo;
     if (moodData) {
       let advice = 'normal';
@@ -989,7 +994,7 @@ export class ConceptResonanceService {
       else if (moodData.strong >= 50) advice = 'normal';
       else if (moodData.strong >= 30) advice = 'cautious';
       else advice = 'pause';
-      
+
       marketInfo = {
         sentiment: moodData.strong,
         limitUpCount: moodData.ztjs || 0,
@@ -1021,7 +1026,7 @@ export class ConceptResonanceService {
   /**
    * 获取可用日期列表
    */
-  async getAvailableDates(): Promise<string[]> {
+  async getAvailableDates (): Promise<string[]> {
     const result = await ConceptResonance.distinct('date') as string[];
     return result
       .map((d: string) => d.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3'))
@@ -1031,14 +1036,14 @@ export class ConceptResonanceService {
   /**
    * 清空所有数据
    */
-  async clearAll(): Promise<void> {
+  async clearAll (): Promise<void> {
     await ConceptResonance.deleteMany({});
   }
 
   /**
    * 更新配置
    */
-  updateConfig(config: Partial<ConceptResonanceConfig>): void {
+  updateConfig (config: Partial<ConceptResonanceConfig>): void {
     this.config = { ...this.config, ...config };
     logger.info(`[ConceptResonance] 配置已更新: beta=${this.config.beta}`);
   }
@@ -1046,7 +1051,7 @@ export class ConceptResonanceService {
   /**
    * 获取当前配置
    */
-  getConfig(): ConceptResonanceConfig {
+  getConfig (): ConceptResonanceConfig {
     return { ...this.config };
   }
 
@@ -1056,8 +1061,8 @@ export class ConceptResonanceService {
    * @param endDate 结束日期 YYYYMMDD
    * @param config 回测配置
    */
-  async backtest(startDate: string, endDate: string, config: any = {}): Promise<any> {
-    const {
+  async backtest (startDate: string, endDate: string, config: any = {}): Promise<any> {
+    let {
       signalFilter = 'high_score',
       minConceptScore = 30,
       minTotalScore = 70,
@@ -1071,9 +1076,12 @@ export class ConceptResonanceService {
     logger.info(`[ConceptResonance] 回测参数: ${JSON.stringify(config)}`);
 
     // 1. 获取日期范围内的所有主线共振候选标的
-    const candidates = await ConceptResonance.find({
-      date: { $gte: startDate, $lte: endDate },
-    }).sort({ date: 1 }).lean();
+    let candidates: any[] = [];
+    const dateList = tradingCalendarService.getTradingDaysInRange(startDate, endDate);
+    for (const dateStr of dateList) {
+      const dailyCandidates = await this.getBuySignalList({ dateStr, strategyScore: minTotalScore });
+      candidates = candidates.concat(dailyCandidates);
+    }
 
     if (candidates.length === 0) {
       return {
@@ -1101,11 +1109,11 @@ export class ConceptResonanceService {
         trades: [],
       };
     }
-
     // 2. 筛选符合条件的候选标的
     let filtered = candidates.filter(c => {
+      const totalScore = (c.openStrengthScore || 0) + (c.auctionScore || 0) + (c.conceptScore || 0) + (c.strategyScore || 0);
       if ((c.conceptScore || 0) < minConceptScore) return false;
-      if ((c.strategyScore || 0) < minTotalScore) return false;
+      if ((totalScore) < minTotalScore) return false;
       if (signalFilter === 'leader_only' && !c.isConceptLeader) return false;
       return true;
     });
@@ -1124,82 +1132,67 @@ export class ConceptResonanceService {
     let leaderWins = 0;
 
     for (const candidate of filtered) {
+      console.log(`[ConceptResonance][Backtest] 回测 ${candidate.date} ${candidate.stockCode} ${candidate.stockName}`);
       // 计算仓位
       let position = basePosition;
-      if (candidate.isConceptLeader) {
-        position = basePosition * (1 + leaderBonus);
-      }
 
-      // 模拟买入（以当日收盘价为参考）
-      const buyPrice = candidate.price;
-      if (!buyPrice) continue;
-
-      // 模拟持仓期间 - 使用已有的 nextDay1Change 数据
-      let sellPrice = buyPrice;
-      let holdDays = 1;
-      let exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'data_end' = 'max_days';
-
-      // 使用 T+1 涨跌幅数据模拟
-      const nextDayChange = candidate.nextDay1Change;
-      if (nextDayChange !== undefined && nextDayChange !== null) {
-        const changeRatio = nextDayChange / 100;
-        
-        if (changeRatio <= -stopLossPercent) {
-          // 触发止损
-          sellPrice = buyPrice * (1 - stopLossPercent);
-          exitReason = 'stop_loss';
-        } else if (changeRatio >= takeProfitPercent) {
-          // 触发止盈
-          sellPrice = buyPrice * (1 + takeProfitPercent);
-          exitReason = 'take_profit';
-        } else {
-          // 按实际涨跌幅
-          sellPrice = buyPrice * (1 + changeRatio);
-          exitReason = 'max_days';
+      // 回测单只股票
+      const buyDate = tradingCalendarService.getNextTradingDay(candidate.date) || '';
+      const backtestRes = await backtestStock(
+        candidate.stockCode,
+        candidate.stockName,
+        buyDate,
+        {
+          stopLossPercent: stopLossPercent * 100,
+          takeProfitPercent: takeProfitPercent * 100,
+          maxHoldDays,
+          useDay2LowAsStopLoss: true,
         }
-      } else {
-        exitReason = 'data_end';
-      }
+      )
+      if (backtestRes) {
+        const buyPrice = backtestRes.entryPrice;
+        const exitPrice = backtestRes.exitPrice;
+        const { holdDays, exitReason, exitDate } = backtestRes;
+        const profitPercent = Number((((exitPrice - buyPrice) / buyPrice) * 100).toFixed(2));
+        const profitAmount = Math.round(position * (Number(backtestRes.profitPercent.toFixed(2)) / 100));
 
-      const profitPercent = Number((((sellPrice - buyPrice) / buyPrice) * 100).toFixed(2));
-      const profitAmount = Math.round(position * (profitPercent / 100));
+        trades.push({
+          stockCode: candidate.stockCode,
+          stockName: candidate.stockName,
+          conceptName: candidate.primaryConcept || '-',
+          isLeader: candidate.isConceptLeader || false,
+          conceptScore: candidate.conceptScore || 0,
+          totalScore: candidate.strategyScore || 0,
+          buyDate,
+          buyPrice,
+          exitDate,
+          exitPrice,
+          holdDays,
+          position,
+          profitPercent,
+          profitAmount,
+          exitReason,
+        });
 
-      trades.push({
-        stockCode: candidate.stockCode,
-        stockName: candidate.stockName,
-        conceptName: candidate.primaryConcept || '-',
-        isLeader: candidate.isConceptLeader || false,
-        conceptScore: candidate.conceptScore || 0,
-        totalScore: candidate.strategyScore || 0,
-        buyDate: candidate.date,
-        buyPrice: Number(buyPrice.toFixed(2)),
-        sellDate: candidate.date, // 简化为同日
-        sellPrice: Number(sellPrice.toFixed(2)),
-        holdDays,
-        position,
-        profitPercent,
-        profitAmount,
-        exitReason,
-      });
+        totalInvested += position;
+        totalProfit += profitAmount;
 
-      totalInvested += position;
-      totalProfit += profitAmount;
+        // 统计连胜连亏
+        if (profitPercent > 0) {
+          consecutiveWins++;
+          consecutiveLosses = 0;
+          maxConsecutiveWins = Math.max(maxConsecutiveWins, consecutiveWins);
+        } else {
+          consecutiveLosses++;
+          consecutiveWins = 0;
+          maxConsecutiveLosses = Math.max(maxConsecutiveLosses, consecutiveLosses);
+        }
 
-      // 统计连胜连亏
-      if (profitPercent > 0) {
-        consecutiveWins++;
-        consecutiveLosses = 0;
-        maxConsecutiveWins = Math.max(maxConsecutiveWins, consecutiveWins);
-      } else {
-        consecutiveLosses++;
-        consecutiveWins = 0;
-        maxConsecutiveLosses = Math.max(maxConsecutiveLosses, consecutiveLosses);
-      }
-
-      // 龙头统计
-      if (candidate.isConceptLeader) {
-        leaderTrades++;
-        if (profitPercent > 0) leaderWins++;
+        // 龙头统计
+        if (candidate.isConceptLeader) {
+          leaderTrades++;
+          if (profitPercent > 0) leaderWins++;
+        }
       }
     }
 
@@ -1209,7 +1202,7 @@ export class ConceptResonanceService {
     const profits = trades.filter(t => t.profitPercent > 0).map(t => t.profitPercent);
     const losses = trades.filter(t => t.profitPercent < 0).map(t => t.profitPercent);
 
-    const avgWinPercent = profits.length > 0 
+    const avgWinPercent = profits.length > 0
       ? Number((profits.reduce((a, b) => a + b, 0) / profits.length).toFixed(2))
       : 0;
     const avgLossPercent = losses.length > 0
@@ -1226,12 +1219,12 @@ export class ConceptResonanceService {
       winRate: trades.length > 0 ? Number(((winTrades / trades.length) * 100).toFixed(2)) : 0,
       totalProfitAmount: totalProfit,
       totalProfitPercent: totalInvested > 0 ? Number(((totalProfit / totalInvested) * 100).toFixed(2)) : 0,
-      avgProfitPercent: trades.length > 0 
+      avgProfitPercent: trades.length > 0
         ? Number((trades.reduce((sum, t) => sum + t.profitPercent, 0) / trades.length).toFixed(2))
         : 0,
       avgWinPercent,
       avgLossPercent,
-      profitLossRatio: avgLossPercent !== 0 
+      profitLossRatio: avgLossPercent !== 0
         ? Number((Math.abs(avgWinPercent / avgLossPercent)).toFixed(2))
         : avgWinPercent > 0 ? 999 : 0,
       totalInvested,
@@ -1248,6 +1241,150 @@ export class ConceptResonanceService {
       trades,
     };
   }
+}
+
+/**
+ * 回测单只股票
+ * @param stockCode 股票代码
+ * @param stockName 股票名称
+ * @param buyDate 买入日期
+ * @param config 回测配置
+ */
+interface BacktestConfig {
+  stopLossPercent: number;  // 止损百分比（如5表示-5%）
+  takeProfitPercent: number; // 止盈百分比（如10表示+10%）
+  maxHoldDays: number;      // 最大持仓天数
+  useDay2LowAsStopLoss?: boolean; // 是否使用第二天最低价作为止损位
+}
+
+interface BacktestResult {
+  entryDate: string;        // 买入日期
+  entryPrice: number;       // 买入价格
+  exitDate: string;         // 卖出日期
+  exitPrice: number;        // 卖出价格
+  holdDays: number;         // 持仓天数
+  exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'data_end'; // 退出原因
+  profitPercent: number;    // 收益百分比
+}
+
+async function backtestStock (
+  stockCode: string,
+  stockName: string,
+  buyDate: string,
+  config: BacktestConfig
+): Promise<BacktestResult | null> {
+
+  // 如果不是交易日，跳过
+  if (!tradingCalendarService.isTradingDay(buyDate)) {
+    logger.info(`[backtestStock] ${stockCode} 买入日期=${buyDate} 不是交易日，跳过`);
+    return null;
+  }
+
+  // 获取K线数据（买入日及其后maxHoldDays天的数据）
+  const klineData = await klineCacheService.getKlinesByStartDay(stockCode, buyDate, config.maxHoldDays);
+  if (klineData.length === 0) {
+    logger.info(`[backtestStock] ${stockCode} 无K线数据`);
+    return null;
+  }
+
+  // 找到买入日的K线索引
+  const buyIdx = klineData.findIndex(k => k.date === buyDate);
+  if (buyIdx === -1) {
+    logger.info(`[backtestStock] ${stockCode} 买入日期=${buyDate} 未找到K线数据`);
+    return null;
+  }
+
+  const buyKline = klineData[buyIdx];
+  const buyPrice = buyKline.open;  // 买入价使用开盘价
+  const buyDateStr = buyKline.date;
+
+  if (buyPrice <= 0) {
+    logger.debug(`${stockCode} 买入价为0`);
+    return null;
+  }
+
+  // 计算止盈止损价
+  const stopLossPrice = buyPrice * (1 - Math.abs(config.stopLossPercent) / 100);
+  const takeProfitPrice = buyPrice * (1 + Math.abs(config.takeProfitPercent) / 100);
+
+  // 模拟持仓期间
+  let exitPrice = 0;
+  let exitDate = '';
+  let holdDays = 0;
+  let exitReason: BacktestResult['exitReason'] = 'data_end';
+
+  // 从买入日的下一天开始检查退出条件
+  for (let i = 0; i < config.maxHoldDays; i++) {
+    const holdIdx = buyIdx + i;
+    if (holdIdx >= klineData.length) {
+      // 数据不足，用最后一天收盘价
+      exitPrice = klineData[klineData.length - 1].close;
+      exitDate = klineData[klineData.length - 1].date;
+      holdDays = klineData.length - buyIdx;
+      exitReason = 'data_end';
+      break;
+    }
+
+    const dayKline = klineData[holdIdx];
+    const dayMood = marketMoodService.getMood(dayKline.date) ?? 50;
+
+    // 买入当天（i=0）跳过卖出检查，因为刚买入
+    if (i === 0) {
+      continue;
+    }
+
+    // 检查市场情绪恶化
+    // if (dayMood < config.marketPanicThreshold) {
+    //   exitPrice = dayKline.open;  // 情绪恶化开盘卖出
+    //   exitDate = dayKline.date;
+    //   holdDays = i + 1;  // 持仓天数（包含买入当天）
+    //   exitReason = 'market_panic';
+    //   break;
+    // }
+
+    // 检查止损（当日最低价触及止损位）
+    if (dayKline.low <= stopLossPrice) {
+      exitPrice = stopLossPrice;
+      exitDate = dayKline.date;
+      holdDays = i + 1;
+      exitReason = 'stop_loss';
+      break;
+    }
+
+    // 检查止盈（当日最高价触及止盈位）
+    if (dayKline.high >= takeProfitPrice) {
+      exitPrice = takeProfitPrice;
+      exitDate = dayKline.date;
+      holdDays = i + 1;
+      exitReason = 'take_profit';
+      break;
+    }
+
+    // 最后一天收盘卖出（i = maxHoldDays - 1 表示第 maxHoldDays 天）
+    if (i === config.maxHoldDays - 1) {
+      exitPrice = dayKline.close;
+      exitDate = dayKline.date;
+      holdDays = i + 1;
+      exitReason = 'max_days';
+      break;
+    }
+  }
+
+  if (exitPrice <= 0) {
+    return null;
+  }
+
+  const profitPercent = ((exitPrice - buyPrice) / buyPrice) * 100;
+
+  return {
+    entryDate: buyDateStr,
+    entryPrice: buyPrice,
+    exitDate,
+    exitPrice,
+    holdDays,
+    exitReason,
+    profitPercent: Math.round(profitPercent * 100) / 100,  // 保留两位小数
+  };
 }
 
 // 导出单例

@@ -848,8 +848,8 @@ const ConceptResonancePage: React.FC = () => {
                                   </td>
                                   <td className="px-4 py-3 text-sm text-center text-gray-600">{trade.buyDate}</td>
                                   <td className="px-4 py-3 text-sm text-right text-gray-900">{trade.buyPrice?.toFixed(2)}</td>
-                                  <td className="px-4 py-3 text-sm text-center text-gray-600">{trade.sellDate}</td>
-                                  <td className="px-4 py-3 text-sm text-right text-gray-900">{trade.sellPrice?.toFixed(2)}</td>
+                                  <td className="px-4 py-3 text-sm text-center text-gray-600">{trade.exitDate}</td>
+                                  <td className="px-4 py-3 text-sm text-right text-gray-900">{trade.exitPrice?.toFixed(2)}</td>
                                   <td className="px-4 py-3 text-sm text-right">
                                     <span className={`font-medium ${trade.profitPercent >= 0 ? 'text-red-600' : 'text-green-600'}`}>
                                       {trade.profitPercent >= 0 ? '+' : ''}{trade.profitPercent}%
