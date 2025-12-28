@@ -784,7 +784,7 @@ const BacktestPage: React.FC = () => {
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">代码</th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">名称</th>
-                        <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">策略</th>
+                        <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">市场</th>
                         <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">评分</th>
                         <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">买入日</th>
                         <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">买入价</th>
@@ -803,7 +803,7 @@ const BacktestPage: React.FC = () => {
                           <td className="px-4 py-3 text-sm text-gray-900">{trade.stockName}</td>
                           <td className="px-4 py-3 text-sm text-center">
                             <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-                              强势资金突破
+                              {trade.marketMood}
                             </span>
                           </td>
                           <td className="px-4 py-3 text-sm text-center">

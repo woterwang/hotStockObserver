@@ -498,7 +498,7 @@ class BuySignalBacktestService {
     const result = this.calculateStatistics(startDate, endDate, finalConfig, trades);
 //${finalConfig.stopLossPercent * 100}%, 止盈=${finalConfig.takeProfitPercent * 100}%, 最大持仓=${finalConfig.maxHoldDays}
     // 回测结果写入缓存 data/backtest_cache/xxx.json
-    const fileName = `${startDate}_${endDate}_${finalConfig.maxHoldDays}_${finalConfig.stopLossPercent * 100}_${finalConfig.takeProfitPercent * 100}.json`;
+    const fileName = `${startDate}_${endDate}_${finalConfig.maxHoldDays}_${finalConfig.stopLossPercent * 100}_${finalConfig.takeProfitPercent * 100}_${finalConfig.minSignalScore}.json`;
     const filePath = path.join(__dirname, `../../data/backtest_cache/${fileName}`);
     fs.writeFile(filePath, JSON.stringify(result, null, 2));
 
