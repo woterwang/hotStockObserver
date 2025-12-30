@@ -99,7 +99,7 @@ export class VolumeSurgeService {
    */
   private async checkIndexAboveMa20(dateStr: string): Promise<boolean> {
     try {
-      const question = `上证指数${dateStr}收盘价>${dateStr}20日均线`;
+      const question = `上证指数${dateStr}收盘价>${dateStr} 20日均线`;
       const result = await this.queryWencai(question);
       return result.length > 0;
     } catch (error) {

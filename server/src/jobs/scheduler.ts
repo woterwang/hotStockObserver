@@ -250,22 +250,11 @@ export class JobScheduler {
     // node-cron 支持6位表达式：秒 分 时 日 月 周
     // const cronExpression = '58 25 9 * * 1-5';
     // 9.25:58 与 9.25:28 各执行一次，确保任务能被触发 cronExpression 该怎么写？
-    const cronExpression = '28,58 25 9 * * 1-5';
+    const cronExpression = '58 25 9 * * 1-5';
     const today = formatDate(new Date(), 'YYYYMMDD');
 
     this.auctionJob = cron.schedule(cronExpression, async () => {
-
-      // 1. 更新市场情绪数据
-      logger.info('开始更新市场情绪缓存');
-      const moodSuccess = await marketMoodService.updateCache();
-      if (moodSuccess) {
-        const moodStatus = marketMoodService.getCacheStatus();
-        logger.info(`市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
-      } else {
-        logger.warn('市场情绪更新失败，将继续使用旧缓存');
-      }
-
-      // 2. 放量大涨策略
+      // 1. 放量大涨策略
       try {
         logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
         const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
@@ -274,7 +263,7 @@ export class JobScheduler {
         logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
       }
 
-      //3.更新 主线共振 入场条件
+      //2.更新 主线共振 入场条件
       try {
         logger.info('开始执行集合竞价后【主线共振策略】入场条件更新');
         const conceptResonanceResult = await conceptResonanceService.getBuySignalList({ dateStr: today });
@@ -283,7 +272,7 @@ export class JobScheduler {
         logger.error(`[主线共振] 生成失败: ${(error as Error).message}`);
       }
 
-      // 4. 价格突破策略
+      // 3. 价格突破策略
       try {
         // 检查是否是交易日（使用交易日历服务，支持节假日判断）
         if (!tradingCalendarService.isTradingDayByDate()) {
@@ -299,9 +288,7 @@ export class JobScheduler {
       } catch (error) {
         logger.error(`入场条件更新失败: ${(error as Error).message}`);
       }
-
-
-
+      
     }, {
       timezone: 'Asia/Shanghai',
     });
