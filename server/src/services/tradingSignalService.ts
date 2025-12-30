@@ -613,7 +613,7 @@ export class TradingSignalService {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         results.signals.push(signal.toObject() as any);
 
-        await this.randomDelay();
+        // await this.randomDelay();
       } catch (error) {
         logger.debug(`更新 ${signal.stockCode} 失败: ${(error as Error).message}`);
       }
