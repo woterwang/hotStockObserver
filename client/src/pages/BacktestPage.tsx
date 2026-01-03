@@ -163,7 +163,7 @@ const BacktestPage: React.FC = () => {
     takeProfitPercent: 0.20,
     maxHoldDays: 3,
     marketPanicThreshold: 40,
-    maxBuyCount:4,
+    maxBuyCount:3,
   });
 
   // 日期格式转换：YYYY-MM-DD -> YYYYMMDD
