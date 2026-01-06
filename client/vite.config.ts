@@ -2,7 +2,7 @@
  * @Author: hp.com
  * @Date: 2025-12-04 17:37:06
  * @LastEditors: WRG
- * @LastEditTime: 2026-01-06 21:53:19
+ * @LastEditTime: 2026-01-06 21:57:33
  * @😍: 😃😃
  */
 import { defineConfig } from 'vite';
@@ -18,6 +18,7 @@ export default defineConfig({
     },
   },
   server: {
+  allowedHosts: ['localhost', '0.0.0.0', 'api.woter.cloud'],
 	host:"0.0.0.0",
     port: 80,
     proxy: {
