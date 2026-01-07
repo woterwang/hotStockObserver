@@ -405,6 +405,7 @@ class KlineCacheService {
       // 缓存中没有目标日期的K线数据，从远端拉取
       console.log(`[K线缓存] ${stockCode} 缓存中不存在 ${targetDate}，从远端拉取`);
       localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
+      this.persistCache(stockCode, localKline, Date.now()); // 更新缓存
     }
     let klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
     if (!klineDates || klineDates.length === 0) {
