@@ -389,16 +389,16 @@ class KlineCacheService {
   }
 
   // 从远端强制拉取某个日期的K线数据并合并写入缓存
-  async fetchKlineByDate (stockCode: string, date: string): Promise<CachedKline | null> {
+  async fetchKlineByDate (stockCode: string, date: string): Promise<CachedKline[] | null> {
     const targetDate = toDateStr(date);
     let localKline = this.loadCache(stockCode).map;
     // targetDate 是否为交易日
     if (!tradingCalendarService.isTradingDay(targetDate)) {
       logger.warn(`[K线缓存] ${stockCode} ${targetDate} 不是交易日，无法获取K线`);
-      return localKline.get(targetDate) || null;
+      return localKline.size > 0 ? Array.from(localKline.values()) : null;
     }
     if (!localKline.has(targetDate)) {
-      if (targetDate < toDateStr(getToday())){
+      if (targetDate > toDateStr(getToday())){
         logger.warn(`[K线缓存] ${stockCode} ${targetDate} K线数据可能尚未生成，稍后重试`);
         return null;
       }
@@ -420,11 +420,11 @@ class KlineCacheService {
       } else {
         logger.warn(`[K线缓存] ${stockCode} ${targetDate} 腾讯接口也无法获取实时行情`);
         this.persistCache(stockCode, new Map(klineDates.map(k => [k.date, k])), Date.now()); // 更新缓存
-        return klineDates.find(k => k.date === targetDate) || null;
+        return klineDates;
       }
     }
-    this.persistCache(stockCode, new Map(klineDates.map(k => [k.date, k])), Date.now()); // 更新缓存
-    return klineDates.find(k => k.date === targetDate) || null;
+    // this.persistCache(stockCode, new Map(klineDates.map(k => [k.date, k])), Date.now()); // 更新缓存
+    return klineDates;
   }
 }
 

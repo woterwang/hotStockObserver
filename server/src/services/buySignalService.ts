@@ -666,8 +666,7 @@ class BuySignalService {
     console.log(`[BuySignal] 获取 ${stockCode} ${dateStr} 开盘数据`);
     try {
       const targetDateStr = formatDateStr(dateStr);
-      const dateKline = await klineCacheService.fetchKlineByDate(stockCode, targetDateStr);
-      const klineData = await klineCacheService.getRecentKlines(stockCode);
+      const klineData = await klineCacheService.fetchKlineByDate(stockCode, targetDateStr);
 
       if (!klineData || klineData.length === 0) {
         console.log(`[BuySignal] getOpeningData ${stockCode} 无K线数据`);
@@ -688,7 +687,8 @@ class BuySignalService {
       const target = klineData[targetIdx];
       const prev = targetIdx > 0 ? klineData[targetIdx - 1] : null;
       console.log(`[BuySignal] ${stockCode} 使用 ${target.date} 的K线数据`);
-
+      //打印 target数据
+      console.log(`[BuySignal] ${stockCode} target:`, target.open, target.close, target.volume, target.turnover, target.high, target.low);
       // 计算开盘涨幅
       const openChangePercent = prev ? ((target.open - prev.close) / prev.close) * 100 : 0;
 
