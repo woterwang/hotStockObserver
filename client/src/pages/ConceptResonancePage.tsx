@@ -108,7 +108,8 @@ const ConceptResonancePage: React.FC = () => {
     try {
       const response = await conceptResonanceApi.getList(date,false,'buySignal');
       if (response.success) {
-        setCandidates(response.data);
+        // 只保留概念分≥30的标的作为买入信号
+        setCandidates(response.data.filter((item) => item.conceptScore >= 30));
       }
     } catch (err) {
       setError((err as Error).message);

@@ -1120,6 +1120,10 @@ export class ConceptResonanceService {
 
     logger.info(`[ConceptResonance] 筛选后候选标的: ${filtered.length} / ${candidates.length}`);
 
+    //过虑概念分数小于30的标的
+    filtered = filtered.filter(c => c.conceptScore >= 30);
+    logger.info(`[ConceptResonance] 过虑后候选标的: ${filtered.length} / ${candidates.length}`);
+
     // 3. 模拟交易
     const trades: any[] = [];
     let totalInvested = 0;

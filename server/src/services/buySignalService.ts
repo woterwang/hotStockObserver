@@ -700,9 +700,21 @@ class BuySignalService {
       }
 
       // 判断是否涨停（收盘价>=开盘价*1.095 且 收盘=最高）
-      const isLimitUp = prev
+      let isLimitUp = prev
         ? (target.close >= prev.close * 1.095 && target.close >= target.high * 0.999)
         : false;
+
+      // 688 与 300 科创板涨停板不同，需特殊处理
+      if (stockCode.startsWith('688') || stockCode.startsWith('300')) {
+        const limitUpPrice = prev ? prev.close * 1.20 : 0; // 20% 涨停板
+        isLimitUp = target.close >= limitUpPrice;
+      }
+
+      // 北郊所股票涨停板不同，需特殊处理
+      if (stockCode.startsWith('920')) {
+        const limitUpPrice = prev ? prev.close * 1.30 : 0; // 9.5% 涨停板
+        isLimitUp = target.close >= limitUpPrice;
+      }
 
       // 竞价金额估算（开盘成交约占全天3%）
       const auctionAmount = target.turnover * 0.03 / 10000;  // 万元
