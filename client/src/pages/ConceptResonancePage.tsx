@@ -36,7 +36,7 @@ const ConceptResonancePage: React.FC = () => {
   
   // 信号筛选
   const [filterLeaderOnly, setFilterLeaderOnly] = useState(false);
-  const [filterMinScore, setFilterMinScore] = useState(88);
+  const [filterMinScore, setFilterMinScore] = useState(100);
   
   // 回测相关
   const [backtestConfig, setBacktestConfig] = useState<ConceptResonanceBacktestConfig>({
