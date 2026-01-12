@@ -1,0 +1,59 @@
+{
+  "startDate": "20251201",
+  "endDate": "20251205",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 50,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 3,
+    "marketPanicThreshold": 40,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 1,
+  "winTrades": 1,
+  "lossTrades": 0,
+  "winRate": 100,
+  "totalProfitAmount": 1465.32,
+  "totalProfitPercent": 2.93,
+  "avgProfitPercent": 2.93,
+  "avgWinPercent": 2.93,
+  "avgLossPercent": 0,
+  "profitLossRatio": 0,
+  "totalInvested": 50000,
+  "maxDrawdown": 0,
+  "maxDrawdownPercent": 0,
+  "maxProfit": 2.93,
+  "maxLoss": 2.93,
+  "maxConsecutiveWins": 1,
+  "maxConsecutiveLosses": 0,
+  "avgHoldDays": 3,
+  "equityCurve": [
+    {
+      "date": "20251204",
+      "equity": 1465.32
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "603341",
+      "stockName": "龙旗科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251202",
+      "buyPrice": 44.7,
+      "sellDate": "20251204",
+      "sellPrice": 46.01,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": 2.93,
+      "profitAmount": 1465.32,
+      "exitReason": "market_panic",
+      "buySignalScore": 80,
+      "marketMood": 50
+    }
+  ]
+}
