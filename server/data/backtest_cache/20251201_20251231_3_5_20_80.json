@@ -1,0 +1,101 @@
+{
+  "startDate": "20251201",
+  "endDate": "20251231",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 80,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 50,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 3,
+    "marketPanicThreshold": 0,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 3,
+  "winTrades": 2,
+  "lossTrades": 1,
+  "winRate": 66.67,
+  "totalProfitAmount": -1659.56,
+  "totalProfitPercent": -1.11,
+  "avgProfitPercent": -1.11,
+  "avgWinPercent": 0.84,
+  "avgLossPercent": -5,
+  "profitLossRatio": 0.17,
+  "totalInvested": 150000,
+  "maxDrawdown": 2500,
+  "maxDrawdownPercent": 1241.68,
+  "maxProfit": 1.28,
+  "maxLoss": -5,
+  "maxConsecutiveWins": 1,
+  "maxConsecutiveLosses": 1,
+  "avgHoldDays": 3,
+  "equityCurve": [
+    {
+      "date": "20251204",
+      "equity": 201.34
+    },
+    {
+      "date": "20251230",
+      "equity": -2298.66
+    },
+    {
+      "date": "20260106",
+      "equity": -1659.56
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "603341",
+      "stockName": "龙旗科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251202",
+      "buyPrice": 44.7,
+      "sellDate": "20251204",
+      "sellPrice": 44.88,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": 0.4,
+      "profitAmount": 201.34,
+      "exitReason": "max_days",
+      "buySignalScore": 82,
+      "marketMood": 50
+    },
+    {
+      "stockCode": "688013",
+      "stockName": "天臣医疗",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251226",
+      "buyPrice": 53.47,
+      "sellDate": "20251230",
+      "sellPrice": 50.796499999999995,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 80,
+      "marketMood": 69
+    },
+    {
+      "stockCode": "301265",
+      "stockName": "华新环保",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251231",
+      "buyPrice": 13.3,
+      "sellDate": "20260106",
+      "sellPrice": 13.47,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": 1.28,
+      "profitAmount": 639.1,
+      "exitReason": "max_days",
+      "buySignalScore": 82,
+      "marketMood": 54
+    }
+  ]
+}

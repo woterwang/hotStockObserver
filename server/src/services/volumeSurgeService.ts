@@ -188,16 +188,17 @@ export class VolumeSurgeService {
       // 趋势确认（修正语法：收盘价>10日均线）
       `${dateStr}收盘价>10日均线`,
       // 基础过滤
-      `${dateStr}非ST`,
-      `${dateStr}非新股`,
-      `${dateStr}非北交所`,
+      `非ST`,
+      `非新股`,
+      `非北交所`,
       `非退市`,
       // 额外请求的字段（用于评分计算）
       `${dateStr}量比`,
       `${dateStr}换手率`,
       `${dateStr}振幅`,
       `${dateStr}下影线`,
-      `成交量/${dateStr}5日平均成交量`,
+      `所属概念`,
+      `${dateStr}成交量/前5日平均成交量`,
     ].join('，');
     
     logger.info(`[问财查询] ${question}`);
@@ -323,7 +324,7 @@ export class VolumeSurgeService {
             upperShadow = parseFloat(item[key] || 0);
           } else if (key.includes('下影线')) {
             lowerShadow = parseFloat(item[key] || 0);
-          } else if (key.includes('5日平均') && key.includes('成交量')) {
+          } else if (key.includes(`/}区间日均成交量`)) {
             volumeRatioTo5Day = parseFloat(item[key] || 0);
           } else if (key.includes('涨停原因') || key.includes('异动原因')) {
             limitUpReason = item[key] || '';

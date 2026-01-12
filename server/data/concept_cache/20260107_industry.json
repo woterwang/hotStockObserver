@@ -1,0 +1,347 @@
+{
+  "type": "industry",
+  "items": [
+    {
+      "code": "881157",
+      "name": "证券",
+      "changeRatio": -1.1646,
+      "hotRate": 165720,
+      "order": 1,
+      "marketId": 48,
+      "hotTag": "连续760天上榜",
+      "limitUpTag": null,
+      "rankChange": 0,
+      "etf": {
+        "productId": "512880",
+        "name": "证券ETF",
+        "changeRatio": -1.4774,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "881105",
+      "name": "煤炭开采加工",
+      "changeRatio": 4.0224,
+      "hotRate": 160875.5,
+      "order": 2,
+      "marketId": 48,
+      "hotTag": "首次上榜",
+      "limitUpTag": "3家涨停",
+      "rankChange": 0,
+      "etf": {
+        "productId": "161724",
+        "name": "煤炭等权LOF",
+        "changeRatio": 10.0051,
+        "marketId": 36
+      }
+    },
+    {
+      "code": "881121",
+      "name": "半导体",
+      "changeRatio": 2.3451,
+      "hotRate": 104447,
+      "order": 3,
+      "marketId": 48,
+      "hotTag": "连续760天上榜",
+      "limitUpTag": "2家涨停",
+      "rankChange": 0,
+      "etf": {
+        "productId": "516640",
+        "name": "芯片龙头ETF",
+        "changeRatio": 1.8486,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "881158",
+      "name": "零售",
+      "changeRatio": 0.0176,
+      "hotRate": 68004,
+      "order": 4,
+      "marketId": 48,
+      "hotTag": "连续102天上榜",
+      "limitUpTag": "1家涨停",
+      "rankChange": 0,
+      "etf": {
+        "productId": "159766",
+        "name": "旅游ETF",
+        "changeRatio": 1.3733,
+        "marketId": 36
+      }
+    },
+    {
+      "code": "881129",
+      "name": "通信设备",
+      "changeRatio": 1.3422,
+      "hotRate": 50294,
+      "order": 5,
+      "marketId": 48,
+      "hotTag": "连续36天上榜",
+      "limitUpTag": "5家涨停",
+      "rankChange": 0,
+      "etf": {
+        "productId": "560300",
+        "name": "电信50ETF",
+        "changeRatio": 0.4223,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "881278",
+      "name": "电网设备",
+      "changeRatio": 1.6047,
+      "hotRate": 38675.5,
+      "order": 6,
+      "marketId": 48,
+      "hotTag": "10天9次上榜",
+      "limitUpTag": "4家涨停",
+      "rankChange": 0,
+      "etf": {
+        "productId": "159326",
+        "name": "电网设备ETF",
+        "changeRatio": 1.7751,
+        "marketId": 36
+      }
+    },
+    {
+      "code": "881274",
+      "name": "影视院线",
+      "changeRatio": 0.741,
+      "hotRate": 37935.5,
+      "order": 7,
+      "marketId": 48,
+      "hotTag": "连续32天上榜",
+      "limitUpTag": null,
+      "rankChange": 0,
+      "etf": {
+        "productId": "516770",
+        "name": "游戏ETF华泰柏瑞",
+        "changeRatio": -0.0635,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "881155",
+      "name": "银行",
+      "changeRatio": -0.5235,
+      "hotRate": 34586,
+      "order": 8,
+      "marketId": 48,
+      "hotTag": "连续760天上榜",
+      "limitUpTag": null,
+      "rankChange": 0,
+      "etf": {
+        "productId": "159887",
+        "name": "银行ETF",
+        "changeRatio": -0.372,
+        "marketId": 36
+      }
+    },
+    {
+      "code": "881276",
+      "name": "军工电子",
+      "changeRatio": 1.4944,
+      "hotRate": 34377,
+      "order": 9,
+      "marketId": 48,
+      "hotTag": "连续33天上榜",
+      "limitUpTag": "4家涨停",
+      "rankChange": 1,
+      "etf": {
+        "productId": "512680",
+        "name": "军工ETF广发",
+        "changeRatio": -0.8737,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "881172",
+      "name": "电子化学品",
+      "changeRatio": 5.1879,
+      "hotRate": 33648,
+      "order": 10,
+      "marketId": 48,
+      "hotTag": "首次上榜",
+      "limitUpTag": "2家涨停",
+      "rankChange": -1,
+      "etf": {
+        "productId": "516120",
+        "name": "化工50ETF",
+        "changeRatio": -0.4255,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "881273",
+      "name": "白酒",
+      "changeRatio": -0.3563,
+      "hotRate": 32453,
+      "order": 11,
+      "marketId": 48,
+      "hotTag": "连续371天上榜",
+      "limitUpTag": null,
+      "rankChange": 0,
+      "etf": {
+        "productId": "515650",
+        "name": "消费50ETF",
+        "changeRatio": -0.416,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "884229",
+      "name": "半导体设备",
+      "changeRatio": 6.674,
+      "hotRate": 29975.5,
+      "order": 12,
+      "marketId": 49,
+      "hotTag": "5天3次上榜",
+      "limitUpTag": null,
+      "rankChange": 0,
+      "etf": {
+        "productId": "588170",
+        "name": "科创半导体ETF",
+        "changeRatio": 7.4188,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "881164",
+      "name": "文化传媒",
+      "changeRatio": -0.1436,
+      "hotRate": 29221.5,
+      "order": 13,
+      "marketId": 48,
+      "hotTag": "连续55天上榜",
+      "limitUpTag": "2家涨停",
+      "rankChange": 1,
+      "etf": {
+        "productId": "516190",
+        "name": "文娱传媒ETF",
+        "changeRatio": 1.0172,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "881170",
+      "name": "小金属",
+      "changeRatio": 2.0074,
+      "hotRate": 29010,
+      "order": 14,
+      "marketId": 48,
+      "hotTag": null,
+      "limitUpTag": "1家涨停",
+      "rankChange": -1,
+      "etf": {
+        "productId": "159690",
+        "name": "有色矿业ETF招商",
+        "changeRatio": 0.5243,
+        "marketId": 36
+      }
+    },
+    {
+      "code": "881281",
+      "name": "电池",
+      "changeRatio": 0.0004,
+      "hotRate": 24418.5,
+      "order": 15,
+      "marketId": 48,
+      "hotTag": "连续86天上榜",
+      "limitUpTag": null,
+      "rankChange": 0,
+      "etf": {
+        "productId": "159796",
+        "name": "电池50ETF",
+        "changeRatio": 0,
+        "marketId": 36
+      }
+    },
+    {
+      "code": "881166",
+      "name": "军工装备",
+      "changeRatio": -0.6738,
+      "hotRate": 22790,
+      "order": 16,
+      "marketId": 48,
+      "hotTag": "连续37天上榜",
+      "limitUpTag": "2家涨停",
+      "rankChange": 1,
+      "etf": {
+        "productId": "512680",
+        "name": "军工ETF广发",
+        "changeRatio": -0.8737,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "884215",
+      "name": "稀土",
+      "changeRatio": 5.0254,
+      "hotRate": 22539.5,
+      "order": 17,
+      "marketId": 49,
+      "hotTag": null,
+      "limitUpTag": null,
+      "rankChange": -1,
+      "etf": {
+        "productId": "159713",
+        "name": "稀土ETF",
+        "changeRatio": 3.4058,
+        "marketId": 36
+      }
+    },
+    {
+      "code": "881156",
+      "name": "保险",
+      "changeRatio": 0.8369,
+      "hotRate": 21371.5,
+      "order": 18,
+      "marketId": 48,
+      "hotTag": "10天9次上榜",
+      "limitUpTag": null,
+      "rankChange": 0,
+      "etf": {
+        "productId": "167301",
+        "name": "保险主题LOF",
+        "changeRatio": 1.1202,
+        "marketId": 36
+      }
+    },
+    {
+      "code": "881160",
+      "name": "旅游及酒店",
+      "changeRatio": 1.6757,
+      "hotRate": 19549.5,
+      "order": 19,
+      "marketId": 48,
+      "hotTag": "10天9次上榜",
+      "limitUpTag": "1家涨停",
+      "rankChange": 0,
+      "etf": {
+        "productId": "562510",
+        "name": "旅游ETF",
+        "changeRatio": 1.4815,
+        "marketId": 20
+      }
+    },
+    {
+      "code": "881153",
+      "name": "房地产",
+      "changeRatio": 0.0584,
+      "hotRate": 19176,
+      "order": 20,
+      "marketId": 48,
+      "hotTag": "连续128天上榜",
+      "limitUpTag": "4家涨停",
+      "rankChange": 1,
+      "etf": {
+        "productId": "515060",
+        "name": "房地产ETF基金",
+        "changeRatio": 0.1366,
+        "marketId": 20
+      }
+    }
+  ],
+  "source": "ths",
+  "queryTime": "2026-01-07T15:58:01.133Z"
+}
