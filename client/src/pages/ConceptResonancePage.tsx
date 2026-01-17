@@ -824,7 +824,7 @@ const ConceptResonancePage: React.FC = () => {
                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">代码</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">名称</th>
                                 <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">概念</th>
-                                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">龙头</th>
+                                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">分数</th>
                                 <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">买入日</th>
                                 <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">买入价</th>
                                 <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">卖出日</th>
@@ -845,7 +845,8 @@ const ConceptResonancePage: React.FC = () => {
                                     </span>
                                   </td>
                                   <td className="px-4 py-3 text-center">
-                                    {trade.isLeader ? '🔥' : '-'}
+                                    {/* {trade.isLeader ? '🔥' : '-'} */}
+                                    z:{trade.totalScore} - g:{trade.conceptScore}
                                   </td>
                                   <td className="px-4 py-3 text-sm text-center text-gray-600">{trade.buyDate}</td>
                                   <td className="px-4 py-3 text-sm text-right text-gray-900">{trade.buyPrice?.toFixed(2)}</td>

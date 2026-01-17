@@ -1143,8 +1143,7 @@ export class ConceptResonanceService {
     filtered = [];
     for (const dateStr in groupedByDate) {
       const group = groupedByDate[dateStr];
-      group.sort((a, b) => (b.openStrengthScore || 0) + (b.auctionScore || 0) + (b.conceptScore || 0) + (b.strategyScore || 0)
-        - (a.openStrengthScore || 0) - (a.auctionScore || 0) - (a.conceptScore || 0) - (a.strategyScore || 0));
+      group.sort((a, b) => (b.strategyScore || 0) - (a.strategyScore || 0));
       filtered = filtered.concat(group.slice(0, maxTradesPerDay));
     }
     //打印日期与股票名称
