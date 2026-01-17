@@ -392,39 +392,47 @@ class KlineCacheService {
   async fetchKlineByDate (stockCode: string, date: string): Promise<CachedKline[] | null> {
     const targetDate = toDateStr(date);
     let localKline = this.loadCache(stockCode).map;
+    let klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
+    // 如果本地没有缓存，直接从远端拉取
+    if (localKline.size === 0) {
+      console.log(`[K线缓存] ${stockCode} 本地缓存为空，从远端拉取`);
+      localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
+    }
     // targetDate 是否为交易日
     if (!tradingCalendarService.isTradingDay(targetDate)) {
       logger.warn(`[K线缓存] ${stockCode} ${targetDate} 不是交易日，无法获取K线`);
       return localKline.size > 0 ? Array.from(localKline.values()) : null;
     }
+    // 检查缓存中是否有数据
+    if (!klineDates || klineDates.length === 0) {
+      logger.warn(`[K线缓存] fetchKlineFromTHS ${stockCode} 获取失败`);
+      return null;
+    }
+    // 如果目标日期不在缓存中，尝试补齐
     if (!localKline.has(targetDate)) {
+      // 目标日期不在缓存中，检查是否为未来日期
       if (targetDate > toDateStr(getToday())){
         logger.warn(`[K线缓存] ${stockCode} ${targetDate} K线数据可能尚未生成，稍后重试`);
         return null;
+      }
+      // 如果目标日期是今天 且 在收盘前，尝试从腾讯接口获取实时行情
+      if (targetDate === toDateStr(getToday()) && dayjs().isBefore(dayjs().hour(15).minute(0).second(0))) {
+        logger.info(`[K线缓存] ${stockCode} ${targetDate} 尝试从腾讯接口获取实时行情`);
+        const realtimeKline = await this.fetchRealtimeKline(stockCode);
+        if (realtimeKline && realtimeKline.date === targetDate) {
+          klineDates.push(realtimeKline);
+        }
+        return klineDates;
       }
       // 缓存中没有目标日期的K线数据，从远端拉取
       console.log(`[K线缓存] ${stockCode} 缓存中不存在 ${targetDate}，从远端拉取`);
       localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
       this.persistCache(stockCode, localKline, Date.now()); // 更新缓存
     }
-    let klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
-    if (!klineDates || klineDates.length === 0) {
-      logger.warn(`[K线缓存] fetchKlineFromTHS ${stockCode} 获取失败`);
-      return null;
-    }
     // 查找目标日期的K线数据
     if (!localKline.has(targetDate)) {
-      logger.warn(`[K线缓存] ${stockCode} ${targetDate} 缓存中不存在，尝试从腾讯接口获取实时行情`);
-      const realtimeKline = await this.fetchRealtimeKline(stockCode);
-      if (realtimeKline && realtimeKline.date === targetDate) {
-        klineDates.push(realtimeKline);
-      } else {
-        logger.warn(`[K线缓存] ${stockCode} ${targetDate} 腾讯接口也无法获取实时行情`);
-        this.persistCache(stockCode, new Map(klineDates.map(k => [k.date, k])), Date.now()); // 更新缓存
-        return klineDates;
-      }
+      logger.warn(`[K线缓存] ${stockCode} ${targetDate} 缓存中不存在，拉取后仍未获取到`);
     }
-    // this.persistCache(stockCode, new Map(klineDates.map(k => [k.date, k])), Date.now()); // 更新缓存
     return klineDates;
   }
 }
