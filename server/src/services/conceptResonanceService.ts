@@ -808,7 +808,12 @@ export class ConceptResonanceService {
   async getBuySignalList (config: ConceptResonanceQueryConfig): Promise<any[]> {
     const prevDateStr = tradingCalendarService.getPrevTradingDay(config.dateStr);
     // const list = await ConceptResonance.find({ date: prevDateStr, strategyScore: { $gte: config?.strategyScore ?? -1 } }).sort({ strategyScore: -1, changePercent: -1 });
-    const list = await ConceptResonance.find({ date: prevDateStr, strategyScore: { $gte: -1 } }).sort({ strategyScore: -1, changePercent: -1 });
+    const list = await ConceptResonance.find({ 
+      date: prevDateStr, 
+      strategyScore: { $gte: -1 } ,
+      // 概念评分至少30分
+      conceptScore: { $gte: 30 }
+    }).sort({ strategyScore: -1, changePercent: -1 });
     // 为每一支股票获取开盘数据
     for (const stock of list) {
       try {
@@ -1123,6 +1128,29 @@ export class ConceptResonanceService {
     //过虑概念分数小于30的标的
     filtered = filtered.filter(c => c.conceptScore >= 30);
     logger.info(`[ConceptResonance] 过虑后候选标的: ${filtered.length} / ${candidates.length}`);
+
+    //每天最多交易N支股票
+    const maxTradesPerDay = 3;
+    const groupedByDate: { [date: string]: any[] } = {};
+    // 按日期分组 且 按总分排序
+    for (const item of filtered) {
+      if (!groupedByDate[item.date]) {
+        groupedByDate[item.date] = [];
+      }
+      groupedByDate[item.date].push(item);
+    }
+    // 每天取前N支股票
+    filtered = [];
+    for (const dateStr in groupedByDate) {
+      const group = groupedByDate[dateStr];
+      group.sort((a, b) => (b.openStrengthScore || 0) + (b.auctionScore || 0) + (b.conceptScore || 0) + (b.strategyScore || 0)
+        - (a.openStrengthScore || 0) - (a.auctionScore || 0) - (a.conceptScore || 0) - (a.strategyScore || 0));
+      filtered = filtered.concat(group.slice(0, maxTradesPerDay));
+    }
+    //打印日期与股票名称
+    logger.info(`[ConceptResonance] 每天取前${maxTradesPerDay}支股票后候选标的: ${filtered.map(f => `${f.date} ${f.stockCode} ${f.stockName}`).join(', ')}`);
+    logger.info(`[ConceptResonance] 每天取前${maxTradesPerDay}支股票后候选标的: ${filtered.length} / ${candidates.length}`);
+    // return;
 
     // 3. 模拟交易
     const trades: any[] = [];
