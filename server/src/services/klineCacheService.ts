@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { logger, sleep, toDateStr, getToday } from '../utils';
 import { tradingCalendarService } from './tradingCalendarService';
+import { intradayTradeService } from './intradayTradeService';
 
 export interface CachedKline {
   date: string;
@@ -350,7 +351,7 @@ class KlineCacheService {
     startDay = toDateStr(startDay);
     // 计算结束日期
     const endDateStr = tradingCalendarService.getNextTradingDays(startDay, klineDays);
-    console.log('🚀 ~ :353 ~ KlineCacheService ~ getKlinesByStartDay ~ endDateStr:', startDay,endDateStr);
+    console.log('🚀 ~ :353 ~ KlineCacheService ~ getKlinesByStartDay ~ endDateStr:', startDay, endDateStr);
     // 如果结束日期 >= 今天，则返回空数组
     if (!endDateStr || toDateStr(getToday()) < endDateStr) {
       logger.warn(`[K线缓存] ${stockCode} 结束日期 ${endDateStr} 不在历史范围内，直接跳过`);
@@ -388,13 +389,45 @@ class KlineCacheService {
     return klinesMap.get(toDateStr(date)) || null;
   }
 
+  // 用 intradayTradeService.fetchIntradayTrade 补全当日K线数据 - 只包含开盘数据 
+  async ensureKlineByDate (stockCode: string, date: string): Promise<CachedKline | null> {
+      const targetDate = toDateStr(date);
+      logger.info(`[K线缓存] 确保 ${stockCode} ${targetDate} 的K线数据`);
+  //   const klinesMap = this.loadCache(stockCode).map;
+  //   // 如果缓存中已经有数据，直接返回
+  //   if (klinesMap.has(targetDate)) {
+  //     return klinesMap.get(targetDate) || null;
+  //   }
+    // 缓存中没有数据，从远端拉取
+    const kline = await intradayTradeService.fetchIntradayTrade(stockCode, targetDate);
+    if (kline) {
+      const trade = kline.trades.length > 0 ? kline.trades[0] : null; // 取首笔成交价作为开盘价
+      if (!trade) {
+        logger.warn(`[K线缓存] ${stockCode} ${targetDate} 当日无成交数据，无法生成K线`);
+        return null;
+      }
+      const cachedKline: CachedKline = {
+        date,
+        open: trade.price,
+        high: 0,
+        low: 0,
+        close: 0,
+        turnover: 0, // 开盘价作为成交额
+        volume: trade.volume, // 开盘价作为成交量
+      }
+      return cachedKline;
+    }
+    return null;
+  }
+
+
   // 从远端强制拉取某个日期的K线数据并合并写入缓存
-  async fetchKlineByDate (stockCode: string, date: string): Promise<CachedKline[] | null> {
-    const targetDate = toDateStr(date);
-    let localKline = this.loadCache(stockCode).map;
-    let klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
-    // 如果本地没有缓存，直接从远端拉取
-    if (localKline.size === 0) {
+  async fetchKlineByDate(stockCode: string, date: string): Promise < CachedKline[] | null > {
+      const targetDate = toDateStr(date);
+      let localKline = this.loadCache(stockCode).map;
+      let klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
+      // 如果本地没有缓存，直接从远端拉取
+      if (localKline.size === 0) {
       console.log(`[K线缓存] ${stockCode} 本地缓存为空，从远端拉取`);
       localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
     }
@@ -408,17 +441,25 @@ class KlineCacheService {
       logger.warn(`[K线缓存] fetchKlineFromTHS ${stockCode} 获取失败`);
       return null;
     }
+    if (localKline.has(targetDate)){
+      const realtimeKline = await this.ensureKlineByDate(stockCode,targetDate);
+      console.log('🚀 ~ :493 ~ KlineCacheService ~ fetchKlineByDate ~ realtimeKline:', realtimeKline);
+      //替换当日K线数据
+      localKline.set(targetDate,realtimeKline!);
+      klineDates = Array.from(localKline.values());
+      return klineDates;
+    }
     // 如果目标日期不在缓存中，尝试补齐
     if (!localKline.has(targetDate)) {
       // 目标日期不在缓存中，检查是否为未来日期
-      if (targetDate > toDateStr(getToday())){
+      if (targetDate > toDateStr(getToday())) {
         logger.warn(`[K线缓存] ${stockCode} ${targetDate} K线数据可能尚未生成，稍后重试`);
         return null;
       }
       // 如果目标日期是今天 且 在收盘前，尝试从腾讯接口获取实时行情
       if (targetDate === toDateStr(getToday()) && dayjs().isBefore(dayjs().hour(15).minute(0).second(0))) {
         logger.info(`[K线缓存] ${stockCode} ${targetDate} 尝试从腾讯接口获取实时行情`);
-        const realtimeKline = await this.fetchRealtimeKline(stockCode);
+        const realtimeKline = await this.ensureKlineByDate(targetDate,stockCode);
         if (realtimeKline && realtimeKline.date === targetDate) {
           klineDates.push(realtimeKline);
         }

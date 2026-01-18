@@ -13,3 +13,4 @@ export { conceptRankingService, ConceptRankingResult, ConceptRankingItem } from 
 export { thsStockConceptService, ThsStockConceptResult, ThsConceptInfo, ThsRelatedStock } from './thsStockConceptService';
 export { thsConceptHotRankService, ThsConceptHotRankResult, ThsConceptHotItem, ThsPlateType } from './thsConceptHotRankService';
 export { conceptResonanceService, ConceptResonanceService } from './conceptResonanceService';
+export { intradayTradeService, IntradayTradeService, IntradayTradeData, IntradayTradeItem, IntradayTradeQuery, BatchIntradayTradeResult, OpeningInfo } from './intradayTradeService';
