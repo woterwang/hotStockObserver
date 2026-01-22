@@ -5,15 +5,25 @@ interface BackfillDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (startDate: string, endDate: string) => Promise<void>;
+  /** 扫描API路径，默认为 '/api/volume-surge/scan' */
+  scanApiPath?: string;
+  /** 对话框标题 */
+  title?: string;
+  /** 策略描述 */
+  description?: string;
 }
 
 /**
  * 历史数据补录对话框
+ * 支持自定义扫描API路径，可用于不同策略的历史数据补录
  */
 export const BackfillDialog: React.FC<BackfillDialogProps> = ({
   isOpen,
   onClose,
   onConfirm,
+  scanApiPath = '/api/volume-surge/scan',
+  title = '历史数据补录',
+  description = '选择日期范围，系统将自动扫描并保存历史数据用于回测',
 }) => {
   const [startDate, setStartDate] = useState(() => dayjs().subtract(30, 'day').format('YYYY-MM-DD'));
   const [endDate, setEndDate] = useState(() => dayjs().format('YYYY-MM-DD'));
@@ -72,7 +82,7 @@ export const BackfillDialog: React.FC<BackfillDialogProps> = ({
         setProgress({ current: i + 1, total: dates.length, currentDate: date });
         
         try {
-          const response = await fetch('/api/volume-surge/scan', {
+          const response = await fetch(scanApiPath, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ date }),
@@ -127,7 +137,7 @@ export const BackfillDialog: React.FC<BackfillDialogProps> = ({
           {/* 标题 */}
           <div className="px-6 py-4 border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">历史数据补录</h3>
+              <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
               <button
                 onClick={handleClose}
                 className="p-1 hover:bg-gray-100 rounded-full transition"
@@ -138,7 +148,7 @@ export const BackfillDialog: React.FC<BackfillDialogProps> = ({
               </button>
             </div>
             <p className="mt-1 text-sm text-gray-500">
-              选择日期范围，系统将自动扫描并保存历史数据用于回测
+              {description}
             </p>
           </div>
 

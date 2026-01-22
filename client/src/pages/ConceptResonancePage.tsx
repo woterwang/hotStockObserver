@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Loading, ErrorMessage, Empty, DatePicker } from '../components';
+import { Layout, Loading, ErrorMessage, Empty, DatePicker, BackfillDialog } from '../components';
 import { conceptResonanceApi } from '../services/api';
 import type { 
   ConceptResonance, 
@@ -33,6 +33,7 @@ const ConceptResonancePage: React.FC = () => {
   const [leaders, setLeaders] = useState<ConceptLeader[]>([]);
   const [scanning, setScanning] = useState(false);
   const [deepScan, setDeepScan] = useState(false);
+  const [showBackfillDialog, setShowBackfillDialog] = useState(false);
   
   // 信号筛选
   const [filterLeaderOnly, setFilterLeaderOnly] = useState(false);
@@ -297,7 +298,31 @@ const ConceptResonancePage: React.FC = () => {
                     )}
                     {scanning ? '扫描中...' : '开始扫描'}
                   </button>
+
+                  {/* 补录历史按钮 */}
+                  <button
+                    onClick={() => setShowBackfillDialog(true)}
+                    className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    补录历史
+                  </button>
                 </div>
+
+                {/* 补录对话框 */}
+                <BackfillDialog
+                  isOpen={showBackfillDialog}
+                  onClose={() => {
+                    setShowBackfillDialog(false);
+                    fetchDates(); // 刷新日期列表
+                  }}
+                  onConfirm={async () => {}}
+                  scanApiPath="/api/concept-resonance/scan"
+                  title="主线共振历史数据补录"
+                  description="选择日期范围，系统将自动扫描并保存主线共振策略的历史数据用于回测"
+                />
 
                 {/* 统计卡片 */}
                 {stats && (
