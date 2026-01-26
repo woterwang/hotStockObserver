@@ -1,0 +1,46 @@
+{
+  "date": "20240315",
+  "updateTime": "2026-01-26T13:39:30.494Z",
+  "signals": [
+    {
+      "stockCode": "603127",
+      "stockName": "昭衍新药",
+      "date": "20240315",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 20.39,
+      "high": 21.71,
+      "low": 19.85,
+      "close": 20.1,
+      "volume": 60366409,
+      "turnover": 1255979140,
+      "amplitude": 9.398686205154117,
+      "changePercent": 1.5664477008590312,
+      "turnoverRate": 0,
+      "upperShadowRatio": 4.551724137931049,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 6.319034111101237,
+      "breakoutConfirmed": false
+    },
+    {
+      "stockCode": "002487",
+      "stockName": "大金重工",
+      "date": "20240315",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 23.89,
+      "high": 25.6,
+      "low": 23.45,
+      "close": 23.82,
+      "volume": 23908978,
+      "turnover": 587440290,
+      "amplitude": 9.03361344537816,
+      "changePercent": 0.08403361344537635,
+      "turnoverRate": 0,
+      "upperShadowRatio": 24.428571428571342,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.4723447535145806,
+      "breakoutConfirmed": false
+    }
+  ]
+}

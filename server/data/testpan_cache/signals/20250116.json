@@ -1,0 +1,46 @@
+{
+  "date": "20250116",
+  "updateTime": "2026-01-26T11:55:28.845Z",
+  "signals": [
+    {
+      "stockCode": "603809",
+      "stockName": "豪能股份",
+      "date": "20250116",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 10.31,
+      "high": 11.09,
+      "low": 10.28,
+      "close": 10.38,
+      "volume": 69858025,
+      "turnover": 976334620,
+      "amplitude": 7.887049659201563,
+      "changePercent": 1.0710808179162727,
+      "turnoverRate": 0,
+      "upperShadowRatio": 10.142857142857089,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.335441418879141,
+      "breakoutConfirmed": false
+    },
+    {
+      "stockCode": "300567",
+      "stockName": "精测电子",
+      "date": "20250116",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 61,
+      "high": 62.8,
+      "low": 59.71,
+      "close": 60.4,
+      "volume": 11228391,
+      "turnover": 686224460,
+      "amplitude": 5.18630412890231,
+      "changePercent": 1.3763007720711653,
+      "turnoverRate": 0,
+      "upperShadowRatio": 2.999999999999988,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.7328483234875027,
+      "breakoutConfirmed": false
+    }
+  ]
+}

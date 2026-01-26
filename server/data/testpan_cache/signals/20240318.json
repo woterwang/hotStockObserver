@@ -1,0 +1,28 @@
+{
+  "date": "20240318",
+  "updateTime": "2026-01-26T13:39:51.283Z",
+  "signals": [
+    {
+      "stockCode": "603308",
+      "stockName": "应流股份",
+      "date": "20240318",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 14,
+      "high": 14.56,
+      "low": 13.62,
+      "close": 13.78,
+      "volume": 44944004,
+      "turnover": 639088900,
+      "amplitude": 6.921944035346106,
+      "changePercent": 1.4727540500736325,
+      "turnoverRate": 0,
+      "upperShadowRatio": 2.5454545454545405,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.3884282865917887,
+      "breakoutConfirmed": true,
+      "breakoutDate": "20240321",
+      "breakoutPrice": 14.58
+    }
+  ]
+}

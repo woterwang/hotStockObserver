@@ -1,0 +1,46 @@
+{
+  "date": "20240329",
+  "updateTime": "2026-01-26T13:45:34.285Z",
+  "signals": [
+    {
+      "stockCode": "603357",
+      "stockName": "设计总院",
+      "date": "20240329",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 9.28,
+      "high": 9.82,
+      "low": 8.98,
+      "close": 9.36,
+      "volume": 55039336,
+      "turnover": 552139300,
+      "amplitude": 9.120521172638433,
+      "changePercent": 1.628664495113991,
+      "turnoverRate": 0,
+      "upperShadowRatio": 5.750000000000005,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.658698029295902,
+      "breakoutConfirmed": false
+    },
+    {
+      "stockCode": "002553",
+      "stockName": "南方精工",
+      "date": "20240329",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 11.98,
+      "high": 12.38,
+      "low": 11.61,
+      "close": 12.05,
+      "volume": 45454501,
+      "turnover": 556924640,
+      "amplitude": 6.42737896494158,
+      "changePercent": 0.5843071786310541,
+      "turnoverRate": 0,
+      "upperShadowRatio": 4.714285714285696,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.3723660916936598,
+      "breakoutConfirmed": false
+    }
+  ]
+}

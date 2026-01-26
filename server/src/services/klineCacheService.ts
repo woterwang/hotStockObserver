@@ -4,7 +4,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { logger, sleep, toDateStr, getToday } from '../utils';
 import { tradingCalendarService } from './tradingCalendarService';
-
+import {
+  OpenData,
+} from '../types/conceptEnhancement';
 export interface CachedKline {
   date: string;
   open: number;
@@ -350,7 +352,7 @@ class KlineCacheService {
     startDay = toDateStr(startDay);
     // 计算结束日期
     const endDateStr = tradingCalendarService.getNextTradingDays(startDay, klineDays);
-    console.log('🚀 ~ :353 ~ KlineCacheService ~ getKlinesByStartDay ~ endDateStr:', startDay,endDateStr);
+    console.log('🚀 ~ :353 ~ KlineCacheService ~ getKlinesByStartDay ~ endDateStr:', startDay, endDateStr);
     // 如果结束日期 >= 今天，则返回空数组
     if (!endDateStr || toDateStr(getToday()) < endDateStr) {
       logger.warn(`[K线缓存] ${stockCode} 结束日期 ${endDateStr} 不在历史范围内，直接跳过`);
@@ -411,7 +413,7 @@ class KlineCacheService {
     // 如果目标日期不在缓存中，尝试补齐
     if (!localKline.has(targetDate)) {
       // 目标日期不在缓存中，检查是否为未来日期
-      if (targetDate > toDateStr(getToday())){
+      if (targetDate > toDateStr(getToday())) {
         logger.warn(`[K线缓存] ${stockCode} ${targetDate} K线数据可能尚未生成，稍后重试`);
         return null;
       }
@@ -438,3 +440,116 @@ class KlineCacheService {
 }
 
 export const klineCacheService = new KlineCacheService();
+
+/**
+ * 批量从腾讯接口获取实时行情数据
+ * @param codes 股票代码数组（6位数字，如 ['000001', '600693']）
+ * @returns Promise<Map<string, TencentRealtimeQuote>> 股票代码 -> 实时行情
+ */
+export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<string, OpenData>> {
+  const result = new Map<string, OpenData>();
+
+  if (!codes || codes.length === 0) {
+    return result;
+  }
+  let dataTime = ''
+
+  try {
+    // 将股票代码转换为腾讯格式并拼接
+    const qqCodes = codes.map(code => {
+      const cleanCode = code.replace(/\D/g, '');
+      if (cleanCode.startsWith('6')) {
+        return `sh${cleanCode}`;
+      } else if (cleanCode.startsWith('0') || cleanCode.startsWith('3')) {
+        return `sz${cleanCode}`;
+      } else if (cleanCode.startsWith('8') || cleanCode.startsWith('4')) {
+        return `bj${cleanCode}`; // 北交所
+      }
+      return `sh${cleanCode}`;
+    });
+    console.log(`[K线缓存] 腾讯接口请求: ${qqCodes.join(',')}`);
+    const url = `https://qt.gtimg.cn/q=${qqCodes.join(',')}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer': 'https://finance.qq.com/',
+      },
+      responseType: 'arraybuffer',
+      timeout: 10000,
+    });
+    // 腾讯返回 GBK 编码
+    const iconv = require('iconv-lite');
+    const dataStr = iconv.decode(response.data, 'gbk');
+
+    // 响应格式: v_sz000001="..."; v_sz000002="...";
+    // 使用正则匹配所有股票数据
+    const regex = /v_([a-z]{2}\d+)="([^"]*)"/g;
+    let match;
+
+    while ((match = regex.exec(dataStr)) !== null) {
+      const qqCode = match[1]; // sh600693 或 sz000001
+      const dataContent = match[2];
+
+      if (!dataContent) {
+        continue;
+      }
+
+      const parts = dataContent.split('~');
+      if (parts.length < 45) {
+        continue;
+      }
+
+      // 腾讯数据格式（以 ~ 分隔，索引从0开始）:
+      // 0:未知 1:名称 2:代码 3:当前价 4:昨收 5:今开 6:成交量(手)
+      // 33:最高 34:最低 37:成交额(万)
+      // 30:时间戳(YYYYMMDDHHMMSS) 31:涨跌额 32:涨跌幅
+      const stockCode = parts[2];
+      const stockName = parts[1];
+      const current = parseFloat(parts[3]) || 0;
+      const preClose = parseFloat(parts[4]) || 0;
+      const open = parseFloat(parts[5]) || 0;
+      const high = parseFloat(parts[33]) || 0;
+      const low = parseFloat(parts[34]) || 0;
+      const volume = parseFloat(parts[6]) || 0;
+      const turnover = (parseFloat(parts[37]) || 0) * 10000; // 万 -> 元
+      const changeAmount = parseFloat(parts[31]) || 0;
+      const changePercent = parseFloat(parts[32]) || 0;
+
+      // 解析日期时间 (格式: 20251215161428)
+      const timeStr = parts[30] || '';
+      const date = timeStr.length >= 8
+        ? `${timeStr.substring(0, 4)}-${timeStr.substring(4, 6)}-${timeStr.substring(6, 8)}`
+        : '';
+      const time = timeStr.length >= 14
+        ? `${timeStr.substring(8, 10)}:${timeStr.substring(10, 12)}:${timeStr.substring(12, 14)}`
+        : '';
+      dataTime = timeStr;
+
+      // 开盘价为0表示数据可能无效，但仍放入结果中，由调用方判断
+      result.set(stockCode, {
+        openTimes: timeStr,
+        openPrice: open,
+        openChangePercent: preClose > 0 ? ((open - preClose) / preClose) * 100 : 0,
+        openVolumeRatio: volume, // 成交量（手）
+        auctionAmount: turnover, // 成交额（元）
+        auctionAmountRatio: preClose > 0 ? ((turnover - preClose * volume * 100) / (preClose * volume * 100)) * 100 : 0,
+        isLimitUp: changePercent >= 9.9, // 简单判断涨停（A股）
+      });
+    }
+  } catch (error) {
+    logger.warn(`[腾讯实时行情] 批量获取失败: ${(error as Error).message}`);
+  }
+
+  //请把result的数据存一份到本地文件备用 路径: server/data/openData/realtimeQuotes_YYYYMMDDHHmmss.json
+  const pathStr = path.join(__dirname, '../../data/openData');
+  const dir = fs.mkdirSync(pathStr, { recursive: true });
+  fs.writeFile(`${dir}/realtimeQuotes_${dataTime}.json`, JSON.stringify(Array.from(result.entries()), null, 2), (err) => {
+    if (err) {
+      console.error('写入实时行情数据文件失败:', err);
+    } else {
+      console.log('实时行情数据已保存到文件');
+    }
+  });
+  return result;
+}

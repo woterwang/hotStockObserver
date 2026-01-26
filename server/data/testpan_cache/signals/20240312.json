@@ -1,0 +1,50 @@
+{
+  "date": "20240312",
+  "updateTime": "2026-01-26T13:38:12.821Z",
+  "signals": [
+    {
+      "stockCode": "300324",
+      "stockName": "旋极信息",
+      "date": "20240312",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 3.29,
+      "high": 3.53,
+      "low": 3.18,
+      "close": 3.34,
+      "volume": 268193040,
+      "turnover": 903758550,
+      "amplitude": 10.638297872340415,
+      "changePercent": 1.5197568389057698,
+      "turnoverRate": 0,
+      "upperShadowRatio": 3.8000000000000123,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.4553225544058945,
+      "breakoutConfirmed": true,
+      "breakoutDate": "20240313",
+      "breakoutPrice": 3.37
+    },
+    {
+      "stockCode": "301368",
+      "stockName": "丰立智能",
+      "date": "20240312",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 46.05,
+      "high": 49.7,
+      "low": 46.03,
+      "close": 46.5,
+      "volume": 13174863,
+      "turnover": 630139060,
+      "amplitude": 7.95405288253143,
+      "changePercent": 0.7802340702210651,
+      "turnoverRate": 0,
+      "upperShadowRatio": 7.1111111111110725,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.8603213821562048,
+      "breakoutConfirmed": true,
+      "breakoutDate": "20240314",
+      "breakoutPrice": 48.76
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import { thsConceptHotRankService } from '../services/thsConceptHotRankService';
 
 import { logger } from '../utils';
 import { formatDate } from '../utils/dateUtils';
+import dayjs from 'dayjs';
 
 /**
  * 定时任务管理
@@ -231,6 +232,14 @@ export class JobScheduler {
         } else {
           logger.warn('早间市场情绪更新失败，将继续使用旧缓存');
         }
+        // 更新K线缓存
+        // 获取上一个交易
+        const today = dayjs().format('YYYY-MM-DD');
+        const prevDay = tradingCalendarService.getPrevTradingDay(today);
+        // 更新前一交易日的K线缓存
+        logger.info(`开始更新前一交易日(${prevDay})的K线缓存...`);
+        await conceptResonanceService.updateKlineCacheForDate(prevDay as string);
+        logger.info(`前一交易日(${prevDay})的K线缓存更新完成`);
       } catch (error) {
         logger.error(`早间市场情绪更新任务失败: ${(error as Error).message}`);
       }

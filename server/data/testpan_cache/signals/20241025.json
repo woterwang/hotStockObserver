@@ -1,0 +1,48 @@
+{
+  "date": "20241025",
+  "updateTime": "2026-01-26T13:08:10.795Z",
+  "signals": [
+    {
+      "stockCode": "002134",
+      "stockName": "天津普林",
+      "date": "20241025",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 19,
+      "high": 20.85,
+      "low": 18.38,
+      "close": 18.9,
+      "volume": 54349035,
+      "turnover": 1084879570,
+      "amplitude": 13.034300791556742,
+      "changePercent": -0.2638522427440671,
+      "turnoverRate": 0,
+      "upperShadowRatio": 18.49999999999975,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.748201869274316,
+      "breakoutConfirmed": false
+    },
+    {
+      "stockCode": "002716",
+      "stockName": "湖南白银",
+      "date": "20241025",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 3.62,
+      "high": 3.75,
+      "low": 3.57,
+      "close": 3.6,
+      "volume": 145618080,
+      "turnover": 529567020,
+      "amplitude": 5.013927576601676,
+      "changePercent": 0.27855153203343264,
+      "turnoverRate": 0,
+      "upperShadowRatio": 6.499999999999989,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.3878313548231778,
+      "breakoutConfirmed": true,
+      "breakoutDate": "20241029",
+      "breakoutPrice": 3.69
+    }
+  ]
+}

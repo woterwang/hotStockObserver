@@ -27,7 +27,7 @@ import { conceptRankingService, ConceptRankingItem } from './conceptRankingServi
 import { buySignalService } from './buySignalService';
 
 // 导入依赖服务
-import { klineCacheService } from './klineCacheService';
+import { klineCacheService, fetchTencentRealTimeQuotes, } from './klineCacheService';
 
 // 导入类型
 import {
@@ -36,7 +36,9 @@ import {
   ConceptResonanceConfig,
   DEFAULT_CONCEPT_RESONANCE_CONFIG,
   ConceptResonanceQueryConfig,
+  OpenData,
 } from '../types/conceptEnhancement';
+import dayjs from 'dayjs';
 
 /**
  * 主线共振策略服务
@@ -808,17 +810,32 @@ export class ConceptResonanceService {
   async getBuySignalList (config: ConceptResonanceQueryConfig): Promise<any[]> {
     const prevDateStr = tradingCalendarService.getPrevTradingDay(config.dateStr);
     // const list = await ConceptResonance.find({ date: prevDateStr, strategyScore: { $gte: config?.strategyScore ?? -1 } }).sort({ strategyScore: -1, changePercent: -1 });
-    const list = await ConceptResonance.find({ 
-      date: prevDateStr, 
-      strategyScore: { $gte: -1 } ,
+    const list = await ConceptResonance.find({
+      date: prevDateStr,
+      strategyScore: { $gte: -1 },
       // 概念评分至少30分
       conceptScore: { $gte: 30 }
     }).sort({ strategyScore: -1, changePercent: -1 });
+    const targetDateStr = config.dateStr;
+    let tencentQuotes = new Map<string, any>();
+    // 如果 targetDateStr 是交易日且是今天，则从腾讯获取当日数据
+    if (tradingCalendarService.isTradingDay(targetDateStr) && targetDateStr === formatDate(getToday(), 'YYYYMMDD')) {
+      logger.info(`[ConceptResonance] ${targetDateStr} 为交易日且是今天，使用腾讯数据更新开盘数据`);
+      const codes = list.map(v => v.stockCode);
+      // 批量获取腾讯数据
+      tencentQuotes = await fetchTencentRealTimeQuotes(codes);
+    }
     // 为每一支股票获取开盘数据
     for (const stock of list) {
       try {
-        // 获取开盘数据
-        const openData = await buySignalService.getOpeningData(stock.stockCode, config.dateStr);
+        let openData: OpenData | null = null;
+        // 如果数据不为空-证明是当日数据 - 优先使用腾讯数据
+        if (tencentQuotes.size > 0) {
+          openData = tencentQuotes.get(stock.stockCode);
+        } else {
+          // 否则使用 buySignalService 获取开盘数据
+          openData = await buySignalService.getOpeningData(stock.stockCode, config.dateStr);
+        }
 
         // ### 2.1 开盘强度（满分30分）⭐最重要
 
@@ -897,7 +914,7 @@ export class ConceptResonanceService {
         logger.warn(`[ConceptResonance] 获取开盘数据失败 ${stock.stockCode}: ${(error as Error).message}`);
       }
     }
-    return list.filter(v => (v?.strategyScore??0) >= (config?.strategyScore ?? -1)).sort((a, b) => (b.strategyScore || 0) - (a.strategyScore || 0));
+    return list.filter(v => (v?.strategyScore ?? 0) >= (config?.strategyScore ?? -1)).sort((a, b) => (b.strategyScore || 0) - (a.strategyScore || 0));
   }
 
 
@@ -1271,6 +1288,24 @@ export class ConceptResonanceService {
       leaderWinRate: leaderTrades > 0 ? Number(((leaderWins / leaderTrades) * 100).toFixed(2)) : undefined,
       trades,
     };
+  }
+
+
+  //更新每日备选股票的K线数据缓存
+  async updateKlineCacheForDate (dateStr: string = dayjs().format('YYYY-MM-DD')) {
+    const list = await ConceptResonance.find({
+      date: dateStr,
+      strategyScore: { $gte: -1 },
+      // 概念评分至少30分
+      conceptScore: { $gte: 30 }
+    }).sort({ strategyScore: -1, changePercent: -1 });
+    for (const stock of list) {
+      try {
+        await klineCacheService.ensureKlines(stock.stockCode,{targetDates: []});
+      } catch (error) {
+        logger.warn(`[ConceptResonance] 更新K线缓存失败 ${stock.stockCode}: ${(error as Error).message}`);
+      }
+    }
   }
 }
 

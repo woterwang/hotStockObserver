@@ -1,0 +1,28 @@
+{
+  "date": "20240308",
+  "updateTime": "2026-01-26T13:36:53.474Z",
+  "signals": [
+    {
+      "stockCode": "002547",
+      "stockName": "春兴精工",
+      "date": "20240308",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 4.38,
+      "high": 4.74,
+      "low": 4.32,
+      "close": 4.34,
+      "volume": 141498120,
+      "turnover": 635101600,
+      "amplitude": 9.610983981693362,
+      "changePercent": -0.686498855835246,
+      "turnoverRate": 0,
+      "upperShadowRatio": 9,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 2.4031180284768343,
+      "breakoutConfirmed": true,
+      "breakoutDate": "20240318",
+      "breakoutPrice": 4.64
+    }
+  ]
+}

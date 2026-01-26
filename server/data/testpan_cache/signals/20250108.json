@@ -1,0 +1,50 @@
+{
+  "date": "20250108",
+  "updateTime": "2026-01-26T11:47:59.830Z",
+  "signals": [
+    {
+      "stockCode": "000962",
+      "stockName": "东方钽业",
+      "date": "20250108",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 14.91,
+      "high": 15.36,
+      "low": 14.36,
+      "close": 14.74,
+      "volume": 53450293,
+      "turnover": 796526100,
+      "amplitude": 6.715916722632639,
+      "changePercent": -1.0073875083948982,
+      "turnoverRate": 0,
+      "upperShadowRatio": 2.6470588235294086,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.3115856448584664,
+      "breakoutConfirmed": true,
+      "breakoutDate": "20250114",
+      "breakoutPrice": 15.29
+    },
+    {
+      "stockCode": "002190",
+      "stockName": "成飞集成",
+      "date": "20250108",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 19.28,
+      "high": 19.97,
+      "low": 18.84,
+      "close": 19.47,
+      "volume": 37567168,
+      "turnover": 729504910,
+      "amplitude": 5.8428128231644205,
+      "changePercent": 0.6721820062047518,
+      "turnoverRate": 0,
+      "upperShadowRatio": 2.6315789473684523,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.4633785003559585,
+      "breakoutConfirmed": true,
+      "breakoutDate": "20250109",
+      "breakoutPrice": 20.2
+    }
+  ]
+}

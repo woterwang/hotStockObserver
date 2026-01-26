@@ -1,0 +1,46 @@
+{
+  "date": "20250107",
+  "updateTime": "2026-01-26T11:45:44.754Z",
+  "signals": [
+    {
+      "stockCode": "605378",
+      "stockName": "野马电池",
+      "date": "20250107",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 16.44,
+      "high": 18.71,
+      "low": 15.99,
+      "close": 16.71,
+      "volume": 26636380,
+      "turnover": 655506060,
+      "amplitude": 16.028285209192696,
+      "changePercent": -1.5321154979375253,
+      "turnoverRate": 0,
+      "upperShadowRatio": 7.407407407407419,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.3208513111379658,
+      "breakoutConfirmed": false
+    },
+    {
+      "stockCode": "601226",
+      "stockName": "华电科工",
+      "date": "20250107",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 7.49,
+      "high": 7.89,
+      "low": 7.22,
+      "close": 7.55,
+      "volume": 86068835,
+      "turnover": 651119880,
+      "amplitude": 8.993288590604026,
+      "changePercent": 1.342281879194626,
+      "turnoverRate": 0,
+      "upperShadowRatio": 5.666666666666702,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.5238012676349808,
+      "breakoutConfirmed": false
+    }
+  ]
+}

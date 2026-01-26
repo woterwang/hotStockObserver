@@ -1,0 +1,50 @@
+{
+  "date": "20241111",
+  "updateTime": "2026-01-26T13:28:21.995Z",
+  "signals": [
+    {
+      "stockCode": "000605",
+      "stockName": "渤海股份",
+      "date": "20241111",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 8.15,
+      "high": 8.88,
+      "low": 7.48,
+      "close": 8.04,
+      "volume": 82805617,
+      "turnover": 686829350,
+      "amplitude": 17.348203221809175,
+      "changePercent": -0.37174721189592486,
+      "turnoverRate": 0,
+      "upperShadowRatio": 6.636363636363567,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 6.185336488238536,
+      "breakoutConfirmed": true,
+      "breakoutDate": "20241115",
+      "breakoutPrice": 8.38
+    },
+    {
+      "stockCode": "600536",
+      "stockName": "中国软件",
+      "date": "20241111",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 67.6,
+      "high": 72.2,
+      "low": 64.58,
+      "close": 65.86,
+      "volume": 164908820,
+      "turnover": 11211185900,
+      "amplitude": 11.598173515981742,
+      "changePercent": 0.24353120243530685,
+      "turnoverRate": 0,
+      "upperShadowRatio": 2.6436781609195528,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 2.410603163071359,
+      "breakoutConfirmed": true,
+      "breakoutDate": "20241113",
+      "breakoutPrice": 67.47
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "date": "20250102",
+  "updateTime": "2026-01-26T11:41:22.113Z",
+  "signals": [
+    {
+      "stockCode": "002218",
+      "stockName": "拓日新能",
+      "date": "20250102",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 3.97,
+      "high": 4.26,
+      "low": 3.84,
+      "close": 3.93,
+      "volume": 173562540,
+      "turnover": 694373180,
+      "amplitude": 10.606060606060606,
+      "changePercent": -0.7575757575757527,
+      "turnoverRate": 0,
+      "upperShadowRatio": 7.249999999999983,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.9811706389739987,
+      "breakoutConfirmed": true,
+      "breakoutDate": "20250109",
+      "breakoutPrice": 4.51
+    },
+    {
+      "stockCode": "002350",
+      "stockName": "北京科锐",
+      "date": "20250102",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 7.57,
+      "high": 8.09,
+      "low": 7.36,
+      "close": 7.55,
+      "volume": 99549974,
+      "turnover": 762865550,
+      "amplitude": 9.643328929986783,
+      "changePercent": -0.2642007926023839,
+      "turnoverRate": 0,
+      "upperShadowRatio": 25.99999999999938,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 3.303614643190278,
+      "breakoutConfirmed": false
+    }
+  ]
+}

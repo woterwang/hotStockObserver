@@ -121,3 +121,18 @@ export interface ConceptResonanceQueryConfig {
   changePercent?: number; //  涨跌幅筛选
   limitUpCount?: number;  // 涨停家数筛选
 }
+
+
+
+// 竞价数据类型定义
+export interface OpenData {
+    openPrice: number;
+    openChangePercent: number;
+    openVolumeRatio: number;
+    auctionAmount: number;
+    auctionAmountRatio: number;
+    isLimitUp: boolean;
+    sealAmount?: number;
+    sealRatio?: number;
+    openTimes?: number|string;
+}

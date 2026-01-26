@@ -1,0 +1,26 @@
+{
+  "date": "20250120",
+  "updateTime": "2026-01-26T11:36:14.579Z",
+  "signals": [
+    {
+      "stockCode": "603629",
+      "stockName": "利通电子",
+      "date": "20250120",
+      "pattern": "upper_shadow",
+      "patternName": "长上影线试盘",
+      "open": 22.62,
+      "high": 24.34,
+      "low": 21.97,
+      "close": 21.99,
+      "volume": 34674624,
+      "turnover": 794784600,
+      "amplitude": 10.599284436493743,
+      "changePercent": -1.6547406082289848,
+      "turnoverRate": 0,
+      "upperShadowRatio": 2.7301587301587174,
+      "lowerShadowRatio": 0,
+      "volumeRatio": 1.5379163130270885,
+      "breakoutConfirmed": false
+    }
+  ]
+}
