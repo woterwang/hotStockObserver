@@ -1,5 +1,5 @@
 import axios from 'axios';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import * as fs from 'fs';
 import * as path from 'path';
 import { logger, sleep, toDateStr, getToday } from '../utils';
@@ -482,7 +482,7 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
     // 腾讯返回 GBK 编码
     const iconv = require('iconv-lite');
     const dataStr = iconv.decode(response.data, 'gbk'); 
-    writeToFile('/debug/', `tencent_realtime_${Date.now()}.txt`,dataStr);
+    writeToFile('/debug/', `tencent_realtime_${dayjs().format('YYYY-MM-DD')}.txt`,dataStr);
 
     // 响应格式: v_sz000001="..."; v_sz000002="...";
     // 使用正则匹配所有股票数据
