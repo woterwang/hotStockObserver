@@ -1,6 +1,34 @@
 {
-  "updatedAt": "2026-01-22T00:18:00.117Z",
+  "updatedAt": "2026-01-28T00:18:00.295Z",
   "data": [
+    {
+      "day": "20260127",
+      "strong": 52,
+      "ztjs": 53,
+      "lbgd": 6,
+      "dfNum": 2
+    },
+    {
+      "day": "20260126",
+      "strong": 52,
+      "ztjs": 70,
+      "lbgd": 5,
+      "dfNum": 18
+    },
+    {
+      "day": "20260123",
+      "strong": 96,
+      "ztjs": 102,
+      "lbgd": 18,
+      "dfNum": 2
+    },
+    {
+      "day": "20260122",
+      "strong": 86,
+      "ztjs": 72,
+      "lbgd": 17,
+      "dfNum": 3
+    },
     {
       "day": "20260121",
       "strong": 77,
