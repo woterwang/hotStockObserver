@@ -828,10 +828,10 @@ export class ConceptResonanceService {
       console.log('tencentQuotes', JSON.stringify(tencentQuotes));
       // 如果是当天9.30之前 存储一份数据到本地
       const now = new Date();
-      // if (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 30)) {
+      if (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 30)) {
         logger.info(`[ConceptResonance] ${targetDateStr} 为交易日且是今天，且当前时间小于9.30，存储一份数据到本地`);
         writeToFile(`/tencentQuotes/`,`${targetDateStr}.json`, Array.from(tencentQuotes.entries()));
-      // }
+      }
     }
     // 为每一支股票获取开盘数据
     for (const stock of list) {

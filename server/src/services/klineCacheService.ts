@@ -481,10 +481,8 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
     });
     // 腾讯返回 GBK 编码
     const iconv = require('iconv-lite');
-    const dataStr = iconv.decode(response.data, 'gbk');
-    // 保存一份原始数据到本地供调试
-    const debugPath = path.join(__dirname, `/debug/`); 
-    writeToFile(debugPath, `tencent_realtime_${Date.now()}.txt`,dataStr);
+    const dataStr = iconv.decode(response.data, 'gbk'); 
+    writeToFile('/debug/', `tencent_realtime_${Date.now()}.txt`,dataStr);
 
     // 响应格式: v_sz000001="..."; v_sz000002="...";
     // 使用正则匹配所有股票数据

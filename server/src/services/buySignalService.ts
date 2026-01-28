@@ -22,7 +22,9 @@ import { PriceBreakthrough } from '../models/PriceBreakthrough';
 import { ConceptResonance } from '../models/ConceptResonance';
 import { tradingCalendarService } from './tradingCalendarService';
 import { marketMoodService } from './marketMoodService';
-import { klineCacheService, CachedKline } from './klineCacheService';
+import { klineCacheService, CachedKline, fetchTencentRealTimeQuotes } from './klineCacheService';
+import { logger } from '../utils';
+import { writeToFile } from '../utils/writeToFile';
 
 // 策略类型定义
 type StrategyType = 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover' | 'concept_resonance';
@@ -519,9 +521,33 @@ class BuySignalService {
     candidate: StrategyCandidate,
     signalDate: string  // YYYYMMDD 格式
   ): Promise<IBuySignal | null> {
-    // 获取开盘数据（这里模拟，实际需要对接实时行情API）
-    const openData = await this.getOpeningData(candidate.stockCode, signalDate);
-
+    // 获取开盘数据，若为今日且为交易日，优先用腾讯实时行情
+    let openData = null;
+    const todayStr = dayjs().format('YYYYMMDD');
+    if (
+      tradingCalendarService.isTradingDay(signalDate) &&
+      signalDate === todayStr
+    ) {
+      // 腾讯行情优先
+      try {
+        const tencentQuotes = await fetchTencentRealTimeQuotes([candidate.stockCode]);
+        // 如果是当天9.30之前 存储一份数据到本地
+        const now = new Date();
+        if (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 30)) {
+          logger.info(`[ConceptResonance] ${todayStr} 为交易日且是今天，且当前时间小于9.30，存储一份数据到本地`);
+          writeToFile(`/tencentQuotes/`, `${todayStr}.json`, Array.from(tencentQuotes.entries()));
+        }
+        openData = tencentQuotes.get(candidate.stockCode);
+        if (openData) {
+          console.log(`[BuySignal] ${candidate.stockCode} 使用腾讯实时行情数据`);
+        }
+      } catch (err) {
+        console.warn(`[BuySignal] 腾讯实时行情获取失败，降级本地K线:`, err);
+      }
+    }
+    if (!openData) {
+      openData = await this.getOpeningData(candidate.stockCode, signalDate);
+    }
     if (!openData) {
       console.log(`[BuySignal] ${candidate.stockCode} 无法获取开盘数据`);
       return null;
@@ -549,7 +575,7 @@ class BuySignalService {
     const sealStrength = BuySignalScorer.scoreSealStrength(
       openData.isLimitUp,
       openData.sealRatio,
-      openData.openTimes
+      parseInt(openData.openTimes?.toString() || '0', 10)
     );
     const technical = BuySignalScorer.scoreTechnical(
       technicalData.distanceToMa5,
@@ -617,7 +643,7 @@ class BuySignalService {
       isLimitUp: openData.isLimitUp,
       sealAmount: openData.sealAmount,
       sealRatio: openData.sealRatio,
-      openTimes: openData.openTimes,
+      openTimes: parseInt(openData.openTimes?.toString() || '0', 10),
 
       distanceToMa5: technicalData.distanceToMa5,
       distanceToMa10: technicalData.distanceToMa10,
@@ -751,7 +777,7 @@ class BuySignalService {
   }> {
     const defaultResult = { indexOpenChange: 0, indexMorningTrend: 'flat' as const, marketMood: 50 };
     const targetDateStr = formatDateStr(dateStr);
-console.log(`[BuySignal] getMarketEnvironment: ${targetDateStr}`);
+    console.log(`[BuySignal] getMarketEnvironment: ${targetDateStr}`);
     // 1. 优先从市场情绪服务获取 strong 值
     const cachedMood = marketMoodService.getMood(targetDateStr);
     if (cachedMood !== null) {
@@ -1076,10 +1102,15 @@ console.log(`[BuySignal] getMarketEnvironment: ${targetDateStr}`);
       }
 
       // 2. 调用共享 K 线缓存服务
-      const klines = await klineCacheService.getRecentKlines(stockCode, days);
+      let klines = await klineCacheService.getRecentKlines(stockCode, days);
       if (!klines || klines.length === 0) {
         console.warn(`[BuySignal] fetchKlineData ${stockCode} 无K线数据`);
-        return null;
+        const klineData = await klineCacheService.ensureKlines(stockCode, { targetDates: [] }); //触发更新
+        klines = await klineCacheService.getRecentKlines(stockCode, days);
+        if (!klines || klines.length === 0) {
+          console.warn(`[BuySignal] fetchKlineData ${stockCode} 仍无K线数据`);
+          return null;
+        }
       }
 
       const result: CachedKline[] = [...klines].sort((a, b) => a.date.localeCompare(b.date));
