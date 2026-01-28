@@ -1,0 +1,86 @@
+[
+  [
+    "002246",
+    {
+      "openTimes": "20260128092915",
+      "openPrice": 23.36,
+      "openChangePercent": -0.04278990158323304,
+      "openVolumeRatio": 1282,
+      "auctionAmount": 2994752,
+      "auctionAmountRatio": -0.04278990158322636,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "688066",
+    {
+      "openTimes": "20260128092922",
+      "openPrice": 41,
+      "openChangePercent": 0.04880429477794809,
+      "openVolumeRatio": 192200,
+      "auctionAmount": 7880200,
+      "auctionAmountRatio": -98.99951195705222,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "300300",
+    {
+      "openTimes": "20260128092845",
+      "openPrice": 12.11,
+      "openChangePercent": -1.943319838056682,
+      "openVolumeRatio": 10324,
+      "auctionAmount": 12502364,
+      "auctionAmountRatio": -1.9433198380566803,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "001316",
+    {
+      "openTimes": "20260128092927",
+      "openPrice": 50.51,
+      "openChangePercent": -1.5399610136452226,
+      "openVolumeRatio": 1608,
+      "auctionAmount": 8122008,
+      "auctionAmountRatio": -1.539961013645213,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "300269",
+    {
+      "openTimes": "20260128092857",
+      "openPrice": 8.59,
+      "openChangePercent": -1.2643678160919476,
+      "openVolumeRatio": 5985,
+      "auctionAmount": 5141115,
+      "auctionAmountRatio": -1.2643678160919363,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "300053",
+    {
+      "openTimes": "20260128092909",
+      "openPrice": 23.67,
+      "openChangePercent": -1.6209476309226807,
+      "openVolumeRatio": 10904,
+      "auctionAmount": 25809768,
+      "auctionAmountRatio": -1.6209476309226933,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "300775",
+    {
+      "openTimes": "20260128092924",
+      "openPrice": 39.26,
+      "openChangePercent": -0.025464731347097314,
+      "openVolumeRatio": 8884,
+      "auctionAmount": 34878584,
+      "auctionAmountRatio": -0.02546473134710564,
+      "isLimitUp": false
+    }
+  ]
+]

@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 import warnings
 import time
 import random
-import traceback
 warnings.filterwarnings("ignore")
 
 # ===================== 配置参数 =====================
@@ -19,43 +18,19 @@ MAX_TURNOVER_RATIO = 25           # 最高换手率
 MIN_AMOUNT = 500000000            # 最低成交额 5 亿
 
 # ===================== 工具函数 =====================
-def test_akshare_connection():
-    """测试akshare连接是否正常"""
-    try:
-        print("正在测试akshare连接...")
-        # 尝试获取少量数据进行测试
-        stock_list = ak.stock_info_a_code_name()
-        print(f"成功获取股票列表，共有 {len(stock_list)} 只股票")
-        
-        # 尝试获取一只股票的历史数据
-        test_stock = stock_list.iloc[0]['code']
-        print(f"正在测试获取股票 {test_stock} 的数据...")
-        test_data = ak.stock_zh_a_hist(symbol=test_stock, period="daily", adjust="hfq", start_date="20230101", end_date="20230131")
-        print(f"成功获取股票 {test_stock} 的 {len(test_data)} 条数据")
-        return True
-    except Exception as e:
-        print(f"akshare连接测试失败: {str(e)}")
-        traceback.print_exc()
-        return False
-
 def get_stock_list():
     """获取A股股票列表"""
-    try:
-        stock_info_df = ak.stock_info_a_code_name()
-        # 过滤ST股，使用转义字符处理正则表达式特殊字符
-        stock_info_df = stock_info_df[~stock_info_df['name'].str.contains(r'ST|\*ST', na=False)]
-        return stock_info_df['code'].tolist()
-    except Exception as e:
-        print(f"获取股票列表失败: {str(e)}")
-        traceback.print_exc()
-        return []
+    stock_info_df = ak.stock_info_a_code_name()
+    # 过滤ST股，使用转义字符处理正则表达式特殊字符
+    stock_info_df = stock_info_df[~stock_info_df['name'].str.contains(r'ST|\*ST', na=False)]
+    return stock_info_df['code'].tolist()
 
 def get_stock_data(code, max_retries=3):
     """获取单只股票后复权日线数据，带重试机制"""
     for attempt in range(max_retries):
         try:
-            # 添加较长的随机延时，减少请求频率
-            time.sleep(random.uniform(2.0, 4.0))  # 增加延时时间
+            # 添加随机延时，减少请求频率
+            time.sleep(random.uniform(0.5, 1.5))
             df = ak.stock_zh_a_hist(symbol=code, period="daily", adjust="hfq")
             if df.empty:
                 print(f"警告: 股票{code}数据为空")
@@ -70,7 +45,7 @@ def get_stock_data(code, max_retries=3):
                 # 最后一次尝试仍然失败，返回空DataFrame
                 return pd.DataFrame()
             # 等待更长时间再重试
-            time.sleep(3 * (attempt + 1))  # 更长的退避时间
+            time.sleep(2 ** attempt)  # 指数退避
     return pd.DataFrame()
 
 def judge_limit_up_multiple(code):
@@ -241,17 +216,8 @@ def backtest_strategy(df, pattern_col):
 
 # ===================== 主函数 =====================
 def main():
-    # 首先测试连接
-    if not test_akshare_connection():
-        print("akshare连接测试失败，程序退出")
-        return
-    
     print("正在获取股票列表...")
     stock_list = get_stock_list()
-    if not stock_list:
-        print("获取股票列表失败，程序退出")
-        return
-    
     total_stocks = len(stock_list)
     print(f"共获取 {total_stocks} 只股票")
     

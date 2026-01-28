@@ -11,6 +11,7 @@
 import { logger } from '../utils';
 import { ConceptResonance } from '../models/ConceptResonance';
 import { getToday, formatDate } from '../utils/dateUtils';
+import { writeToFile } from '../utils/writeToFile';
 import axios from 'axios';
 import pLimit from 'p-limit';
 
@@ -824,6 +825,13 @@ export class ConceptResonanceService {
       const codes = list.map(v => v.stockCode);
       // 批量获取腾讯数据
       tencentQuotes = await fetchTencentRealTimeQuotes(codes);
+      console.log('tencentQuotes', JSON.stringify(tencentQuotes));
+      // 如果是当天9.30之前 存储一份数据到本地
+      const now = new Date();
+      // if (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 30)) {
+        logger.info(`[ConceptResonance] ${targetDateStr} 为交易日且是今天，且当前时间小于9.30，存储一份数据到本地`);
+        writeToFile(`/tencentQuotes/`,`${targetDateStr}.json`, Array.from(tencentQuotes.entries()));
+      // }
     }
     // 为每一支股票获取开盘数据
     for (const stock of list) {

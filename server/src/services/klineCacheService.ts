@@ -7,6 +7,7 @@ import { tradingCalendarService } from './tradingCalendarService';
 import {
   OpenData,
 } from '../types/conceptEnhancement';
+import { writeToFile } from '../utils/writeToFile';
 export interface CachedKline {
   date: string;
   open: number;
@@ -481,6 +482,9 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
     // 腾讯返回 GBK 编码
     const iconv = require('iconv-lite');
     const dataStr = iconv.decode(response.data, 'gbk');
+    // 保存一份原始数据到本地供调试
+    const debugPath = path.join(__dirname, `/debug/`); 
+    writeToFile(debugPath, `tencent_realtime_${Date.now()}.txt`,dataStr);
 
     // 响应格式: v_sz000001="..."; v_sz000002="...";
     // 使用正则匹配所有股票数据
@@ -503,7 +507,9 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
       // 腾讯数据格式（以 ~ 分隔，索引从0开始）:
       // 0:未知 1:名称 2:代码 3:当前价 4:昨收 5:今开 6:成交量(手)
       // 33:最高 34:最低 37:成交额(万)
+      // 35:6.81/929492/625533800 split by '/' 0:收盘价 1:总手-成交量 2:总额-成交额
       // 30:时间戳(YYYYMMDDHHMMSS) 31:涨跌额 32:涨跌幅
+      const volumeAndTurnover = parts[35].split('/');
       const stockCode = parts[2];
       const stockName = parts[1];
       const current = parseFloat(parts[3]) || 0;
@@ -511,8 +517,8 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
       const open = parseFloat(parts[5]) || 0;
       const high = parseFloat(parts[33]) || 0;
       const low = parseFloat(parts[34]) || 0;
-      const volume = parseFloat(parts[6]) || 0;
-      const turnover = (parseFloat(parts[37]) || 0) * 10000; // 万 -> 元
+      const volume = parseFloat(volumeAndTurnover[1]) || 0; // 手
+      const turnover = parseFloat(volumeAndTurnover[2]) || 0; // 万
       const changeAmount = parseFloat(parts[31]) || 0;
       const changePercent = parseFloat(parts[32]) || 0;
 
@@ -540,16 +546,5 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
   } catch (error) {
     logger.warn(`[腾讯实时行情] 批量获取失败: ${(error as Error).message}`);
   }
-
-  //请把result的数据存一份到本地文件备用 路径: server/data/openData/realtimeQuotes_YYYYMMDDHHmmss.json
-  const pathStr = path.join(__dirname, '../../data/openData');
-  const dir = fs.mkdirSync(pathStr, { recursive: true });
-  fs.writeFile(`${dir}/realtimeQuotes_${dataTime}.json`, JSON.stringify(Array.from(result.entries()), null, 2), (err) => {
-    if (err) {
-      console.error('写入实时行情数据文件失败:', err);
-    } else {
-      console.log('实时行情数据已保存到文件');
-    }
-  });
   return result;
 }
