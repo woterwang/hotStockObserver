@@ -808,6 +808,12 @@ export class ConceptResonanceService {
  */
   async getBuySignalList (config: ConceptResonanceQueryConfig): Promise<any[]> {
     const targetDateStr = config.dateStr;
+
+    //如果不是交易日，返回空
+    if (!tradingCalendarService.isTradingDay(targetDateStr)) {
+      logger.info(`[ConceptResonance] ${targetDateStr} 不是交易日，返回空`);
+      return [];
+    }
     
     // 1. 优先查库：如果已存在则直接返回（查信号集合）
     const dbList = await ConceptResonanceBuySignals.find({
