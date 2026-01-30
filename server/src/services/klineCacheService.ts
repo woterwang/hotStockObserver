@@ -438,6 +438,19 @@ class KlineCacheService {
     }
     return klineDates;
   }
+
+  // 批量从ths远端获取多个股票的K线数据
+  async fetchKlinesByCodes (stockCodes: string[], days: number = 1800): Promise<Map<string, Map<string, CachedKline>>> {
+    const result = new Map<string, Map<string, CachedKline>>();
+    for (const code of stockCodes) {
+      console.log(`[K线缓存] 批量获取K线数据，正在获取 ${code} 最近 ${days} 天`);
+      const klines = await this.fetchKlineFromTHS(code, days);
+      this.persistCache(code, klines, Date.now());
+      result.set(code, klines);
+      await sleep(8, 13); // 简单节流
+    }
+    return result;
+  }
 }
 
 export const klineCacheService = new KlineCacheService();

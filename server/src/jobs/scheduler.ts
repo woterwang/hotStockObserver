@@ -2,6 +2,7 @@ import cron from 'node-cron';
 import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, volumeSurgeService, tradingCalendarService, marketMoodService, conceptResonanceService } from '../services';
 import { buySignalService } from '../services/buySignalService';
 import { thsConceptHotRankService } from '../services/thsConceptHotRankService';
+import { updateCodeKline } from './updateCodeKline';
 
 import { logger } from '../utils';
 import { formatDate } from '../utils/dateUtils';
@@ -71,6 +72,7 @@ export class JobScheduler {
     this.startMarketHoursJobs();
     this.startAfterMarketJobs();
     this.startNightJobs();
+    this.startDailyKlineUpdateJob();
 
     logger.info('定时任务已启动');
   }
@@ -263,22 +265,23 @@ export class JobScheduler {
     const today = formatDate(new Date(), 'YYYYMMDD');
 
     this.auctionJob = cron.schedule(cronExpression, async () => {
-      // 1. 放量大涨策略
-      try {
-        logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
-        const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
-        logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.length} 个信号，入场日=${volumeSurgeResult[0].date}`);
-      } catch (error) {
-        logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
-      }
 
-      //2.更新 主线共振 入场条件
+      // 1.更新 主线共振 入场条件
       try {
         logger.info('开始执行集合竞价后【主线共振策略】入场条件更新');
         const conceptResonanceResult = await conceptResonanceService.getBuySignalList({ dateStr: today });
         logger.info(`[主线共振] 生成完成，共 ${conceptResonanceResult.length} 个信号，入场日=${conceptResonanceResult[0].date}`);
       } catch (error) {
         logger.error(`[主线共振] 生成失败: ${(error as Error).message}`);
+      }
+
+      // 2. 放量大涨策略
+      try {
+        logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
+        const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
+        logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.length} 个信号，入场日=${volumeSurgeResult[0].date}`);
+      } catch (error) {
+        logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
       }
 
       // 3. 价格突破策略
@@ -458,6 +461,19 @@ export class JobScheduler {
     });
 
     logger.info(`收盘后串行任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+    /**
+   * 收盘后串行任务 (按顺序执行各项任务)
+   * 时间: 每天凌晨1:00之后
+   */
+  private startDailyKlineUpdateJob () {
+    // 在1:00执行，将各项收盘后任务串行执行
+    const cronExpression = '0 1 * * *';
+    cron.schedule(cronExpression, async () => {
+       await updateCodeKline()
+    })
+    logger.info(`每日K线更新任务已配置，Cron表达式: ${cronExpression}`);
   }
 }
 
