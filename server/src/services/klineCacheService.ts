@@ -441,9 +441,10 @@ class KlineCacheService {
 
   // 批量从ths远端获取多个股票的K线数据
   async fetchKlinesByCodes (stockCodes: string[], days: number = 1800): Promise<Map<string, Map<string, CachedKline>>> {
+    logger.info(`[K线缓存] 批量获取K线数据，股票数量: ${stockCodes.length}，天数: ${days}`);
     const result = new Map<string, Map<string, CachedKline>>();
     for (const code of stockCodes) {
-      console.log(`[K线缓存] 批量获取K线数据，正在获取 ${code} 最近 ${days} 天`);
+      logger.info(`[K线缓存] 批量获取K线数据，正在获取 ${code} 最近 ${days} 天`);
       const klines = await this.fetchKlineFromTHS(code, days);
       this.persistCache(code, klines, Date.now());
       result.set(code, klines);

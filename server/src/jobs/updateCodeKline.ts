@@ -31,7 +31,7 @@ export async function updateCodeKline () {
 		ConceptResonanceRecords.forEach(record => allCodesSet.add(record.stockCode));
 		const allCodes = Array.from(allCodesSet);
 		// 调用K线更新服务
-		klineCacheService.fetchKlinesByCodes(allCodes);
+		await klineCacheService.fetchKlinesByCodes(allCodes);
 	} catch (error) {
 		console.error('Error in scheduled task:', error);
 	}
