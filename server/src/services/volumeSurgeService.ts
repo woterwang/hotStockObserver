@@ -245,11 +245,7 @@ export class VolumeSurgeService {
       } else {
         // 缓存未命中，降级使用原有的 marketSentimentService
         logger.info(`[市场情绪] 缓存未命中 ${targetDate}，使用 marketSentimentService`);
-        let sentiment = await marketSentimentService.getSentimentByDate(targetDate);
-        if (!sentiment) {
-          logger.info(`[市场情绪] 未找到 ${targetDate} 的数据，尝试自动获取...`);
-          sentiment = await marketSentimentService.fetchAndCalculateSentiment(targetDate);
-        }
+        let sentiment = await marketSentimentService.fetchAndCalculateSentiment(targetDate);
         if (sentiment) {
           marketSentimentScore = sentiment.score || 50;
           marketLimitUpCount = sentiment.limitUpCount || 0;

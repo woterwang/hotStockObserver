@@ -403,10 +403,11 @@ const ConceptResonancePage: React.FC = () => {
                               }`}>
                                 {item.conceptScore?.toFixed(0) || '-'}
                               </span>
-                            </td><td className="px-4 py-3 text-center">
+                            </td>
+                            <td className="px-4 py-3 text-center">
                               <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                (Number(item.strategyScore) - item.conceptScore) >= 40 ? 'bg-red-100 text-red-800' :
-                                (Number(item.strategyScore) - item.conceptScore) >= 25 ? 'bg-orange-100 text-orange-800' :
+                                (item.conceptScore) >= 40 ? 'bg-red-100 text-red-800' :
+                                (item.conceptScore) >= 25 ? 'bg-orange-100 text-orange-800' :
                                 'bg-gray-100 text-gray-800'
                               }`}>
                                 {(Number(item.strategyScore) - item.conceptScore) || '-'}

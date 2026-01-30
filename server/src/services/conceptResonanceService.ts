@@ -546,10 +546,7 @@ export class ConceptResonanceService {
         }
         logger.info(`[ConceptResonance] 市场情绪: 评分=${marketSentimentScore}, 涨停数=${marketLimitUpCount}`);
       } else {
-        let sentiment = await marketSentimentService.getSentimentByDate(targetDate);
-        if (!sentiment) {
-          sentiment = await marketSentimentService.fetchAndCalculateSentiment(targetDate);
-        }
+        let sentiment = await marketSentimentService.fetchAndCalculateSentiment(targetDate);
         if (sentiment) {
           marketSentimentScore = sentiment.score || 50;
           marketLimitUpCount = sentiment.limitUpCount || 0;
