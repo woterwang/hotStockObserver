@@ -540,7 +540,9 @@ const VolumeSurgePage: React.FC = () => {
                         </button>
                       ))}
                       {day.stocks.length > 10 && (
-                        <span className="inline-flex items-center px-3 py-1 text-sm text-gray-500">
+                        <span onClick={
+                          () => alert('请切换到按日期查看模式，查看更多股票详情。')
+                        } className="inline-flex items-center px-3 py-1 text-sm text-gray-500">
                           +{day.stocks.length - 10} 更多
                         </span>
                       )}

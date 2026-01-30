@@ -10,6 +10,7 @@
  */
 import { logger } from '../utils';
 import { ConceptResonance } from '../models/ConceptResonance';
+import { ConceptResonanceBuySignals } from '../models/ConceptResonanceBuySignals';
 import { getToday, formatDate } from '../utils/dateUtils';
 import { writeToFile } from '../utils/writeToFile';
 import axios from 'axios';
@@ -809,23 +810,38 @@ export class ConceptResonanceService {
  * 获取指定日期 且 strategyScore >= config.minstrategyScore 的选股列表
  */
   async getBuySignalList (config: ConceptResonanceQueryConfig): Promise<any[]> {
+    const targetDateStr = config.dateStr;
+    
+    // 1. 优先查库：如果已存在则直接返回（查信号集合）
+    const dbList = await ConceptResonanceBuySignals.find({
+      date: targetDateStr,
+      strategyScore: { $gte: config?.strategyScore ?? -1 },
+      // conceptScore: { $gte: 30 }
+    }).sort({ strategyScore: -1, changePercent: -1 });
+    if (dbList && dbList.length > 0) {
+      logger.info(`[ConceptResonance] ${targetDateStr} 已存在 ${dbList.length} 条信号数据，直接返回`);
+      return dbList;
+    }
+    
+    // 2. 不存在则生成信号
     const prevDateStr = tradingCalendarService.getPrevTradingDay(config.dateStr);
-    // const list = await ConceptResonance.find({ date: prevDateStr, strategyScore: { $gte: config?.strategyScore ?? -1 } }).sort({ strategyScore: -1, changePercent: -1 });
+    console.log('prevDateStr', prevDateStr);
     const list = await ConceptResonance.find({
       date: prevDateStr,
       strategyScore: { $gte: -1 },
       // 概念评分至少30分
       conceptScore: { $gte: 30 }
     }).sort({ strategyScore: -1, changePercent: -1 });
-    const targetDateStr = config.dateStr;
+    logger.info(`[ConceptResonance] ${targetDateStr} 从 ${prevDateStr} 获取 ${list.length} 条候选数据`);
+    
     let tencentQuotes = new Map<string, any>();
     // 如果 targetDateStr 是交易日且是今天，则从腾讯获取当日数据
     if (tradingCalendarService.isTradingDay(targetDateStr) && targetDateStr === formatDate(getToday(), 'YYYYMMDD')) {
       logger.info(`[ConceptResonance] ${targetDateStr} 为交易日且是今天，使用腾讯数据更新开盘数据`);
       const codes = list.map(v => v.stockCode);
+      console.log('tencentQuotes codes', codes);
       // 批量获取腾讯数据
       tencentQuotes = await fetchTencentRealTimeQuotes(codes);
-      console.log('tencentQuotes', JSON.stringify(tencentQuotes));
       // 如果是当天9.30之前 存储一份数据到本地
       const now = new Date();
       if (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 30)) {
@@ -833,16 +849,25 @@ export class ConceptResonanceService {
         writeToFile(`/tencentQuotes/`,`${targetDateStr}.json`, Array.from(tencentQuotes.entries()));
       }
     }
+    
+    // 用于去重，确保同一支股票只入库一次
+    const insertedStockCodes = new Set<string>();
+    const resultList: any[] = [];
+    
     // 为每一支股票获取开盘数据
     for (const stock of list) {
       try {
+        // 将 mongoose 文档转为普通对象以便修改
+        const stockObj = stock.toObject ? stock.toObject() : { ...stock };
+        
         let openData: OpenData | null = null;
         // 如果数据不为空-证明是当日数据 - 优先使用腾讯数据
         if (tencentQuotes.size > 0) {
-          openData = tencentQuotes.get(stock.stockCode);
+          openData = tencentQuotes.get(stockObj.stockCode);
+          console.log(`使用腾讯数据获取开盘数据 ${stockObj.stockCode}:`, openData);
         } else {
           // 否则使用 buySignalService 获取开盘数据
-          openData = await buySignalService.getOpeningData(stock.stockCode, config.dateStr);
+          openData = await buySignalService.getOpeningData(stockObj.stockCode, config.dateStr);
         }
 
         // ### 2.1 开盘强度（满分30分）⭐最重要
@@ -910,19 +935,35 @@ export class ConceptResonanceService {
             auctionScore = 2;
           }
           // 开盘强度评分
-          stock.openStrengthScore = openStrengthScore;
+          stockObj.openStrengthScore = openStrengthScore;
           // 竞价抢筹评分
-          stock.auctionScore = auctionScore;
+          stockObj.auctionScore = auctionScore;
           // 开盘总评分
-          stock.openingTotalScore = openStrengthScore + auctionScore;
+          stockObj.openingTotalScore = openStrengthScore + auctionScore;
           // 更新策略总评分
-          stock.strategyScore = (stock.strategyScore || 0) + stock.openingTotalScore;
+          stockObj.strategyScore = (stockObj.strategyScore || 0) + stockObj.openingTotalScore;
+        }
+        // 检查是否符合条件
+        if ((stockObj?.strategyScore ?? 0) < (config?.strategyScore ?? -1)) {
+          continue;
+        }
+        // 3. 检查信号集合是否已存在该股票（同一支股票只能入库一次，不能被覆盖）
+        const exist = await ConceptResonanceBuySignals.findOne({ date: targetDateStr, stockCode: stockObj.stockCode });
+        if (!exist && !insertedStockCodes.has(stockObj.stockCode)) {
+          // 只插入一次，移除原有 _id 以便创建新文档
+          const { _id, ...stockData } = stockObj;
+          const doc = new ConceptResonanceBuySignals({ ...stockData, date: targetDateStr });
+          await doc.save();
+          insertedStockCodes.add(stockObj.stockCode);
+          resultList.push(doc.toObject());
+          logger.debug(`[ConceptResonance] 信号入库成功: ${stockObj.stockCode} ${stockObj.stockName}`);
         }
       } catch (error) {
         logger.warn(`[ConceptResonance] 获取开盘数据失败 ${stock.stockCode}: ${(error as Error).message}`);
       }
     }
-    return list.filter(v => (v?.strategyScore ?? 0) >= (config?.strategyScore ?? -1)).sort((a, b) => (b.strategyScore || 0) - (a.strategyScore || 0));
+    logger.info(`[ConceptResonance] ${targetDateStr} 生成 ${resultList.length} 条信号数据`);
+    return resultList.sort((a, b) => (b.strategyScore || 0) - (a.strategyScore || 0));
   }
 
 

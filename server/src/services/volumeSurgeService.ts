@@ -660,12 +660,12 @@ export class VolumeSurgeService {
     const result = await VolumeSurge.aggregate([
       {
         $match: {
-          date: { $gte: startDate, $lte: endDate }
+          date: { $gte: formatDate(startDate,'YYYYMMDD'), $lte: formatDate(endDate,'YYYYMMDD') }
         }
       },
       {
         $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          _id: { $substr: ["$date", 0, 8] },  // 从字符串类型的date字段提取年月日部分
           count: { $sum: 1 },
           stocks: { $push: "$$ROOT" }
         }

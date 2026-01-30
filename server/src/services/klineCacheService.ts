@@ -529,6 +529,7 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
         ? `${timeStr.substring(8, 10)}:${timeStr.substring(10, 12)}:${timeStr.substring(12, 14)}`
         : '';
       dataTime = timeStr;
+      console.log(`[K线缓存] 腾讯接口时间: ${date} ${time}`);
 
       // 开盘价为0表示数据可能无效，但仍放入结果中，由调用方判断
       result.set(stockCode, {
