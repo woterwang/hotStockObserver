@@ -1,0 +1,104 @@
+========================================
+  每日热搜股票观察系统 - 启动脚本
+========================================
+
+[OK] Node.js v20.17.0
+[OK] MongoDB 已安装
+
+[1/4] 安装后端依赖...
+[OK] 后端依赖已安装
+
+[2/4] 安装前端依赖...
+[OK] 前端依赖已安装
+
+[3/4] 启动后端服务 (端口 3000)...
+
+> hot-stock-observer-server@1.0.0 dev
+> tsx watch src/app.ts
+
+2026-01-30 19:23:53 [[32MINFO[39M]: MongoDB 连接成功
+2026-01-30 19:23:53 [[32MINFO[39M]: 交易日历缓存已加载，共 781 个交易日，更新时间: 2026-01-30T07:20:00.717Z
+2026-01-30 19:23:53 [[32MINFO[39M]: 市场情绪缓存已加载，共 1031 条数据，更新时间: 2026-01-30T00:18:00.588Z
+2026-01-30 19:23:53 [[32MINFO[39M]: 早间市场情绪任务已配置，Cron表达式: 18 8 * * *
+2026-01-30 19:23:53 [[32MINFO[39M]: 集合竞价更新任务已配置，Cron表达式: 28 26 9 * * 1-5
+2026-01-30 19:23:53 [[32MINFO[39M]: 热搜股票更新任务已配置，Cron表达式: */5 9-15 * * 1-5
+2026-01-30 19:23:53 [[32MINFO[39M]: 交易日历更新任务已配置，Cron表达式: 20 15 * * *
+2026-01-30 19:23:53 [[32MINFO[39M]: 收盘后串行任务已配置，Cron表达式: 30 15 * * 1-5
+2026-01-30 19:23:53 [[32MINFO[39M]: 每日热搜板块更新任务已配置，Cron表达式: 58 23 * * *
+2026-01-30 19:23:53 [[32MINFO[39M]: 定时任务已启动
+node:events:497
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1904:16)
+    at listenInCluster (node:net:1961:12)
+    at Server.listen (node:net:2063:7)
+    at Function.listen (/code/hotStockObserver/server/node_modules/express/lib/application.js:635:24)
+    at startServer (/code/hotStockObserver/server/src/app.ts:88:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1940:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 3000
+}
+
+Node.js v20.17.0
+[4/4] 启动前端服务 (端口 5173)...
+
+========================================
+  服务已启动!
+  前端地址: http://localhost:5173
+  后端地址: http://localhost:3000
+========================================
+
+按 Ctrl+C 停止服务
+
+> hot-stock-observer-client@1.0.0 dev
+> vite
+
+Port 80 is in use, trying another one...
+
+  VITE v5.4.21  ready in 176 ms
+
+  ➜  Local:   http://localhost:81/
+  ➜  Network: http://172.17.0.2:81/
+7:30:52 PM [tsx] change in ./src/types/conceptEnhancement.ts Rerunning...
+c2026-01-30 19:30:55 [[32MINFO[39M]: [试盘服务] 已加载 1031 条大盘情绪数据
+2026-01-30 19:30:55 [[32MINFO[39M]: MongoDB 连接成功
+2026-01-30 19:30:55 [[32MINFO[39M]: 交易日历缓存已加载，共 781 个交易日，更新时间: 2026-01-30T07:20:00.717Z
+2026-01-30 19:30:55 [[32MINFO[39M]: 市场情绪缓存已加载，共 1031 条数据，更新时间: 2026-01-30T00:18:00.588Z
+2026-01-30 19:30:55 [[32MINFO[39M]: 早间市场情绪任务已配置，Cron表达式: 18 8 * * *
+2026-01-30 19:30:55 [[32MINFO[39M]: 集合竞价更新任务已配置，Cron表达式: 18 26 9 * * 1-5
+2026-01-30 19:30:55 [[32MINFO[39M]: 热搜股票更新任务已配置，Cron表达式: */5 9-15 * * 1-5
+2026-01-30 19:30:55 [[32MINFO[39M]: 交易日历更新任务已配置，Cron表达式: 20 15 * * *
+2026-01-30 19:30:55 [[32MINFO[39M]: 收盘后串行任务已配置，Cron表达式: 30 15 * * 1-5
+2026-01-30 19:30:55 [[32MINFO[39M]: 每日热搜板块更新任务已配置，Cron表达式: 58 23 * * *
+2026-01-30 19:30:55 [[32MINFO[39M]: 每日K线更新任务已配置，Cron表达式: 0 1 * * *
+2026-01-30 19:30:55 [[32MINFO[39M]: 定时任务已启动
+node:events:497
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1904:16)
+    at listenInCluster (node:net:1961:12)
+    at Server.listen (node:net:2063:7)
+    at Function.listen (/code/hotStockObserver/server/node_modules/express/lib/application.js:635:24)
+    at startServer (/code/hotStockObserver/server/src/app.ts:88:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1940:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 3000
+}
+
+Node.js v20.17.0
