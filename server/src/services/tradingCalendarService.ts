@@ -20,9 +20,9 @@ interface TradingCalendarCache {
 
 class TradingCalendarService {
   // 内存缓存：交易日 Set
-  private tradingDaysSet: Set<string> = new Set();
+  // private tradingDaysSet: Set<string> = new Set();
   // 缓存更新时间
-  private lastUpdated: Date | null = null;
+  // private lastUpdated: Date | null = null;
   // 是否已初始化
   private initialized: boolean = false;
 
@@ -44,8 +44,8 @@ class TradingCalendarService {
         const cacheData = JSON.parse(fs.readFileSync(CACHE_FILE_PATH, 'utf-8')) as TradingCalendarCache;
         // 确保 tradingDays 是有效数组
         if (cacheData.tradingDays && Array.isArray(cacheData.tradingDays)) {
-          this.tradingDaysSet = new Set(cacheData.tradingDays);
-          this.lastUpdated = new Date(cacheData.updatedAt);
+          // this.tradingDaysSet = new Set(cacheData.tradingDays);
+          // this.lastUpdated = new Date(cacheData.updatedAt);
           logger.info(`交易日历缓存已加载，共 ${this.tradingDaysSet.size} 个交易日，更新时间: ${cacheData.updatedAt}`);
         } else {
           logger.warn('交易日历缓存文件格式无效，将重新获取');
@@ -59,6 +59,29 @@ class TradingCalendarService {
       logger.error(`加载交易日历缓存失败: ${(error as Error).message}`);
       this.initialized = true; // 即使失败也标记为已初始化，避免重复尝试
     }
+  }
+
+  /**
+   * 获取交易日期集合的getter方法
+   * 该方法从缓存文件中读取交易日数据并转换为Set集合返回
+   * @returns {Set<string>} 包含所有交易日期的Set集合
+   */
+  get tradingDaysSet (): Set<string> {
+    // 从缓存文件中读取数据并解析为TradingCalendarCache类型
+    const cacheData = JSON.parse(fs.readFileSync(CACHE_FILE_PATH, 'utf-8')) as TradingCalendarCache;
+    // 将解析得到的交易日数组转换为Set集合并返回
+    return new Set(cacheData.tradingDays);
+  }
+
+  /**
+   * 获取交易历历最后更新时间的getter方法
+   * @returns 返回一个Date对象表示最后更新时间，如果缓存不存在则返回null
+   */
+  get lastUpdated (): Date | null {
+    // 从缓存文件中读取数据并解析为TradingCalendarCache类型
+    const cacheData = JSON.parse(fs.readFileSync(CACHE_FILE_PATH, 'utf-8')) as TradingCalendarCache;
+    // 将解析得到的交易日数组转换为Set集合并返回
+    return new Date(cacheData.updatedAt);
   }
 
   /**

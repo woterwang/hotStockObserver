@@ -465,11 +465,11 @@ export class JobScheduler {
 
     /**
    * 收盘后串行任务 (按顺序执行各项任务)
-   * 时间: 每天凌晨1:00之后
+   * 时间: 每天凌晨5:18之后
    */
   private startDailyKlineUpdateJob () {
     // 在1:00执行，将各项收盘后任务串行执行
-    const cronExpression = '0 1 * * *';
+    const cronExpression = '18 5 * * *';
     cron.schedule(cronExpression, async () => {
        await updateCodeKline()
     })
