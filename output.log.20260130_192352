@@ -100,3 +100,5 @@ Emitted 'error' event on Server instance at:
 }
 
 Node.js v20.17.0
+11:26:21 AM [tsx] change in ./src/services/tradingCalendarService.ts Rerunning...
+c2026-02-01 11:26:26 [[32MINFO[39M]: [试盘服务] 已加载 1032 条大盘情绪数据
