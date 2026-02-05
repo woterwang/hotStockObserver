@@ -552,7 +552,7 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
         openChangePercent: preClose > 0 ? ((open - preClose) / preClose) * 100 : 0,
         openVolumeRatio: volume, // 成交量（手）
         auctionAmount: turnover, // 成交额（元）
-        auctionAmountRatio: preClose > 0 ? ((turnover - preClose * volume * 100) / (preClose * volume * 100)) * 100 : 0,
+        auctionAmountRatio: turnover > 0 ? ((turnover - preClose * volume * 100) / (preClose * volume * 100)) * 100 : 0,
         isLimitUp: changePercent >= 9.9, // 简单判断涨停（A股）
       });
     }

@@ -783,10 +783,11 @@ class BuySignalService {
     if (cachedMood !== null) {
       console.log(`[BuySignal] 使用缓存的市场情绪: ${targetDateStr} -> ${cachedMood}`);
       // 仍需获取指数开盘数据，但情绪值用缓存的
-      const indexData = await this.fetchIndexData(targetDateStr);
+      // TODO: 后续可考虑缓存指数开盘数据，减少请求，这里获取的指数数据是错误的
+      // const indexData = await this.fetchIndexData(targetDateStr);
       return {
-        indexOpenChange: indexData.indexOpenChange,
-        indexMorningTrend: indexData.indexMorningTrend,
+        indexOpenChange: 0,
+        indexMorningTrend: 'flat',
         marketMood: cachedMood,
       };
     }

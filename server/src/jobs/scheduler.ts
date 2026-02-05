@@ -226,6 +226,8 @@ export class JobScheduler {
 
     this.morningMoodJob = cron.schedule(cronExpression, async () => {
       try {
+        // 更新市场情绪缓存
+        logger.info('开始执行早间市场情绪更新任务');
         logger.info('早间市场情绪缓存更新开始');
         const moodSuccess = await marketMoodService.updateCache();
         if (moodSuccess) {
@@ -234,6 +236,8 @@ export class JobScheduler {
         } else {
           logger.warn('早间市场情绪更新失败，将继续使用旧缓存');
         }
+        // 初始化市场情绪服务（确保已初始化）
+        await marketMoodService.init();
         // 更新K线缓存
         // 获取上一个交易
         const today = dayjs().format('YYYY-MM-DD');
