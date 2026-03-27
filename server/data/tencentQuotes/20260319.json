@@ -1,0 +1,86 @@
+[
+  [
+    "002202",
+    {
+      "openTimes": "20260319092709",
+      "openPrice": 30,
+      "openChangePercent": -3.225806451612903,
+      "openVolumeRatio": 42680,
+      "auctionAmount": 128040570,
+      "auctionAmountRatio": -3.2253756386613057,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "300657",
+    {
+      "openTimes": "20260319092754",
+      "openPrice": 31.54,
+      "openChangePercent": -2.533992583436342,
+      "openVolumeRatio": 2778,
+      "auctionAmount": 8762348,
+      "auctionAmountRatio": -2.5280301432498504,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "002025",
+    {
+      "openTimes": "20260319092706",
+      "openPrice": 59,
+      "openChangePercent": -1.96078431372549,
+      "openVolumeRatio": 4744,
+      "auctionAmount": 27989600,
+      "auctionAmountRatio": -1.9607843137254901,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "688818",
+    {
+      "openTimes": "20260319092743",
+      "openPrice": 65.02,
+      "openChangePercent": -3.244047619047629,
+      "openVolumeRatio": 464677,
+      "auctionAmount": 30213299,
+      "auctionAmountRatio": -99.0324404614593,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "600726",
+    {
+      "openTimes": "20260319092714",
+      "openPrice": 4.32,
+      "openChangePercent": -5.263157894736828,
+      "openVolumeRatio": 95354,
+      "auctionAmount": 41192928,
+      "auctionAmountRatio": -5.263157894736842,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "688387",
+    {
+      "openTimes": "20260319092750",
+      "openPrice": 15.5,
+      "openChangePercent": -3.125,
+      "openVolumeRatio": 883874,
+      "auctionAmount": 13700047,
+      "auctionAmountRatio": -99.03125,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "300900",
+    {
+      "openTimes": "20260319092657",
+      "openPrice": 40.01,
+      "openChangePercent": -3.798990141861037,
+      "openVolumeRatio": 3706,
+      "auctionAmount": 14827706,
+      "auctionAmountRatio": -3.798990141861024,
+      "isLimitUp": false
+    }
+  ]
+]

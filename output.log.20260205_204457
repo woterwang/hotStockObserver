@@ -3586,3 +3586,194 @@ Emitted 'error' event on Server instance at:
 Node.js v20.20.0
 Files in the public directory are served at the root path.
 Instead of /public/.env, use /.env.
+Server responded with status code 431. See https://vite.dev/guide/troubleshooting.html#_431-request-header-fields-too-large.
+The request url "/etc/passwd" is outside of Vite serving allow list.
+
+- /codes/hotStockObserver/client
+
+Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more details.
+
+The request url "/etc/passwd" is outside of Vite serving allow list.
+The request url "/etc/passwd" is outside of Vite serving allow list.
+Files in the public directory are served at the root path.
+Instead of /public/.git/config, use /.git/config.
+Files in the public directory are served at the root path.
+Instead of /public/.env, use /.env.
+Files in the public directory are served at the root path.
+Instead of /public/.env.local, use /.env.local.
+Files in the public directory are served at the root path.
+Instead of /public/.env.production, use /.env.production.
+Files in the public directory are served at the root path.
+Instead of /public/.env.prod, use /.env.prod.
+Files in the public directory are served at the root path.
+Instead of /public/.env.development, use /.env.development.
+Files in the public directory are served at the root path.
+Instead of /public/.env.dev, use /.env.dev.
+Files in the public directory are served at the root path.
+Instead of /public/.env.staging, use /.env.staging.
+Files in the public directory are served at the root path.
+Instead of /public/.env.stage, use /.env.stage.
+Files in the public directory are served at the root path.
+Instead of /public/.env.test, use /.env.test.
+Files in the public directory are served at the root path.
+Instead of /public/.env.uat, use /.env.uat.
+Files in the public directory are served at the root path.
+Instead of /public/.env.qa, use /.env.qa.
+Files in the public directory are served at the root path.
+Instead of /public/.env.preprod, use /.env.preprod.
+Files in the public directory are served at the root path.
+Instead of /public/.env.live, use /.env.live.
+Files in the public directory are served at the root path.
+Instead of /public/.env.example, use /.env.example.
+Files in the public directory are served at the root path.
+Instead of /public/.env.sample, use /.env.sample.
+Files in the public directory are served at the root path.
+Instead of /public/.env.dist, use /.env.dist.
+Files in the public directory are served at the root path.
+Instead of /public/.env.bak, use /.env.bak.
+Files in the public directory are served at the root path.
+Instead of /public/.env.backup, use /.env.backup.
+Files in the public directory are served at the root path.
+Instead of /public/.env.old, use /.env.old.
+Files in the public directory are served at the root path.
+Instead of /public/.env.save, use /.env.save.
+Files in the public directory are served at the root path.
+Instead of /public/.env.swp, use /.env.swp.
+Files in the public directory are served at the root path.
+Instead of /public/.env, use /.env.
+Files in the public directory are served at the root path.
+Instead of /public/.env.local, use /.env.local.
+Files in the public directory are served at the root path.
+Instead of /public/.env.production, use /.env.production.
+Files in the public directory are served at the root path.
+Instead of /public/.env.prod, use /.env.prod.
+Files in the public directory are served at the root path.
+Instead of /public/.env.development, use /.env.development.
+Files in the public directory are served at the root path.
+Instead of /public/.env.dev, use /.env.dev.
+Files in the public directory are served at the root path.
+Instead of /public/.env.staging, use /.env.staging.
+Files in the public directory are served at the root path.
+Instead of /public/.env.stage, use /.env.stage.
+Files in the public directory are served at the root path.
+Instead of /public/.env.test, use /.env.test.
+Files in the public directory are served at the root path.
+Instead of /public/.env.uat, use /.env.uat.
+Files in the public directory are served at the root path.
+Instead of /public/.env.qa, use /.env.qa.
+Files in the public directory are served at the root path.
+Instead of /public/.env.preprod, use /.env.preprod.
+Files in the public directory are served at the root path.
+Instead of /public/.env.live, use /.env.live.
+Files in the public directory are served at the root path.
+Instead of /public/.env.example, use /.env.example.
+Files in the public directory are served at the root path.
+Instead of /public/.env.sample, use /.env.sample.
+Files in the public directory are served at the root path.
+Instead of /public/.env.dist, use /.env.dist.
+Files in the public directory are served at the root path.
+Instead of /public/.env.bak, use /.env.bak.
+Files in the public directory are served at the root path.
+Instead of /public/.env.backup, use /.env.backup.
+Files in the public directory are served at the root path.
+Instead of /public/.env.old, use /.env.old.
+Files in the public directory are served at the root path.
+Instead of /public/.env.save, use /.env.save.
+Files in the public directory are served at the root path.
+Instead of /public/.env.swp, use /.env.swp.
+Files in the public directory are served at the root path.
+Instead of /public/.env, use /.env.
+Files in the public directory are served at the root path.
+Instead of /public/.env.local, use /.env.local.
+Files in the public directory are served at the root path.
+Instead of /public/.env.production, use /.env.production.
+Files in the public directory are served at the root path.
+Instead of /public/.env.prod, use /.env.prod.
+Files in the public directory are served at the root path.
+Instead of /public/.env.development, use /.env.development.
+Files in the public directory are served at the root path.
+Instead of /public/.env.dev, use /.env.dev.
+Files in the public directory are served at the root path.
+Instead of /public/.env.staging, use /.env.staging.
+Files in the public directory are served at the root path.
+Instead of /public/.env.stage, use /.env.stage.
+Files in the public directory are served at the root path.
+Instead of /public/.env.test, use /.env.test.
+Files in the public directory are served at the root path.
+Instead of /public/.env.uat, use /.env.uat.
+Files in the public directory are served at the root path.
+Instead of /public/.env.qa, use /.env.qa.
+Files in the public directory are served at the root path.
+Instead of /public/.env.preprod, use /.env.preprod.
+Files in the public directory are served at the root path.
+Instead of /public/.env.live, use /.env.live.
+Files in the public directory are served at the root path.
+Instead of /public/.env.example, use /.env.example.
+Files in the public directory are served at the root path.
+Instead of /public/.env.sample, use /.env.sample.
+Files in the public directory are served at the root path.
+Instead of /public/.env.dist, use /.env.dist.
+Files in the public directory are served at the root path.
+Instead of /public/.env.bak, use /.env.bak.
+Files in the public directory are served at the root path.
+Instead of /public/.env.backup, use /.env.backup.
+Files in the public directory are served at the root path.
+Instead of /public/.env.old, use /.env.old.
+Files in the public directory are served at the root path.
+Instead of /public/.env.save, use /.env.save.
+Files in the public directory are served at the root path.
+Instead of /public/.env.swp, use /.env.swp.
+Files in the public directory are served at the root path.
+Instead of /public/.env, use /.env.
+Files in the public directory are served at the root path.
+Instead of /public/.env.local, use /.env.local.
+Files in the public directory are served at the root path.
+Instead of /public/.env.production, use /.env.production.
+Files in the public directory are served at the root path.
+Instead of /public/.env.prod, use /.env.prod.
+Files in the public directory are served at the root path.
+Instead of /public/.env.development, use /.env.development.
+Files in the public directory are served at the root path.
+Instead of /public/.env.dev, use /.env.dev.
+Files in the public directory are served at the root path.
+Instead of /public/.env.staging, use /.env.staging.
+Files in the public directory are served at the root path.
+Instead of /public/.env.stage, use /.env.stage.
+Files in the public directory are served at the root path.
+Instead of /public/.env.test, use /.env.test.
+Files in the public directory are served at the root path.
+Instead of /public/.env.uat, use /.env.uat.
+Files in the public directory are served at the root path.
+Instead of /public/.env.qa, use /.env.qa.
+Files in the public directory are served at the root path.
+Instead of /public/.env.preprod, use /.env.preprod.
+Files in the public directory are served at the root path.
+Instead of /public/.env.live, use /.env.live.
+Files in the public directory are served at the root path.
+Instead of /public/.env.example, use /.env.example.
+Files in the public directory are served at the root path.
+Instead of /public/.env.sample, use /.env.sample.
+Files in the public directory are served at the root path.
+Instead of /public/.env.dist, use /.env.dist.
+Files in the public directory are served at the root path.
+Instead of /public/.env.bak, use /.env.bak.
+Files in the public directory are served at the root path.
+Instead of /public/.env.backup, use /.env.backup.
+Files in the public directory are served at the root path.
+Instead of /public/.env.old, use /.env.old.
+Files in the public directory are served at the root path.
+Instead of /public/.env.save, use /.env.save.
+Files in the public directory are served at the root path.
+Instead of /public/.env.swp, use /.env.swp.
+The request url "/etc/passwd" is outside of Vite serving allow list.
+The request url "/etc/passwd" is outside of Vite serving allow list.
+The request url "/etc/passwd" is outside of Vite serving allow list.
+The request url "/etc/passwd" is outside of Vite serving allow list.
+The request url "/etc/passwd" is outside of Vite serving allow list.
+The request url "/etc/passwd" is outside of Vite serving allow list.
+The request url "/etc/passwd" is outside of Vite serving allow list.
+Server responded with status code 431. See https://vite.dev/guide/troubleshooting.html#_431-request-header-fields-too-large.
+Files in the public directory are served at the root path.
+Instead of /public/.env, use /.env.
+Files in the public directory are served at the root path.
+Instead of /public/.env, use /.env.
