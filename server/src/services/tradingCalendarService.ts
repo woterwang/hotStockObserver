@@ -167,13 +167,9 @@ class TradingCalendarService {
       return false;
     }
 
-    // 更新内存缓存
-    this.tradingDaysSet = new Set(tradingDays);
-    this.lastUpdated = new Date();
-
     // 持久化到文件
     const cacheData: TradingCalendarCache = {
-      updatedAt: this.lastUpdated.toISOString(),
+      updatedAt: new Date().toISOString(),
       tradingDays: tradingDays
     };
 
@@ -382,14 +378,13 @@ class TradingCalendarService {
     }
 
     // 更新内存缓存
-    this.tradingDaysSet = allTradingDays;
-    this.lastUpdated = new Date();
+    // this.tradingDaysSet = allTradingDays;
 
     // 排序后持久化
     const sortedAll = Array.from(allTradingDays).sort();
 
     const cacheData = {
-      updatedAt: this.lastUpdated.toISOString(),
+      updatedAt: new Date().toISOString(),
       tradingDays: sortedAll
     };
 
