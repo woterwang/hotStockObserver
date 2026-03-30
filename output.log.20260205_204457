@@ -3777,3 +3777,8 @@ Files in the public directory are served at the root path.
 Instead of /public/.env, use /.env.
 Files in the public directory are served at the root path.
 Instead of /public/.env, use /.env.
+Files in the public directory are served at the root path.
+Instead of /public/.git/config, use /.git/config.
+Files in the public directory are served at the root path.
+Instead of /public/.git/config, use /.git/config.
+Killed
