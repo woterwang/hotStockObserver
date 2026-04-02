@@ -32,6 +32,18 @@ export interface MarketMoodData {
   dfNum: number;      // 大幅回撤股票数量
 }
 
+// 最近N日平均情绪数据
+export interface RecentAverageMoodData {
+  days: number;           // 实际天数
+  avgStrong: number;      // 平均大盘情绪
+  avgZtjs: number;        // 平均涨停家数
+  avgLbgd: number;        // 平均连板高度
+  avgDfNum: number;       // 平均大幅回撤数量
+  trend: 'up' | 'down' | 'stable';  // 情绪趋势
+  dateRange: { start: string; end: string }; // 日期范围
+  detail: MarketMoodData[];  // 每日明细
+}
+
 // 缓存数据结构
 interface MarketMoodCache {
   updatedAt: string;           // 更新时间
@@ -255,6 +267,73 @@ class MarketMoodService {
       count: this.moodMap.size,
       lastUpdated: this.lastUpdated ? this.lastUpdated.toISOString() : null,
       latestDay: sortedDays.length > 0 ? sortedDays[0] : null,
+    };
+  }
+
+  /**
+   * 获取最近N个交易日的平均市场情绪
+   * @param days 天数，默认5
+   * @param fromDate 从哪天开始往前算，默认为最新一天
+   * @returns 平均情绪数据
+   */
+  getRecentAverageMood(days: number = 5, fromDate?: string): RecentAverageMoodData {
+    const allDays = Array.from(this.moodMap.keys()).sort().reverse();
+    
+    let filteredDays = allDays;
+    if (fromDate) {
+      const normalized = fromDate.replace(/-/g, '');
+      filteredDays = allDays.filter(d => d <= normalized);
+    }
+    
+    const recentDays = filteredDays.slice(0, days);
+    
+    if (recentDays.length === 0) {
+      return {
+        days: 0,
+        avgStrong: DEFAULT_MOOD_STRONG,
+        avgZtjs: 0,
+        avgLbgd: 0,
+        avgDfNum: 0,
+        trend: 'stable',
+        dateRange: { start: '', end: '' },
+        detail: [],
+      };
+    }
+    
+    const recentData = recentDays.map(d => this.moodMap.get(d)!).filter(Boolean);
+    const count = recentData.length;
+    
+    const avgStrong = Math.round(recentData.reduce((sum, d) => sum + d.strong, 0) / count);
+    const avgZtjs = Math.round(recentData.reduce((sum, d) => sum + d.ztjs, 0) / count);
+    const avgLbgd = Math.round(recentData.reduce((sum, d) => sum + d.lbgd, 0) / count * 10) / 10;
+    const avgDfNum = Math.round(recentData.reduce((sum, d) => sum + d.dfNum, 0) / count);
+    
+    // 判断趋势：比较前半段和后半段的平均strong
+    let trend: 'up' | 'down' | 'stable' = 'stable';
+    if (count >= 3) {
+      const mid = Math.floor(count / 2);
+      // recentData 按日期降序，前半段是近期，后半段是较早的
+      const recentHalf = recentData.slice(0, mid);
+      const olderHalf = recentData.slice(mid);
+      const recentAvg = recentHalf.reduce((sum, d) => sum + d.strong, 0) / recentHalf.length;
+      const olderAvg = olderHalf.reduce((sum, d) => sum + d.strong, 0) / olderHalf.length;
+      const diff = recentAvg - olderAvg;
+      if (diff > 5) trend = 'up';
+      else if (diff < -5) trend = 'down';
+    }
+    
+    return {
+      days: count,
+      avgStrong,
+      avgZtjs,
+      avgLbgd,
+      avgDfNum,
+      trend,
+      dateRange: {
+        start: recentDays[recentDays.length - 1],
+        end: recentDays[0],
+      },
+      detail: recentData,
     };
   }
 

@@ -27,6 +27,7 @@ export const Header: React.FC = () => {
   const location = useLocation();
   const [showStrategyMenu, setShowStrategyMenu] = useState(false);
   const [showSignalMenu, setShowSignalMenu] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
     { path: '/', label: '信息概览', icon: '📊' },
@@ -38,6 +39,7 @@ export const Header: React.FC = () => {
   const closeAllMenus = () => {
     setShowStrategyMenu(false);
     setShowSignalMenu(false);
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -45,12 +47,29 @@ export const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2" onClick={closeAllMenus}>
             <span className="text-2xl">🔥</span>
+            <span className="font-bold text-gray-800 hidden sm:inline">热搜观察</span>
           </Link>
 
-          {/* 导航 */}
-          <nav className="flex items-center space-x-1">
+          {/* 移动端菜单按钮 */}
+          <div className="flex md:hidden">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-600 hover:text-gray-900 focus:outline-none"
+            >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+
+          {/* 桌面端导航 */}
+          <nav className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => (
               <Link
                 key={item.path}
@@ -168,13 +187,83 @@ export const Header: React.FC = () => {
             </div>
           </nav>
 
-          {/* 更新时间 */}
-          <div className="text-sm text-gray-500">
+          {/* 更新时间 - 桌面端显示 */}
+          <div className="hidden md:block text-sm text-gray-500">
             <span>最后更新: </span>
             <span>{new Date().toLocaleTimeString()}</span>
           </div>
         </div>
       </div>
+
+      {/* 移动端菜单 */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-white border-t border-gray-200 overflow-y-auto max-h-[calc(100vh-4rem)]">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={closeAllMenus}
+                className={`block px-3 py-2 rounded-md text-base font-medium ${
+                  location.pathname === item.path
+                    ? 'bg-blue-50 text-blue-600'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <span className="mr-2">{item.icon}</span>
+                {item.label}
+              </Link>
+            ))}
+            
+            <div className="pt-4 pb-2 px-3 border-t border-gray-100">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">策略中心</p>
+            </div>
+            {strategyItems.map((item) => (
+              <Link
+                key={item.id}
+                to={item.path}
+                onClick={closeAllMenus}
+                className={`block px-3 py-2 rounded-md text-base font-medium ${
+                  location.pathname === item.path
+                    ? 'bg-purple-50 text-purple-600'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <span className="mr-2">{item.icon}</span>
+                {item.name}
+              </Link>
+            ))}
+
+            <div className="pt-4 pb-2 px-3 border-t border-gray-100">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">信号中心</p>
+            </div>
+            {signalItems.map((item) => (
+              <Link
+                key={item.id}
+                to={item.disabled ? '#' : item.path}
+                onClick={(e) => {
+                  if (item.disabled) e.preventDefault();
+                  else closeAllMenus();
+                }}
+                className={`block px-3 py-2 rounded-md text-base font-medium ${
+                  item.disabled ? 'opacity-50 cursor-not-allowed' : ''
+                } ${
+                  location.pathname === item.path
+                    ? 'bg-green-50 text-green-600'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <span className="mr-2">{item.icon}</span>
+                {item.name}
+                {item.disabled && <span className="ml-2 text-xs text-gray-400">(开发中)</span>}
+              </Link>
+            ))}
+          </div>
+          <div className="px-5 py-4 border-t border-gray-100 text-xs text-gray-500">
+            最后更新: {new Date().toLocaleTimeString()}
+          </div>
+        </div>
+      )}
     </header>
   );
 };

@@ -318,6 +318,18 @@ export interface MarketMood {
   dfNum: number;    // 大幅回撤数量
 }
 
+// 最近N日平均市场情绪
+export interface RecentAverageMood {
+  days: number;           // 实际天数
+  avgStrong: number;      // 平均大盘情绪
+  avgZtjs: number;        // 平均涨停家数
+  avgLbgd: number;        // 平均连板高度
+  avgDfNum: number;       // 平均大幅回撤数量
+  trend: 'up' | 'down' | 'stable';  // 情绪趋势
+  dateRange: { start: string; end: string }; // 日期范围
+  detail: MarketMood[];   // 每日明细
+}
+
 // 市场概览
 export interface MarketOverview {
   indices: MarketIndex[];
@@ -451,7 +463,7 @@ export interface ConceptResonanceBacktestConfig {
 }
 
 // 主线共振回测结果
-export interface fConceptResonanceBacktestResult {
+export interface ConceptResonanceBacktestResult {
   startDate: string;
   endDate: string;
   config: ConceptResonanceBacktestConfig;

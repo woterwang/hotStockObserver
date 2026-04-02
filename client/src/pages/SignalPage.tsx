@@ -117,7 +117,7 @@ export default function SignalPage() {
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().slice(0, 10).replace(/-/g, '')
   );
-  const [day2Date, setDay2Date] = useState<string | null>(null); // Day2日期，用于显示情绪
+  const [day2Date, setDay2Date] = useState<string | null>(selectedDate); // Day2日期，用于显示情绪
   const [selectedStrategy, setSelectedStrategy] = useState<StrategyType | 'all'>('all'); // 策略筛选
   const [summary, setSummary] = useState({
     total: 0,

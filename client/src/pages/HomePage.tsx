@@ -72,43 +72,43 @@ const HomePage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* 大盘指数 */}
         <section>
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">📊 大盘指数</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-3 sm:mb-4">📊 大盘指数</h2>
           <IndexList indices={data.indices} />
         </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6">
           {/* 增加tab： 🔥 热搜股票 Top 20 | 🔥 热搜板块 Top 20*/}
           {/* 热搜板块Top20 */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 order-1 lg:order-none">
             <div className="card">
-              <div className="border-b border-gray-200">
-                <nav className="flex space-x-8">
+              <div className="border-b border-gray-200 overflow-x-auto">
+                <nav className="flex space-x-4 sm:space-x-8 whitespace-nowrap px-1">
                   <button
                     onClick={() => setActiveTab('stocks')}
-                    className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${
+                    className={`py-3 sm:py-4 px-1 text-center border-b-2 font-medium text-sm transition-colors ${
                       activeTab === 'stocks'
                         ? 'border-blue-500 text-blue-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}
                   >
-                    🔥 热搜股票 Top 20
+                    🔥 热搜股票
                   </button>
                   <button
                     onClick={() => setActiveTab('concepts')}
-                    className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${
+                    className={`py-3 sm:py-4 px-1 text-center border-b-2 font-medium text-sm transition-colors ${
                       activeTab === 'concepts'
                         ? 'border-blue-500 text-blue-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}
                   >
-                    🔥 热搜板块 Top 20
+                    🔥 热搜板块
                   </button>
                   <button
                     onClick={() => setActiveTab('history')}
-                    className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${
+                    className={`py-3 sm:py-4 px-1 text-center border-b-2 font-medium text-sm transition-colors ${
                       activeTab === 'history'
                         ? 'border-blue-500 text-blue-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -117,6 +117,9 @@ const HomePage: React.FC = () => {
                     📅 历史热搜
                   </button>
                 </nav>
+              </div>
+              <div className="mt-2 text-xs text-gray-400 sm:hidden px-1">
+                * 左右滑动查看表格详情
               </div>
               {activeTab === 'stocks' ? (
                 data.hotStocks.length > 0 ? (
@@ -141,7 +144,7 @@ const HomePage: React.FC = () => {
           </div>
           
           {/* 右侧栏 */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6 order-2 lg:order-none">
             {/* 热门板块 */}
             <div className="card">
               <h3 className="card-header">📈 热门板块</h3>
@@ -154,10 +157,10 @@ const HomePage: React.FC = () => {
 
             {/* 强势股 */}
             <div className="card">
-              <h3 className="card-header">💪 强势股（涨幅&gt;5%）</h3>
+              <h3 className="card-header">💪 强势股（涨幅 &gt; 5%）</h3>
               {data.strongStocks.length > 0 ? (
-                <div className="space-y-2">
-                  {data.strongStocks.slice(0, 5).map((stock) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+                  {data.strongStocks.slice(0, 10).map((stock) => (
                     <div
                       key={stock.stockCode}
                       className="flex items-center justify-between py-2 px-3 bg-red-50 rounded-lg"
@@ -167,7 +170,7 @@ const HomePage: React.FC = () => {
                         <div className="text-xs text-gray-500">{stock.stockCode}</div>
                       </div>
                       <div className="text-right">
-                        <div className="font-mono text-rise">
+                        <div className="font-mono text-rise font-bold">
                           +{stock.changePercent.toFixed(2)}%
                         </div>
                       </div>
@@ -182,8 +185,8 @@ const HomePage: React.FC = () => {
         </div>
 
         {/* 更新时间 */}
-        <div className="text-center text-sm text-gray-400">
-          数据更新时间: {new Date(data.updateTime).toLocaleString()}
+        <div className="mt-8 text-center text-xs sm:text-sm text-gray-400 pb-4">
+          数据最后更新: {new Date(data.updateTime).toLocaleString()}
         </div>
       </div>
     </Layout>

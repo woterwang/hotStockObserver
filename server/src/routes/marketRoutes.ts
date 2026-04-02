@@ -119,6 +119,24 @@ router.post('/trading-calendar/extend', async (req, res) => {
   }
 });
 
+// 市场情绪 - 获取最近N个交易日的平均情绪数据
+router.get('/mood/recent-average', (req, res) => {
+  try {
+    const days = parseInt(req.query.days as string) || 5;
+    const fromDate = req.query.fromDate as string;
+    const result = marketMoodService.getRecentAverageMood(days, fromDate);
+    res.json({
+      success: true,
+      data: result
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: (error as Error).message
+    });
+  }
+});
+
 // 市场情绪 - 获取指定日期的 mood 数据
 // 优先从本地缓存获取，如果没有则从数据库获取
 router.get('/mood/:dateStr', async (req, res) => {

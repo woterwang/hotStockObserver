@@ -17,6 +17,7 @@ import type {
   BuySignalStats,
   MarketSentiment,
   MarketMood,
+  RecentAverageMood,
   ConceptResonance,
   ConceptResonanceStats,
   ConceptLeader,
@@ -154,6 +155,13 @@ export const moodApi = {
   // 获取最新的情绪数据
   getLatest: (): Promise<ApiResponse<MarketMood>> => {
     return api.get('/market/mood');
+  },
+
+  // 获取最近N个交易日的平均情绪数据
+  getRecentAverage: (days: number = 5, fromDate?: string): Promise<ApiResponse<RecentAverageMood>> => {
+    const params = new URLSearchParams({ days: String(days) });
+    if (fromDate) params.set('fromDate', fromDate);
+    return api.get(`/market/mood/recent-average?${params.toString()}`);
   },
 };
 
