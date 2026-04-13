@@ -3,7 +3,7 @@ import { dataFetchService, priceBreakthroughService, tradingSignalService, marke
 import { buySignalService } from '../services/buySignalService';
 import { thsConceptHotRankService } from '../services/thsConceptHotRankService';
 import { updateCodeKline } from './updateCodeKline';
-
+import { groupService } from '../services/groupService';
 import { logger } from '../utils';
 import { formatDate } from '../utils/dateUtils';
 import dayjs from 'dayjs';
@@ -275,6 +275,13 @@ export class JobScheduler {
         logger.info('开始执行集合竞价后【主线共振策略】入场条件更新');
         const conceptResonanceResult = await conceptResonanceService.getBuySignalList({ dateStr: today });
         logger.info(`[主线共振] 生成完成，共 ${conceptResonanceResult.length} 个信号，入场日=${conceptResonanceResult[0].date}`);
+        // 取前3只股票作为当天的主线共振股票添加到当天的分组中
+        const topThree = conceptResonanceResult.slice(0, 3).map(signal => signal.stockCode);
+        // 创建分组：${日期}-主线共振
+        logger.info(`[主线共振] 今日主线共振股票: ${topThree.join(', ')}`);
+        const groupId = await groupService.createGroup(`${today}-主线共振`);
+        // 将 topThree 股票添加到当天的主线共振分组中
+        await groupService.addStocksToGroup(groupId, topThree);
       } catch (error) {
         logger.error(`[主线共振] 生成失败: ${(error as Error).message}`);
       }
@@ -284,6 +291,13 @@ export class JobScheduler {
         logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
         const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
         logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.length} 个信号，入场日=${volumeSurgeResult[0].date}`);
+        // 取前3只股票作为当天的主线共振股票添加到当天的分组中
+        const topThree = volumeSurgeResult.slice(0, 3).map(signal => signal.stockCode);
+        // 创建分组：${日期}-放量大涨
+        logger.info(`[放量大涨] 今日放量大涨股票: ${topThree.join(', ')}`);
+        const groupId = await groupService.createGroup(`${today}-放量大涨`);
+        // 将 topThree 股票添加到当天的放量大涨分组中
+        await groupService.addStocksToGroup(groupId, topThree);
       } catch (error) {
         logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
       }
@@ -304,7 +318,7 @@ export class JobScheduler {
       } catch (error) {
         logger.error(`入场条件更新失败: ${(error as Error).message}`);
       }
-      
+
     }, {
       timezone: 'Asia/Shanghai',
     });
@@ -467,15 +481,15 @@ export class JobScheduler {
     logger.info(`收盘后串行任务已配置，Cron表达式: ${cronExpression}`);
   }
 
-    /**
-   * 收盘后串行任务 (按顺序执行各项任务)
-   * 时间: 每天凌晨5:18之后
-   */
+  /**
+ * 收盘后串行任务 (按顺序执行各项任务)
+ * 时间: 每天凌晨5:18之后
+ */
   private startDailyKlineUpdateJob () {
     // 在1:00执行，将各项收盘后任务串行执行
     const cronExpression = '18 5 * * *';
     cron.schedule(cronExpression, async () => {
-       await updateCodeKline()
+      await updateCodeKline()
     })
     logger.info(`每日K线更新任务已配置，Cron表达式: ${cronExpression}`);
   }
