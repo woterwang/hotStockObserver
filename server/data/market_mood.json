@@ -1,6 +1,48 @@
 {
-  "updatedAt": "2026-04-02T00:18:00.894Z",
+  "updatedAt": "2026-04-13T00:18:00.194Z",
   "data": [
+    {
+      "day": "20260410",
+      "strong": 62,
+      "ztjs": 59,
+      "lbgd": 4,
+      "dfNum": 2
+    },
+    {
+      "day": "20260409",
+      "strong": 41,
+      "ztjs": 53,
+      "lbgd": 5,
+      "dfNum": 3
+    },
+    {
+      "day": "20260408",
+      "strong": 88,
+      "ztjs": 122,
+      "lbgd": 4,
+      "dfNum": 3
+    },
+    {
+      "day": "20260407",
+      "strong": 68,
+      "ztjs": 93,
+      "lbgd": 7,
+      "dfNum": 1
+    },
+    {
+      "day": "20260403",
+      "strong": 32,
+      "ztjs": 36,
+      "lbgd": 6,
+      "dfNum": 7
+    },
+    {
+      "day": "20260402",
+      "strong": 31,
+      "ztjs": 27,
+      "lbgd": 5,
+      "dfNum": 1
+    },
     {
       "day": "20260401",
       "strong": 61,
