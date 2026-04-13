@@ -291,7 +291,9 @@ export class JobScheduler {
         logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
         const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
         logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.length} 个信号，入场日=${volumeSurgeResult[0].date}`);
-        // 取前3只股票作为当天的主线共振股票添加到当天的分组中
+        // 按totalBuyScore排序
+        volumeSurgeResult.sort((a, b) => b.totalBuyScore - a.totalBuyScore);
+        // 取前3只股票作为当天的放量大涨股票添加到当天的分组中
         const topThree = volumeSurgeResult.slice(0, 3).map(signal => signal.stockCode);
         // 创建分组：${日期}-放量大涨
         logger.info(`[放量大涨] 今日放量大涨股票: ${topThree.join(', ')}`);
