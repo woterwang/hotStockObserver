@@ -265,16 +265,15 @@ export class JobScheduler {
     // node-cron 支持6位表达式：秒 分 时 日 月 周
     // const cronExpression = '58 25 9 * * 1-5';
     // 9.25:58 与 9.25:28 各执行一次，确保任务能被触发 cronExpression 该怎么写？
-    const cronExpression = '18 26 9 * * 1-5';
-    const today = formatDate(new Date(), 'YYYYMMDD');
-
+    const cronExpression = '39 20 * * 1-5';
+    
     this.auctionJob = cron.schedule(cronExpression, async () => {
-
+      const today = formatDate(new Date(), 'YYYYMMDD');
       // 1.更新 主线共振 入场条件
       try {
         logger.info('开始执行集合竞价后【主线共振策略】入场条件更新');
         const conceptResonanceResult = await conceptResonanceService.getBuySignalList({ dateStr: today });
-        logger.info(`[主线共振] 生成完成，共 ${conceptResonanceResult.length} 个信号，入场日=${conceptResonanceResult[0].date}`);
+        logger.info(`[主线共振] 生成完成，共 ${conceptResonanceResult.length} 个信号，入场日=${today}`);
         // 取前3只股票作为当天的主线共振股票添加到当天的分组中
         const topThree = conceptResonanceResult.slice(0, 3).map(signal => signal.stockCode);
         // 创建分组：${日期}-主线共振
@@ -290,7 +289,7 @@ export class JobScheduler {
       try {
         logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
         const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
-        logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.length} 个信号，入场日=${volumeSurgeResult[0].date}`);
+        logger.info(`[放量大涨] 生成完成，共 ${volumeSurgeResult.length} 个信号，入场日=${today}`);
         // 按totalBuyScore排序
         volumeSurgeResult.sort((a, b) => b.totalBuyScore - a.totalBuyScore);
         // 取前3只股票作为当天的放量大涨股票添加到当天的分组中
