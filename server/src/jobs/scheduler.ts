@@ -275,7 +275,7 @@ export class JobScheduler {
         const conceptResonanceResult = await conceptResonanceService.getBuySignalList({ dateStr: today });
         logger.info(`[主线共振] 生成完成，共 ${conceptResonanceResult.length} 个信号，入场日=${today}`);
         // 取前3只股票作为当天的主线共振股票添加到当天的分组中
-        const topThree = conceptResonanceResult.slice(0, 3).map(signal => signal.stockCode);
+        const topThree = conceptResonanceResult.filter(item => item.strategyScore > 88).slice(0, 3).map(signal => signal.stockCode);
         // 创建分组：${日期}-主线共振
         logger.info(`[主线共振] 今日主线共振股票: ${topThree.join(', ')}`);
         const groupId = await groupService.createGroup(`${today}-主线共振`);
@@ -293,7 +293,7 @@ export class JobScheduler {
         // 按totalBuyScore排序
         volumeSurgeResult.sort((a, b) => b.totalBuyScore - a.totalBuyScore);
         // 取前3只股票作为当天的放量大涨股票添加到当天的分组中
-        const topThree = volumeSurgeResult.slice(0, 3).map(signal => signal.stockCode);
+        const topThree = volumeSurgeResult.filter(item => item.totalBuyScore > 70).slice(0, 3).map(signal => signal.stockCode);
         // 创建分组：${日期}-放量大涨
         logger.info(`[放量大涨] 今日放量大涨股票: ${topThree.join(', ')}`);
         const groupId = await groupService.createGroup(`${today}-放量大涨`);
