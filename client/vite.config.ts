@@ -18,7 +18,7 @@ export default defineConfig({
     },
   },
   server: {
-  allowedHosts: ['localhost', '0.0.0.0', 'api.woter.cloud'],
+  allowedHosts: ['localhost', '0.0.0.0', 'api.woter.cloud','127.0.0.1'],
 	host:"0.0.0.0",
     port: 80,
     proxy: {
