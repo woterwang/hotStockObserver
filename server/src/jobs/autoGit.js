@@ -15,9 +15,8 @@ const autoPush = () => {
 		git.status().then(async (status) => {
 			this.branch = status.current
 			console.log(`pull 当前分支：${ this.branch }`);
-			// 打印更新日志
-			const log = await git.log()
-			console.log('Git log:', log)
+			// 打印本地修改的文件列表
+			console.log('Modified files:', status.modified)
 			//pull
 			await git.pull('origin', this.branch)
 			// 添加所有文件到暂存区
