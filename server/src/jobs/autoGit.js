@@ -9,29 +9,20 @@
  * @Author: hqwx.com
  * @Date: 2023-12-22 18:22:12
  * @LastEditors: WRG
- * @LastEditTime: 2026-04-27 20:13:59
+ * @LastEditTime: 2026-04-27 20:56:50
  * @Description: 
  * @
 */
 const cron = require('node-cron')
 const simpleGit = require('simple-git')
 
-interface StatusResult {
-  current: string;      // 当前分支
-  modified: string[];   // 修改的文件
-  not_added: string[];  // 未添加的文件
-  conflicted: string[]; // 冲突文件
-  created: string[];    // 新建文件
-  deleted: string[];    // 删除文件
-  renamed: string[];    // 重命名文件
-}
 
 const git = simpleGit()
 let branch = 'main'
 const autoPush = () => {
 	try {
 		// 添加远程仓库地址
-		git.status().then(async (status: StatusResult) => {
+		git.status().then(async (status) => {
 			branch = status.current
 			console.log(`pull 当前分支：${ branch }`);
 			// 打印本地修改的文件列表
