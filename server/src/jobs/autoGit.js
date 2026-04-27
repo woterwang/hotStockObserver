@@ -1,15 +1,8 @@
-/*
-* @Author: hp.com
-* @Date: 2026-04-27 19:54:58
- * @LastEditors: WRG
- * @LastEditTime: 2026-04-27 20:51:22
- * @😍: 😃😃
- */
 /**
  * @Author: hqwx.com
  * @Date: 2023-12-22 18:22:12
  * @LastEditors: WRG
- * @LastEditTime: 2026-04-27 20:56:50
+ * @LastEditTime: 2026-04-27 21:00:50
  * @Description: 
  * @
 */
@@ -51,5 +44,5 @@ cron.schedule('0 0 * * *', () => {
 	console.log('Running autoPush at 12:00 AM every day')
 	autoPush()
 })
-
+console.log('Auto push job scheduled')
 // module.exports = autoPush
