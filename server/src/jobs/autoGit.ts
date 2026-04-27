@@ -1,8 +1,8 @@
 /*
- * @Author: hp.com
- * @Date: 2026-04-27 19:54:58
+* @Author: hp.com
+* @Date: 2026-04-27 19:54:58
  * @LastEditors: WRG
- * @LastEditTime: 2026-04-27 20:21:15
+ * @LastEditTime: 2026-04-27 20:51:22
  * @😍: 😃😃
  */
 /**
@@ -12,7 +12,8 @@
  * @LastEditTime: 2026-04-27 20:13:59
  * @Description: 
  * @
- */
+*/
+const cron = require('node-cron')
 const simpleGit = require('simple-git')
 
 interface StatusResult {
@@ -54,5 +55,10 @@ const autoPush = () => {
 		console.log(error)
 	}
 }
-autoPush()
-module.exports = autoPush
+//增加定时任务，每天晚上12点执行一次
+cron.schedule('0 0 * * *', () => {
+	console.log('Running autoPush at 12:00 AM every day')
+	autoPush()
+})
+
+// module.exports = autoPush
