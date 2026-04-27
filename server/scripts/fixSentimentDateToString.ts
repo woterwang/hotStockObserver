@@ -1,12 +1,4 @@
-/*
- * @Author: hp.com
- * @Date: 2025-12-19 20:24:45
- * @LastEditors: WRG
- * @LastEditTime: 2026-04-27 20:11:37
- * @😍: 😃😃
- */
 import mongoose from 'mongoose';
-
 import { toDateStr } from '../src/utils/dateUtils';
 
 const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/hot-stock-observer';

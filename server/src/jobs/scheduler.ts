@@ -6,6 +6,7 @@ import { updateCodeKline } from './updateCodeKline';
 import { groupService } from '../services/groupService';
 import { logger } from '../utils';
 import { formatDate } from '../utils/dateUtils';
+import { autoPush } from './autoGit.ts';
 import dayjs from 'dayjs';
 
 /**
@@ -39,6 +40,7 @@ import dayjs from 'dayjs';
  * =================== 晚间任务 (晚上23:58) ===================
  * 1. 每日热搜板块更新任务 - 每天 23:58 执行
  *    更新并缓存每日热搜概念和行业板块数据
+ * 2. 每日自动推送代码到GitHub任务 - 每天凌晨1:00执行
  */
 export class JobScheduler {
   // 开盘前任务
@@ -73,6 +75,7 @@ export class JobScheduler {
     this.startAfterMarketJobs();
     this.startNightJobs();
     this.startDailyKlineUpdateJob();
+    this.startAutoPushJob();
 
     logger.info('定时任务已启动');
   }
@@ -493,6 +496,18 @@ export class JobScheduler {
       await updateCodeKline()
     })
     logger.info(`每日K线更新任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /** 
+   * 每日推送代码到GitHub任务
+   * 时间: 每天凌晨1:00执行
+   */
+  private startAutoPushJob () {
+    // 在1:00执行，将各项收盘后任务串行执行
+    const cronExpression = '0 1 * * *';
+    cron.schedule(cronExpression, async () => {
+      await autoPush()
+    })
   }
 }
 
