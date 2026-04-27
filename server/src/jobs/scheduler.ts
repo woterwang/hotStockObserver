@@ -75,7 +75,7 @@ export class JobScheduler {
     this.startAfterMarketJobs();
     this.startNightJobs();
     this.startDailyKlineUpdateJob();
-    this.startAutoPushJob();
+    // this.startAutoPushJob();
 
     logger.info('定时任务已启动');
   }
