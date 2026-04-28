@@ -96,6 +96,21 @@ const BuySignalPage: React.FC = () => {
     }
   };
 
+  const handleDelete = async () => {
+    if (!selectedDate) {
+      alert('请选择日期');
+    }
+    if (window.confirm(`确定要删除 ${selectedDate} 的买入信号数据吗？此操作不可恢复！`)) {
+      try {
+        await buySignalApi.deleteByDate(selectedDate);
+        alert(`已删除 ${selectedDate} 的买入信号数据`);
+        fetchSignals(selectedDate);
+      } catch (err) {
+        alert('删除失败: ' + (err as Error).message);
+      }
+    }
+  }
+
   // 批量生成买入信号
   const handleBatchGenerate = async () => {
     if (!batchStartDate || !batchEndDate) {
@@ -200,6 +215,12 @@ const BuySignalPage: React.FC = () => {
               className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
             >
               📅 批量补录
+            </button>
+            <button
+              onClick={ handleDelete }
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
+            >
+              🗑 删除
             </button>
           </div>
         </div>

@@ -273,6 +273,30 @@ class BuySignalController {
       next(error);
     }
   }
-}
 
+  /**
+   * 删除指定日期的买入信号数据
+   * DELETE /api/buy-signal/delete?date=YYYYMMDD
+   * 
+    * @query date - 日期，格式 YYYYMMDD
+    * @returns { message: string }
+  */
+  async deleteByDate(req: Request, res: Response, next: NextFunction) {
+    try {
+      const date = req.query.date as string;
+      if (!date) {
+        return res.status(400).json({ success: false, message: '日期参数不能为空' });
+      }
+
+      await buySignalService.deleteBuySignalsByDate(date);
+      
+      res.json({
+        success: true,
+        message: `删除日期 ${date} 的买入信号数据成功`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+}
 export const buySignalController = new BuySignalController();

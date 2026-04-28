@@ -3,7 +3,7 @@
  # @Author: hp.com
  # @Date: 2026-01-17 20:07:18
  # @LastEditors: WRG
- # @LastEditTime: 2026-03-30 19:59:19
+ # @LastEditTime: 2026-04-28 08:42:38
  # @😍: 😃😃
 ### 
 
@@ -29,4 +29,17 @@ cd "$SCRIPT_DIR"
 LOG_FILE="${SCRIPT_DIR}/$(date +%Y-%m-%d).log"
 echo "正在启动 start.sh 脚本，日志将输出到 $LOG_FILE..."
 nohup bash start.sh > "$LOG_FILE" 2>&1 &
+# 输出 start.sh 脚本的 PID
+echo "start.sh 脚本已启动，PID: $!"
+# 开始检查 mongodb 进程
+echo "正在检查 mongodb 进程..."
+# 检查 mongodb 进程是否存在，如果不存在则启动它
+if ! pgrep -x "mongod" > /dev/null; then
+    echo "mongodb 进程未找到，正在启动 mongodb..."
+    # mongod --dbpath /data/db --logpath /data/log/mongodb.log --fork
+    mongo-manage status
+    echo "mongodb 已启动"
+else
+    echo "mongodb 进程已存在，跳过启动"
+fi
 echo "=== 重启 start.sh 脚本 完成 ==="

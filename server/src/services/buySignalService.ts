@@ -1319,6 +1319,14 @@ class BuySignalService {
 
     return result;
   }
+  /**
+   * 删除指定日期的买入信号数据
+   */
+  async deleteBuySignalsByDate (dateStr: string): Promise<void> {
+    const targetDateStr = formatDateStr(dateStr);
+    await BuySignal.deleteMany({ date: targetDateStr });
+    console.log(`[BuySignal] 已删除 ${targetDateStr} 的买入信号数据`);
+  }
 }
 
 export const buySignalService = new BuySignalService();

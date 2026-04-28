@@ -124,8 +124,8 @@ export const marketApi = {
       const response = await axios.get(`/api/market/concepts/history/${date}/${type}`);
       return response.data;
     } catch (error) {
-      return [];
       console.error('获取历史概念热度排行失败:', error);
+      return [];
       // throw new Error(`获取历史概念热度排行失败: ${error.response?.data?.message || error.message}`);
     }
   },
@@ -261,8 +261,13 @@ export const buySignalApi = {
   },
 
   // 获取统计数据
-  getStats: (date?: string): Promise<ApiResponse<BuySignalStats>> => {
+  getStats: (date: string): Promise<ApiResponse<BuySignalStats>> => {
     return api.get('/buy-signal/stats', { params: { date } });
+  },
+
+  // 删除指定日期的买入信号数据
+  deleteByDate: (dateStr: string): Promise<ApiResponse<{ message: string }>> => {
+    return api.delete('/buy-signal/delete', { params: { date: dateStr } });
   },
 };
 
