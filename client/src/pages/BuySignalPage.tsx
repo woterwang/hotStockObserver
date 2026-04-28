@@ -216,12 +216,6 @@ const BuySignalPage: React.FC = () => {
             >
               📅 批量补录
             </button>
-            <button
-              onClick={ handleDelete }
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
-            >
-              🗑 删除
-            </button>
           </div>
         </div>
 

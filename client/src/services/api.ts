@@ -267,7 +267,7 @@ export const buySignalApi = {
 
   // 删除指定日期的买入信号数据
   deleteByDate: (dateStr: string): Promise<ApiResponse<{ message: string }>> => {
-    return api.delete('/buy-signal/delete', { params: { date: dateStr } });
+    return api.delete('/buy-signal/deleteByDate', { params: { date: dateStr } });
   },
 };
 

@@ -447,6 +447,20 @@ class BuySignalService {
       return [];
     }
 
+    // 如果数据库有今日的数据直接返回
+    const existingCount = await BuySignal.countDocuments({ date: formatDateStr(dateStr) });
+    if (existingCount > 0) {
+      console.log(`[BuySignal] ${dateStr} 已存在 ${existingCount} 条买入信号数据，跳过生成`);
+      return await BuySignal.find({ date: formatDateStr(dateStr) });
+    }
+
+    // 如果小于 9.26 分，直接返回空
+    const now = new Date();
+    if (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 26)) {
+      console.log(`[BuySignal] 当前时间 ${now.getHours()}:${now.getMinutes()} 小于 9:26，跳过生成`);
+      return [];
+    }
+
     // 直接使用字符串日期
     const signalDate = formatDateStr(dateStr);
 
