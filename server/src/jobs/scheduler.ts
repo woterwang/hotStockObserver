@@ -280,7 +280,9 @@ export class JobScheduler {
         logger.info(`[主线共振] 今日主线共振股票: ${topThree.join(', ')}`);
         const groupId = await groupService.createGroup(`${today}-主线共振`);
         // 将 topThree 股票添加到当天的主线共振分组中
-        await groupService.addStocksToGroup(groupId, topThree);
+        if (topThree.length > 0) {
+          await groupService.addStocksToGroup(groupId, topThree);
+        }
       } catch (error) {
         logger.error(`[主线共振] 生成失败: ${(error as Error).message}`);
       }
@@ -298,7 +300,9 @@ export class JobScheduler {
         logger.info(`[放量大涨] 今日放量大涨股票: ${topThree.join(', ')}`);
         const groupId = await groupService.createGroup(`${today}-放量大涨`);
         // 将 topThree 股票添加到当天的放量大涨分组中
-        await groupService.addStocksToGroup(groupId, topThree);
+        if (topThree.length > 0) {
+          await groupService.addStocksToGroup(groupId, topThree);
+        }
       } catch (error) {
         logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
       }
