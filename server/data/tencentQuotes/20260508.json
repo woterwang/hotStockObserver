@@ -1,0 +1,26 @@
+[
+  [
+    "002865",
+    {
+      "openTimes": "20260508092500",
+      "openPrice": 89.89,
+      "openChangePercent": 2.4387464387464397,
+      "openVolumeRatio": 3997,
+      "auctionAmount": 35929033,
+      "auctionAmountRatio": 2.438746438746439,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "688523",
+    {
+      "openTimes": "20260508092530",
+      "openPrice": 71.44,
+      "openChangePercent": -0.984060984060995,
+      "openVolumeRatio": 24139,
+      "auctionAmount": 1724490,
+      "auctionAmountRatio": -99.00984070170863,
+      "isLimitUp": false
+    }
+  ]
+]
