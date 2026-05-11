@@ -265,7 +265,7 @@ export class JobScheduler {
     // node-cron 支持6位表达式：秒 分 时 日 月 周
     // const cronExpression = '58 25 9 * * 1-5';
     // 9.25:58 与 9.25:28 各执行一次，确保任务能被触发 cronExpression 该怎么写？
-    const cronExpression = '18 45 21 * * 1-5';
+    const cronExpression = '18 26 9 * * 1-5';
     
     this.auctionJob = cron.schedule(cronExpression, async () => {
       const today = formatDate(new Date(), 'YYYYMMDD');
