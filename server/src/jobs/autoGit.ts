@@ -1,23 +1,14 @@
-/**
- * @Author: hqwx.com
- * @Date: 2023-12-22 18:22:12
- * @LastEditors: WRG
- * @LastEditTime: 2026-04-27 21:00:50
- * @Description: 
- * @
-*/
-const cron = require('node-cron')
+import { SimpleGit, StatusResult } from 'simple-git';
 const simpleGit = require('simple-git')
 
-
-const git = simpleGit()
+const git: SimpleGit = simpleGit()
 let branch = 'main'
 const autoPush = () => {
 	try {
 		// 添加远程仓库地址
-		git.status().then(async (status) => {
-			branch = status.current
-			console.log(`pull 当前分支：${ branch }`);
+		git.status().then(async (status: StatusResult) => {
+			branch = status.current ?? 'main';
+			console.log(`pull 当前分支：${branch}`);
 			// 打印本地修改的文件列表
 			console.log('Modified files:', status.modified)
 			//pull
@@ -30,7 +21,7 @@ const autoPush = () => {
 					console.log('Commit committed!')
 					// 推送到 branch
 					git.push('origin', branch).then(() => {
-						console.log(`Pushed to ${ branch }!`)
+						console.log(`Pushed to ${branch}!`)
 					})
 				})
 			})
@@ -39,10 +30,7 @@ const autoPush = () => {
 		console.log(error)
 	}
 }
-//增加定时任务，每天晚上12点执行一次
-cron.schedule('0 0 * * *', () => {
-	console.log('Running autoPush at 12:00 AM every day')
-	autoPush()
-})
-console.log('Auto push job scheduled')
-// module.exports = autoPush
+
+module.exports = autoPush
+
+export { autoPush }

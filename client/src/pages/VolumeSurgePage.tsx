@@ -225,7 +225,6 @@ const VolumeSurgePage: React.FC = () => {
             setShowBackfillDialog(false);
             fetchDates(); // 刷新日期列表
           }}
-          onConfirm={async () => {}}
         />
 
         {/* 分析仪表盘 - 仅在按日期查看模式且有统计数据时显示 */}

@@ -9,6 +9,12 @@ import { Layout, Loading, ErrorMessage, Empty, HotConceptTable } from '../compon
 import { marketApi } from '../services/api';
 import type { ThsConceptHotRankResult, ThsConceptHotItem } from '../types';
 
+type RankedConceptItem = ThsConceptHotItem & {
+  rank: number;
+  hotTag: string;
+  limitUpTag: string;
+};
+
 /**
  * 历史概念热搜页面
  */
@@ -20,7 +26,7 @@ const HistoryConceptPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [conceptType, setConceptType] = useState<'concept' | 'industry'>('concept');
   const [data, setData] = useState<ThsConceptHotRankResult | null>(null);
-  const [concepts, setConcepts] = useState<ThsConceptHotItem[]>([]);
+  const [concepts, setConcepts] = useState<RankedConceptItem[]>([]);
 
   // 获取可用日期列表
   const fetchAvailableDates = async () => {
@@ -54,9 +60,11 @@ const HistoryConceptPage: React.FC = () => {
       if (response.success) {
         setData(response.data);
         // 添加排名字段
-        const itemsWithRank = response.data.items.map((item, index) => ({
+        const itemsWithRank: RankedConceptItem[] = response.data.items.map((item: ThsConceptHotItem, index: number) => ({
           ...item,
-          rank: index + 1
+          rank: index + 1,
+          hotTag: item.hotTag || '',
+          limitUpTag: item.limitUpTag || ''
         }));
         setConcepts(itemsWithRank);
       } else {
@@ -86,10 +94,6 @@ const HistoryConceptPage: React.FC = () => {
   }, [selectedDate, conceptType]);
 
   // 处理日期选择变化
-  const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDate(e.target.value);
-  };
-
   // 处理类型选择变化
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setConceptType(e.target.value as 'concept' | 'industry');
@@ -128,7 +132,7 @@ const HistoryConceptPage: React.FC = () => {
               <label className="text-sm font-medium text-gray-700">日期:</label>
               <select
                 value={selectedDate}
-                onChange={handleDateChange}
+                onChange={(e) => setSelectedDate(e.target.value)}
                 disabled={saving}
                 className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               >

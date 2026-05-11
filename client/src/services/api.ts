@@ -26,6 +26,18 @@ import type {
   ThsConceptHotRankResult
 } from '../types';
 
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (axios.isAxiosError(error)) {
+    return error.response?.data?.message || error.message || fallback;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return fallback;
+};
+
 // 创建axios实例
 const api = axios.create({
   baseURL: '/api',
@@ -119,26 +131,25 @@ export const marketApi = {
   /**
    * 获取历史概念热度排行
    */
-  getHistoryConceptRank: async (date: string, type: 'concept' | 'industry' = 'concept') => {
+  getHistoryConceptRank: async (date: string, type: 'concept' | 'industry' = 'concept'): Promise<ApiResponse<ThsConceptHotRankResult>> => {
     try {
       const response = await axios.get(`/api/market/concepts/history/${date}/${type}`);
       return response.data;
     } catch (error) {
       console.error('获取历史概念热度排行失败:', error);
-      return [];
-      // throw new Error(`获取历史概念热度排行失败: ${error.response?.data?.message || error.message}`);
+      throw new Error(getErrorMessage(error, '获取历史概念热度排行失败'));
     }
   },
 
   /**
    * 获取可用的历史数据日期列表
    */
-  getHistoryConceptDates: async () => {
+  getHistoryConceptDates: async (): Promise<ApiResponse<string[]>> => {
     try {
       const response = await axios.get('/api/market/concepts/history/dates');
       return response.data;
     } catch (error) {
-      throw new Error(`获取历史数据日期列表失败: ${error.response?.data?.message || error.message}`);
+      throw new Error(getErrorMessage(error, '获取历史数据日期列表失败'));
     }
   }
 };
@@ -261,7 +272,7 @@ export const buySignalApi = {
   },
 
   // 获取统计数据
-  getStats: (date: string): Promise<ApiResponse<BuySignalStats>> => {
+  getStats: (date?: string): Promise<ApiResponse<BuySignalStats>> => {
     return api.get('/buy-signal/stats', { params: { date } });
   },
 

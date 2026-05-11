@@ -7,6 +7,7 @@ import { groupService } from '../services/groupService';
 import { logger } from '../utils';
 import { formatDate } from '../utils/dateUtils';
 import dayjs from 'dayjs';
+import { autoPush } from './autoGit';
 
 /**
  * 定时任务管理
@@ -73,6 +74,7 @@ export class JobScheduler {
     this.startAfterMarketJobs();
     this.startNightJobs();
     this.startDailyKlineUpdateJob();
+    this.startAutoPushJob();
 
     logger.info('定时任务已启动');
   }

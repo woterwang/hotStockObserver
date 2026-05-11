@@ -22,24 +22,11 @@ const BreakthroughPage: React.FC = () => {
 
   const [breakthroughList, setBreakthroughList] = useState<PriceBreakthrough[]>([]);
   const [history, setHistory] = useState<BreakthroughHistory[]>([]);
-  const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>(getTodayStr());
   const [loading, setLoading] = useState(true);
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'today' | 'history'>('today');
-
-  // 获取可用日期列表
-  const fetchDates = async () => {
-    try {
-      const response = await breakthroughApi.getDates();
-      if (response.success) {
-        setAvailableDates(response.data);
-      }
-    } catch (err) {
-      console.error('获取日期列表失败:', err);
-    }
-  };
 
   // 获取突破列表
   const fetchList = async (date?: string) => {
@@ -93,7 +80,6 @@ const BreakthroughPage: React.FC = () => {
         const count = (response as any).count || 0;
         alert(`扫描完成，发现 ${count} 只突破股票`);
         fetchList(selectedDate);
-        fetchDates();
       }
     } catch (err) {
       alert('扫描失败: ' + (err as Error).message);
@@ -101,10 +87,6 @@ const BreakthroughPage: React.FC = () => {
       setScanning(false);
     }
   };
-
-  useEffect(() => {
-    fetchDates();
-  }, []);
 
   useEffect(() => {
     if (viewMode === 'today' && selectedDate) {

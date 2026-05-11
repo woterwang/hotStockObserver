@@ -121,19 +121,16 @@ export interface PriceBreakthrough {
   date: string;
   stockCode: string;
   stockName: string;
-  industry: string;
-  concept: string;
-  price: number;
+  currentPrice: number;
   changePercent: number;
-  breakthroughPrice: number; // 突破价（day1最高价）
-  day1Date: string;
-  day1Change: number;
-  day2Date: string;
-  day2Change: number;
-  day3Open: number;
-  status: 'pending' | 'success' | 'failed'; // 状态：等待验证、成功获利、失败止损
-  maxProfit?: number; // 最大获利
-  holdDays?: number; // 持仓天数
+  turnover: number;
+  prevDayTurnover: number;
+  turnoverRatio: number;
+  high188: number;
+  breakTime?: string;
+  riseReason?: string;
+  sector?: string;
+  concept?: string[];
 }
 
 export interface BreakthroughHistory {

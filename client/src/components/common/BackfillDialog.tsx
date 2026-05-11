@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 interface BackfillDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (startDate: string, endDate: string) => Promise<void>;
 }
 
 /**
@@ -13,7 +12,6 @@ interface BackfillDialogProps {
 export const BackfillDialog: React.FC<BackfillDialogProps> = ({
   isOpen,
   onClose,
-  onConfirm,
 }) => {
   const [startDate, setStartDate] = useState(() => dayjs().subtract(30, 'day').format('YYYY-MM-DD'));
   const [endDate, setEndDate] = useState(() => dayjs().format('YYYY-MM-DD'));

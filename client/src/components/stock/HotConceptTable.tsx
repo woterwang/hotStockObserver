@@ -8,15 +8,15 @@ interface HotConcept {
 	hotRate: number;
 	order: number;
 	marketId: number;
-	hotTag: string;
-	limitUpTag: string;
+	hotTag?: string | null;
+	limitUpTag?: string | null;
 	rankChange: number;
 	etf?: {
 		productId: string;
 		name: string;
 		changeRatio: number;
 		marketId: number;
-	};
+	} | null;
 	rank: number;
 }
 
@@ -53,7 +53,7 @@ export const HotConceptTable: React.FC<HotConceptTableProps> = ({ concepts, show
 			<table className="stock-table">
 				<thead>
 					<tr>
-						<th className="w-12">排名</th>
+						{showRank && <th className="w-12">排名</th>}
 						<th>概念代码</th>
 						<th>概念名称</th>
 						<th className="text-right">涨跌幅</th>
@@ -69,16 +69,18 @@ export const HotConceptTable: React.FC<HotConceptTableProps> = ({ concepts, show
 							onClick={ () => handleRowClick(concept.code) }
 							className="cursor-pointer hover:bg-gray-50"
 						>
-							<td>
-								<span className={ `inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium ${concept.rank <= 3
-										? 'bg-red-500 text-white'
-										: concept.rank <= 10
-											? 'bg-orange-100 text-orange-600'
-											: 'bg-gray-100 text-gray-600'
+							{showRank && (
+								<td>
+									<span className={ `inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium ${concept.rank <= 3
+											? 'bg-red-500 text-white'
+											: concept.rank <= 10
+												? 'bg-orange-100 text-orange-600'
+												: 'bg-gray-100 text-gray-600'
 									}` }>
-									{ concept.rank }
-								</span>
-							</td>
+										{ concept.rank }
+									</span>
+								</td>
+							)}
 							<td className="font-mono text-gray-600">{ concept.code }</td>
 							<td className="font-medium">{ concept.name }</td>
 							<td className={ `text-right font-mono ${getPriceColor(concept.changeRatio)}` }>
