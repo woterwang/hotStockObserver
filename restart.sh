@@ -1,4 +1,11 @@
 #!/bin/bash
+###
+ # @Author: hp.com
+ # @Date: 2026-04-29 18:39:13
+ # @LastEditors: WRG
+ # @LastEditTime: 2026-05-12 19:58:05
+ # @😍: 😃😃
+### 
 
 set -euo pipefail
 
@@ -18,7 +25,7 @@ if ! command -v pm2 &> /dev/null; then
 fi
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PORT="${PORT:-3000}"
+PORT="${PORT:-8080}"
 
 echo "[1/4] 检查 MongoDB..."
 if ! command -v mongod &> /dev/null; then
