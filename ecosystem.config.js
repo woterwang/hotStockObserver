@@ -8,12 +8,12 @@ module.exports = {
     watch: false,
     max_memory_restart: '500M',
     env: {
-      NODE_ENV: 'production',
-      PORT: 3000
+      NODE_ENV: process.env.NODE_ENV || 'production',
+      PORT: process.env.PORT || 3000
     },
     env_development: {
       NODE_ENV: 'development',
-      PORT: 3000
+      PORT: process.env.PORT || 3000
     },
     log_date_format: 'YYYY-MM-DD HH:mm:ss',
     error_file: './logs/pm2-error.log',

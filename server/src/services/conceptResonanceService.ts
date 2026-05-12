@@ -14,7 +14,6 @@ import { ConceptResonanceBuySignals } from '../models/ConceptResonanceBuySignals
 import { getToday, formatDate } from '../utils/dateUtils';
 import { writeToFile } from '../utils/writeToFile';
 import axios from 'axios';
-import pLimit from 'p-limit';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const thsUtils = require('../utils/thsUtils');
@@ -41,6 +40,33 @@ import {
   OpenData,
 } from '../types/conceptEnhancement';
 import dayjs from 'dayjs';
+
+function createConcurrencyLimit(concurrency: number) {
+  let activeCount = 0;
+  const queue: Array<() => void> = [];
+
+  const next = () => {
+    activeCount -= 1;
+    const run = queue.shift();
+    if (run) {
+      run();
+    }
+  };
+
+  return async function limit<T>(task: () => Promise<T>): Promise<T> {
+    if (activeCount >= concurrency) {
+      await new Promise<void>(resolve => queue.push(resolve));
+    }
+
+    activeCount += 1;
+
+    try {
+      return await task();
+    } finally {
+      next();
+    }
+  };
+}
 
 /**
  * 主线共振策略服务
@@ -609,7 +635,7 @@ export class ConceptResonanceService {
     // ========================================
     // Step 7: 🆕 并发计算板块共振评分
     // ========================================
-    const limit = pLimit(this.config.concurrencyLimit);
+    const limit = createConcurrencyLimit(this.config.concurrencyLimit);
 
     const enhancedCandidates = await Promise.all(
       topCandidates.map(candidate =>

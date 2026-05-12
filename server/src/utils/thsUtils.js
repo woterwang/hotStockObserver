@@ -11,6 +11,7 @@ const document = {
 const window = globalThis
 const navigator = globalThis
 let globalCall = null
+let BROWSER_LIST = {}
 var TOKEN_SERVER_TIME = 1689394569.193
 !(function (n, t) {
 	!(function () {

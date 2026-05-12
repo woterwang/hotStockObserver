@@ -19,6 +19,8 @@ if ! command -v pm2 &> /dev/null; then
 fi
 echo "[OK] PM2 $(pm2 -v)"
 
+PORT="${PORT:-3000}"
+
 # 检查 MongoDB
 if ! command -v mongod &> /dev/null; then
     echo "[警告] 未找到 mongod 命令，请确认 MongoDB 已作为服务启动"
@@ -82,8 +84,8 @@ pm2 status
 echo
 echo "========================================"
 echo "  服务已启动!"
-echo "  访问入口: http://localhost:3000"
-echo "  健康检查: http://localhost:3000/api/health"
+echo "  访问入口: http://localhost:${PORT}"
+echo "  健康检查: http://localhost:${PORT}/api/health"
 echo "========================================"
 echo
 echo "停止服务请执行: pm2 delete hot-stock-observer"

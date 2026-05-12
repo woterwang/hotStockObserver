@@ -1,29 +1,44 @@
-# 阿里云 ECS 部署清单
+# 阿里云 ECS 部署清单（Express + PM2，无 Nginx）
 
-本文档适用于当前仓库的生产模式：先构建前后端，再由 server 进程托管 client/dist，Nginx 只做 80/443 入口反向代理。
+本文档适用于当前仓库的无 Nginx 部署方式：
 
-如果你不想安装 Nginx，而是让 Express 直接对外提供 Web 服务，请改看：
+- 先构建 client 和 server
+- 由 Express 在 production 模式下直接托管 client/dist
+- 由 PM2 守护 Node.js 进程
+- 浏览器直接访问 ECS 公网 IP 或域名对应端口
 
-- [docs/ECS_EXPRESS_PM2.md](./ECS_EXPRESS_PM2.md)
+## 适用场景
+
+- 单机部署
+- 访问量中低
+- 追求部署简单
+- 不需要额外的反向代理、静态缓存和多服务转发
 
 ## 架构说明
 
-- 浏览器 -> Nginx -> Node.js/Express (3000)
+- 浏览器 -> Node.js/Express (3000 或自定义端口)
 - Node.js/Express -> MongoDB (27017)
-- 前端静态资源由 server/dist/app.js 在生产环境下统一提供
+- 前端静态资源由 Express 在生产模式下直接提供
 
 对应代码入口：
 
-- server 生产静态托管见 [server/src/app.ts](../server/src/app.ts)
+- Express 生产静态托管见 [server/src/app.ts](../server/src/app.ts)
 - PM2 配置见 [ecosystem.config.js](../ecosystem.config.js)
-- 生产启动脚本见 [start.sh](../start.sh)
+- 启动脚本见 [start.sh](../start.sh)
 
 ## ECS 安全组建议
 
+如果你直接开放 3000 端口：
+
 - 放行 22 端口用于 SSH
-- 放行 80 端口用于 HTTP
-- 放行 443 端口用于 HTTPS
-- 不要对公网开放 3000 和 27017
+- 放行 3000 端口用于 Web 访问
+- 不要对公网开放 27017
+
+如果你希望直接用 80 端口：
+
+- 放行 22 端口用于 SSH
+- 放行 80 端口用于 Web 访问
+- 不要对公网开放 27017
 
 ## 部署命令清单
 
@@ -33,7 +48,7 @@
 
 ```bash
 sudo apt update
-sudo apt install -y git nginx curl ca-certificates
+sudo apt install -y git curl ca-certificates
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
 sudo npm install -g pm2
@@ -89,37 +104,44 @@ CRON_UPDATE_INTERVAL=*/5 9-15 * * 1-5
 
 ```bash
 cd /opt/hot-stock-observer-source
+export PORT=3000
+export NODE_ENV=production
 npm run pm2:start
 pm2 save
 pm2 startup systemd -u $USER --hp $HOME
 ```
 
-### 7. 部署 Nginx 配置
-
-仓库内已提供可直接复用的 ECS 配置样例：
-
-- [deploy/nginx/hot-stock-observer.ecs.conf](../deploy/nginx/hot-stock-observer.ecs.conf)
-
-部署命令：
-
-```bash
-sudo cp /opt/hot-stock-observer-source/deploy/nginx/hot-stock-observer.ecs.conf /etc/nginx/sites-available/hot-stock-observer
-sudo ln -sf /etc/nginx/sites-available/hot-stock-observer /etc/nginx/sites-enabled/hot-stock-observer
-sudo rm -f /etc/nginx/sites-enabled/default
-sudo nginx -t
-sudo systemctl reload nginx
-sudo systemctl enable nginx
-```
-
-如果你已经有域名，把配置中的 server_name _ 改成你的域名即可。
-
-### 8. 健康检查
+### 7. 健康检查
 
 ```bash
 curl http://127.0.0.1:3000/api/health
-curl http://<你的域名或ECS公网IP>/api/health
+curl http://<ECS公网IP>:3000/api/health
 pm2 status
 pm2 logs hot-stock-observer --lines 100
+```
+
+## 如果想直接监听 80 端口
+
+Node.js 默认不能直接绑定 80 这种低端口，除非使用 root 或给 node 可执行文件赋权。更推荐继续用 3000 端口；如果你确定要直接开放 80，可用下面方式赋权：
+
+```bash
+sudo setcap 'cap_net_bind_service=+ep' $(readlink -f $(which node))
+```
+
+然后重新设置端口并启动：
+
+```bash
+cd /opt/hot-stock-observer-source
+export PORT=80
+export NODE_ENV=production
+npm run pm2:restart
+```
+
+健康检查变成：
+
+```bash
+curl http://127.0.0.1/api/health
+curl http://<ECS公网IP>/api/health
 ```
 
 ## 更新部署命令
@@ -133,23 +155,19 @@ npm run build
 npm run pm2:restart
 ```
 
-## HTTPS 可选步骤
-
-如果已经绑定域名，可以继续接入 Let's Encrypt：
-
-```bash
-sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d <你的域名>
-```
-
 ## 排障命令
 
 ```bash
 pm2 status
 pm2 logs hot-stock-observer --lines 200
-sudo systemctl status nginx --no-pager
 sudo systemctl status mongod --no-pager
 sudo ss -lntp | grep -E ':80|:3000|:27017'
-curl -I http://127.0.0.1:3000
-curl http://127.0.0.1:3000/api/health
+curl -I http://127.0.0.1:${PORT:-3000}
+curl http://127.0.0.1:${PORT:-3000}/api/health
 ```
+
+## 说明
+
+- 这种方式不需要安装 Nginx
+- 生产入口就是 Express 本身
+- 如果未来要做 HTTPS、静态缓存、多个服务转发，再考虑加 Nginx 更合适

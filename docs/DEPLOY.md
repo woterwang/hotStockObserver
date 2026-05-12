@@ -110,6 +110,14 @@ npm run dev
 
 ## 生产环境部署
 
+### 方式零：Express + PM2 直接部署（无 Nginx）
+
+当前仓库已经支持由 Express 在 production 模式下直接托管前端静态资源，因此可以不安装 Nginx，只保留 Node.js、MongoDB 和 PM2。
+
+阿里云 ECS 的完整步骤见：
+
+- [docs/ECS_EXPRESS_PM2.md](./ECS_EXPRESS_PM2.md)
+
 ### 方式一：PM2 部署（推荐）
 
 当前仓库的生产模式已经调整为：
@@ -195,6 +203,10 @@ server {
 - [deploy/nginx/hot-stock-observer.ecs.conf](../deploy/nginx/hot-stock-observer.ecs.conf)
 
 ### 方式二：Docker 部署
+
+当前仓库的可执行 Docker 方案请优先参考：
+
+- [docs/DOCKER_PM2.md](./DOCKER_PM2.md)
 
 #### 1. 创建 Dockerfile
 
