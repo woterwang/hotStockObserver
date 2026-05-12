@@ -19,7 +19,7 @@ if ! command -v pm2 &> /dev/null; then
 fi
 echo "[OK] PM2 $(pm2 -v)"
 
-PORT="${PORT:-8080}"
+PORT="${PORT:-80}"
 
 # 检查 MongoDB
 if ! command -v mongod &> /dev/null; then

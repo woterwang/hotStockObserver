@@ -25,7 +25,7 @@ if ! command -v pm2 &> /dev/null; then
 fi
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PORT="${PORT:-8080}"
+PORT="${PORT:-80}"
 
 echo "[1/4] 检查 MongoDB..."
 if ! command -v mongod &> /dev/null; then
