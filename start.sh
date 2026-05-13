@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "========================================"
-echo "  每日热搜股票观察系统 - 启动脚本"
+echo "  每日热搜股票观察系统 - 生产启动脚本"
 echo "========================================"
 echo
 
@@ -12,9 +12,18 @@ if ! command -v node &> /dev/null; then
 fi
 echo "[OK] Node.js $(node -v)"
 
+# 检查 PM2
+if ! command -v pm2 &> /dev/null; then
+    echo "[错误] 未找到 PM2，请先执行: npm install -g pm2"
+    exit 1
+fi
+echo "[OK] PM2 $(pm2 -v)"
+
+PORT="${PORT:-80}"
+
 # 检查 MongoDB
 if ! command -v mongod &> /dev/null; then
-    echo "[警告] 未找到 MongoDB，请确保 MongoDB 服务已启动"
+    echo "[警告] 未找到 mongod 命令，请确认 MongoDB 已作为服务启动"
 else
     echo "[OK] MongoDB 已安装"
 fi
@@ -24,7 +33,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # 安装依赖
 echo
-echo "[1/4] 安装后端依赖..."
+echo "[1/6] 安装后端依赖..."
 cd "$SCRIPT_DIR/server"
 if [ ! -d "node_modules" ]; then
     npm install
@@ -33,7 +42,7 @@ else
 fi
 
 echo
-echo "[2/4] 安装前端依赖..."
+echo "[2/6] 安装前端依赖..."
 cd "$SCRIPT_DIR/client"
 if [ ! -d "node_modules" ]; then
     npm install
@@ -48,28 +57,35 @@ if [ ! -f ".env" ]; then
     echo "[OK] 已创建 .env 配置文件"
 fi
 
+mkdir -p "$SCRIPT_DIR/server/logs"
+
+echo
+echo "[3/6] 构建前端..."
+cd "$SCRIPT_DIR/client"
+npm run build
+
+echo
+echo "[4/6] 构建后端..."
+cd "$SCRIPT_DIR/server"
+npm run build
+
 # 启动服务
 echo
-echo "[3/4] 启动后端服务 (端口 3000)..."
-cd "$SCRIPT_DIR/server"
-npm run dev &
-SERVER_PID=$!
+echo "[5/6] 启动 PM2 服务..."
+cd "$SCRIPT_DIR"
+pm2 start ecosystem.config.js --update-env
 
-sleep 3
+echo
+echo "[6/6] 保存 PM2 进程列表..."
+pm2 save
 
-echo "[4/4] 启动前端服务 (端口 5173)..."
-cd "$SCRIPT_DIR/client"
-npm run dev &
-CLIENT_PID=$!
+pm2 status
 
 echo
 echo "========================================"
 echo "  服务已启动!"
-echo "  前端地址: http://localhost:5173"
-echo "  后端地址: http://localhost:3000"
+echo "  访问入口: http://localhost:${PORT}"
+echo "  健康检查: http://localhost:${PORT}/api/health"
 echo "========================================"
 echo
-echo "按 Ctrl+C 停止服务"
-
-# 等待进程
-wait $SERVER_PID $CLIENT_PID
+echo "停止服务请执行: pm2 delete hot-stock-observer"

@@ -6,7 +6,7 @@ export interface HotStockDocument extends Omit<IHotStock, '_id'>, Document {}
 const HotStockSchema = new Schema<HotStockDocument>(
   {
     date: {
-      type: Date,
+      type: String,
       required: true,
       index: true,
     },

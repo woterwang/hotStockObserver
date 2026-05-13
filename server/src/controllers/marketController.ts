@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { stockService, dataFetchService } from '../services';
+import { stockService, dataFetchService, conceptRankingService, thsConceptHotRankService, ThsPlateType } from '../services';
 import { logger } from '../utils';
 
 /**
@@ -10,18 +10,18 @@ export class MarketController {
    * 获取大盘指数
    * GET /api/market/indices
    */
-  async getIndices(req: Request, res: Response, next: NextFunction) {
+  async getIndices (req: Request, res: Response, next: NextFunction) {
     try {
       // 实时获取大盘指数数据
       const indices = await dataFetchService.fetchMarketIndices();
-      
+
       res.json({
         success: true,
         data: indices,
       });
     } catch (error) {
       logger.error(`获取大盘指数失败: ${(error as Error).message}`);
-      
+
       // 返回默认结构避免前端出错
       const defaultIndices = [
         { indexCode: '000001', indexName: '上证指数', currentPoint: 0, changePercent: 0, changePoint: 0 },
@@ -29,7 +29,7 @@ export class MarketController {
         { indexCode: '399006', indexName: '创业板指', currentPoint: 0, changePercent: 0, changePoint: 0 },
         { indexCode: '399005', indexName: '中小100', currentPoint: 0, changePercent: 0, changePoint: 0 },
       ];
-      
+
       res.json({
         success: true,
         data: defaultIndices,
@@ -41,13 +41,13 @@ export class MarketController {
    * 获取热门板块
    * GET /api/market/sectors
    */
-  async getHotSectors(req: Request, res: Response, next: NextFunction) {
+  async getHotSectors (req: Request, res: Response, next: NextFunction) {
     try {
       const { limit = 10 } = req.query;
-      
+
       // 实时获取热门板块
       const sectors = await dataFetchService.fetchHotSectors(Number(limit));
-      
+
       res.json({
         success: true,
         data: sectors,
@@ -62,7 +62,8 @@ export class MarketController {
    * 获取市场概览（综合数据）
    * GET /api/market/overview
    */
-  async getOverview(req: Request, res: Response, next: NextFunction) {
+  async getOverview (req: Request, res: Response, next: NextFunction) {
+    let hotConcepts: any[] = [];
     try {
       // 并行获取所有数据，指数和板块数据实时获取
       const [indices, hotStocks, sectors, strongStocks] = await Promise.all([
@@ -71,16 +72,80 @@ export class MarketController {
         dataFetchService.fetchHotSectors(10),   // 实时获取热门板块
         stockService.getStrongStocks(5, 10),
       ]);
-      
+
+      try {
+        // 1. 获取热度榜
+        const hotRankResult = await thsConceptHotRankService.fetchConceptHotRank();
+        // hotRankResult.items.forEach((item, index) => {
+        //   hotConceptMap.set(item.name, { rank: index + 1, item });
+        // });
+        hotConcepts = hotRankResult.items.map((item, index) => {
+          //1.添加排名
+          return{...item, rank: index + 1};
+        })
+        logger.info(`[ConceptResonance] 热度榜获取成功，共 ${hotConcepts.length} 个热点概念`);
+      } catch (error) {
+        logger.warn(`[ConceptResonance] 获取热度榜失败: ${(error as Error).message}`);
+      }
+
       res.json({
         success: true,
         data: {
           indices,
           hotStocks,
+          hotConcepts,
           sectors,
           strongStocks,
           updateTime: new Date().toISOString(),
         },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 获取每日概念/板块强度排名
+   * GET /api/market/concepts/rank
+   */
+  async getConceptRanking (req: Request, res: Response, next: NextFunction) {
+    try {
+      const { date, limit = 20, raw } = req.query;
+      const includeRaw = raw === '1';
+
+      const ranking = await conceptRankingService.fetchDailyConceptRanking(
+        typeof date === 'string' ? date : undefined,
+        Number(limit),
+        includeRaw,
+      );
+
+      res.json({
+        success: true,
+        data: ranking,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * 获取板块热度排行（同花顺数据源）
+   * GET /api/market/concepts/hot
+   * 返回实时板块热度排行，包括热度值、涨停数、ETF信息等
+   */
+  async getConceptHotRank (req: Request, res: Response, next: NextFunction) {
+    try {
+      const { type = 'concept', raw } = req.query;
+      const includeRaw = raw === '1';
+
+      // 验证 type 参数
+      const plateType = (type === 'industry' ? 'industry' : 'concept') as ThsPlateType;
+
+      const hotRank = await thsConceptHotRankService.fetchHotRank(plateType, includeRaw);
+
+      res.json({
+        success: true,
+        data: hotRank,
       });
     } catch (error) {
       next(error);

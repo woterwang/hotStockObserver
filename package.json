@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "build": "npm --prefix client run build && npm --prefix server run build",
+    "start": "npm --prefix server run start",
+    "start:prod": "npm --prefix server run start",
+    "pm2:start": "pm2 start ecosystem.config.js --update-env",
+    "pm2:restart": "pm2 restart ecosystem.config.js --update-env",
+    "pm2:stop": "pm2 delete hot-stock-observer"
+  },
+  "dependencies": {
+    "simple-git": "^3.36.0"
+  }
+}

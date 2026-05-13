@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ReactECharts from 'echarts-for-react';
 import { Layout, Loading, ErrorMessage, Empty } from '../components';
 import { stockApi } from '../services/api';
-import type { StockDetail, HotStock, StockNews } from '../types';
+import type { StockDetail, HotStock } from '../types';
 
 /**
  * 股票详情页
@@ -186,65 +186,65 @@ const StockDetailPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* 返回按钮和标题 */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <button
             onClick={() => navigate(-1)}
-            className="text-gray-500 hover:text-gray-700"
+            className="p-2 -ml-2 text-gray-500 hover:text-gray-700 active:bg-gray-100 rounded-full transition-colors"
           >
-            ← 返回
+            ← <span className="hidden sm:inline">返回</span>
           </button>
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 truncate">
             {basic.stockName}
-            <span className="text-gray-400 text-lg ml-2">({basic.stockCode})</span>
+            <span className="text-gray-400 text-base sm:text-lg ml-2 font-normal">({basic.stockCode})</span>
           </h1>
         </div>
 
         {/* 基本信息卡片 */}
         <div className="card">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            <div className="text-center">
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+            <div className="text-center p-2 rounded-lg bg-gray-50 sm:bg-transparent">
               <div
-                className={`text-3xl font-bold ${
+                className={`text-xl sm:text-3xl font-bold font-mono ${
                   basic.changePercent >= 0 ? 'text-rise' : 'text-fall'
                 }`}
               >
                 {basic.currentPrice.toFixed(2)}
               </div>
-              <div className="text-xs text-gray-500">最新价</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">最新价</div>
             </div>
-            <div className="text-center">
+            <div className="text-center p-2 rounded-lg bg-gray-50 sm:bg-transparent">
               <div
-                className={`text-xl font-bold ${
+                className={`text-lg sm:text-xl font-bold font-mono ${
                   basic.changePercent >= 0 ? 'text-rise' : 'text-fall'
                 }`}
               >
                 {basic.changePercent >= 0 ? '+' : ''}{basic.changePercent.toFixed(2)}%
               </div>
-              <div className="text-xs text-gray-500">涨跌幅</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">涨跌幅</div>
             </div>
-            <div className="text-center">
-              <div className="text-xl font-bold text-gray-800">
+            <div className="text-center p-2 rounded-lg bg-gray-50 sm:bg-transparent">
+              <div className="text-lg sm:text-xl font-bold text-gray-800 font-mono">
                 {(basic.turnover / 100000000).toFixed(2)}亿
               </div>
-              <div className="text-xs text-gray-500">成交额</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">成交额</div>
             </div>
-            <div className="text-center">
-              <div className="text-xl font-bold text-blue-500">{basic.rank}</div>
-              <div className="text-xs text-gray-500">热搜排名</div>
+            <div className="text-center p-2 rounded-lg bg-gray-50 sm:bg-transparent">
+              <div className="text-lg sm:text-xl font-bold text-blue-500 font-mono">{basic.rank}</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">热搜排名</div>
             </div>
-            <div className="text-center">
-              <div className="text-xl font-bold text-orange-500">
+            <div className="text-center p-2 rounded-lg bg-gray-50 sm:bg-transparent">
+              <div className="text-lg sm:text-xl font-bold text-orange-500 font-mono">
                 {basic.consecutiveDays}天
               </div>
-              <div className="text-xs text-gray-500">连续上榜</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">连续上榜</div>
             </div>
-            <div className="text-center">
-              <div className="text-xl font-bold text-purple-500">
+            <div className="text-center p-2 rounded-lg bg-gray-50 sm:bg-transparent">
+              <div className="text-lg sm:text-xl font-bold text-purple-500 font-mono">
                 {basic.hotScore || '-'}
               </div>
-              <div className="text-xs text-gray-500">热度分数</div>
+              <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">热度分数</div>
             </div>
           </div>
 

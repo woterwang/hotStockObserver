@@ -1,0 +1,59 @@
+当日K线：
+curl 'https://quota-h.10jqka.com.cn/fuyao/common_hq_aggr/quote/v1/multi_last_snapshot' \
+  -H 'accept: */*' \
+  -H 'accept-language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://www.iwencai.com' \
+  -H 'platform: hxkline' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.iwencai.com/' \
+  -H 'sec-ch-ua: "Google Chrome";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-fetch-storage-access: active' \
+  -H 'source-id: hxkline-AIME_Component_Library_Component' \
+  -H 'sw8: 1-ZTJiZDFmNTQtNWI4ZS00ODY1LWJlOGUtMTVlZDJmOTEzMTU1-ZmVjMTAzNTQtZWRiNy00MmUzLWEyZDktMGMzMDRkNTA0YmEz-0-YjJjd2ViLWNvbXBvbmVudC1oeGtsaW5lLWZyb250PGJyb3dzZXI+-SFhLbGluZV92MS4yLjE0-aHR0cHM6Ly93d3cuaXdlbmNhaS5jb20vdW5pZmllZHdhcC9yZXN1bHQ/dz02MDAxOTEuU0glMjAmcXVlcnl0eXBlPXN0b2Nr-cXVvdGEtaC4xMGpxa2EuY29tLmNu' \
+  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'x-auth-appname: AINVEST' \
+  -H 'x-auth-progid: 7047' \
+  -H 'x-auth-type: ths' \
+  -H 'x-auth-version: 1.0' \
+  -H 'x-fuyao-auth: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpemVyX25hbWVzcGFjZSI6ImNvbW1vbi1ocS1hZ2dyIiwibGljZW5zZWVfdHlwZSI6IkZST05UX0FQUCIsImxpY2Vuc2VlX25hbWVzcGFjZSI6Imh4a2xpbmUtQUlNRV9Db21wb25lbnRfTGlicmFyeV9Db21wb25lbnQifQ.MWqYrKk4Y2_oWTbG3XZjNGoHK_GmIi_KeJKc_mNDqTA' \
+  --data-raw '{"code_list":[{"codes":["600191"],"market":"17"}],"trade_class":"intraday","data_fields":["1","6","7","8","9","10","12","13","18","19","24","54","65541","199112","264648"],"lang":"zh_cn","gpid":1}'
+
+
+
+  历史K线：
+  curl 'https://quota-h.10jqka.com.cn/fuyao/common_hq_aggr/quote/v1/single_kline' \
+  -H 'accept: */*' \
+  -H 'accept-language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://www.iwencai.com' \
+  -H 'platform: hxkline' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://www.iwencai.com/' \
+  -H 'sec-ch-ua: "Google Chrome";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-fetch-storage-access: active' \
+  -H 'source-id: hxkline-AIME_Component_Library_Component' \
+  -H 'sw8: 1-NWI2OTFiY2YtYmRmNS00YWZiLWJkM2MtMmU3MjQ2ZjRmNmIx-NmY1OGVjYjAtODMzNS00N2EzLTk0NmQtZmM3OWI3Y2Q1NzM0-0-YjJjd2ViLWNvbXBvbmVudC1oeGtsaW5lLWZyb250PGJyb3dzZXI+-SFhLbGluZV92MS4yLjE0-aHR0cHM6Ly93d3cuaXdlbmNhaS5jb20vdW5pZmllZHdhcC9yZXN1bHQ/dz02MDAxOTEuU0glMjAmcXVlcnl0eXBlPXN0b2Nr-cXVvdGEtaC4xMGpxa2EuY29tLmNu' \
+  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'x-auth-appname: AINVEST' \
+  -H 'x-auth-progid: 7047' \
+  -H 'x-auth-type: ths' \
+  -H 'x-auth-version: 1.0' \
+  -H 'x-fuyao-auth: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdXRob3JpemVyX25hbWVzcGFjZSI6ImNvbW1vbi1ocS1hZ2dyIiwibGljZW5zZWVfdHlwZSI6IkZST05UX0FQUCIsImxpY2Vuc2VlX25hbWVzcGFjZSI6Imh4a2xpbmUtQUlNRV9Db21wb25lbnRfTGlicmFyeV9Db21wb25lbnQifQ.MWqYrKk4Y2_oWTbG3XZjNGoHK_GmIi_KeJKc_mNDqTA' \
+  --data-raw '{"code_list":[{"codes":["600191",""],"market":"17"}],"trade_class":"intraday","time_period":"day_1","trade_date":-1,"begin_time":-350,"end_time":0,"adjust_type":"forward","gpid":1}'
+
+  "time_period":"day_1" 表示日线 week_1 表示周线 month_1 表示月线
+  "end_time":0 表示最新交易日，
+  "begin_time":-350 表示向前350个交易日
+  可以根据需要调整获取的时间范围
+  

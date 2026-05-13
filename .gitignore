@@ -82,6 +82,9 @@ out
 .nuxt
 dist
 
+# Local caches
+server/data/kline_cache/
+
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js

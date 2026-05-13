@@ -110,7 +110,25 @@ npm run dev
 
 ## 生产环境部署
 
+### 方式零：Express + PM2 直接部署（无 Nginx）
+
+当前仓库已经支持由 Express 在 production 模式下直接托管前端静态资源，因此可以不安装 Nginx，只保留 Node.js、MongoDB 和 PM2。
+
+阿里云 ECS 的完整步骤见：
+
+- [docs/ECS_EXPRESS_PM2.md](./ECS_EXPRESS_PM2.md)
+
 ### 方式一：PM2 部署（推荐）
+
+当前仓库的生产模式已经调整为：
+
+- 先构建 client 和 server
+- 由 server 在 production 模式下直接托管 client/dist
+- Nginx 统一反向代理到 127.0.0.1:3000
+
+如果你要部署到阿里云 ECS，优先参考：
+
+- [docs/ECS_DEPLOY.md](./ECS_DEPLOY.md)
 
 #### 1. 安装 PM2
 
@@ -165,29 +183,30 @@ pm2 startup  # 设置开机自启
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com;
+  server_name your-domain.com;
 
-    # 前端静态文件
-    location / {
-        root /path/to/hot-stock-observer/client/dist;
-        try_files $uri $uri/ /index.html;
-    }
-
-    # API代理
-    location /api {
+  location / {
         proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Connection "upgrade";
     }
 }
 ```
 
+仓库示例配置见：
+
+- [deploy/nginx/hot-stock-observer.ecs.conf](../deploy/nginx/hot-stock-observer.ecs.conf)
+
 ### 方式二：Docker 部署
+
+当前仓库的可执行 Docker 方案请优先参考：
+
+- [docs/DOCKER_PM2.md](./DOCKER_PM2.md)
 
 #### 1. 创建 Dockerfile
 

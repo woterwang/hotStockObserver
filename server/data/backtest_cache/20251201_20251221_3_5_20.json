@@ -1,0 +1,185 @@
+{
+  "startDate": "20251201",
+  "endDate": "20251221",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 100000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 0,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 3,
+    "marketPanicThreshold": 40,
+    "maxBuyCount": 4
+  },
+  "totalTrades": 7,
+  "winTrades": 4,
+  "lossTrades": 3,
+  "winRate": 57.14,
+  "totalProfitAmount": 26408.52,
+  "totalProfitPercent": 3.77,
+  "avgProfitPercent": 3.77,
+  "avgWinPercent": 8.94,
+  "avgLossPercent": -3.12,
+  "profitLossRatio": 2.87,
+  "totalInvested": 700000,
+  "maxDrawdown": 6240.24,
+  "maxDrawdownPercent": 19.11,
+  "maxProfit": 19.04,
+  "maxLoss": -5,
+  "maxConsecutiveWins": 4,
+  "maxConsecutiveLosses": 2,
+  "avgHoldDays": 2.7,
+  "equityCurve": [
+    {
+      "date": "20251203",
+      "equity": -3117.38
+    },
+    {
+      "date": "20251204",
+      "equity": -186.73000000000002
+    },
+    {
+      "date": "20251210",
+      "equity": 18855.59
+    },
+    {
+      "date": "20251211",
+      "equity": 28966.75
+    },
+    {
+      "date": "20251211",
+      "equity": 32648.760000000002
+    },
+    {
+      "date": "20251216",
+      "equity": 31408.52
+    },
+    {
+      "date": "20251222",
+      "equity": 26408.52
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "300553",
+      "stockName": "集智股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251201",
+      "buyPrice": 36.89,
+      "sellDate": "20251203",
+      "sellPrice": 35.74,
+      "holdDays": 3,
+      "position": 100000,
+      "profitPercent": -3.12,
+      "profitAmount": -3117.38,
+      "exitReason": "max_days",
+      "buySignalScore": 74,
+      "marketMood": 65
+    },
+    {
+      "stockCode": "603341",
+      "stockName": "龙旗科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251202",
+      "buyPrice": 44.7,
+      "sellDate": "20251204",
+      "sellPrice": 46.01,
+      "holdDays": 3,
+      "position": 100000,
+      "profitPercent": 2.93,
+      "profitAmount": 2930.65,
+      "exitReason": "market_panic",
+      "buySignalScore": 83,
+      "marketMood": 50
+    },
+    {
+      "stockCode": "688661",
+      "stockName": "和林微纳",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251208",
+      "buyPrice": 44.9,
+      "sellDate": "20251210",
+      "sellPrice": 53.45,
+      "holdDays": 3,
+      "position": 100000,
+      "profitPercent": 19.04,
+      "profitAmount": 19042.32,
+      "exitReason": "max_days",
+      "buySignalScore": 76,
+      "marketMood": 73
+    },
+    {
+      "stockCode": "688623",
+      "stockName": "双元科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251209",
+      "buyPrice": 84.56,
+      "sellDate": "20251211",
+      "sellPrice": 93.11,
+      "holdDays": 3,
+      "position": 100000,
+      "profitPercent": 10.11,
+      "profitAmount": 10111.16,
+      "exitReason": "market_panic",
+      "buySignalScore": 77,
+      "marketMood": 48
+    },
+    {
+      "stockCode": "002536",
+      "stockName": "飞龙股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251209",
+      "buyPrice": 23.9,
+      "sellDate": "20251211",
+      "sellPrice": 24.78,
+      "holdDays": 3,
+      "position": 100000,
+      "profitPercent": 3.68,
+      "profitAmount": 3682.01,
+      "exitReason": "market_panic",
+      "buySignalScore": 74,
+      "marketMood": 48
+    },
+    {
+      "stockCode": "300435",
+      "stockName": "中泰股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251215",
+      "buyPrice": 21.77,
+      "sellDate": "20251216",
+      "sellPrice": 21.5,
+      "holdDays": 2,
+      "position": 100000,
+      "profitPercent": -1.24,
+      "profitAmount": -1240.24,
+      "exitReason": "market_panic",
+      "buySignalScore": 80,
+      "marketMood": 52
+    },
+    {
+      "stockCode": "300900",
+      "stockName": "广联航空",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251219",
+      "buyPrice": 25.1,
+      "sellDate": "20251222",
+      "sellPrice": 23.845,
+      "holdDays": 2,
+      "position": 100000,
+      "profitPercent": -5,
+      "profitAmount": -5000,
+      "exitReason": "stop_loss",
+      "buySignalScore": 74,
+      "marketMood": 72
+    }
+  ]
+}

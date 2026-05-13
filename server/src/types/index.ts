@@ -1,3 +1,5 @@
+export * from './conceptEnhancement';
+
 export interface Stock {
   code: string;
   name: string;
@@ -7,7 +9,7 @@ export interface Stock {
 // HotStock 接口 - 数据库存储结构
 export interface HotStock {
   _id?: string;
-  date: Date;
+  date: string;
   stockCode: string;
   stockName: string;
   currentPrice: number;

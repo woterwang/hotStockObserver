@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { logger } from '../utils';
 import { HotStock, StockNews } from '../models';
-import { formatDate, getToday, getDaysAgo } from '../utils/dateUtils';
+import { toDateStr, getToday, getDaysAgo } from '../utils/dateUtils';
 import iconv from 'iconv-lite';
 
 // 同花顺热搜API配置
@@ -213,7 +213,8 @@ export class DataFetchService {
         
         if (response.data.status_code === 0 && response.data.data?.stock_list) {
           logger.info(`成功获取热搜股票数据，共 ${response.data.data.stock_list.length} 条`);
-          return response.data.data.stock_list;
+          // 返回数据 100 条，只取前 20 条
+          return response.data.data.stock_list.slice(0, 20);
         } else {
           throw new Error(`API返回错误: ${response.data.status_msg}`);
         }
@@ -235,7 +236,7 @@ export class DataFetchService {
    * 保存热搜股票数据到数据库
    */
   async saveHotStocks(stocks: THSHotStockItem[]): Promise<number> {
-    const today = getToday();
+    const today = toDateStr(getToday());
     let savedCount = 0;
 
     // 先批量获取所有股票的行情数据

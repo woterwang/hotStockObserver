@@ -1,0 +1,606 @@
+## 📋 方案总览
+
+本优化方案的核心目标是将 `volume-surge`（强势资金突破）策略从 **"个股单维度选股"** 升级为 **"个股+板块双维度共振选股"**，通过引入概念板块数据，显著提升选股的准确率和持续性。策略名称：主线共振（Concept Resonance）
+
+##基础要求
+	1.该策略为新增选股策略，需在现有策略“`volume-surge`（强势资金突破）”的逻辑上实现。
+	2.确保不影响现有选股流程的稳定性和性能。
+	3.请为该优化方案独立实现，与现有代码解耦，便于后续维护、升级以及做AB测试。
+
+### 优化架构图
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      Volume-Surge 策略 2.0                       │
+├─────────────────────────────────────────────────────────────────┤
+│  第一层：个股量价筛选（现有逻辑）                                 │
+│  ├── 涨幅 > 7%                                                  │
+│  ├── 成交额前200                                                 │
+│  ├── 上影线 < 5%                                                 │
+│  └── 收盘价 > 10日均线                                           │
+├─────────────────────────────────────────────────────────────────┤
+│  第二层：板块共振验证（新增逻辑）🆕                               │
+│  ├── 热度验证：个股所属板块是否为当日热点                         │
+│  ├── 强度验证：热点板块是否有真实涨幅支撑                         │
+│  └── 地位验证：个股在板块中是龙头还是跟风                         │
+├─────────────────────────────────────────────────────────────────┤
+│  第三层：综合评分输出                                            │
+│  └── Score = Score_量价 + β × Score_板块共振                    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📊 一、接口分工定义（三层数据架构）
+
+为确保数据使用的合理性，需明确三个接口的定位：
+
+| 接口 | 核心问题 | 数据特征 | 使用场景 |
+|------|----------|----------|----------|
+| `/api/market/concepts/hot` | 资金在关注什么？ | 实时热度、舆论关注、排名变化 | **风向过滤**：识别市场主线方向 |
+| `/api/market/concepts/rank` | 板块涨得是否真强？ | 强度值、涨幅、速度、成交额 | **确认信号**：过滤纯热度噪音 |
+| `/api/stocks/:code/concepts/detail` | 个股在板块中什么地位？ | 龙头标识、成分股、板块涨停数 | **地位加权**：识别龙头vs跟风 |
+
+### 接口数据结构对照
+
+```typescript
+// 热度接口 (thsConceptHotRankService)
+interface ThsConceptHotItem {
+  code: string;           // 板块代码
+  name: string;           // 板块名称
+  changeRatio: number;    // 涨跌幅(%)
+  hotRate: number;        // 热度值
+  order: number;          // 排名
+  hotTag: string | null;  // 热度标签，如"连续39天上榜"
+  limitUpTag: string | null; // 涨停信息，如"5家涨停"
+  rankChange: number;     // 排名变化
+}
+
+// 强度接口 (conceptRankingService)
+interface ConceptRankingItem {
+  code: string;
+  name: string;
+  strength: number;       // 强度值（核心指标）
+  change: number;         // 涨跌幅
+  speed: number;          // 涨速
+  turnover: number;       // 成交额
+  mainNet: number;        // 主力净流入
+  volumeRatio: number;    // 量比
+}
+
+// 个股概念详情 (thsStockConceptService)
+interface ThsConceptInfo {
+  name: string;
+  changeRatio: number;
+  riseCount: number;       // 上涨家数
+  limitUpCount: number;    // 涨停数量
+  leading: ThsRelatedStock[];   // 龙头股列表 ⭐
+  components: ThsRelatedStock[]; // 成分股列表
+}
+```
+
+---
+
+## 📐 二、评分模型设计（可落地的量化规则）
+
+### 2.1 评分公式
+
+$$Score_{total} = Score_{量价} + \beta \times Score_{板块共振}$$
+
+其中：
+- $Score_{量价}$：现有评分逻辑（0-130分），保持不变
+- $Score_{板块共振}$：新增板块评分（0-60分，设上限防止喧宾夺主）
+- $\beta$：调节系数，建议起步值 **0.3~0.5**，可通过回测优化
+
+### 2.2 板块共振评分拆解
+
+$Score_{板块共振} = S_{热度} + S_{强度} + S_{地位}$
+
+#### 2.2.1 热度分（风向）—— 0~20分
+
+基于 `/api/market/concepts/hot` 接口返回的排名进行衰减计算：
+
+$$S_{热度} = \min(20, \alpha \times (K - rank + 1))$$
+
+其中：
+- $K = 20$（取前20热点）
+- $\alpha = 1.0$（衰减系数）
+- $rank$：板块在热度榜中的排名
+
+**落地规则表：**
+
+| 热度排名 | 得分 | 说明 |
+|----------|------|------|
+| Top 1-5 | 15-20 | 核心热点，强共振 |
+| Top 6-10 | 10-15 | 次热点，有效共振 |
+| Top 11-20 | 5-10 | 边缘热点，弱共振 |
+| 20名以外 | 0 | 不计入热度分 |
+
+**重要规则：主概念原则**
+- 个股通常归属多个概念，但只取 **Top 1-2 个命中热点的概念** 作为"主概念"计算热度分
+- 避免"多概念股"因叠加而虚高
+- 主概念选择优先级：热度排名 > 强度值 > 涨停家数
+
+#### 2.2.2 强度分（确认）—— 0~15分
+
+基于 `/api/market/concepts/rank` 接口的 `strength` 值进行验证：
+
+**目的：** 防止"热度高但涨幅差"的概念误导判断
+
+| 条件 | 得分 | 说明 |
+|------|------|------|
+| 主概念 strength ≥ 80 | +15 | 真强题材 |
+| 主概念 strength ≥ 60 | +10 | 较强题材 |
+| 主概念 strength ≥ 40 | +5 | 一般强度 |
+| 主概念 strength < 40 | 0 | 强度不足，热度分打5折 |
+
+**交叉验证规则：**
+- 若热点板块在强度榜中排名靠后（Top30以外），则该板块的热度分 × 0.5
+- 若热点板块涨跌幅 `changeRatio` 为负，不计入热度分
+
+#### 2.2.3 地位分（龙头效应）—— 0~25分
+
+基于 `/api/stocks/:code/concepts/detail` 返回的 `leading` 和 `components` 判断：
+
+| 条件 | 得分 | 说明 |
+|------|------|------|
+| 在主概念的 `leading` 列表中 | +20 | 板块龙头，最具辨识度 |
+| 在主概念的 `components` 列表中 | +8 | 核心成分股，有板块光环 |
+| 主概念 `limitUpCount ≥ 5` | +5 | 板块效应强，容错率高 |
+| 主概念 `riseCount / (riseCount + fallCount) > 70%` | +2 | 板块整体偏强 |
+
+**龙头识别注意事项：**
+```typescript
+// leading 中的 code 格式可能是 "603601" 或同花顺带市场前缀的格式
+// 需要统一转换为6位纯数字代码进行比较
+const normalizeCode = (code: string): string => {
+  return code.replace(/[^0-9]/g, '').slice(-6);
+};
+
+const isLeading = concept.leading.some(l => 
+  normalizeCode(l.code) === normalizeCode(stockCode)
+);
+```
+
+### 2.3 评分上限与去重
+
+```typescript
+// 板块共振分数上限控制
+const conceptScore = Math.min(60, S_热度 + S_强度 + S_地位);
+
+// 最终评分
+const totalScore = baseScore + marketBonus + boardBonus + conceptScore * beta;
+```
+
+---
+
+## 🛡️ 三、过滤与保护规则（风控逻辑）
+
+### 3.1 题材最低门槛（抗噪）
+
+```typescript
+// 如果候选股完全不命中热度Top20且强度榜Top30，降权处理
+if (!hitAnyHotConcept && !hitAnyStrongConcept) {
+  conceptScore = 0;
+  // 可选：baseScore *= 0.9; // 轻微降权
+}
+```
+
+**设计理由：** 在题材行情中，完全不靠热点的个股持续性往往较差
+
+### 3.2 题材过热保护（防追高）
+
+```typescript
+// 若板块热度极高(Top3)但当日涨幅为负，视为"退潮信号"
+if (hotRank <= 3 && conceptChangeRatio < 0) {
+  S_热度 = 0;  // 不给热度分
+  // 可选：添加风险标签 riskTags.push('concept_cooling');
+}
+```
+
+**设计理由：** 热度高但涨幅转负，可能是资金撤退，次日大概率继续调整
+
+### 3.3 龙头保护（强化龙头）
+
+```typescript
+// 若识别为龙头，且板块涨停数≥3，给予最高评级
+if (isLeader && concept.limitUpCount >= 3) {
+  riskLevel = 'low';  // 强制降低风险等级
+}
+```
+
+---
+
+## 💻 四、代码实现方案
+
+### 4.1 新增类型定义
+
+```typescript
+// types/conceptEnhancement.ts
+export interface ConceptEnhancementResult {
+  /** 命中的热点概念列表 */
+  hitHotConcepts: string[];
+  /** 主概念名称（用于展示） */
+  primaryConcept: string | null;
+  /** 是否为龙头 */
+  isConceptLeader: boolean;
+  /** 龙头所属概念 */
+  leaderInConcepts: string[];
+  /** 板块共振评分 */
+  conceptScore: number;
+  /** 评分明细 */
+  conceptScoreDetail: {
+    hotScore: number;
+    strengthScore: number;
+    positionScore: number;
+  };
+  /** 主概念涨停家数 */
+  conceptLimitUpCount: number;
+}
+```
+
+### 4.2 核心服务改造
+
+```typescript
+// services/volumeSurgeService.ts 新增方法
+
+import { thsConceptHotRankService, ThsConceptHotItem } from './thsConceptHotRankService';
+import { thsStockConceptService } from './thsStockConceptService';
+import { conceptRankingService, ConceptRankingItem } from './conceptRankingService';
+
+class VolumeSurgeService {
+  // ... 现有代码 ...
+
+  /**
+   * 获取板块共振数据（前置准备）
+   * 缓存时间：热度榜每天缓存为本地文件，强度榜无需缓存直接第三方接口;
+   */
+  private async fetchConceptContext(dateStr: string): Promise<{
+    hotConceptMap: Map<string, { rank: number; item: ThsConceptHotItem }>;
+    strengthConceptMap: Map<string, ConceptRankingItem>;
+  }> {
+    // 1. 获取热度榜
+    const hotRankResult = await thsConceptHotRankService.fetchConceptHotRank();
+    const hotConceptMap = new Map<string, { rank: number; item: ThsConceptHotItem }>();
+    hotRankResult.items.slice(0, 20).forEach((item, index) => {
+      hotConceptMap.set(item.name, { rank: index + 1, item });
+    });
+
+    // 2. 获取强度榜
+    const strengthResult = await conceptRankingService.fetchDailyConceptRanking(dateStr, 30);
+    const strengthConceptMap = new Map<string, ConceptRankingItem>();
+    strengthResult.items.forEach(item => {
+      strengthConceptMap.set(item.name, item);
+    });
+
+    return { hotConceptMap, strengthConceptMap };
+  }
+
+  /**
+   * 计算个股的板块共振评分
+   */
+  private async calculateConceptScore(
+    stockCode: string,
+    hotConceptMap: Map<string, { rank: number; item: ThsConceptHotItem }>,
+    strengthConceptMap: Map<string, ConceptRankingItem>
+  ): Promise<ConceptEnhancementResult> {
+    const result: ConceptEnhancementResult = {
+      hitHotConcepts: [],
+      primaryConcept: null,
+      isConceptLeader: false,
+      leaderInConcepts: [],
+      conceptScore: 0,
+      conceptScoreDetail: { hotScore: 0, strengthScore: 0, positionScore: 0 },
+      conceptLimitUpCount: 0,
+    };
+
+    try {
+      // 获取个股概念详情
+      const conceptDetail = await thsStockConceptService.fetchConcepts(stockCode);
+      
+      // 遍历个股所属概念，找出命中热点的
+      const candidates: Array<{
+        name: string;
+        hotRank: number;
+        strength: number;
+        concept: any;
+        isLeader: boolean;
+      }> = [];
+
+      for (const concept of conceptDetail.concepts) {
+        const hotInfo = hotConceptMap.get(concept.name);
+        if (!hotInfo) continue; // 不在热度榜中，跳过
+
+        const strengthInfo = strengthConceptMap.get(concept.name);
+        const strength = strengthInfo?.strength || 0;
+
+        // 检查是否为龙头
+        const normalizedCode = stockCode.replace(/[^0-9]/g, '').slice(-6);
+        const isLeader = concept.leading.some(l => 
+          l.code.replace(/[^0-9]/g, '').slice(-6) === normalizedCode
+        );
+
+        candidates.push({
+          name: concept.name,
+          hotRank: hotInfo.rank,
+          strength,
+          concept,
+          isLeader,
+        });
+
+        result.hitHotConcepts.push(concept.name);
+        if (isLeader) {
+          result.isConceptLeader = true;
+          result.leaderInConcepts.push(concept.name);
+        }
+      }
+
+      if (candidates.length === 0) {
+        return result;
+      }
+
+      // 选择主概念：优先龙头所在概念 > 热度排名最高
+      candidates.sort((a, b) => {
+        if (a.isLeader !== b.isLeader) return a.isLeader ? -1 : 1;
+        return a.hotRank - b.hotRank;
+      });
+
+      const primary = candidates[0];
+      result.primaryConcept = primary.name;
+      result.conceptLimitUpCount = primary.concept.limitUpCount || 0;
+
+      // === 计算评分 ===
+
+      // 1. 热度分 (0-20)
+      let hotScore = Math.max(0, Math.min(20, 21 - primary.hotRank));
+      
+      // 若热点板块涨幅为负，热度分归零
+      if (primary.concept.changeRatio < 0) {
+        hotScore = 0;
+      }
+      result.conceptScoreDetail.hotScore = hotScore;
+
+      // 2. 强度分 (0-15)
+      let strengthScore = 0;
+      if (primary.strength >= 80) strengthScore = 15;
+      else if (primary.strength >= 60) strengthScore = 10;
+      else if (primary.strength >= 40) strengthScore = 5;
+      else {
+        // 强度不足，热度分打折
+        hotScore = Math.floor(hotScore * 0.5);
+        result.conceptScoreDetail.hotScore = hotScore;
+      }
+      result.conceptScoreDetail.strengthScore = strengthScore;
+
+      // 3. 地位分 (0-25)
+      let positionScore = 0;
+      if (primary.isLeader) positionScore += 20;
+      else {
+        // 检查是否在成分股中
+        const normalizedCode = stockCode.replace(/[^0-9]/g, '').slice(-6);
+        const isComponent = primary.concept.components.some(c =>
+          c.code.replace(/[^0-9]/g, '').slice(-6) === normalizedCode
+        );
+        if (isComponent) positionScore += 8;
+      }
+      if ((primary.concept.limitUpCount || 0) >= 5) positionScore += 5;
+      
+      const riseRatio = primary.concept.riseCount / 
+        (primary.concept.riseCount + primary.concept.fallCount + 0.01);
+      if (riseRatio > 0.7) positionScore += 2;
+      
+      result.conceptScoreDetail.positionScore = positionScore;
+
+      // 总分（设上限60分）
+      result.conceptScore = Math.min(60, hotScore + strengthScore + positionScore);
+
+    } catch (error) {
+      logger.warn(`获取个股概念失败 ${stockCode}: ${(error as Error).message}`);
+    }
+
+    return result;
+  }
+}
+```
+
+### 4.3 数据库模型扩展
+
+```typescript
+// models/VolumeSurge.ts 新增字段
+const volumeSurgeSchema = new Schema({
+  // ... 现有字段 ...
+  
+  // 🆕 概念板块增强字段
+  hitHotConcepts: { type: [String], default: [] },
+  primaryConcept: { type: String, default: null },
+  isConceptLeader: { type: Boolean, default: false },
+  leaderInConcepts: { type: [String], default: [] },
+  conceptScore: { type: Number, default: 0 },
+  conceptScoreDetail: {
+    hotScore: { type: Number, default: 0 },
+    strengthScore: { type: Number, default: 0 },
+    positionScore: { type: Number, default: 0 },
+  },
+  conceptLimitUpCount: { type: Number, default: 0 },
+});
+```
+
+---
+
+## ⚙️ 五、工程实施要点
+
+### 5.1 缓存策略（必须实现）
+
+```typescript
+// 缓存配置
+const CACHE_CONFIG = {
+  // 热度榜：实时性高，缓存1-3分钟
+  conceptHot: { ttl: 60 * 1000, key: 'concept_hot' },
+  
+  // 强度榜：按日期，缓存1天
+  conceptRank: { ttl: 24 * 60 * 60 * 1000, keyPrefix: 'concept_rank_' },
+  
+  // 个股概念：变化较慢，缓存30-60分钟
+  stockConcept: { ttl: 30 * 60 * 1000, keyPrefix: 'stock_concept_' },
+};
+```
+
+### 5.2 并发控制
+
+```typescript
+// 深度扫描时的并发控制
+import pLimit from 'p-limit';
+
+const limit = pLimit(5); // 最多5个并发请求
+
+const enhancedCandidates = await Promise.all(
+  topCandidates.map(stock => 
+    limit(async () => {
+      try {
+        const enhancement = await this.calculateConceptScore(
+          stock.stockCode, hotConceptMap, strengthConceptMap
+        );
+        return { ...stock, ...enhancement };
+      } catch (e) {
+        return stock; // 失败时返回原数据
+      }
+    })
+  )
+);
+```
+
+### 5.3 超时降级
+
+```typescript
+// 设置超时，失败不影响主流程
+const fetchWithTimeout = async <T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  fallback: T
+): Promise<T> => {
+  const timeout = new Promise<T>((_, reject) => 
+    setTimeout(() => reject(new Error('Timeout')), timeoutMs)
+  );
+  try {
+    return await Promise.race([promise, timeout]);
+  } catch {
+    return fallback;
+  }
+};
+```
+
+---
+
+## 📈 六、回测与验证方案
+
+### 6.1 防前视偏差
+
+**关键问题：** 热度榜是实时数据，回测时不能使用"事后"数据
+
+**解决方案：**
+1. **快照机制**：每日收盘前（14:50）自动保存热度榜快照
+2. **次日信号**：回测时使用T日收盘快照，验证T+1日表现
+3. **字段标记**：数据库中记录 `conceptDataTime` 字段
+
+```typescript
+// 回测时的数据获取逻辑
+const getBacktestConceptData = async (tradeDate: string) => {
+  // 使用交易日前一天的收盘快照
+  const snapshotDate = getPreviousTradingDay(tradeDate);
+  return await conceptSnapshotService.getSnapshot(snapshotDate);
+};
+```
+
+### 6.2 AB对比测试
+
+| 测试组 | 描述 | 评估指标 |
+|--------|------|----------|
+| A组（基线） | 原版评分逻辑 | 次日/3日胜率、平均收益 |
+| B组（优化） | 加入概念共振评分 | 同上 |
+
+**分层测试：**
+- 按市场情绪分层（强市/弱市）
+- 按选股数量分层（Top10/Top20/Top50）
+- 按概念命中情况分层（命中热点/未命中）
+
+### 6.3 监控指标
+
+```typescript
+interface OptimizationMetrics {
+  // 选股质量
+  hitRateNextDay: number;      // 次日上涨概率
+  avgReturnNextDay: number;    // 次日平均收益
+  maxDrawdown: number;         // 最大回撤
+  
+  // 概念相关
+  conceptHitRate: number;      // 热点命中率
+  leaderHitRate: number;       // 龙头识别率
+  conceptReturnPremium: number; // 命中热点vs未命中的收益差
+}
+```
+
+---
+
+## 📋 七、实施路线图
+
+### Phase 1: 基础能力建设（1-2天）
+
+- [ ] 实现缓存层（概念数据缓存）
+- [ ] 扩展数据库模型字段
+- [ ] 编写 `calculateConceptScore` 核心方法
+- [ ] 单元测试覆盖
+
+### Phase 2: 集成验证（2-3天）
+
+- [ ] 集成到 `scanAndSave` 主流程
+- [ ] 调整 β 参数（建议从0.3开始）
+- [ ] 前端展示适配（显示热点标签、龙头标识）
+- [ ] 人工验证选股结果
+
+### Phase 3: 回测优化（3-5天）
+
+- [ ] 建立概念数据快照机制
+- [ ] 回测2023-2025年数据
+- [ ] 参数调优（β值、评分阈值）
+- [ ] 生成优化效果报告
+
+### Phase 4: 生产上线
+
+- [ ] 灰度发布
+- [ ] 监控报警配置
+- [ ] 用户反馈收集
+
+---
+
+## 🎯 八、预期效果
+
+| 指标 | 优化前预估 | 优化后目标 | 提升 |
+|------|-----------|-----------|------|
+| 次日上涨概率 | ~55% | ~65% | +10% |
+| 平均次日收益 | ~1.5% | ~2.5% | +1% |
+| 龙头捕获率 | - | 30%+ | 新增 |
+| 一日游过滤 | - | 减少40% | 新增 |
+| 策略可解释性 | 低 | 高 | 显著提升 |
+
+---
+
+## 📝 九、风险与注意事项
+
+1. **接口稳定性**：同花顺接口可能变更，需做好降级方案
+2. **过度拟合**：避免过度依赖历史回测优化参数
+3. **市场变化**：题材轮动风格可能变化，需定期复盘
+4. **延迟问题**：概念数据获取增加延迟，需控制在3秒以内
+
+---
+
+## 🔚 总结
+
+本方案通过 **"热度验证 + 强度确认 + 地位加权"** 三层过滤机制，将概念板块数据有机融入现有的量价选股策略，既保留了原有策略的核心优势（量价强势），又增加了市场主线感知能力（板块共振），预期可显著提升选股的准确率和持续性。
+
+方案设计遵循以下原则：
+- **理论依据充分**：基于"板块轮动"和"龙头效应"的市场规律
+- **可量化落地**：所有规则都有明确的数值阈值和计算公式
+- **工程可行性高**：充分考虑了缓存、并发、降级等工程问题
+- **可验证可迭代**：提供了完整的回测方案和监控指标
+
+。

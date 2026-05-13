@@ -1,0 +1,897 @@
+[
+  [
+    "605589",
+    {
+      "openTimes": "20260430092503",
+      "openPrice": 40.59,
+      "openChangePercent": -0.5390835579514797,
+      "openVolumeRatio": 4168,
+      "auctionAmount": 16918318,
+      "auctionAmountRatio": -0.5366966716693294,
+      "isLimitUp": false
+    }
+  ],
+  [
+    "300118",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 17,
+      "openChangePercent": -0.7589025102159895,
+      "openVolumeRatio": 5251,
+      "auctionAmount": 8926700,
+      "auctionAmountRatio": -0.7589025102159748,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "002340",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 9.14,
+      "openChangePercent": -5.186721991701244,
+      "openVolumeRatio": 81324,
+      "auctionAmount": 74330136,
+      "auctionAmountRatio": -5.186721991701263,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "301487",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 24.31,
+      "openChangePercent": -1.975806451612911,
+      "openVolumeRatio": 2742,
+      "auctionAmount": 6665802,
+      "auctionAmountRatio": -1.9758064516129166,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300688",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 25.85,
+      "openChangePercent": 0.038699690402482834,
+      "openVolumeRatio": 543,
+      "auctionAmount": 1403655,
+      "auctionAmountRatio": 0.03869969040247678,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300881",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 48.71,
+      "openChangePercent": -0.38854805725970903,
+      "openVolumeRatio": 118,
+      "auctionAmount": 574778,
+      "auctionAmountRatio": -0.3885480572597137,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "002738",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 90.29,
+      "openChangePercent": -1.1062431544359157,
+      "openVolumeRatio": 1613,
+      "auctionAmount": 14563777,
+      "auctionAmountRatio": -1.1062431544359255,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "001337",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 50.5,
+      "openChangePercent": -1.0386047423084481,
+      "openVolumeRatio": 1822,
+      "auctionAmount": 9201100,
+      "auctionAmountRatio": -1.0386047423084461,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688669",
+    {
+      "openTimes": "20260430092557",
+      "openPrice": 31.35,
+      "openChangePercent": 0.25583626479053995,
+      "openVolumeRatio": 54933,
+      "auctionAmount": 1722150,
+      "auctionAmountRatio": -98.99744137538224,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300405",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 6.75,
+      "openChangePercent": 1.0479041916167708,
+      "openVolumeRatio": 1421,
+      "auctionAmount": 959175,
+      "auctionAmountRatio": 1.0479041916167788,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300748",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 33.09,
+      "openChangePercent": -1.1943863839952182,
+      "openVolumeRatio": 3077,
+      "auctionAmount": 10181793,
+      "auctionAmountRatio": -1.1943863839952404,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300825",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 9.87,
+      "openChangePercent": 0,
+      "openVolumeRatio": 1488,
+      "auctionAmount": 1468656,
+      "auctionAmountRatio": 0,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688420",
+    {
+      "openTimes": "20260430092535",
+      "openPrice": 26.97,
+      "openChangePercent": -0.5897530409141177,
+      "openVolumeRatio": 7908,
+      "auctionAmount": 213279,
+      "auctionAmountRatio": -99.0058964117577,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688063",
+    {
+      "openTimes": "20260430092552",
+      "openPrice": 77.51,
+      "openChangePercent": -0.7045862157314849,
+      "openVolumeRatio": 29582,
+      "auctionAmount": 2292901,
+      "auctionAmountRatio": -99.00704578420726,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688095",
+    {
+      "openTimes": "20260430092546",
+      "openPrice": 77.81,
+      "openChangePercent": 0.790155440414507,
+      "openVolumeRatio": 24181,
+      "auctionAmount": 1881524,
+      "auctionAmountRatio": -98.9920982366792,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300381",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 7.03,
+      "openChangePercent": 1.0057471264367857,
+      "openVolumeRatio": 2200,
+      "auctionAmount": 1546600,
+      "auctionAmountRatio": 1.0057471264367817,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "600884",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 17.18,
+      "openChangePercent": 1.6568047337278176,
+      "openVolumeRatio": 40640,
+      "auctionAmount": 69820293,
+      "auctionAmountRatio": 1.6579302171178307,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688353",
+    {
+      "openTimes": "20260430092535",
+      "openPrice": 110.77,
+      "openChangePercent": -12.003495392437241,
+      "openVolumeRatio": 248618,
+      "auctionAmount": 27539416,
+      "auctionAmountRatio": -99.12003494945097,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300124",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 67.67,
+      "openChangePercent": 0.11836070424618772,
+      "openVolumeRatio": 3872,
+      "auctionAmount": 26201824,
+      "auctionAmountRatio": 0.11836070424619026,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300459",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 4.15,
+      "openChangePercent": -0.47961630695442625,
+      "openVolumeRatio": 16310,
+      "auctionAmount": 6768650,
+      "auctionAmountRatio": -0.4796163069544364,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "002780",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 16.29,
+      "openChangePercent": -0.366972477064234,
+      "openVolumeRatio": 4539,
+      "auctionAmount": 7394031,
+      "auctionAmountRatio": -0.3669724770642327,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300380",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 36.02,
+      "openChangePercent": 1.5506061460389182,
+      "openVolumeRatio": 706,
+      "auctionAmount": 2543012,
+      "auctionAmountRatio": 1.5506061460389062,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688275",
+    {
+      "openTimes": "20260430092533",
+      "openPrice": 170.14,
+      "openChangePercent": 4.380368098159501,
+      "openVolumeRatio": 337937,
+      "auctionAmount": 57496601,
+      "auctionAmountRatio": -98.95619632228616,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688307",
+    {
+      "openTimes": "20260430092549",
+      "openPrice": 97,
+      "openChangePercent": 0.4244745832901921,
+      "openVolumeRatio": 48388,
+      "auctionAmount": 4693636,
+      "auctionAmountRatio": -98.9957552541671,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688032",
+    {
+      "openTimes": "20260430092533",
+      "openPrice": 112.03,
+      "openChangePercent": -3.4557049293347166,
+      "openVolumeRatio": 57670,
+      "auctionAmount": 6460770,
+      "auctionAmountRatio": -99.03455706423651,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688400",
+    {
+      "openTimes": "20260430092556",
+      "openPrice": 50.91,
+      "openChangePercent": 2.994133117539949,
+      "openVolumeRatio": 197547,
+      "auctionAmount": 10057118,
+      "auctionAmountRatio": -98.97005864527048,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "301308",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 410,
+      "openChangePercent": -1.0378952449915548,
+      "openVolumeRatio": 2293,
+      "auctionAmount": 94013000,
+      "auctionAmountRatio": -1.037895244991552,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300919",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 64.96,
+      "openChangePercent": -0.6119951040391763,
+      "openVolumeRatio": 3305,
+      "auctionAmount": 21466682,
+      "auctionAmountRatio": -0.624022057747895,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "600258",
+    {
+      "openTimes": "20260430092503",
+      "openPrice": 15.81,
+      "openChangePercent": -1.372426699937621,
+      "openVolumeRatio": 2764,
+      "auctionAmount": 4370074,
+      "auctionAmountRatio": -1.368138430746279,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688319",
+    {
+      "openTimes": "20260430092529",
+      "openPrice": 30.97,
+      "openChangePercent": 3.4402137608550354,
+      "openVolumeRatio": 141946,
+      "auctionAmount": 4396068,
+      "auctionAmountRatio": -98.9655977729768,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "301376",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 17.58,
+      "openChangePercent": 0,
+      "openVolumeRatio": 900,
+      "auctionAmount": 1582200,
+      "auctionAmountRatio": 1.4715626574002632e-14,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300118",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 17,
+      "openChangePercent": -0.7589025102159895,
+      "openVolumeRatio": 5251,
+      "auctionAmount": 8926700,
+      "auctionAmountRatio": -0.7589025102159748,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "301326",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 170.47,
+      "openChangePercent": -1.4624277456647405,
+      "openVolumeRatio": 50,
+      "auctionAmount": 852350,
+      "auctionAmountRatio": -1.4624277456647399,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688059",
+    {
+      "openTimes": "20260430092542",
+      "openPrice": 141.03,
+      "openChangePercent": 0.02837080644016742,
+      "openVolumeRatio": 94363,
+      "auctionAmount": 13308014,
+      "auctionAmountRatio": -98.99971628366757,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688778",
+    {
+      "openTimes": "20260430092536",
+      "openPrice": 84.73,
+      "openChangePercent": -0.7380506091846245,
+      "openVolumeRatio": 11169,
+      "auctionAmount": 946349,
+      "auctionAmountRatio": -99.00738089418236,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "601969",
+    {
+      "openTimes": "20260430092503",
+      "openPrice": 12.4,
+      "openChangePercent": -1.1164274322168963,
+      "openVolumeRatio": 5095,
+      "auctionAmount": 6317800,
+      "auctionAmountRatio": -1.1164274322169059,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "002812",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 84,
+      "openChangePercent": -0.5564105599621154,
+      "openVolumeRatio": 3549,
+      "auctionAmount": 29811600,
+      "auctionAmountRatio": -0.5564105599621043,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "002240",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 55.26,
+      "openChangePercent": 1.1532125205930723,
+      "openVolumeRatio": 9492,
+      "auctionAmount": 52452792,
+      "auctionAmountRatio": 1.1532125205930808,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688411",
+    {
+      "openTimes": "20260430092554",
+      "openPrice": 252.94,
+      "openChangePercent": -1.0445600719846702,
+      "openVolumeRatio": 68471,
+      "auctionAmount": 17319055,
+      "auctionAmountRatio": -99.01044558586429,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300745",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 34.8,
+      "openChangePercent": 0.8403361344537791,
+      "openVolumeRatio": 1847,
+      "auctionAmount": 6427212,
+      "auctionAmountRatio": 0.8348764519343348,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688005",
+    {
+      "openTimes": "20260430092553",
+      "openPrice": 36.57,
+      "openChangePercent": -5.012987012987012,
+      "openVolumeRatio": 865835,
+      "auctionAmount": 31663586,
+      "auctionAmountRatio": -99.05012986862994,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "000688",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 48.91,
+      "openChangePercent": -0.8715038508309826,
+      "openVolumeRatio": 775,
+      "auctionAmount": 3790525,
+      "auctionAmountRatio": -0.8715038508309687,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "601858",
+    {
+      "openTimes": "20260430092503",
+      "openPrice": 24.48,
+      "openChangePercent": -0.8505467800729074,
+      "openVolumeRatio": 1022,
+      "auctionAmount": 2501856,
+      "auctionAmountRatio": -0.850546780072904,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688148",
+    {
+      "openTimes": "20260430092551",
+      "openPrice": 10.9,
+      "openChangePercent": -0.5474452554744571,
+      "openVolumeRatio": 363907,
+      "auctionAmount": 3966586,
+      "auctionAmountRatio": -99.00547452777249,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300428",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 20.84,
+      "openChangePercent": -0.8563273073263546,
+      "openVolumeRatio": 1773,
+      "auctionAmount": 3695120,
+      "auctionAmountRatio": -0.8512828273558929,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300815",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 21.14,
+      "openChangePercent": -0.7977475363678938,
+      "openVolumeRatio": 523,
+      "auctionAmount": 1105622,
+      "auctionAmountRatio": -0.7977475363679024,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688390",
+    {
+      "openTimes": "20260430092543",
+      "openPrice": 100.51,
+      "openChangePercent": -1.1020368001574243,
+      "openVolumeRatio": 153807,
+      "auctionAmount": 15459142,
+      "auctionAmountRatio": -99.01102034049285,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300733",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 21.67,
+      "openChangePercent": 7.810945273631842,
+      "openVolumeRatio": 9924,
+      "auctionAmount": 21505308,
+      "auctionAmountRatio": 7.8109452736318215,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "605589",
+    {
+      "openTimes": "20260430092503",
+      "openPrice": 40.59,
+      "openChangePercent": -0.5390835579514797,
+      "openVolumeRatio": 4168,
+      "auctionAmount": 16918318,
+      "auctionAmountRatio": -0.5366966716693294,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "301662",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 177,
+      "openChangePercent": 2.0172910662824206,
+      "openVolumeRatio": 629,
+      "auctionAmount": 11133300,
+      "auctionAmountRatio": 2.0172910662824206,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "002667",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 0,
+      "openChangePercent": -100,
+      "openVolumeRatio": 0,
+      "auctionAmount": 0,
+      "auctionAmountRatio": 0,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "301222",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 48.96,
+      "openChangePercent": -1.3301088270858457,
+      "openVolumeRatio": 450,
+      "auctionAmount": 2203200,
+      "auctionAmountRatio": -1.3301088270858523,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300738",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 24.86,
+      "openChangePercent": -0.9561752988047888,
+      "openVolumeRatio": 11137,
+      "auctionAmount": 27686582,
+      "auctionAmountRatio": -0.9561752988047808,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300763",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 94.65,
+      "openChangePercent": -0.7861635220125787,
+      "openVolumeRatio": 1489,
+      "auctionAmount": 14093385,
+      "auctionAmountRatio": -0.7861635220125787,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "301291",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 60.18,
+      "openChangePercent": -3.029326458266198,
+      "openVolumeRatio": 1953,
+      "auctionAmount": 11753154,
+      "auctionAmountRatio": -3.029326458266194,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300302",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 28.48,
+      "openChangePercent": -0.4891684136967176,
+      "openVolumeRatio": 9187,
+      "auctionAmount": 26164576,
+      "auctionAmountRatio": -0.4891684136967156,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "002948",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 6.08,
+      "openChangePercent": 0.49586776859504544,
+      "openVolumeRatio": 9477,
+      "auctionAmount": 5762016,
+      "auctionAmountRatio": 0.49586776859504134,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688702",
+    {
+      "openTimes": "20260430092544",
+      "openPrice": 314,
+      "openChangePercent": -4.2682926829268295,
+      "openVolumeRatio": 48338,
+      "auctionAmount": 15178132,
+      "auctionAmountRatio": -99.04268292682927,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688515",
+    {
+      "openTimes": "20260430092533",
+      "openPrice": 152,
+      "openChangePercent": -0.1182809830463969,
+      "openVolumeRatio": 198047,
+      "auctionAmount": 30103144,
+      "auctionAmountRatio": -99.00118280983047,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "000709",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 2.37,
+      "openChangePercent": -2.469135802469138,
+      "openVolumeRatio": 129793,
+      "auctionAmount": 30760941,
+      "auctionAmountRatio": -2.4691358024691477,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688805",
+    {
+      "openTimes": "20260430092538",
+      "openPrice": 52.82,
+      "openChangePercent": -1.6570471048221944,
+      "openVolumeRatio": 132035,
+      "auctionAmount": 6974089,
+      "auctionAmountRatio": -99.01657042874466,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "000890",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 16.5,
+      "openChangePercent": -4.069767441860462,
+      "openVolumeRatio": 15012,
+      "auctionAmount": 24769800,
+      "auctionAmountRatio": -4.069767441860465,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300511",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 8.19,
+      "openChangePercent": -0.606796116504863,
+      "openVolumeRatio": 10512,
+      "auctionAmount": 8609328,
+      "auctionAmountRatio": -0.6067961165048543,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "301603",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 111.63,
+      "openChangePercent": -0.9933481152993388,
+      "openVolumeRatio": 276,
+      "auctionAmount": 3080988,
+      "auctionAmountRatio": -0.9933481152993349,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "000703",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 17.1,
+      "openChangePercent": -0.523560209424083,
+      "openVolumeRatio": 5722,
+      "auctionAmount": 9784620,
+      "auctionAmountRatio": -0.5235602094240838,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "688717",
+    {
+      "openTimes": "20260430092545",
+      "openPrice": 117,
+      "openChangePercent": 0,
+      "openVolumeRatio": 23200,
+      "auctionAmount": 2714400,
+      "auctionAmountRatio": -99,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "300069",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 28.38,
+      "openChangePercent": -0.8039147151345698,
+      "openVolumeRatio": 726,
+      "auctionAmount": 2060388,
+      "auctionAmountRatio": -0.8039147151345682,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "301358",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 105,
+      "openChangePercent": -1.8691588785046727,
+      "openVolumeRatio": 6607,
+      "auctionAmount": 69378330,
+      "auctionAmountRatio": -1.862326702491976,
+      "isLimitUp": false
+    }
+  ]
+][
+  [
+    "301526",
+    {
+      "openTimes": "20260430092500",
+      "openPrice": 16.8,
+      "openChangePercent": -1.408450704225343,
+      "openVolumeRatio": 19620,
+      "auctionAmount": 32962020,
+      "auctionAmountRatio": -1.4071944408551205,
+      "isLimitUp": false
+    }
+  ]
+]

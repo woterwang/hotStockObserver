@@ -19,7 +19,7 @@ export const IndexCard: React.FC<IndexCardProps> = ({ index }) => {
   return (
     <div className={`index-card ${colorClass}`}>
       <div className="text-sm text-gray-500 mb-1">{index.indexName}</div>
-      <div className={`text-2xl font-bold ${textColorClass}`}>
+      <div className={`index-value ${textColorClass}`}>
         {index.currentPoint.toFixed(2)}
       </div>
       <div className="flex items-center space-x-3 mt-1">
@@ -43,7 +43,7 @@ interface IndexListProps {
  */
 export const IndexList: React.FC<IndexListProps> = ({ indices }) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
       {indices.map((index) => (
         <IndexCard key={index.indexCode} index={index} />
       ))}

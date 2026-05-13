@@ -31,45 +31,56 @@ body {
 
 /* 卡片样式 */
 .card {
-  @apply bg-white rounded-lg shadow-sm p-4;
+  @apply bg-white rounded-lg shadow-sm p-3 sm:p-4 overflow-hidden;
 }
 
 .card-header {
-  @apply text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100;
+  @apply text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4 pb-2 border-b border-gray-100 flex items-center justify-between;
 }
 
 /* 表格样式 */
 .stock-table {
-  @apply w-full text-sm;
+  @apply w-full text-xs sm:text-sm border-collapse;
 }
 
 .stock-table th {
-  @apply text-left py-2 px-3 bg-gray-50 font-medium text-gray-600;
+  @apply text-left py-2 px-2 sm:px-3 bg-gray-50 font-medium text-gray-600 whitespace-nowrap sticky top-0;
 }
 
 .stock-table td {
-  @apply py-3 px-3 border-b border-gray-50;
+  @apply py-2 sm:py-3 px-2 sm:px-3 border-b border-gray-50;
 }
 
-.stock-table tr:hover {
-  @apply bg-gray-50;
+/* 允许表格横向滚动 */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 数字样式 */
+.num-rise {
+  color: var(--color-rise);
+  @apply font-bold;
 }
 
 /* 指数卡片 */
 .index-card {
-  @apply bg-white rounded-lg p-4 shadow-sm;
+  @apply bg-white rounded-lg p-3 sm:p-4 shadow-sm border-l-4;
+}
+
+.index-card .index-value {
+  @apply text-lg sm:text-2xl font-bold;
 }
 
 .index-card.rise {
-  @apply border-l-4 border-rise;
+  @apply border-rise;
 }
 
 .index-card.fall {
-  @apply border-l-4 border-fall;
+  @apply border-fall;
 }
 
 .index-card.flat {
-  @apply border-l-4 border-flat;
+  @apply border-flat;
 }
 
 /* 股票行样式 */

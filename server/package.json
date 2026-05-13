@@ -5,13 +5,16 @@
   "main": "dist/app.js",
   "scripts": {
     "dev": "tsx watch src/app.ts",
-    "build": "tsc",
+    "build": "tsc && node -e \"const fs=require('fs'); const path=require('path'); const src=path.join(process.cwd(),'src','utils','thsUtils.js'); const destDir=path.join(process.cwd(),'dist','utils'); const dest=path.join(destDir,'thsUtils.js'); fs.mkdirSync(destDir,{recursive:true}); fs.copyFileSync(src,dest); console.log('copied', dest);\"",
     "start": "node dist/app.js",
-    "import-data": "tsx src/scripts/importHistoricalData.ts"
+    "import-data": "tsx src/scripts/importHistoricalData.ts",
+    "backfill": "tsx src/scripts/backfillBreakthrough.ts",
+    "test:updateCache": "node test-update-cache.js"
   },
   "dependencies": {
     "axios": "^1.6.0",
-    "cors": "^2.8.5",
+    "cors": "^1.8.5",
+    "dayjs": "^1.11.19",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
@@ -19,7 +22,9 @@
     "iconv-lite": "^0.7.0",
     "mongoose": "^8.0.3",
     "node-cron": "^3.0.3",
-    "winston": "^3.11.0"
+    "p-limit": "^7.2.0",
+    "winston": "^3.11.0",
+    "simple-git": "^3.21.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

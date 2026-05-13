@@ -15,11 +15,18 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hot_stock_observer';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/hot_stock_observer';
 
 // 中间件
+const enableHttpsUpgrade = process.env.ENABLE_HTTPS_UPGRADE === 'true';
+
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: {
+    directives: {
+      'upgrade-insecure-requests': enableHttpsUpgrade ? [] : null,
+    },
+  },
 }));
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'],

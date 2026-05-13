@@ -1,0 +1,16 @@
+.git
+.gitignore
+.venv
+node_modules
+client/node_modules
+server/node_modules
+client/dist
+server/dist
+server/logs
+docs
+reports
+output.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.md

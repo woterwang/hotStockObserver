@@ -1,0 +1,1051 @@
+{
+    "status_code": 0,
+    "data": {
+        "parser_data": {
+            "domain": "abs_股票领域",
+            "sugs": [],
+            "query_type": "stock",
+            "condition_id": ""
+        },
+        "status_code": 0,
+        "answer": [
+            {
+                "src_url": "",
+                "urp_flag": 1,
+                "img": [],
+                "sug": [],
+                "show_delay_time": 2,
+                "source": "finance",
+                "video": [],
+                "his_time": 1765809360456,
+                "zhengu_duolun": 0,
+                "score": 99.62,
+                "duolun_signal": 0,
+                "secondary_source": "stock",
+                "id": -1675070699,
+                "ans_type": "NORMAL",
+                "table": [],
+                "text_answer": "为你找到3条结果，包含鸿日达(301285.SZ)、永冠新材(603681.SH)、东田微(301183.SZ)等股票，告诉我你感兴趣的股票,我可以给你更多解读.",
+                "question": "",
+                "voice_txt": "为你找到3条结果，包含鸿日达，永冠新材，东田微等股票，告诉我你感兴趣的股票,我可以给你更多解读.",
+                "activeTime": 60000,
+                "outside_url": "",
+                "sug_title": "",
+                "intent": "iwencai",
+                "diagram": [],
+                "txt": [
+                    {
+                        "color": "none",
+                        "ansDelayTime": 0,
+                        "link_url": "",
+                        "disambiguationed": "false",
+                        "style": "none",
+                        "div_no": 0,
+                        "type": "global-result",
+                        "content": {
+                            "components": [
+                                {
+                                    "show_type": "xuangu_tableV1",
+                                    "title_config": {
+                                        "show_type": "title1",
+                                        "data": {
+                                            "h1": "",
+                                            "h2": ""
+                                        },
+                                        "config": {
+                                            "display": true,
+                                            "type": "7",
+                                            "url": ""
+                                        }
+                                    },
+                                    "data": {
+                                        "columns": [
+                                            {
+                                                "unit": "",
+                                                "domain": "abs_股票领域",
+                                                "source": "fixed_index",
+                                                "label": "code",
+                                                "type": "STR",
+                                                "index_name": "股票代码",
+                                                "key": "股票代码"
+                                            },
+                                            {
+                                                "unit": "",
+                                                "filter_value": "st",
+                                                "domain": "abs_股票领域",
+                                                "filter_oper": "不包含",
+                                                "source": "fixed_index",
+                                                "label": "name",
+                                                "filter_keys": "股票简称",
+                                                "type": "STR",
+                                                "index_name": "股票简称",
+                                                "key": "股票简称"
+                                            },
+                                            {
+                                                "unit": "元",
+                                                "domain": "abs_股票领域",
+                                                "source": "fixed_index",
+                                                "label": "price",
+                                                "type": "DOUBLE",
+                                                "index_name": "最新价",
+                                                "key": "最新价",
+                                                "timestamp": ""
+                                            },
+                                            {
+                                                "unit": "%",
+                                                "domain": "abs_股票领域",
+                                                "source": "fixed_index",
+                                                "label": "ratio",
+                                                "type": "DOUBLE",
+                                                "index_name": "最新涨跌幅",
+                                                "key": "最新涨跌幅",
+                                                "timestamp": ""
+                                            },
+                                            {
+                                                "unit": "%",
+                                                "filter_value": "3.0",
+                                                "filter_oper": "<",
+                                                "domain": "abs_股票领域",
+                                                "source": "new_parser",
+                                                "label": "风险等级B",
+                                                "filter_keys": "涨跌幅:前复权[20251211]",
+                                                "type": "DOUBLE",
+                                                "index_name": "涨跌幅:前复权",
+                                                "key": "涨跌幅:前复权[20251211]",
+                                                "timestamp": "20251211"
+                                            },
+                                            {
+                                                "unit": "%",
+                                                "filter_value": "8.0",
+                                                "filter_oper": ">",
+                                                "domain": "abs_股票领域",
+                                                "source": "new_parser",
+                                                "label": "风险等级B",
+                                                "filter_keys": "涨跌幅:前复权[20251210]",
+                                                "type": "DOUBLE",
+                                                "index_name": "涨跌幅:前复权",
+                                                "key": "涨跌幅:前复权[20251210]",
+                                                "timestamp": "20251210"
+                                            },
+                                            {
+                                                "unit": "元",
+                                                "domain": "abs_股票领域",
+                                                "source": "new_parser",
+                                                "label": "风险等级B",
+                                                "type": "DOUBLE",
+                                                "index_name": "最高价:不复权",
+                                                "key": "最高价:不复权[20251211]",
+                                                "timestamp": "20251211"
+                                            },
+                                            {
+                                                "unit": "元",
+                                                "domain": "abs_股票领域",
+                                                "source": "new_parser",
+                                                "label": "风险等级B",
+                                                "type": "DOUBLE",
+                                                "index_name": "最高价:不复权",
+                                                "key": "最高价:不复权[20251210]",
+                                                "timestamp": "20251210"
+                                            },
+                                            {
+                                                "unit": "",
+                                                "domain": "abs_股票领域",
+                                                "indexId": "",
+                                                "source": "calc",
+                                                "sort_info": "desc",
+                                                "type": "DOUBLE",
+                                                "index_name": "{(}最高价:不复权{-}最高价:不复权{)}",
+                                                "key": "{(}最高价:不复权[20251211]{-}最高价:不复权[20251210]{)}",
+                                                "timestamp": "20251211"
+                                            },
+                                            {
+                                                "unit": "元",
+                                                "domain": "abs_股票领域",
+                                                "source": "new_parser",
+                                                "label": "风险等级B",
+                                                "type": "DOUBLE",
+                                                "index_name": "开盘价:不复权",
+                                                "key": "开盘价:不复权[20251212]",
+                                                "timestamp": "20251212"
+                                            },
+                                            {
+                                                "unit": "",
+                                                "domain": "abs_股票领域",
+                                                "indexId": "",
+                                                "source": "new_parser",
+                                                "type": "DOUBLE",
+                                                "index_name": "avl",
+                                                "key": "1日avl[20251211]",
+                                                "timestamp": "20251211"
+                                            },
+                                            {
+                                                "unit": "",
+                                                "domain": "abs_股票领域",
+                                                "indexId": "",
+                                                "source": "calc",
+                                                "type": "DOUBLE",
+                                                "index_name": "{(}开盘价:不复权{-}1日avl{)}",
+                                                "key": "{(}开盘价:不复权[20251212]{-}1日avl[20251211]{)}",
+                                                "timestamp": "20251212"
+                                            },
+                                            {
+                                                "unit": "%",
+                                                "filter_value": "-5.0",
+                                                "filter_oper": ">",
+                                                "domain": "abs_股票领域",
+                                                "source": "new_parser",
+                                                "filter_keys": "分时涨跌幅:前复权[20251212 09:25]",
+                                                "type": "DOUBLE",
+                                                "index_name": "分时涨跌幅:前复权",
+                                                "key": "分时涨跌幅:前复权[20251212 09:25]",
+                                                "timestamp": "20251212 09:25"
+                                            },
+                                            {
+                                                "unit": "天",
+                                                "filter_value": "5",
+                                                "filter_oper": ">",
+                                                "domain": "abs_股票领域",
+                                                "source": "new_parser",
+                                                "label": "babel",
+                                                "filter_keys": "上市交易日天数[20251215]",
+                                                "type": "LONG",
+                                                "index_name": "上市交易日天数",
+                                                "key": "上市交易日天数[20251215]",
+                                                "timestamp": "20251215"
+                                            },
+                                            {
+                                                "unit": "",
+                                                "filter_value": "北证a股",
+                                                "filter_oper": "不包含",
+                                                "domain": "abs_股票领域",
+                                                "source": "new_parser",
+                                                "filter_keys": "股票市场类型",
+                                                "type": "STR",
+                                                "index_name": "股票市场类型",
+                                                "key": "股票市场类型",
+                                                "timestamp": ""
+                                            },
+                                            {
+                                                "unit": "",
+                                                "subtype": "split",
+                                                "domain": "abs_股票领域",
+                                                "source": "add_condition",
+                                                "type": "STR",
+                                                "index_name": "买入信号inter",
+                                                "key": "买入信号inter[20251210]",
+                                                "timestamp": "20251210"
+                                            },
+                                            {
+                                                "unit": "元",
+                                                "domain": "abs_股票领域",
+                                                "source": "add_condition",
+                                                "label": "风险等级B",
+                                                "type": "DOUBLE",
+                                                "index_name": "最低价:不复权",
+                                                "key": "最低价:不复权[20251212]",
+                                                "timestamp": "20251212"
+                                            },
+                                            {
+                                                "unit": "元",
+                                                "domain": "abs_股票领域",
+                                                "source": "add_condition",
+                                                "label": "风险等级B",
+                                                "type": "DOUBLE",
+                                                "index_name": "最低价:不复权",
+                                                "key": "最低价:不复权[20251211]",
+                                                "timestamp": "20251211"
+                                            },
+                                            {
+                                                "unit": "元",
+                                                "domain": "abs_股票领域",
+                                                "source": "add_condition",
+                                                "label": "风险等级B",
+                                                "type": "DOUBLE",
+                                                "index_name": "最低价:不复权",
+                                                "key": "最低价:不复权[20251210]",
+                                                "timestamp": "20251210"
+                                            },
+                                            {
+                                                "unit": "元",
+                                                "domain": "abs_股票领域",
+                                                "source": "add_condition",
+                                                "type": "DOUBLE",
+                                                "index_name": "收盘价:不复权",
+                                                "key": "收盘价:不复权[20251212]",
+                                                "timestamp": "20251212"
+                                            },
+                                            {
+                                                "unit": "元",
+                                                "domain": "abs_股票领域",
+                                                "source": "add_condition",
+                                                "type": "DOUBLE",
+                                                "index_name": "收盘价:不复权",
+                                                "key": "收盘价:不复权[20251211]",
+                                                "timestamp": "20251211"
+                                            },
+                                            {
+                                                "unit": "元",
+                                                "domain": "abs_股票领域",
+                                                "source": "add_condition",
+                                                "type": "DOUBLE",
+                                                "index_name": "收盘价:不复权",
+                                                "key": "收盘价:不复权[20251210]",
+                                                "timestamp": "20251210"
+                                            },
+                                            {
+                                                "unit": "",
+                                                "domain": "abs_股票领域",
+                                                "indexId": "",
+                                                "source": "new_parser",
+                                                "label": "market_pattern",
+                                                "type": "STR",
+                                                "index_name": "最高价创新高(条件说明)",
+                                                "key": "最高价创新高(条件说明)[20251210]",
+                                                "timestamp": "20251210"
+                                            },
+                                            {
+                                                "unit": "次",
+                                                "domain": "abs_股票领域",
+                                                "source": "new_parser",
+                                                "type": "LONG",
+                                                "index_name": "立案调查次数",
+                                                "key": "立案调查次数[20231218-20251215]",
+                                                "timestamp": "20231218-20251215"
+                                            }
+                                        ],
+                                        "datas": [
+                                            {
+                                                "code": "301183",
+                                                "最新价": "172.08",
+                                                "涨跌幅:前复权[20251210]": "8.24050711",
+                                                "最高价:不复权[20251210]": "178",
+                                                "{(}最高价:不复权[20251211]{-}最高价:不复权[20251210]{)}": 7.280000000000001,
+                                                "最低价:不复权[20251210]": "163.05",
+                                                "{(}开盘价:不复权[20251212]{-}1日avl[20251211]{)}": 3.6129999999999995,
+                                                "最低价:不复权[20251212]": "181.54",
+                                                "股票简称": "东田微",
+                                                "收盘价:不复权[20251210]": 175.88,
+                                                "开盘价:不复权[20251212]": "181.54",
+                                                "收盘价:不复权[20251212]": 185.88,
+                                                "分时涨跌幅:前复权[20251212 09:25]": "1.4189944134078167",
+                                                "最高价:不复权[20251211]": "185.28",
+                                                "涨跌幅:前复权[20251211]": "1.77393678",
+                                                "最新涨跌幅": "-7.424144609",
+                                                "上市交易日天数[20251215]": 867,
+                                                "market_code": "33",
+                                                "最高价创新高(条件说明)[20251210]": "2025年12月10日的最高价:后复权创188日新高",
+                                                "最低价:不复权[20251211]": "170.08",
+                                                "股票代码": "301183.SZ",
+                                                "1日avl[20251211]": "177.927",
+                                                "买入信号inter[20251210]": "周线cr金叉",
+                                                "收盘价:不复权[20251211]": 179,
+                                                "股票市场类型": "全部AB股;全部A股;全部A股(非ST);全部A股(非金融);全部上市公司;创业板;创业板(注册制);沪深AB股;沪深A股;深证AB股;深证A股;深证上市公司"
+                                            },
+                                            {
+                                                "code": "301285",
+                                                "最新价": "68.03",
+                                                "涨跌幅:前复权[20251210]": "13.31862911",
+                                                "最高价:不复权[20251210]": "66.88",
+                                                "{(}最高价:不复权[20251211]{-}最高价:不复权[20251210]{)}": 2.6200000000000045,
+                                                "最低价:不复权[20251210]": "58.9",
+                                                "{(}开盘价:不复权[20251212]{-}1日avl[20251211]{)}": 0.4229999999999876,
+                                                "最低价:不复权[20251212]": "66.53",
+                                                "股票简称": "鸿日达",
+                                                "收盘价:不复权[20251210]": 66.79,
+                                                "开盘价:不复权[20251212]": "68.35",
+                                                "收盘价:不复权[20251212]": 70.41,
+                                                "分时涨跌幅:前复权[20251212 09:25]": "-0.49497743485223966",
+                                                "最高价:不复权[20251211]": "69.5",
+                                                "涨跌幅:前复权[20251211]": "2.84473724",
+                                                "最新涨跌幅": "-3.380201676",
+                                                "上市交易日天数[20251215]": 778,
+                                                "market_code": "33",
+                                                "最高价创新高(条件说明)[20251210]": "2025年12月10日的最高价:后复权创188日新高",
+                                                "最低价:不复权[20251211]": "65",
+                                                "股票代码": "301285.SZ",
+                                                "1日avl[20251211]": "67.927",
+                                                "买入信号inter[20251210]": "月线boll突破上轨||周线rsi金叉||周线macd金叉",
+                                                "收盘价:不复权[20251211]": 68.69,
+                                                "股票市场类型": "全部AB股;全部A股;全部A股(非ST);全部A股(非金融);全部上市公司;创业板;创业板(注册制);沪深AB股;沪深A股;沪深股通;深股通;深证AB股;深证A股;深证上市公司"
+                                            },
+                                            {
+                                                "code": "603681",
+                                                "最新价": "19.11",
+                                                "涨跌幅:前复权[20251210]": "9.98959417",
+                                                "最高价:不复权[20251210]": "21.14",
+                                                "{(}最高价:不复权[20251211]{-}最高价:不复权[20251210]{)}": 0.35999999999999943,
+                                                "最低价:不复权[20251210]": "19.94",
+                                                "{(}开盘价:不复权[20251212]{-}1日avl[20251211]{)}": 0.1559999999999988,
+                                                "最低价:不复权[20251212]": "20",
+                                                "股票简称": "永冠新材",
+                                                "收盘价:不复权[20251210]": 21.14,
+                                                "开盘价:不复权[20251212]": "21",
+                                                "收盘价:不复权[20251212]": 20.17,
+                                                "分时涨跌幅:前复权[20251212 09:25]": "1.744186046511625",
+                                                "最高价:不复权[20251211]": "21.5",
+                                                "涨跌幅:前复权[20251211]": "-2.36518448",
+                                                "最新涨跌幅": "-5.255329698",
+                                                "上市交易日天数[20251215]": 1633,
+                                                "market_code": "17",
+                                                "最高价创新高(条件说明)[20251210]": "2025年12月10日的最高价:后复权创188日新高",
+                                                "最低价:不复权[20251211]": "20.38",
+                                                "股票代码": "603681.SH",
+                                                "1日avl[20251211]": "20.844",
+                                                "买入信号inter[20251210]": "dma金叉||boll突破上轨||月线boll突破上轨",
+                                                "收盘价:不复权[20251211]": 20.64,
+                                                "股票市场类型": "上证AB股;上证A股;上证上市公司;上证主板A股;全部AB股;全部A股;全部A股(非ST);全部A股(非金融);全部上市公司;沪深AB股;沪深A股;沪深主板A股"
+                                            }
+                                        ],
+                                        "meta": {
+                                            "ret": "json_all",
+                                            "addcondition": "{\"\\u6da8\\u8dcc\\u5e45:\\u524d\\u590d\\u6743\":[\"\\u5f00\\u76d8\\u4ef7:\\u524d\\u590d\\u6743\",\"\\u6700\\u9ad8\\u4ef7:\\u524d\\u590d\\u6743\",\"\\u6700\\u4f4e\\u4ef7:\\u524d\\u590d\\u6743\",\"\\u6536\\u76d8\\u4ef7:\\u524d\\u590d\\u6743\",\"\\u632f\\u5e45\",\"\\u6210\\u4ea4\\u91cf\"],\"\\u6700\\u9ad8\\u4ef7:\\u540e\\u590d\\u6743\":[\"\\u4e70\\u5165\\u4fe1\\u53f7inter\",\"\\u6280\\u672f\\u5f62\\u6001\"],\"\\u6700\\u9ad8\\u4ef7:\\u4e0d\\u590d\\u6743\":[\"\\u6700\\u4f4e\\u4ef7:\\u4e0d\\u590d\\u6743\",\"\\u6536\\u76d8\\u4ef7:\\u4e0d\\u590d\\u6743\"],\"\\u5f00\\u76d8\\u4ef7:\\u4e0d\\u590d\\u6743\":[\"\\u6700\\u4f4e\\u4ef7:\\u4e0d\\u590d\\u6743\",\"\\u6536\\u76d8\\u4ef7:\\u4e0d\\u590d\\u6743\"],\"avl\":[],\"\\u5206\\u65f6\\u6da8\\u8dcc\\u5e45:\\u524d\\u590d\\u6743\":[\"\\u5206\\u65f6\\u6210\\u4ea4\\u91cf\",\"\\u5206\\u65f6\\u6210\\u4ea4\\u989d\",\"\\u5206\\u65f6\\u6362\\u624b\\u7387\",\"\\u5206\\u65f6\\u6536\\u76d8\\u4ef7:\\u4e0d\\u590d\\u6743\"],\"\\u80a1\\u7968\\u7b80\\u79f0\":[],\"\\u4e0a\\u5e02\\u4ea4\\u6613\\u65e5\\u5929\\u6570\":[],\"\\u80a1\\u7968\\u5e02\\u573a\\u7c7b\\u578b\":[],\"\\u7acb\\u6848\\u8c03\\u67e5\\u6b21\\u6570\":[\"\\u7acb\\u6848\\u8c03\\u67e5\\u660e\\u7ec6\"]}",
+                                            "is_cache": "1",
+                                            "sessionid": "7cd763f5a386882cfb1f39b40382ecbb",
+                                            "source": "Ths_iwencai_Xuangu",
+                                            "permission_limit": "charge_data",
+                                            "qid": "7cd763f5a386882cfb1f39b40382ecbb",
+                                            "urp_use_sort": "1",
+                                            "userid": "Ths_iwencai_Xuangu_go8ew34uqq340dbjhh6xnv2psf74gzhu",
+                                            "q": "20251210涨幅>8%，20251210股价创188日新高，20251211涨跌幅大于-3%且<3%，20251211最高价>20251210最高价，20251212开盘价>20251211当日均价，20251212开盘涨幅<3%且>-5%，非ST，非新股，非北交 所，近二年未被立案",
+                                            "domain": "abs_股票领域",
+                                            "extra": {
+                                                "QTime": "145",
+                                                "status_code": 0,
+                                                "iwc_column_info": {
+                                                    "分时涨跌幅:前复权[20251212 09:25]": {
+                                                        "index_meta": {
+                                                            "description": {
+                                                                "desc": "前复权就是以除权前的价格为基准来对除权后的股票数据进行修复"
+                                                            },
+                                                            "label": "分时涨跌幅:前复权"
+                                                        },
+                                                        "display_config": {
+                                                            "hl": [
+                                                                {
+                                                                    "comp_relation": "<",
+                                                                    "comp_with": "0",
+                                                                    "effect": "green"
+                                                                },
+                                                                {
+                                                                    "comp_relation": ">",
+                                                                    "comp_with": "0",
+                                                                    "effect": "red"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "最新价": {
+                                                        "index_meta": {
+                                                            "description": [],
+                                                            "label": "现价"
+                                                        },
+                                                        "display_config": {
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "涨跌幅:前复权[20251210]": {
+                                                        "index_meta": {
+                                                            "description": {
+                                                                "desc": "前复权就是以除权前的价格为基准来对除权后的股票数据进行修复"
+                                                            },
+                                                            "label": "涨跌幅:前复权"
+                                                        },
+                                                        "display_config": {
+                                                            "hl": [
+                                                                {
+                                                                    "comp_relation": "<",
+                                                                    "comp_with": "0",
+                                                                    "effect": "green"
+                                                                },
+                                                                {
+                                                                    "comp_relation": ">",
+                                                                    "comp_with": "0",
+                                                                    "effect": "red"
+                                                                }
+                                                            ],
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "最高价:不复权[20251211]": {
+                                                        "index_meta": {
+                                                            "index_number": "[1]",
+                                                            "description": {
+                                                                "desc": "不复权就是不对除权前后的股票数据做修改"
+                                                            },
+                                                            "label": "最高价:不复权"
+                                                        },
+                                                        "display_config": {
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "涨跌幅:前复权[20251211]": {
+                                                        "index_meta": {
+                                                            "description": {
+                                                                "desc": "前复权就是以除权前的价格为基准来对除权后的股票数据进行修复"
+                                                            },
+                                                            "label": "涨跌幅:前复权"
+                                                        },
+                                                        "display_config": {
+                                                            "hl": [
+                                                                {
+                                                                    "comp_relation": "<",
+                                                                    "comp_with": "0",
+                                                                    "effect": "green"
+                                                                },
+                                                                {
+                                                                    "comp_relation": ">",
+                                                                    "comp_with": "0",
+                                                                    "effect": "red"
+                                                                }
+                                                            ],
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "最高价:不复权[20251210]": {
+                                                        "index_meta": {
+                                                            "index_number": "[2]",
+                                                            "description": {
+                                                                "desc": "不复权就是不对除权前后的股票数据做修改"
+                                                            },
+                                                            "label": "最高价:不复权"
+                                                        },
+                                                        "display_config": {
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "最新涨跌幅": {
+                                                        "index_meta": {
+                                                            "description": [],
+                                                            "label": "涨跌幅"
+                                                        },
+                                                        "display_config": {
+                                                            "hl": [
+                                                                {
+                                                                    "comp_relation": "<",
+                                                                    "comp_with": "0",
+                                                                    "effect": "green"
+                                                                },
+                                                                {
+                                                                    "comp_relation": ">",
+                                                                    "comp_with": "0",
+                                                                    "effect": "red"
+                                                                }
+                                                            ],
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2 "
+                                                                }
+                                                            ],
+                                                            "special_unit": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "%"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "{(}最高价:不复权[20251211]{-}最高价:不复权[20251210]{)}": {
+                                                        "index_meta": {
+                                                            "index_number": "[1]-[2]",
+                                                            "description": {
+                                                                "desc": "[1]-[2] = 最高价:不复权[20251211]-最高价:不复权[20251210]"
+                                                            }
+                                                        },
+                                                        "display_config": []
+                                                    },
+                                                    "上市交易日天数[20251215]": {
+                                                        "index_meta": [],
+                                                        "display_config": []
+                                                    },
+                                                    "最低价:不复权[20251210]": {
+                                                        "index_meta": {
+                                                            "description": {
+                                                                "desc": "不复权就是不对除权前后的股票数据做修改"
+                                                            },
+                                                            "label": "最低价:不复权"
+                                                        },
+                                                        "display_config": {
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "最高价创新高(条件说明)[20251210]": {
+                                                        "index_meta": [],
+                                                        "display_config": []
+                                                    },
+                                                    "最低价:不复权[20251211]": {
+                                                        "index_meta": {
+                                                            "description": {
+                                                                "desc": "不复权就是不对除权前后的股票数据做修改"
+                                                            },
+                                                            "label": "最低价:不复权"
+                                                        },
+                                                        "display_config": {
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "{(}开盘价:不复权[20251212]{-}1日avl[20251211]{)}": {
+                                                        "index_meta": {
+                                                            "index_number": "[3]-[4]",
+                                                            "description": {
+                                                                "desc": "[3]-[4] = 开盘价:不复权[20251212]-1日avl[20251211]"
+                                                            }
+                                                        },
+                                                        "display_config": []
+                                                    },
+                                                    "最低价:不复权[20251212]": {
+                                                        "index_meta": {
+                                                            "description": {
+                                                                "desc": "不复权就是不对除权前后的股票数据做修改"
+                                                            },
+                                                            "label": "最低价:不复权"
+                                                        },
+                                                        "display_config": {
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "股票代码": {
+                                                        "index_meta": [],
+                                                        "display_config": {
+                                                            "code": [
+                                                                {
+                                                                    "comp_relation": "",
+                                                                    "comp_with": "",
+                                                                    "effect": ""
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "1日avl[20251211]": {
+                                                        "index_meta": {
+                                                            "index_number": "[4]"
+                                                        },
+                                                        "display_config": []
+                                                    },
+                                                    "立案调查次数[20231218-20251215]": {
+                                                        "index_meta": [],
+                                                        "display_config": []
+                                                    },
+                                                    "买入信号inter[20251210]": {
+                                                        "index_meta": {
+                                                            "description": [],
+                                                            "label": "买入信号"
+                                                        },
+                                                        "trace_config": {
+                                                            "1": [
+                                                                {
+                                                                    "link_type": 1,
+                                                                    "bind_index": "买入信号inter[20251210]",
+                                                                    "interaction_type": 1,
+                                                                    "label": "",
+                                                                    "event": 1,
+                                                                    "type": 1,
+                                                                    "params": {
+                                                                        "join_type": "4",
+                                                                        "query": "{$指标值$} 选股新动向"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "2": [
+                                                                {
+                                                                    "link_type": 1,
+                                                                    "bind_index": "买入信号inter[20251210]",
+                                                                    "interaction_type": 2,
+                                                                    "label": "",
+                                                                    "event": 1,
+                                                                    "type": 1,
+                                                                    "params": {
+                                                                        "join_type": "1",
+                                                                        "query": "{$股票代码$} 买入信号inter"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "display_config": {
+                                                            "split": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": ";",
+                                                                    "effect": "{\"num\":3,\"str\":\"【@@】\",\"split_char\":\"||\",\"more\":\"<a href=\\\"/stockpick/search?typed=1&preParams=&ts=1&f=1&qs=index_rewrite&selfsectsn=&querytype=&searchfilter=&tid=stockpick&w=(_stk-code_)+选股新动向\\\" target=\\\"_blank\\\">更多</a>\"}"
+                                                                }
+                                                            ],
+                                                            "link": [
+                                                                {
+                                                                    "comp_relation": "include",
+                                                                    "comp_with": "*",
+                                                                    "effect": "/stockpick/search?preParams=&ts=1&f=1&qs=zxmcxh&querytype=&tid=stockpick&w=(current)选股新动向"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "股票简称": {
+                                                        "index_meta": [],
+                                                        "trace_config": {
+                                                            "1": [
+                                                                {
+                                                                    "link_type": 1,
+                                                                    "bind_index": "股票简称",
+                                                                    "interaction_type": 1,
+                                                                    "label": "",
+                                                                    "event": 1,
+                                                                    "type": 1,
+                                                                    "params": {
+                                                                        "join_type": "4",
+                                                                        "query": "{$股票代码$} "
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "display_config": {
+                                                            "link": [
+                                                                {
+                                                                    "comp_relation": "",
+                                                                    "comp_with": "",
+                                                                    "effect": "/stockpick/search?tid=stockpick&qs=stockpick_diag&ts=1&w=(股票代码)"
+                                                                }
+                                                            ],
+                                                            "align": [
+                                                                {
+                                                                    "comp_relation": "",
+                                                                    "comp_with": "",
+                                                                    "effect": "center"
+                                                                }
+                                                            ],
+                                                            "class": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "graph"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "收盘价:不复权[20251211]": {
+                                                        "index_meta": {
+                                                            "description": {
+                                                                "desc": "不复权就是不对除权前后的股票数据做修改"
+                                                            },
+                                                            "label": "收盘价:不复权"
+                                                        },
+                                                        "display_config": {
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "收盘价:不复权[20251210]": {
+                                                        "index_meta": {
+                                                            "description": {
+                                                                "desc": "不复权就是不对除权前后的股票数据做修改"
+                                                            },
+                                                            "label": "收盘价:不复权"
+                                                        },
+                                                        "display_config": {
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "开盘价:不复权[20251212]": {
+                                                        "index_meta": {
+                                                            "index_number": "[3]",
+                                                            "description": {
+                                                                "desc": "不复权就是不对除权前后的股票数据做修改"
+                                                            },
+                                                            "label": "开盘价:不复权"
+                                                        },
+                                                        "display_config": {
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "收盘价:不复权[20251212]": {
+                                                        "index_meta": {
+                                                            "description": {
+                                                                "desc": "不复权就是不对除权前后的股票数据做修改"
+                                                            },
+                                                            "label": "收盘价:不复权"
+                                                        },
+                                                        "display_config": {
+                                                            "accuracy": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "2"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "股票市场类型": {
+                                                        "index_meta": [],
+                                                        "trace_config": {
+                                                            "1": [
+                                                                {
+                                                                    "link_type": 1,
+                                                                    "bind_index": "股票市场类型",
+                                                                    "interaction_type": 1,
+                                                                    "label": "",
+                                                                    "event": 1,
+                                                                    "type": 1,
+                                                                    "params": {
+                                                                        "join_type": "2",
+                                                                        "query": "股票市场类型包含{$current$}"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "display_config": {
+                                                            "split": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": ";",
+                                                                    "effect": "{\"num\":1,\"str\":\"【@@】\",\"split_char\":\";\"}"
+                                                                }
+                                                            ],
+                                                            "link": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "search?&w=股票市场类型包含(current)"
+                                                                }
+                                                            ],
+                                                            "align": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "left"
+                                                                }
+                                                            ],
+                                                            "long_string": [
+                                                                {
+                                                                    "comp_relation": "any",
+                                                                    "comp_with": "*",
+                                                                    "effect": "{\"length\":12}"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "query": "20251210涨幅>8%，20251210股价创188日新高，20251211涨跌幅大于-3%且<3%，20251211最高价>20251210最高价，20251212开盘价>20251211当日均价，20251212开盘涨幅<3%且>-5%，非ST，非新股，非北交 所，近二年未被立案",
+                                                "ip": "10.201.157.196",
+                                                "iwc_sort_info": {
+                                                    "sortKey": "{(}最高价:不复权[20251211]{-}最高价:不复权[20251210]{)}",
+                                                    "sortType": "desc",
+                                                    "sortFrom": "Original",
+                                                    "sortQuery": true
+                                                },
+                                                "row_count": 3,
+                                                "token": "0ac99dc417658093634558902",
+                                                "availableQuery": {
+                                                    "query": ""
+                                                },
+                                                "condition": "[{\"score\":0,\"node_type\":\"op\",\"chunkedResult\":\"20251210涨幅>8%,_&_20251210股价创188日新高,_&_20251211涨跌幅大于-3%且<3%,_&_20251211最高价>20251210最高价,_&_20251212开盘价>20251211当日均价,_&_20251212开盘涨幅<3%且>-5%,_&_非st,_&_非新股,_&_非北交 _&_所,_&_近二年未被立案\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":28,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251210\",\"ci\":false,\"indexName\":\"涨跌幅:前复权\",\"indexProperties\":[\"交易日期 20251210\",\"(0.08\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251210\",\"(\":\"0.08\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"uiText\":\"2025年12月10日的涨跌幅>8%\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":26,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"创新高\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"[起始交易日期 20250307,截止交易日期 20251210]\",\"uiText\":\"2025年12月10日的最高价:后复权创188日新高\",\"sonSize\":1,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251210\",\"ci\":false,\"indexName\":\"最高价:后复权\",\"indexProperties\":[\"n日 188日\",\"周期长度 1\",\"交易日期 20251210\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251210\",\"n日\":\"188日\",\"周期长度\":\"1\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":23,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"uiText\":\"2025年12月11日的涨跌幅>-3%且2025年12月11日的涨跌幅<3%\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"涨跌幅:前复权\",\"indexProperties\":[\"交易日期 20251211\",\"(-0.03\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\",\"(\":\"-0.03\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"涨跌幅:前复权\",\"indexProperties\":[\"交易日期 20251211\",\"<0.03\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\",\"<\":\"0.03\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":19,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"-\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"(0\",\"uiText\":\"2025年12月11日的最高价>2025年12月10日的最高价\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"最高价:不复权\",\"indexProperties\":[\"交易日期 20251211\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元|港元|美元|英镑)\",\"sonSize\":0},{\"dateText\":\"20251210\",\"ci\":false,\"indexName\":\"最高价:不复权\",\"indexProperties\":[\"交易日期 20251210\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251210\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元|港元|美元|英镑)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":15,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"-\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"(0\",\"uiText\":\"2025年12月12日的开盘价>2025年12月11日的avl\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251212\",\"ci\":false,\"indexName\":\"开盘价:不复权\",\"indexProperties\":[\"交易日期 20251212\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251212\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元)\",\"sonSize\":0},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"avl\",\"indexProperties\":[\"交易日期 20251211\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"tech\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":11,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"uiText\":\"2025年12月12日09点25分的涨跌幅<3%且2025年12月12日09点25分的涨跌幅>-5%\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251212开盘\",\"ci\":false,\"indexName\":\"分时涨跌幅:前复权\",\"indexProperties\":[\"区间偏移 [0,0]\",\"交易时间 09:25\",\"交易日期 20251212\",\"<0.03\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251212\",\"区间偏移\":\"[0,0]\",\"交易时间\":\"09:25\",\"<\":\"0.03\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"dateText\":\"20251212开盘\",\"ci\":false,\"indexName\":\"分时涨跌幅:前复权\",\"indexProperties\":[\"区间偏移 [0,0]\",\"交易时间 09:25\",\"交易日期 20251212\",\"(-0.05\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251212\",\"区间偏移\":\"[0,0]\",\"交易时间\":\"09:25\",\"(\":\"-0.05\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":7,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"\",\"ci\":false,\"indexName\":\"股票简称\",\"indexProperties\":[\"不包含st\"],\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"不包含\":\"st\"},\"reportType\":\"null\",\"score\":0,\"node_type\":\"index\",\"domain\":\"abs_股票领域\",\"uiText\":\"股票简称不包含st\",\"valueType\":\"_股票简称\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":5,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"\",\"ci\":false,\"indexName\":\"上市交易日天数\",\"indexProperties\":[\"nodate 1\",\"交易日期 20251215\",\"(5\"],\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251215\",\"(\":\"5\",\"nodate\":\"1\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"uiText\":\"上市交易日天数>5\",\"valueType\":\"_整型数值(天)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":3,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"\",\"ci\":false,\"indexName\":\"股票市场类型\",\"indexProperties\":[\"不包含北证a股\"],\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"不包含\":\"北证a股\"},\"reportType\":\"null\",\"score\":0,\"node_type\":\"index\",\"domain\":\"abs_股票领域\",\"uiText\":\"股票市场类型不包含北交\",\"valueType\":\"_股票市场类型\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"取反\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"uiText\":\"近2年的立案调查次数取反\",\"sonSize\":1,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"近2年\",\"ci\":false,\"indexName\":\"立案调查次数\",\"indexProperties\":[\"起始交易日期 20231218\",\"截止交易日期 20251215\"],\"dateUnit\":\"年\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"起始交易日期\":\"20231218\",\"截止交易日期\":\"20251215\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"+区间\",\"domain\":\"abs_股票领域\",\"valueType\":\"_整型数值(次)\",\"sonSize\":0}]",
+                                                "techFormula": "datacorex-appid=iwc_nlp_dataquery_proxy_240&method=quote&datetime=16384(20251210-20251210)&fuquan=Q&append=Y&sortby=10&sorttype=select&codelist=17();33();22();151()&sortappend=Y&formula=period:16384;ID:7615;NAME:_3118974;source:select count(( h=hhv(h,188)),1)>=1;datacoredatacoredatacoredatacoredatacoredatacoredatacoredatacorecacheScheduledatacorecacheScheduledatacore",
+                                                "chunks_info": "[\"2025年12月10日的涨跌幅>8% (79)\",\"2025年12月10日的最高价:后复权创188日新高 (117)\",\"2025年12月11日的涨跌幅>-3%且2025年12月11日的涨跌幅<3% (4070)\",\"2025年12月11日的最高价>2025年12月10日的最高价 (2094)\",\"2025年12月12日的开盘价>2025年12月11日的avl (764)\",\"2025年12月12日09点25分的涨跌幅<3%且2025年12月12日09点25分的涨跌幅>-5% (5337)\",\"股票简称不包含st (5295)\",\"上市交易日天数>5 (5456)\",\"股票市场类型不包含北交 (5183)\",\"近2年的立案调查次数取反 (5184)\"]",
+                                                "detail_info": "[{\"股票代码\":{\"nextupdate\":\"20251216 01:06:00\",\"isValidData\":true,\"queryTime\":0,\"update\":\"0 6,16 1,2,3,8,21 * * *\"}},{\"股票简称\":{\"nextupdate\":\"20251216 01:06:00\",\"size\":5295,\"isValidData\":true,\"queryTime\":0,\"update\":\"0 6,16 1,2,3,8,21 * * *\",\"tag\":\"股票简称\"}},{\"最新价\":{\"nextupdate\":\"20251215 22:36:05\",\"isValidData\":true,\"queryTime\":0,\"update\":\"0/5 * * * * *\"}},{\"最新涨跌幅\":{\"nextupdate\":\"20251215 22:36:05\",\"isValidData\":true,\"queryTime\":0,\"update\":\"0/5 * * * * *\"}},{\"涨跌幅:前复权[20251210]\":{\"isValidData\":true,\"queryTime\":4}},{\"涨跌幅:前复权[20251211]\":{\"isValidData\":true,\"queryTime\":44}},{\"最高价创新高(条件说明)[20251210]\":{\"isValidData\":true,\"queryTime\":-1}},{\"最高价:不复权[20251210]\":{\"isValidData\":true,\"queryTime\":39}},{\"最高价:不复权[20251211]\":{\"isValidData\":true,\"queryTime\":32}},{\"{(}最高价:不复权[20251211]{-}最高价:不复权[20251210]{)}\":{\"isValidData\":true,\"queryTime\":-1}},{\"开盘价:不复权[20251212]\":{\"isValidData\":true,\"queryTime\":25}},{\"1日avl[20251211]\":{\"isValidData\":true,\"queryTime\":49}},{\"{(}开盘价:不复权[20251212]{-}1日avl[20251211]{)}\":{\"isValidData\":true,\"queryTime\":-1}},{\"分时涨跌幅:前复权[20251212 09:25]\":{\"nextupdate\":\"20251215 23:30:00\",\"isValidData\":true,\"queryTime\":46,\"update\":\"0/20 * 9-11 * * 1-5||0/20 * 13-14 * * 1-5||0 30 0-8 * * 1-5||0 30 15-23 * * 1-5||0 15,25 9 * * 1-5\"}},{\"上市交易日天数[20251215]\":{\"isValidData\":true,\"queryTime\":23}},{\"股票市场类型\":{\"nextupdate\":\"20251216 08:01:00\",\"size\":5470,\"isValidData\":true,\"queryTime\":65,\"update\":\"0 1,11 8 * * *\",\"tag\":\"股票市场类型\"}},{\"立案调查次数[20231218-20251215]\":{\"nextupdate\":\"20251216 03:02:00\",\"isValidData\":true,\"queryTime\":6,\"update\":\"0 2 3,9,10,16,18,19,20,21,22 * * *\"}},{\"最低价:不复权[20251210]\":{\"isValidData\":true,\"queryTime\":13}},{\"最低价:不复权[20251211]\":{\"isValidData\":true,\"queryTime\":32}},{\"最低价:不复权[20251212]\":{\"isValidData\":true,\"queryTime\":36}},{\"收盘价:不复权[20251210]\":{\"nextupdate\":\"20251216 09:15:00\",\"isValidData\":true,\"queryTime\":34,\"update\":\"0 10 15,17,22 * * *||0 15,18 9 * * 1-5||0 15 9 * * *\"}},{\"收盘价:不复权[20251211]\":{\"nextupdate\":\"20251216 09:15:00\",\"isValidData\":true,\"queryTime\":44,\"update\":\"0 10 15,17,22 * * *||0 15,18 9 * * 1-5||0 15 9 * * *\"}},{\"收盘价:不复权[20251212]\":{\"nextupdate\":\"20251216 09:15:00\",\"isValidData\":true,\"queryTime\":14,\"update\":\"0 10 15,17,22 * * *||0 15,18 9 * * 1-5||0 15 9 * * *\"}},{\"买入信号inter[20251210]\":{\"nextupdate\":\"20251216 09:15:00\",\"isValidData\":true,\"queryTime\":49,\"update\":\"0 20 16 * * *||0 20 21 * * *||0 15,18 9 * * 1-5||0 15 9 * * *\"}}]",
+                                                "data_permission": "{\"data_permission\":true,\"data_permission_prod\":null}",
+                                                "status_msg": "ok",
+                                                "filter_info": [
+                                                    {
+                                                        "filterValue": "8.0",
+                                                        "filterKeys": "涨跌幅:前复权[20251210]",
+                                                        "filterOper": ">"
+                                                    },
+                                                    {
+                                                        "filterValue": "-3.0",
+                                                        "filterKeys": "涨跌幅:前复权[20251211]",
+                                                        "filterOper": ">"
+                                                    },
+                                                    {
+                                                        "filterValue": "3.0",
+                                                        "filterKeys": "涨跌幅:前复权[20251211]",
+                                                        "filterOper": "<"
+                                                    },
+                                                    {
+                                                        "filterValue": "3.0",
+                                                        "filterKeys": "分时涨跌幅:前复权[20251212 09:25]",
+                                                        "filterOper": "<"
+                                                    },
+                                                    {
+                                                        "filterValue": "-5.0",
+                                                        "filterKeys": "分时涨跌幅:前复权[20251212 09:25]",
+                                                        "filterOper": ">"
+                                                    },
+                                                    {
+                                                        "filterValue": "st",
+                                                        "filterKeys": "股票简称",
+                                                        "filterOper": "不包含"
+                                                    },
+                                                    {
+                                                        "filterValue": "5",
+                                                        "filterKeys": "上市交易日天数[20251215]",
+                                                        "filterOper": ">"
+                                                    },
+                                                    {
+                                                        "filterValue": "北证a股",
+                                                        "filterKeys": "股票市场类型",
+                                                        "filterOper": "不包含"
+                                                    }
+                                                ],
+                                                "code_count": 3
+                                            },
+                                            "limit": 100,
+                                            "json": "[{\"score\":0,\"node_type\":\"op\",\"chunkedResult\":\"20251210涨幅>8%,_&_20251210股价创188日新高,_&_20251211涨跌幅大于-3%且<3%,_&_20251211最高价>20251210最高价,_&_20251212开盘价>20251211当日均价,_&_20251212开盘涨幅<3%且>-5%,_&_非st,_&_非新股,_&_非北交 _&_所,_&_近二年未被立案\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":28,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251210\",\"ci\":false,\"indexName\":\"涨跌幅:前复权\",\"indexProperties\":[\"交易日期 20251210\",\"(0.08\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251210\",\"(\":\"0.08\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"uiText\":\"2025年12月10日的涨跌幅>8%\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":26,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"创新高\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"[起始交易日期 20250307,截止交易日期 20251210]\",\"uiText\":\"2025年12月10日的最高价:后复权创188日新高\",\"sonSize\":1,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251210\",\"ci\":false,\"indexName\":\"最高价:后复权\",\"indexProperties\":[\"n日 188日\",\"周期长度 1\",\"交易日期 20251210\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251210\",\"n日\":\"188日\",\"周期长度\":\"1\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":23,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"uiText\":\"2025年12月11日的涨跌幅>-3%且2025年12月11日的涨跌幅<3%\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"涨跌幅:前复权\",\"indexProperties\":[\"交易日期 20251211\",\"(-0.03\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\",\"(\":\"-0.03\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"涨跌幅:前复权\",\"indexProperties\":[\"交易日期 20251211\",\"<0.03\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\",\"<\":\"0.03\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":19,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"-\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"(0\",\"uiText\":\"2025年12月11日的最高价>2025年12月10日的最高价\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"最高价:不复权\",\"indexProperties\":[\"交易日期 20251211\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元|港元|美元|英镑)\",\"sonSize\":0},{\"dateText\":\"20251210\",\"ci\":false,\"indexName\":\"最高价:不复权\",\"indexProperties\":[\"交易日期 20251210\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251210\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元|港元|美元|英镑)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":15,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"-\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"(0\",\"uiText\":\"2025年12月12日的开盘价>2025年12月11日的avl\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251212\",\"ci\":false,\"indexName\":\"开盘价:不复权\",\"indexProperties\":[\"交易日期 20251212\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251212\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元)\",\"sonSize\":0},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"avl\",\"indexProperties\":[\"交易日期 20251211\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"tech\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":11,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"uiText\":\"2025年12月12日09点25分的涨跌幅<3%且2025年12月12日09点25分的涨跌幅>-5%\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251212开盘\",\"ci\":false,\"indexName\":\"分时涨跌幅:前复权\",\"indexProperties\":[\"区间偏移 [0,0]\",\"交易时间 09:25\",\"交易日期 20251212\",\"<0.03\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251212\",\"区间偏移\":\"[0,0]\",\"交易时间\":\"09:25\",\"<\":\"0.03\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"dateText\":\"20251212开盘\",\"ci\":false,\"indexName\":\"分时涨跌幅:前复权\",\"indexProperties\":[\"区间偏移 [0,0]\",\"交易时间 09:25\",\"交易日期 20251212\",\"(-0.05\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251212\",\"区间偏移\":\"[0,0]\",\"交易时间\":\"09:25\",\"(\":\"-0.05\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":7,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"\",\"ci\":false,\"indexName\":\"股票简称\",\"indexProperties\":[\"不包含st\"],\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"不包含\":\"st\"},\"reportType\":\"null\",\"score\":0,\"node_type\":\"index\",\"domain\":\"abs_股票领域\",\"uiText\":\"股票简称不包含st\",\"valueType\":\"_股票简称\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":5,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"\",\"ci\":false,\"indexName\":\"上市交易日天数\",\"indexProperties\":[\"nodate 1\",\"交易日期 20251215\",\"(5\"],\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251215\",\"(\":\"5\",\"nodate\":\"1\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"uiText\":\"上市交易日天数>5\",\"valueType\":\"_整型数值(天)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":3,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"\",\"ci\":false,\"indexName\":\"股票市场类型\",\"indexProperties\":[\"不包含北证a股\"],\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"不包含\":\"北证a股\"},\"reportType\":\"null\",\"score\":0,\"node_type\":\"index\",\"domain\":\"abs_股票领域\",\"uiText\":\"股票市场类型不包含北交\",\"valueType\":\"_股票市场类型\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"取反\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"uiText\":\"近2年的立案调查次数取反\",\"sonSize\":1,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"近2年\",\"ci\":false,\"indexName\":\"立案调查次数\",\"indexProperties\":[\"起始交易日期 20231218\",\"截止交易日期 20251215\"],\"dateUnit\":\"年\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"起始交易日期\":\"20231218\",\"截止交易日期\":\"20251215\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"+区间\",\"domain\":\"abs_股票领域\",\"valueType\":\"_整型数值(次)\",\"sonSize\":0}]",
+                                            "page": 1,
+                                            "time": "20231218 0000",
+                                            "urp_sort_way": "desc",
+                                            "add_index": "1",
+                                            "addcolumnslimit": "1",
+                                            "uuids": "24087"
+                                        }
+                                    },
+                                    "puuid": 24087,
+                                    "config": {
+                                        "other_info": {
+                                            "footer_info": {
+                                                "title": "查看更多",
+                                                "url": "/gateway/urp/v7/landing/getDataList?query=20251210%E6%B6%A8%E5%B9%85%3E8%25%EF%BC%8C20251210%E8%82%A1%E4%BB%B7%E5%88%9B188%E6%97%A5%E6%96%B0%E9%AB%98%EF%BC%8C20251211%E6%B6%A8%E8%B7%8C%E5%B9%85%E5%A4%A7%E4%BA%8E-3%25%E4%B8%94%3C3%25%EF%BC%8C20251211%E6%9C%80%E9%AB%98%E4%BB%B7%3E20251210%E6%9C%80%E9%AB%98%E4%BB%B7%EF%BC%8C20251212%E5%BC%80%E7%9B%98%E4%BB%B7%3E20251211%E5%BD%93%E6%97%A5%E5%9D%87%E4%BB%B7%EF%BC%8C20251212%E5%BC%80%E7%9B%98%E6%B6%A8%E5%B9%85%3C3%25%E4%B8%94%3E-5%25%EF%BC%8C%E9%9D%9EST%EF%BC%8C%E9%9D%9E%E6%96%B0%E8%82%A1%EF%BC%8C%E9%9D%9E%E5%8C%97%E4%BA%A4%20%E6%89%80%EF%BC%8C%E8%BF%91%E4%BA%8C%E5%B9%B4%E6%9C%AA%E8%A2%AB%E7%AB%8B%E6%A1%88&urp_sort_way=desc&urp_sort_index=&page=1&perpage=30&addheaderindexes=&condition=%5B%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22chunkedResult%22%3A%2220251210%E6%B6%A8%E5%B9%85%3E8%25%2C_%26_20251210%E8%82%A1%E4%BB%B7%E5%88%9B188%E6%97%A5%E6%96%B0%E9%AB%98%2C_%26_20251211%E6%B6%A8%E8%B7%8C%E5%B9%85%E5%A4%A7%E4%BA%8E-3%25%E4%B8%94%3C3%25%2C_%26_20251211%E6%9C%80%E9%AB%98%E4%BB%B7%3E20251210%E6%9C%80%E9%AB%98%E4%BB%B7%2C_%26_20251212%E5%BC%80%E7%9B%98%E4%BB%B7%3E20251211%E5%BD%93%E6%97%A5%E5%9D%87%E4%BB%B7%2C_%26_20251212%E5%BC%80%E7%9B%98%E6%B6%A8%E5%B9%85%3C3%25%E4%B8%94%3E-5%25%2C_%26_%E9%9D%9Est%2C_%26_%E9%9D%9E%E6%96%B0%E8%82%A1%2C_%26_%E9%9D%9E%E5%8C%97%E4%BA%A4%20_%26_%E6%89%80%2C_%26_%E8%BF%91%E4%BA%8C%E5%B9%B4%E6%9C%AA%E8%A2%AB%E7%AB%8B%E6%A1%88%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A28%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251210%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251210%22%2C%22%280.08%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251210%22%2C%22%28%22%3A%220.08%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8810%E6%97%A5%E7%9A%84%E6%B6%A8%E8%B7%8C%E5%B9%85%3E8%25%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%25%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A26%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22%E5%88%9B%E6%96%B0%E9%AB%98%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%5B%E8%B5%B7%E5%A7%8B%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020250307%2C%E6%88%AA%E6%AD%A2%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251210%5D%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8810%E6%97%A5%E7%9A%84%E6%9C%80%E9%AB%98%E4%BB%B7%3A%E5%90%8E%E5%A4%8D%E6%9D%83%E5%88%9B188%E6%97%A5%E6%96%B0%E9%AB%98%22%2C%22sonSize%22%3A1%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251210%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%9C%80%E9%AB%98%E4%BB%B7%3A%E5%90%8E%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22n%E6%97%A5%20188%E6%97%A5%22%2C%22%E5%91%A8%E6%9C%9F%E9%95%BF%E5%BA%A6%201%22%2C%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251210%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251210%22%2C%22n%E6%97%A5%22%3A%22188%E6%97%A5%22%2C%22%E5%91%A8%E6%9C%9F%E9%95%BF%E5%BA%A6%22%3A%221%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%85%83%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A23%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8811%E6%97%A5%E7%9A%84%E6%B6%A8%E8%B7%8C%E5%B9%85%3E-3%25%E4%B8%942025%E5%B9%B412%E6%9C%8811%E6%97%A5%E7%9A%84%E6%B6%A8%E8%B7%8C%E5%B9%85%3C3%25%22%2C%22sonSize%22%3A2%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251211%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251211%22%2C%22%28-0.03%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251211%22%2C%22%28%22%3A%22-0.03%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%25%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22dateText%22%3A%2220251211%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251211%22%2C%22%3C0.03%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251211%22%2C%22%3C%22%3A%220.03%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%25%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A19%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22-%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%280%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8811%E6%97%A5%E7%9A%84%E6%9C%80%E9%AB%98%E4%BB%B7%3E2025%E5%B9%B412%E6%9C%8810%E6%97%A5%E7%9A%84%E6%9C%80%E9%AB%98%E4%BB%B7%22%2C%22sonSize%22%3A2%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251211%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%9C%80%E9%AB%98%E4%BB%B7%3A%E4%B8%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251211%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251211%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%85%83%7C%E6%B8%AF%E5%85%83%7C%E7%BE%8E%E5%85%83%7C%E8%8B%B1%E9%95%91%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22dateText%22%3A%2220251210%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%9C%80%E9%AB%98%E4%BB%B7%3A%E4%B8%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251210%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251210%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%85%83%7C%E6%B8%AF%E5%85%83%7C%E7%BE%8E%E5%85%83%7C%E8%8B%B1%E9%95%91%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A15%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22-%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%280%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8812%E6%97%A5%E7%9A%84%E5%BC%80%E7%9B%98%E4%BB%B7%3E2025%E5%B9%B412%E6%9C%8811%E6%97%A5%E7%9A%84avl%22%2C%22sonSize%22%3A2%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251212%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E5%BC%80%E7%9B%98%E4%BB%B7%3A%E4%B8%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251212%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251212%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%85%83%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22dateText%22%3A%2220251211%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22avl%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251211%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22tech%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251211%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%85%83%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A11%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8812%E6%97%A509%E7%82%B925%E5%88%86%E7%9A%84%E6%B6%A8%E8%B7%8C%E5%B9%85%3C3%25%E4%B8%942025%E5%B9%B412%E6%9C%8812%E6%97%A509%E7%82%B925%E5%88%86%E7%9A%84%E6%B6%A8%E8%B7%8C%E5%B9%85%3E-5%25%22%2C%22sonSize%22%3A2%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251212%E5%BC%80%E7%9B%98%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E5%88%86%E6%97%B6%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E5%8C%BA%E9%97%B4%E5%81%8F%E7%A7%BB%20%5B0%2C0%5D%22%2C%22%E4%BA%A4%E6%98%93%E6%97%B6%E9%97%B4%2009%3A25%22%2C%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251212%22%2C%22%3C0.03%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251212%22%2C%22%E5%8C%BA%E9%97%B4%E5%81%8F%E7%A7%BB%22%3A%22%5B0%2C0%5D%22%2C%22%E4%BA%A4%E6%98%93%E6%97%B6%E9%97%B4%22%3A%2209%3A25%22%2C%22%3C%22%3A%220.03%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%25%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22dateText%22%3A%2220251212%E5%BC%80%E7%9B%98%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E5%88%86%E6%97%B6%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E5%8C%BA%E9%97%B4%E5%81%8F%E7%A7%BB%20%5B0%2C0%5D%22%2C%22%E4%BA%A4%E6%98%93%E6%97%B6%E9%97%B4%2009%3A25%22%2C%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251212%22%2C%22%28-0.05%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251212%22%2C%22%E5%8C%BA%E9%97%B4%E5%81%8F%E7%A7%BB%22%3A%22%5B0%2C0%5D%22%2C%22%E4%BA%A4%E6%98%93%E6%97%B6%E9%97%B4%22%3A%2209%3A25%22%2C%22%28%22%3A%22-0.05%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%25%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A7%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%22%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E8%82%A1%E7%A5%A8%E7%AE%80%E7%A7%B0%22%2C%22indexProperties%22%3A%5B%22%E4%B8%8D%E5%8C%85%E5%90%ABst%22%5D%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%B8%8D%E5%8C%85%E5%90%AB%22%3A%22st%22%7D%2C%22reportType%22%3A%22null%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22uiText%22%3A%22%E8%82%A1%E7%A5%A8%E7%AE%80%E7%A7%B0%E4%B8%8D%E5%8C%85%E5%90%ABst%22%2C%22valueType%22%3A%22_%E8%82%A1%E7%A5%A8%E7%AE%80%E7%A7%B0%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A5%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%22%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E4%B8%8A%E5%B8%82%E4%BA%A4%E6%98%93%E6%97%A5%E5%A4%A9%E6%95%B0%22%2C%22indexProperties%22%3A%5B%22nodate%201%22%2C%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251215%22%2C%22%285%22%5D%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251215%22%2C%22%28%22%3A%225%22%2C%22nodate%22%3A%221%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22uiText%22%3A%22%E4%B8%8A%E5%B8%82%E4%BA%A4%E6%98%93%E6%97%A5%E5%A4%A9%E6%95%B0%3E5%22%2C%22valueType%22%3A%22_%E6%95%B4%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%A4%A9%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A3%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%22%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E8%82%A1%E7%A5%A8%E5%B8%82%E5%9C%BA%E7%B1%BB%E5%9E%8B%22%2C%22indexProperties%22%3A%5B%22%E4%B8%8D%E5%8C%85%E5%90%AB%E5%8C%97%E8%AF%81a%E8%82%A1%22%5D%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%B8%8D%E5%8C%85%E5%90%AB%22%3A%22%E5%8C%97%E8%AF%81a%E8%82%A1%22%7D%2C%22reportType%22%3A%22null%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22uiText%22%3A%22%E8%82%A1%E7%A5%A8%E5%B8%82%E5%9C%BA%E7%B1%BB%E5%9E%8B%E4%B8%8D%E5%8C%85%E5%90%AB%E5%8C%97%E4%BA%A4%22%2C%22valueType%22%3A%22_%E8%82%A1%E7%A5%A8%E5%B8%82%E5%9C%BA%E7%B1%BB%E5%9E%8B%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22%E5%8F%96%E5%8F%8D%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22uiText%22%3A%22%E8%BF%912%E5%B9%B4%E7%9A%84%E7%AB%8B%E6%A1%88%E8%B0%83%E6%9F%A5%E6%AC%A1%E6%95%B0%E5%8F%96%E5%8F%8D%22%2C%22sonSize%22%3A1%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%22%E8%BF%912%E5%B9%B4%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E7%AB%8B%E6%A1%88%E8%B0%83%E6%9F%A5%E6%AC%A1%E6%95%B0%22%2C%22indexProperties%22%3A%5B%22%E8%B5%B7%E5%A7%8B%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020231218%22%2C%22%E6%88%AA%E6%AD%A2%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%2020251215%22%5D%2C%22dateUnit%22%3A%22%E5%B9%B4%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E8%B5%B7%E5%A7%8B%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220231218%22%2C%22%E6%88%AA%E6%AD%A2%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251215%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%2B%E5%8C%BA%E9%97%B4%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%95%B4%E5%9E%8B%E6%95%B0%E5%80%BC%28%E6%AC%A1%29%22%2C%22sonSize%22%3A0%7D%5D&codelist=&indexnamelimit=&logid=7cd763f5a386882cfb1f39b40382ecbb&ret=json_all&sessionid=7cd763f5a386882cfb1f39b40382ecbb&source=Ths_iwencai_Xuangu&date_range%5B0%5D=20231218&date_range%5B1%5D=20251215&iwc_token=0ac99dc417658093634558902&urp_use_sort=1&user_id=Ths_iwencai_Xuangu_go8ew34uqq340dbjhh6xnv2psf74gzhu&uuids%5B0%5D=24087&query_type=stock&comp_id=6836372&business_cat=soniu&uuid=24087"
+                                            }
+                                        },
+                                        "display": [],
+                                        "render": {
+                                            "leftNum": "2",
+                                            "merge": {
+                                                "股票简称": {
+                                                    "keys": [
+                                                        "股票代码"
+                                                    ],
+                                                    "title": "股票"
+                                                }
+                                            },
+                                            "exclude": [
+                                                "股票代码"
+                                            ]
+                                        }
+                                    },
+                                    "uuid": "990d4e73b94147348243fe59e2289a46",
+                                    "ori_index": 1,
+                                    "cid": 6836372
+                                }
+                            ],
+                            "status_code": "0",
+                            "request_params": "trace_debug=0&business=1&source_type=ths_company&sessionid=7cd763f5a386882cfb1f39b40382ecbb&source=Ths_iwencai_Xuangu&query_type=stock&userid=Ths_iwencai_Xuangu_go8ew34uqq340dbjhh6xnv2psf74gzhu&qid=7cd763f5a386882cfb1f39b40382ecbb&condition=%5B%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22chunkedResult%22%3A%2220251210%E6%B6%A8%E5%B9%85%3E8%25%2C_%26_20251210%E8%82%A1%E4%BB%B7%E5%88%9B188%E6%97%A5%E6%96%B0%E9%AB%98%2C_%26_20251211%E6%B6%A8%E8%B7%8C%E5%B9%85%E5%A4%A7%E4%BA%8E-3%25%E4%B8%94%3C3%25%2C_%26_20251211%E6%9C%80%E9%AB%98%E4%BB%B7%3E20251210%E6%9C%80%E9%AB%98%E4%BB%B7%2C_%26_20251212%E5%BC%80%E7%9B%98%E4%BB%B7%3E20251211%E5%BD%93%E6%97%A5%E5%9D%87%E4%BB%B7%2C_%26_20251212%E5%BC%80%E7%9B%98%E6%B6%A8%E5%B9%85%3C3%25%E4%B8%94%3E-5%25%2C_%26_%E9%9D%9Est%2C_%26_%E9%9D%9E%E6%96%B0%E8%82%A1%2C_%26_%E9%9D%9E%E5%8C%97%E4%BA%A4+_%26_%E6%89%80%2C_%26_%E8%BF%91%E4%BA%8C%E5%B9%B4%E6%9C%AA%E8%A2%AB%E7%AB%8B%E6%A1%88%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A28%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251210%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251210%22%2C%22%280.08%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251210%22%2C%22%28%22%3A%220.08%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8810%E6%97%A5%E7%9A%84%E6%B6%A8%E8%B7%8C%E5%B9%85%3E8%25%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%25%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A26%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22%E5%88%9B%E6%96%B0%E9%AB%98%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%5B%E8%B5%B7%E5%A7%8B%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20250307%2C%E6%88%AA%E6%AD%A2%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251210%5D%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8810%E6%97%A5%E7%9A%84%E6%9C%80%E9%AB%98%E4%BB%B7%3A%E5%90%8E%E5%A4%8D%E6%9D%83%E5%88%9B188%E6%97%A5%E6%96%B0%E9%AB%98%22%2C%22sonSize%22%3A1%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251210%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%9C%80%E9%AB%98%E4%BB%B7%3A%E5%90%8E%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22n%E6%97%A5+188%E6%97%A5%22%2C%22%E5%91%A8%E6%9C%9F%E9%95%BF%E5%BA%A6+1%22%2C%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251210%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251210%22%2C%22n%E6%97%A5%22%3A%22188%E6%97%A5%22%2C%22%E5%91%A8%E6%9C%9F%E9%95%BF%E5%BA%A6%22%3A%221%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%85%83%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A23%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8811%E6%97%A5%E7%9A%84%E6%B6%A8%E8%B7%8C%E5%B9%85%3E-3%25%E4%B8%942025%E5%B9%B412%E6%9C%8811%E6%97%A5%E7%9A%84%E6%B6%A8%E8%B7%8C%E5%B9%85%3C3%25%22%2C%22sonSize%22%3A2%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251211%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251211%22%2C%22%28-0.03%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251211%22%2C%22%28%22%3A%22-0.03%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%25%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22dateText%22%3A%2220251211%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251211%22%2C%22%3C0.03%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251211%22%2C%22%3C%22%3A%220.03%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%25%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A19%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22-%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%280%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8811%E6%97%A5%E7%9A%84%E6%9C%80%E9%AB%98%E4%BB%B7%3E2025%E5%B9%B412%E6%9C%8810%E6%97%A5%E7%9A%84%E6%9C%80%E9%AB%98%E4%BB%B7%22%2C%22sonSize%22%3A2%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251211%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%9C%80%E9%AB%98%E4%BB%B7%3A%E4%B8%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251211%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251211%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%85%83%7C%E6%B8%AF%E5%85%83%7C%E7%BE%8E%E5%85%83%7C%E8%8B%B1%E9%95%91%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22dateText%22%3A%2220251210%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E6%9C%80%E9%AB%98%E4%BB%B7%3A%E4%B8%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251210%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251210%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%85%83%7C%E6%B8%AF%E5%85%83%7C%E7%BE%8E%E5%85%83%7C%E8%8B%B1%E9%95%91%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A15%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22-%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%280%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8812%E6%97%A5%E7%9A%84%E5%BC%80%E7%9B%98%E4%BB%B7%3E2025%E5%B9%B412%E6%9C%8811%E6%97%A5%E7%9A%84avl%22%2C%22sonSize%22%3A2%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251212%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E5%BC%80%E7%9B%98%E4%BB%B7%3A%E4%B8%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251212%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251212%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%85%83%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22dateText%22%3A%2220251211%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22avl%22%2C%22indexProperties%22%3A%5B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251211%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22tech%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251211%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%85%83%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A11%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22uiText%22%3A%222025%E5%B9%B412%E6%9C%8812%E6%97%A509%E7%82%B925%E5%88%86%E7%9A%84%E6%B6%A8%E8%B7%8C%E5%B9%85%3C3%25%E4%B8%942025%E5%B9%B412%E6%9C%8812%E6%97%A509%E7%82%B925%E5%88%86%E7%9A%84%E6%B6%A8%E8%B7%8C%E5%B9%85%3E-5%25%22%2C%22sonSize%22%3A2%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%2220251212%E5%BC%80%E7%9B%98%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E5%88%86%E6%97%B6%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E5%8C%BA%E9%97%B4%E5%81%8F%E7%A7%BB+%5B0%2C0%5D%22%2C%22%E4%BA%A4%E6%98%93%E6%97%B6%E9%97%B4+09%3A25%22%2C%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251212%22%2C%22%3C0.03%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251212%22%2C%22%E5%8C%BA%E9%97%B4%E5%81%8F%E7%A7%BB%22%3A%22%5B0%2C0%5D%22%2C%22%E4%BA%A4%E6%98%93%E6%97%B6%E9%97%B4%22%3A%2209%3A25%22%2C%22%3C%22%3A%220.03%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%25%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22dateText%22%3A%2220251212%E5%BC%80%E7%9B%98%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E5%88%86%E6%97%B6%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22indexProperties%22%3A%5B%22%E5%8C%BA%E9%97%B4%E5%81%8F%E7%A7%BB+%5B0%2C0%5D%22%2C%22%E4%BA%A4%E6%98%93%E6%97%B6%E9%97%B4+09%3A25%22%2C%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251212%22%2C%22%28-0.05%22%5D%2C%22dateUnit%22%3A%22%E6%97%A5%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251212%22%2C%22%E5%8C%BA%E9%97%B4%E5%81%8F%E7%A7%BB%22%3A%22%5B0%2C0%5D%22%2C%22%E4%BA%A4%E6%98%93%E6%97%B6%E9%97%B4%22%3A%2209%3A25%22%2C%22%28%22%3A%22-0.05%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E5%80%BC%28%25%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A7%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%22%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E8%82%A1%E7%A5%A8%E7%AE%80%E7%A7%B0%22%2C%22indexProperties%22%3A%5B%22%E4%B8%8D%E5%8C%85%E5%90%ABst%22%5D%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%B8%8D%E5%8C%85%E5%90%AB%22%3A%22st%22%7D%2C%22reportType%22%3A%22null%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22uiText%22%3A%22%E8%82%A1%E7%A5%A8%E7%AE%80%E7%A7%B0%E4%B8%8D%E5%8C%85%E5%90%ABst%22%2C%22valueType%22%3A%22_%E8%82%A1%E7%A5%A8%E7%AE%80%E7%A7%B0%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A5%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%22%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E4%B8%8A%E5%B8%82%E4%BA%A4%E6%98%93%E6%97%A5%E5%A4%A9%E6%95%B0%22%2C%22indexProperties%22%3A%5B%22nodate+1%22%2C%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251215%22%2C%22%285%22%5D%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251215%22%2C%22%28%22%3A%225%22%2C%22nodate%22%3A%221%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22uiText%22%3A%22%E4%B8%8A%E5%B8%82%E4%BA%A4%E6%98%93%E6%97%A5%E5%A4%A9%E6%95%B0%3E5%22%2C%22valueType%22%3A%22_%E6%95%B4%E5%9E%8B%E6%95%B0%E5%80%BC%28%E5%A4%A9%29%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22and%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22sonSize%22%3A3%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%22%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E8%82%A1%E7%A5%A8%E5%B8%82%E5%9C%BA%E7%B1%BB%E5%9E%8B%22%2C%22indexProperties%22%3A%5B%22%E4%B8%8D%E5%8C%85%E5%90%AB%E5%8C%97%E8%AF%81a%E8%82%A1%22%5D%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E4%B8%8D%E5%8C%85%E5%90%AB%22%3A%22%E5%8C%97%E8%AF%81a%E8%82%A1%22%7D%2C%22reportType%22%3A%22null%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22uiText%22%3A%22%E8%82%A1%E7%A5%A8%E5%B8%82%E5%9C%BA%E7%B1%BB%E5%9E%8B%E4%B8%8D%E5%8C%85%E5%90%AB%E5%8C%97%E4%BA%A4%22%2C%22valueType%22%3A%22_%E8%82%A1%E7%A5%A8%E5%B8%82%E5%9C%BA%E7%B1%BB%E5%9E%8B%22%2C%22sonSize%22%3A0%7D%2C%7B%22score%22%3A0%2C%22node_type%22%3A%22op%22%2C%22children%22%3A%5B%5D%2C%22opName%22%3A%22%E5%8F%96%E5%8F%8D%22%2C%22ci%22%3Afalse%2C%22opPropertiesMap%22%3A%7B%7D%2C%22opProperty%22%3A%22%22%2C%22uiText%22%3A%22%E8%BF%912%E5%B9%B4%E7%9A%84%E7%AB%8B%E6%A1%88%E8%B0%83%E6%9F%A5%E6%AC%A1%E6%95%B0%E5%8F%96%E5%8F%8D%22%2C%22sonSize%22%3A1%2C%22opPropertyMap%22%3A%7B%7D%2C%22source%22%3A%22new_parser%22%7D%2C%7B%22dateText%22%3A%22%E8%BF%912%E5%B9%B4%22%2C%22ci%22%3Afalse%2C%22indexName%22%3A%22%E7%AB%8B%E6%A1%88%E8%B0%83%E6%9F%A5%E6%AC%A1%E6%95%B0%22%2C%22indexProperties%22%3A%5B%22%E8%B5%B7%E5%A7%8B%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20231218%22%2C%22%E6%88%AA%E6%AD%A2%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F+20251215%22%5D%2C%22dateUnit%22%3A%22%E5%B9%B4%22%2C%22source%22%3A%22new_parser%22%2C%22type%22%3A%22index%22%2C%22indexPropertiesMap%22%3A%7B%22%E8%B5%B7%E5%A7%8B%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220231218%22%2C%22%E6%88%AA%E6%AD%A2%E4%BA%A4%E6%98%93%E6%97%A5%E6%9C%9F%22%3A%2220251215%22%7D%2C%22reportType%22%3A%22TRADE_DAILY%22%2C%22score%22%3A0%2C%22node_type%22%3A%22index%22%2C%22dateType%22%3A%22%2B%E5%8C%BA%E9%97%B4%22%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%2C%22valueType%22%3A%22_%E6%95%B4%E5%9E%8B%E6%95%B0%E5%80%BC%28%E6%AC%A1%29%22%2C%22sonSize%22%3A0%7D%5D&urp=%7B%22perpage%22%3A100%2C%22business%22%3A1%2C%22company%22%3A1%2C%22page%22%3A1%2C%22scene%22%3A1%7D&parse_res=%7B%22date_range%22%3A%5B%2220231218%22%2C%2220251215%22%5D%2C%22compares_ofindex%22%3A%7B%22%E4%B8%8A%E5%B8%82%E4%BA%A4%E6%98%93%E6%97%A5%E5%A4%A9%E6%95%B0%22%3A%5B%5B%22%3E%22%2C%225%22%5D%5D%2C%22%E5%88%86%E6%97%B6%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%3A%5B%5B%22%3C%22%2C%220.03%22%5D%2C%5B%22%3E%22%2C%22-0.05%22%5D%5D%2C%22%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%3A%5B%5B%22%3E%22%2C%220.08%22%5D%2C%5B%22%3E%22%2C%22-0.03%22%5D%2C%5B%22%3C%22%2C%220.03%22%5D%5D%7D%2C%22indexes%22%3A%5B%22%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22%E6%9C%80%E9%AB%98%E4%BB%B7%3A%E5%90%8E%E5%A4%8D%E6%9D%83%22%2C%22%E6%9C%80%E9%AB%98%E4%BB%B7%3A%E4%B8%8D%E5%A4%8D%E6%9D%83%22%2C%22%E5%BC%80%E7%9B%98%E4%BB%B7%3A%E4%B8%8D%E5%A4%8D%E6%9D%83%22%2C%22avl%22%2C%22%E5%88%86%E6%97%B6%E6%B6%A8%E8%B7%8C%E5%B9%85%3A%E5%89%8D%E5%A4%8D%E6%9D%83%22%2C%22%E4%B8%8A%E5%B8%82%E4%BA%A4%E6%98%93%E6%97%A5%E5%A4%A9%E6%95%B0%22%2C%22%E8%82%A1%E7%A5%A8%E5%B8%82%E5%9C%BA%E7%B1%BB%E5%9E%8B%22%2C%22%E7%AB%8B%E6%A1%88%E8%B0%83%E6%9F%A5%E6%AC%A1%E6%95%B0%22%5D%2C%22domain%22%3A%22abs_%E8%82%A1%E7%A5%A8%E9%A2%86%E5%9F%9F%22%7D&scene_val=2&w=20251210%E6%B6%A8%E5%B9%85%3E8%25%EF%BC%8C20251210%E8%82%A1%E4%BB%B7%E5%88%9B188%E6%97%A5%E6%96%B0%E9%AB%98%EF%BC%8C20251211%E6%B6%A8%E8%B7%8C%E5%B9%85%E5%A4%A7%E4%BA%8E-3%25%E4%B8%94%3C3%25%EF%BC%8C20251211%E6%9C%80%E9%AB%98%E4%BB%B7%3E20251210%E6%9C%80%E9%AB%98%E4%BB%B7%EF%BC%8C20251212%E5%BC%80%E7%9B%98%E4%BB%B7%3E20251211%E5%BD%93%E6%97%A5%E5%9D%87%E4%BB%B7%EF%BC%8C20251212%E5%BC%80%E7%9B%98%E6%B6%A8%E5%B9%85%3C3%25%E4%B8%94%3E-5%25%EF%BC%8C%E9%9D%9EST%EF%BC%8C%E9%9D%9E%E6%96%B0%E8%82%A1%EF%BC%8C%E9%9D%9E%E5%8C%97%E4%BA%A4+%E6%89%80%EF%BC%8C%E8%BF%91%E4%BA%8C%E5%B9%B4%E6%9C%AA%E8%A2%AB%E7%AB%8B%E6%A1%88&logid=7cd763f5a386882cfb1f39b40382ecbb&remove_switch=1&tag=iwencai_stock&business_cat=8&question_labels=%5B%22%E6%B6%A8%E5%B9%85%22%2C%22%E8%82%A1%E4%BB%B7%22%2C%22%E6%96%B0%E9%AB%98%22%2C%22%E6%B6%A8%E8%B7%8C%E5%B9%85%22%2C%22%E6%9C%80%E9%AB%98%E4%BB%B7%22%2C%22%E6%9C%80%E9%AB%98%E4%BB%B7%22%2C%22%E5%BC%80%E7%9B%98%E4%BB%B7%22%2C%22%E5%9D%87%E4%BB%B7%22%2C%22%E5%BC%80%E7%9B%98%22%2C%22%E6%B6%A8%E5%B9%85%22%2C%22st%22%2C%22%E6%96%B0%E8%82%A1%22%5D&entity=%5B%5D",
+                            "global": {
+                                "requestTime": "2025-12-15 22:36:03",
+                                "appModule": "Urp",
+                                "condition": "[{\"score\":0,\"node_type\":\"op\",\"chunkedResult\":\"20251210涨幅>8%,_&_20251210股价创188日新高,_&_20251211涨跌幅大于-3%且<3%,_&_20251211最高价>20251210最高价,_&_20251212开盘价>20251211当日均价,_&_20251212开盘涨幅<3%且>-5%,_&_非st,_&_非新股,_&_非北交 _&_所,_&_近二年未被立案\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":28,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251210\",\"ci\":false,\"indexName\":\"涨跌幅:前复权\",\"indexProperties\":[\"交易日期 20251210\",\"(0.08\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251210\",\"(\":\"0.08\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"uiText\":\"2025年12月10日的涨跌幅>8%\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":26,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"创新高\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"[起始交易日期 20250307,截止交易日期 20251210]\",\"uiText\":\"2025年12月10日的最高价:后复权创188日新高\",\"sonSize\":1,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251210\",\"ci\":false,\"indexName\":\"最高价:后复权\",\"indexProperties\":[\"n日 188日\",\"周期长度 1\",\"交易日期 20251210\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251210\",\"n日\":\"188日\",\"周期长度\":\"1\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":23,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"uiText\":\"2025年12月11日的涨跌幅>-3%且2025年12月11日的涨跌幅<3%\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"涨跌幅:前复权\",\"indexProperties\":[\"交易日期 20251211\",\"(-0.03\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\",\"(\":\"-0.03\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"涨跌幅:前复权\",\"indexProperties\":[\"交易日期 20251211\",\"<0.03\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\",\"<\":\"0.03\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":19,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"-\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"(0\",\"uiText\":\"2025年12月11日的最高价>2025年12月10日的最高价\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"最高价:不复权\",\"indexProperties\":[\"交易日期 20251211\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元|港元|美元|英镑)\",\"sonSize\":0},{\"dateText\":\"20251210\",\"ci\":false,\"indexName\":\"最高价:不复权\",\"indexProperties\":[\"交易日期 20251210\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251210\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元|港元|美元|英镑)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":15,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"-\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"(0\",\"uiText\":\"2025年12月12日的开盘价>2025年12月11日的avl\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251212\",\"ci\":false,\"indexName\":\"开盘价:不复权\",\"indexProperties\":[\"交易日期 20251212\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251212\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元)\",\"sonSize\":0},{\"dateText\":\"20251211\",\"ci\":false,\"indexName\":\"avl\",\"indexProperties\":[\"交易日期 20251211\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"tech\",\"indexPropertiesMap\":{\"交易日期\":\"20251211\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(元)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":11,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"uiText\":\"2025年12月12日09点25分的涨跌幅<3%且2025年12月12日09点25分的涨跌幅>-5%\",\"sonSize\":2,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"20251212开盘\",\"ci\":false,\"indexName\":\"分时涨跌幅:前复权\",\"indexProperties\":[\"区间偏移 [0,0]\",\"交易时间 09:25\",\"交易日期 20251212\",\"<0.03\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251212\",\"区间偏移\":\"[0,0]\",\"交易时间\":\"09:25\",\"<\":\"0.03\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"dateText\":\"20251212开盘\",\"ci\":false,\"indexName\":\"分时涨跌幅:前复权\",\"indexProperties\":[\"区间偏移 [0,0]\",\"交易时间 09:25\",\"交易日期 20251212\",\"(-0.05\"],\"dateUnit\":\"日\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251212\",\"区间偏移\":\"[0,0]\",\"交易时间\":\"09:25\",\"(\":\"-0.05\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"valueType\":\"_浮点型数值(%)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":7,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"\",\"ci\":false,\"indexName\":\"股票简称\",\"indexProperties\":[\"不包含st\"],\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"不包含\":\"st\"},\"reportType\":\"null\",\"score\":0,\"node_type\":\"index\",\"domain\":\"abs_股票领域\",\"uiText\":\"股票简称不包含st\",\"valueType\":\"_股票简称\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":5,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"\",\"ci\":false,\"indexName\":\"上市交易日天数\",\"indexProperties\":[\"nodate 1\",\"交易日期 20251215\",\"(5\"],\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"交易日期\":\"20251215\",\"(\":\"5\",\"nodate\":\"1\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"交易日期\",\"domain\":\"abs_股票领域\",\"uiText\":\"上市交易日天数>5\",\"valueType\":\"_整型数值(天)\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"and\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"sonSize\":3,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"\",\"ci\":false,\"indexName\":\"股票市场类型\",\"indexProperties\":[\"不包含北证a股\"],\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"不包含\":\"北证a股\"},\"reportType\":\"null\",\"score\":0,\"node_type\":\"index\",\"domain\":\"abs_股票领域\",\"uiText\":\"股票市场类型不包含北交\",\"valueType\":\"_股票市场类型\",\"sonSize\":0},{\"score\":0,\"node_type\":\"op\",\"children\":[],\"opName\":\"取反\",\"ci\":false,\"opPropertiesMap\":{},\"opProperty\":\"\",\"uiText\":\"近2年的立案调查次数取反\",\"sonSize\":1,\"opPropertyMap\":{},\"source\":\"new_parser\"},{\"dateText\":\"近2年\",\"ci\":false,\"indexName\":\"立案调查次数\",\"indexProperties\":[\"起始交易日期 20231218\",\"截止交易日期 20251215\"],\"dateUnit\":\"年\",\"source\":\"new_parser\",\"type\":\"index\",\"indexPropertiesMap\":{\"起始交易日期\":\"20231218\",\"截止交易日期\":\"20251215\"},\"reportType\":\"TRADE_DAILY\",\"score\":0,\"node_type\":\"index\",\"dateType\":\"+区间\",\"domain\":\"abs_股票领域\",\"valueType\":\"_整型数值(次)\",\"sonSize\":0}]",
+                                "appVersion": "V7",
+                                "queryType": "stock"
+                            },
+                            "page": {
+                                "layout": {
+                                    "layout_data": "[{\"uuid\":\"990d4e73b94147348243fe59e2289a46\",\"showType\":\"xuangu_tableV1\",\"children\":[]}]",
+                                    "layout_mode": "waterfall"
+                                },
+                                "cache_time": 0,
+                                "ori_id": 1582617255,
+                                "more": {
+                                    "q": "20251210涨幅>8%，20251210股价创188日新高，20251211涨跌幅大于-3%且<3%，20251211最高价>20251210最高价，20251212开盘价>20251211当日均价，20251212开盘涨幅<3%且>-5%，非ST，非新股，非北交 所，近二年未被立案",
+                                    "codes": [],
+                                    "isview": false,
+                                    "display_board": false,
+                                    "query_type": "stock"
+                                },
+                                "tag": "iwencai_stock",
+                                "ori_scene": 0,
+                                "uuids": [
+                                    24087
+                                ]
+                            },
+                            "id": -1675070699
+                        }
+                    }
+                ],
+                "sugs": [],
+                "idx": [
+                    {
+                        "pos": [
+                            0
+                        ],
+                        "type": "txt"
+                    }
+                ],
+                "lenovo": []
+            }
+        ],
+        "question": "20251210涨幅>8%，20251210股价创188日新高，20251211涨跌幅大于-3%且<3%，20251211最高价>20251210最高价，20251212开盘价>20251211当日均价，20251212开盘涨幅<3%且>-5%，非ST，非新股，非北交 所，近二年未被立案",
+        "evaluateScore": 0,
+        "user_id": "Ths_iwencai_Xuangu_go8ew34uqq340dbjhh6xnv2psf74gzhu",
+        "rewriteQuestion": "20251210涨幅>8%，20251210股价创188日新高，20251211涨跌幅大于-3%且<3%，20251211最高价>20251210最高价，20251212开盘价>20251211当日均价，20251212开盘涨幅<3%且>-5%，非ST，非新股，非北交 所，近二年未被立案",
+        "status_msg": "success",
+        "logid": "7cd763f5a386882cfb1f39b40382ecbb",
+        "logs": [],
+        "question_id": "20251215223600456196634",
+        "version": "2.0"
+    },
+    "status_msg": "ok",
+    "logid": "7cd763f5a386882cfb1f39b40382ecbb"
+}
