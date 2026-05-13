@@ -80,18 +80,6 @@ class ThsConceptHotRankService {
   ): Promise<ThsConceptHotRankResult> {
     const today = toDateStr(new Date());
     const cacheKey = `${today}_${type}`;
-    const cacheFile = path.join(this.cacheDir, `${cacheKey}.json`);
-    
-    // // 尝试从缓存读取
-    // if (fs.existsSync(cacheFile)) {
-    //   try {
-    //     const cachedData = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
-    //     logger.info(`[concept-hot-rank] 使用缓存数据: ${cacheKey}`);
-    //     return cachedData;
-    //   } catch (err) {
-    //     logger.warn(`[concept-hot-rank] 缓存读取失败: ${cacheKey}`, err);
-    //   }
-    // }
     
     try {
       const response = await axios.get(this.baseUrl, {

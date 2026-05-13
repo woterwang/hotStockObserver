@@ -9,6 +9,9 @@ router.post('/fetch', stockController.fetchData.bind(stockController));
 // 热搜股票列表
 router.get('/hot', stockController.getHotStocks.bind(stockController));
 
+// 热搜股票可用日期
+router.get('/hot/dates', stockController.getHotStockDates.bind(stockController));
+
 // 阶段统计
 router.get('/period-stats', stockController.getPeriodStats.bind(stockController));
 

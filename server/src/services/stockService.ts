@@ -65,6 +65,16 @@ export class StockService {
   }
 
   /**
+   * 获取热搜股票可用日期列表
+   */
+  async getAvailableDates() {
+    const dates = await HotStock.distinct('date') as string[];
+    return dates
+      .filter(Boolean)
+      .sort((left, right) => right.localeCompare(left));
+  }
+
+  /**
    * 计算股票在指定日期范围内的最大连续上榜天数
    * @param records 股票的上榜记录（按日期排序）
    * @param allDatesInRange 指定范围内所有有数据的日期集合

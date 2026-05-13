@@ -5,15 +5,17 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Loading, ErrorMessage, Empty, HotConceptTable, DatePicker } from '..';
-import { marketApi } from '../../services/api';
-import type { ThsConceptHotRankResult, ThsConceptHotItem } from '../../types';
+import { Loading, ErrorMessage, Empty, HotConceptTable, HotStockTable, DatePicker } from '..';
+import { marketApi, stockApi } from '../../services/api';
+import type { HotStock, ThsConceptHotRankResult, ThsConceptHotItem } from '../../types';
 
 type RankedConceptItem = ThsConceptHotItem & {
   rank: number;
   hotTag: string;
   limitUpTag: string;
 };
+
+type HistoryHotType = 'concept' | 'industry' | 'stock';
 
 /**
  * 历史概念热搜页面
@@ -22,25 +24,46 @@ const HistoryConceptPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dates, setDates] = useState<string[]>([]);
+  const [conceptDates, setConceptDates] = useState<string[]>([]);
+  const [stockDates, setStockDates] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const [conceptType, setConceptType] = useState<'concept' | 'industry'>('concept');
+  const [conceptType, setConceptType] = useState<HistoryHotType>('concept');
   const [data, setData] = useState<ThsConceptHotRankResult | null>(null);
   const [concepts, setConcepts] = useState<RankedConceptItem[]>([]);
+  const [stocks, setStocks] = useState<HotStock[]>([]);
+
+  const getDatesForType = (type: HistoryHotType) => (
+    type === 'stock' ? stockDates : conceptDates
+  );
+
+  const formatAvailableDates = (dates: string[]) => (
+    dates.map((date) => `${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}`)
+  );
 
   // 获取可用日期列表
   const fetchAvailableDates = async () => {
     try {
       setLoading(true);
-      const response = await marketApi.getHistoryConceptDates();
-      if (response.success) {
-        setDates(response.data);
-        if (response.data.length > 0) {
-          setSelectedDate(response.data[0].toString().split('_')[0]);
-        }
-      } else {
+      setError(null);
+
+      const [conceptResponse, stockResponse] = await Promise.all([
+        marketApi.getHistoryConceptDates(),
+        stockApi.getHotStockDates(),
+      ]);
+
+      if (!conceptResponse.success || !stockResponse.success) {
         setError('获取日期列表失败');
+        return;
       }
+
+      const normalizedConceptDates = conceptResponse.data.map((date) => date.toString().split('_')[0]);
+      const normalizedStockDates = stockResponse.data;
+
+      setConceptDates(normalizedConceptDates);
+      setStockDates(normalizedStockDates);
+
+      const defaultDates = normalizedConceptDates.length > 0 ? normalizedConceptDates : normalizedStockDates;
+      setSelectedDate((currentDate) => currentDate || defaultDates[0] || '');
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -55,11 +78,27 @@ const HistoryConceptPage: React.FC = () => {
     try {
       setSaving(true);
       setError(null);
+
+      if (conceptType === 'stock') {
+        const response = await stockApi.getHotStocks({ date: selectedDate });
+
+        if (response.success) {
+          setStocks(response.data);
+          setData(null);
+          setConcepts([]);
+        } else {
+          setData(null);
+          setConcepts([]);
+          setStocks([]);
+        }
+        return;
+      }
+
       const response = await marketApi.getHistoryConceptRank(selectedDate, conceptType);
 
       if (response.success) {
         setData(response.data);
-        // 添加排名字段，并处理可能为null的字段
+        setStocks([]);
         const itemsWithRank: RankedConceptItem[] = response.data.items.map((item: ThsConceptHotItem, index: number) => ({
           ...item,
           rank: index + 1,
@@ -68,14 +107,14 @@ const HistoryConceptPage: React.FC = () => {
         }));
         setConcepts(itemsWithRank);
       } else {
-        // setError(response.message || '获取数据失败');
         setData(null);
         setConcepts([]);
+        setStocks([]);
       }
     } catch (err) {
-      // setError((err as Error).message);
       setData(null);
       setConcepts([]);
+      setStocks([]);
     } finally {
       setSaving(false);
     }
@@ -85,6 +124,18 @@ const HistoryConceptPage: React.FC = () => {
   useEffect(() => {
     fetchAvailableDates();
   }, []);
+
+  useEffect(() => {
+    const availableDates = getDatesForType(conceptType);
+    if (availableDates.length === 0) {
+      setSelectedDate('');
+      return;
+    }
+
+    if (!selectedDate || !availableDates.includes(selectedDate)) {
+      setSelectedDate(availableDates[0]);
+    }
+  }, [conceptType, conceptDates, stockDates]);
 
   // 日期或类型变化时重新获取数据
   useEffect(() => {
@@ -96,7 +147,7 @@ const HistoryConceptPage: React.FC = () => {
   // 处理日期选择变化
   // 处理类型选择变化
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setConceptType(e.target.value as 'concept' | 'industry');
+    setConceptType(e.target.value as HistoryHotType);
   };
 
   // 重新加载数据
@@ -127,9 +178,7 @@ const HistoryConceptPage: React.FC = () => {
             <DatePicker
               value={ selectedDate }
               onChange={ (date) => setSelectedDate(date) }
-              availableDates={ dates.map(date =>
-                `${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}`
-              ) }
+              availableDates={ formatAvailableDates(getDatesForType(conceptType)) }
               placeholder="选择日期"
             />
           </div>
@@ -145,6 +194,7 @@ const HistoryConceptPage: React.FC = () => {
           >
             <option value="concept">概念板块</option>
             <option value="industry">行业板块</option>
+            <option value="stock">股票</option>
           </select>
         </div>
 
@@ -173,7 +223,14 @@ const HistoryConceptPage: React.FC = () => {
       ) }
 
       {/* 数据展示 */ }
-      { !saving && concepts.length > 0 ? (
+      { !saving && conceptType === 'stock' && stocks.length > 0 ? (
+        <div className="overflow-hidden">
+          <HotStockTable stocks={ stocks } showRank={ true } />
+          <div className="mt-4 text-sm text-gray-500 text-right">
+            数据来源: 热搜股票数据库 | 查询日期: { selectedDate }
+          </div>
+        </div>
+      ) : !saving && conceptType !== 'stock' && concepts.length > 0 ? (
         <div className="overflow-hidden">
           <HotConceptTable concepts={ concepts } showRank={ true } />
           <div className="mt-4 text-sm text-gray-500 text-right">

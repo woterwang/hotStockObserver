@@ -83,6 +83,11 @@ export const stockApi = {
     return api.get('/stocks/hot', { params });
   },
 
+  // 获取热搜股票可用日期
+  getHotStockDates: (): Promise<ApiResponse<string[]>> => {
+    return api.get('/stocks/hot/dates');
+  },
+
   // 获取阶段统计
   getPeriodStats: (days: number = 7): Promise<ApiResponse<PeriodStats[]>> => {
     return api.get('/stocks/period-stats', { params: { days } });

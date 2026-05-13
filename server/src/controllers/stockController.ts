@@ -117,6 +117,24 @@ export class StockController {
   }
 
   /**
+   * 获取热搜股票可用日期列表
+   * GET /api/stocks/hot/dates
+   */
+  async getHotStockDates(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dates = await stockService.getAvailableDates();
+
+      res.json({
+        success: true,
+        data: dates,
+        total: dates.length,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * 获取阶段统计
    * GET /api/stocks/period-stats
    */
