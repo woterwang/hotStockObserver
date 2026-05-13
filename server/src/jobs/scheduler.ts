@@ -58,6 +58,9 @@ export class JobScheduler {
   // 晚间任务
   private dailyConceptUpdateJob: cron.ScheduledTask | null = null;
 
+  // 自动推送任务
+  private autoPushJob: cron.ScheduledTask | null = null;
+
   /**
    * 启动所有定时任务
    */
@@ -116,6 +119,11 @@ export class JobScheduler {
     if (this.dailyConceptUpdateJob) {
       this.dailyConceptUpdateJob.stop();
       this.dailyConceptUpdateJob = null;
+    }
+
+    if (this.autoPushJob) {
+      this.autoPushJob.stop();
+      this.autoPushJob = null;
     }
 
     logger.info('定时任务已停止');
@@ -493,8 +501,8 @@ export class JobScheduler {
  * 时间: 每天凌晨5:18之后
  */
   private startDailyKlineUpdateJob () {
-    // 在1:00执行，将各项收盘后任务串行执行
-    const cronExpression = '18 5 * * *';
+    // 在5:18执行
+    const cronExpression = '18 5 * * 1-5';
     cron.schedule(cronExpression, async () => {
       await updateCodeKline()
     })
@@ -506,11 +514,20 @@ export class JobScheduler {
    * 时间: 每天凌晨1:00执行
    */
   private startAutoPushJob () {
-    // 在1:00执行，将各项收盘后任务串行执行
-    const cronExpression = '0 1 * * *';
-    cron.schedule(cronExpression, async () => {
-      await autoPush()
+    const cronExpression = '0 1 * * 1-5';
+    this.autoPushJob = cron.schedule(cronExpression, async () => {
+      try {
+        logger.info('开始执行自动推送到GitHub任务');
+        await autoPush();
+        logger.info('自动推送到GitHub任务执行完成');
+      } catch (error) {
+        logger.error(`自动推送到GitHub任务失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
     })
+
+    logger.info(`自动推送到GitHub任务已配置，Cron表达式: ${cronExpression}`);
   }
 }
 
