@@ -1,0 +1,164 @@
+{
+  "startDate": "20260501",
+  "endDate": "20260518",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 0,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 4,
+    "marketPanicThreshold": 0,
+    "maxBuyCount": 1
+  },
+  "totalTrades": 6,
+  "winTrades": 3,
+  "lossTrades": 3,
+  "winRate": 50,
+  "totalProfitAmount": 2565.97,
+  "totalProfitPercent": 0.86,
+  "avgProfitPercent": 0.85,
+  "avgWinPercent": 6.71,
+  "avgLossPercent": -5,
+  "profitLossRatio": 1.34,
+  "totalInvested": 300000,
+  "maxDrawdown": 7500,
+  "maxDrawdownPercent": 74.51,
+  "maxProfit": 15.64,
+  "maxLoss": -5,
+  "maxConsecutiveWins": 3,
+  "maxConsecutiveLosses": 3,
+  "avgHoldDays": 3,
+  "equityCurve": [
+    {
+      "date": "20260511",
+      "equity": 7820.96
+    },
+    {
+      "date": "20260513",
+      "equity": 9464.880000000001
+    },
+    {
+      "date": "20260514",
+      "equity": 10065.970000000001
+    },
+    {
+      "date": "20260513",
+      "equity": 7565.970000000001
+    },
+    {
+      "date": "20260515",
+      "equity": 5065.970000000001
+    },
+    {
+      "date": "20260518",
+      "equity": 2565.970000000001
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "301286",
+      "stockName": "侨源股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260506",
+      "buyPrice": 51.72,
+      "sellDate": "20260511",
+      "sellPrice": 59.81,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 15.64,
+      "profitAmount": 7820.96,
+      "exitReason": "max_days",
+      "buySignalScore": 75,
+      "marketMood": 75
+    },
+    {
+      "stockCode": "300668",
+      "stockName": "杰恩股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260508",
+      "buyPrice": 64.48,
+      "sellDate": "20260513",
+      "sellPrice": 66.6,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 3.29,
+      "profitAmount": 1643.92,
+      "exitReason": "max_days",
+      "buySignalScore": 83,
+      "marketMood": 70
+    },
+    {
+      "stockCode": "300507",
+      "stockName": "苏奥传感",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260511",
+      "buyPrice": 9.15,
+      "sellDate": "20260514",
+      "sellPrice": 9.26,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 1.2,
+      "profitAmount": 601.09,
+      "exitReason": "max_days",
+      "buySignalScore": 74,
+      "marketMood": 72
+    },
+    {
+      "stockCode": "300788",
+      "stockName": "中信出版",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260512",
+      "buyPrice": 37.42,
+      "sellDate": "20260513",
+      "sellPrice": 35.549,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 81,
+      "marketMood": 48
+    },
+    {
+      "stockCode": "300179",
+      "stockName": "四方达",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260514",
+      "buyPrice": 29.81,
+      "sellDate": "20260515",
+      "sellPrice": 28.319499999999998,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 79,
+      "marketMood": 45
+    },
+    {
+      "stockCode": "300757",
+      "stockName": "罗博特科",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260515",
+      "buyPrice": 605,
+      "sellDate": "20260518",
+      "sellPrice": 574.75,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 71,
+      "marketMood": 45
+    }
+  ]
+}
