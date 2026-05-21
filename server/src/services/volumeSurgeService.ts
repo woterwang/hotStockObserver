@@ -1,3 +1,4 @@
+import { groupService } from '../services/groupService';
 import { logger } from '../utils';
 import { VolumeSurge } from '../models';
 import { getToday, formatDate } from '../utils/dateUtils';
@@ -12,8 +13,8 @@ import { marketMoodService } from './marketMoodService';
 import { tradingCalendarService } from './tradingCalendarService';
 
 export class VolumeSurgeService {
-  
-  private getHexinV(): string {
+
+  private getHexinV (): string {
     try {
       return thsUtils.update();
     } catch (error) {
@@ -25,14 +26,14 @@ export class VolumeSurgeService {
   /**
    * 延迟函数
    */
-  private delay(ms: number): Promise<void> {
+  private delay (ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
    * 随机延迟（8-12秒），模拟真人操作
    */
-  private async randomDelay(): Promise<void> {
+  private async randomDelay (): Promise<void> {
     const minDelay = 8000;
     const maxDelay = 12000;
     const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
@@ -43,10 +44,10 @@ export class VolumeSurgeService {
   /**
    * 通用问财查询
    */
-  private async queryWencai(question: string): Promise<any[]> {
+  private async queryWencai (question: string): Promise<any[]> {
     const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
     const hexinV = this.getHexinV();
-    
+
     const data: Record<string, string | number> = {
       question,
       perpage: 200,
@@ -73,19 +74,19 @@ export class VolumeSurgeService {
 
       // 问财接口响应结构可能变化，需要遍历 components 查找数据
       const components = response.data?.data?.answer?.[0]?.txt?.[0]?.content?.components || [];
-      
+
       for (const comp of components) {
         if (comp?.data?.datas && Array.isArray(comp.data.datas) && comp.data.datas.length > 0) {
           logger.debug(`问财返回 ${comp.data.datas.length} 条数据 (${comp.show_type})`);
           return comp.data.datas;
         }
       }
-      
+
       // 兼容旧结构
       if (response.data?.data?.answer?.[0]?.txt?.[0]?.content?.components?.[0]?.data?.datas) {
         return response.data.data.answer[0].txt[0].content.components[0].data.datas;
       }
-      
+
       logger.warn('问财未返回有效数据');
       return [];
     } catch (error) {
@@ -97,7 +98,7 @@ export class VolumeSurgeService {
   /**
    * 获取上证指数是否站上20日均线
    */
-  private async checkIndexAboveMa20(dateStr: string): Promise<boolean> {
+  private async checkIndexAboveMa20 (dateStr: string): Promise<boolean> {
     try {
       const question = `上证指数${dateStr}收盘价>${dateStr} 20日均线`;
       const result = await this.queryWencai(question);
@@ -113,22 +114,22 @@ export class VolumeSurgeService {
    * 合并原 getFirstBoardList 和 getContinuousBoardInfo，减少API调用
    * @returns { firstBoardSet: 首板股票集合, continuousBoardMap: 连板股票->连板数 }
    */
-  private async getLimitUpBoardInfo(dateStr: string): Promise<{
+  private async getLimitUpBoardInfo (dateStr: string): Promise<{
     firstBoardSet: Set<string>;
     continuousBoardMap: Map<string, number>;
   }> {
     const firstBoardSet = new Set<string>();
     const continuousBoardMap = new Map<string, number>();
-    
+
     try {
       // 一次查询获取所有涨停股及连板天数
       const question = `${dateStr}涨停，非ST，非北交所，${dateStr}连续涨停天数`;
       const result = await this.queryWencai(question);
-      
+
       result.forEach((item: any) => {
         const code = String(item.code || item['股票代码'] || '').replace(/[^0-9]/g, '');
         if (code.length !== 6) return;
-        
+
         // 尝试从字段中获取连板天数
         let boardCount = 1; // 默认1天（首板）
         for (const key in item) {
@@ -139,7 +140,7 @@ export class VolumeSurgeService {
             }
           }
         }
-        
+
         if (boardCount === 1) {
           // 首板
           firstBoardSet.add(code);
@@ -148,16 +149,16 @@ export class VolumeSurgeService {
           continuousBoardMap.set(code, boardCount);
         }
       });
-      
+
       logger.info(`[涨停检测] ${dateStr} 首板数量: ${firstBoardSet.size}, 连板数量: ${continuousBoardMap.size}`);
     } catch (error) {
       logger.warn(`获取涨停信息失败: ${(error as Error).message}`);
     }
-    
+
     return { firstBoardSet, continuousBoardMap };
   }
 
-  private async fetchFromWencai(dateStr: string): Promise<any[]> {
+  private async fetchFromWencai (dateStr: string): Promise<any[]> {
     // ========================================
     // 🚀 "强势资金突破"策略 - 优化版
     // ========================================
@@ -179,7 +180,7 @@ export class VolumeSurgeService {
     // 注：其他条件（20日新高、量能放大、底部抬升等）
     //     在代码中通过评分体系处理，避免过滤掉太多股票
     // ========================================
-    
+
     const question = [
       // 核心条件（宽松版，确保有数据）
       `${dateStr}涨幅>7%`,
@@ -200,31 +201,31 @@ export class VolumeSurgeService {
       `${dateStr}下影线`,
       `${dateStr}成交量/前5日平均成交量`,
     ].join('，');
-    
+
     logger.info(`[问财查询] ${question}`);
     return this.queryWencai(question);
   }
 
-  async scanAndSave(dateStr?: string): Promise<number> {
+  async scanAndSave (dateStr?: string): Promise<number> {
     const targetDate = dateStr || formatDate(getToday(), 'YYYYMMDD');
-    
+
     // 🔒 检查目标日期是否为交易日，防止在非交易日存储错误数据
     if (!tradingCalendarService.isTradingDay(targetDate)) {
       logger.warn(`[VolumeSurge] ${targetDate} 不是交易日，跳过扫描`);
       return 0;
     }
-    
+
     logger.info(`开始扫描放量大涨股票: ${targetDate}`);
-    
+
     // ========================================
     // 🔥 进阶优化：获取市场环境数据
     // ========================================
-    
+
     // 1. 获取市场情绪数据（优先从 marketMoodService 获取）
     let marketSentimentScore = 50;
     let marketLimitUpCount = 0;
     let marketAdvice = 'normal';
-    
+
     try {
       // 优先从龙虎榜市场情绪缓存获取 strong 值
       const moodData = marketMoodService.getMoodData(targetDate);
@@ -258,21 +259,21 @@ export class VolumeSurgeService {
     } catch (error) {
       logger.warn(`获取市场情绪失败: ${(error as Error).message}`);
     }
-    
+
     // 2. 检查上证指数是否站上20日均线
     const indexAboveMa20 = await this.checkIndexAboveMa20(targetDate);
     logger.info(`[大盘趋势] 上证指数${indexAboveMa20 ? '站上' : '跌破'}20日均线`);
-    
+
     // 3. 获取涨停股信息（首板+连板，合并为一次API调用）
     await this.randomDelay();
     const { firstBoardSet, continuousBoardMap } = await this.getLimitUpBoardInfo(targetDate);
     logger.info(`[涨停检测] 首板数量: ${firstBoardSet.size}, 连板数量: ${continuousBoardMap.size}`);
-    
+
     // 获取选股数据
     await this.randomDelay();
     const rawData = await this.fetchFromWencai(targetDate);
     logger.info(`获取到 ${rawData.length} 条原始数据`);
-    
+
     if (rawData.length === 0) {
       return 0;
     }
@@ -285,14 +286,14 @@ export class VolumeSurgeService {
         const stockCode = item.code || item['股票代码'];
         const stockName = item['股票简称'] || item['名称'];
         const price = parseFloat(item['最新价'] || 0);
-        
+
         let changePercent = 0;
         let volumeRatio = 0;
         let turnover = 0;
         let turnoverRate = 0;
         let industry = item['所属行业'] || '';
         let concept = item['所属概念'] || '';
-        
+
         // 新增字段
         let amplitude = 0;        // 振幅
         let upperShadow = 0;      // 上影线
@@ -326,7 +327,7 @@ export class VolumeSurgeService {
             limitUpReason = item[key] || '';
           }
         }
-        
+
         // ========================================
         // 🔥 判断是否涨停、首板、连板
         // ========================================
@@ -336,14 +337,14 @@ export class VolumeSurgeService {
         const isLimitUp = changePercent >= limitThreshold;
         const isFirstBoard = firstBoardSet.has(codeStr);
         const continuousBoardCount = continuousBoardMap.get(codeStr) || (isFirstBoard ? 1 : 0);
-        
+
         // ========================================
         // 🚀 策略评分逻辑（满分100分 + 额外加分）
         // ========================================
-        
+
         // ---- 基础评分 (0-100分) ----
         let baseScore = 0;
-        
+
         // 1. 涨幅得分 (0-20分)：7%-10% 得满分，超过10%适当扣分（追高风险）
         if (changePercent >= 7 && changePercent <= 10) {
           baseScore += 20;
@@ -352,7 +353,7 @@ export class VolumeSurgeService {
         } else if (changePercent > 15) {
           baseScore += 10;  // 涨幅过大，追高风险增加
         }
-        
+
         // 2. 换手率得分 (0-20分)：8%-15% 最佳
         if (turnoverRate >= 8 && turnoverRate <= 15) {
           baseScore += 20;
@@ -363,7 +364,7 @@ export class VolumeSurgeService {
         } else if (turnoverRate > 25) {
           baseScore += 5;  // 换手率过高，筹码分散
         }
-        
+
         // 3. 上影线得分 (0-15分)：越小越好
         if (upperShadow <= 1) {
           baseScore += 15;
@@ -372,7 +373,7 @@ export class VolumeSurgeService {
         } else if (upperShadow <= 3) {
           baseScore += 8;
         }
-        
+
         // 4. 下影线得分 (0-15分)：越小越好（说明没有抛压）
         if (lowerShadow <= 1) {
           baseScore += 15;
@@ -381,7 +382,7 @@ export class VolumeSurgeService {
         } else if (lowerShadow <= 3) {
           baseScore += 5;
         }
-        
+
         // 5. 振幅得分 (0-15分)：振幅适中最佳
         if (amplitude >= 8 && amplitude <= 12) {
           baseScore += 15;  // 振幅适中，走势健康
@@ -392,7 +393,7 @@ export class VolumeSurgeService {
         } else {
           baseScore += 3;  // 振幅过大，日内震荡剧烈
         }
-        
+
         // 6. 量能放大得分 (0-15分)
         if (volumeRatioTo5Day >= 2 && volumeRatioTo5Day <= 4) {
           baseScore += 15;  // 放量2-4倍最佳
@@ -403,10 +404,10 @@ export class VolumeSurgeService {
         } else if (volumeRatioTo5Day >= 1.5) {
           baseScore += 10;
         }
-        
+
         // ---- 市场环境加分 (-20 ~ +15分) ----
         let marketBonus = 0;
-        
+
         // 涨停家数加分
         if (marketLimitUpCount >= 100) {
           marketBonus += 10;  // 涨停过百，市场情绪火爆
@@ -415,17 +416,17 @@ export class VolumeSurgeService {
         } else if (marketLimitUpCount < 30) {
           marketBonus -= 10;  // 情绪冰点，需要谨慎
         }
-        
+
         // 大盘趋势加分
         if (indexAboveMa20) {
           marketBonus += 5;   // 大盘趋势向上
         } else {
           marketBonus -= 10;  // 大盘趋势向下，风险增加
         }
-        
+
         // ---- 首板/连板加分 (0 ~ +15分) ----
         let boardBonus = 0;
-        
+
         if (isFirstBoard) {
           boardBonus += 15;   // 首板最安全，启动点
         } else if (continuousBoardCount === 2) {
@@ -433,10 +434,10 @@ export class VolumeSurgeService {
         } else if (continuousBoardCount >= 3) {
           boardBonus += 5;    // 3连板及以上，追高风险增加
         }
-        
+
         // ---- 计算最终评分 ----
         const strategyScore = Math.max(0, Math.min(130, baseScore + marketBonus + boardBonus));
-        
+
         // ---- 风险等级判定 ----
         let riskLevel: 'low' | 'medium' | 'high' = 'medium';
         if (strategyScore >= 85 && indexAboveMa20 && marketLimitUpCount >= 60) {
@@ -491,11 +492,25 @@ export class VolumeSurgeService {
         logger.error(`保存放量大涨数据失败: ${(err as Error).message}`);
       }
     }
-    
+    try {
+      // 查询当天所有放量大涨股票所有备选股票，按照评分倒序排列并添加到当天的分组中
+      const allSignals = await VolumeSurge.find({ date: targetDate }).sort({ strategyScore: -1, changePercent: -1 });
+      logger.info(`[放量大涨] 今日放量大涨股票: ${allSignals.length} 只`);
+      // 获取所有股票代码
+      const stockCodes = allSignals.map(s => s.stockCode);
+      logger.info(`[放量大涨] 今日备选股票: ${stockCodes.join(', ')}`);
+      // 创建备选股票分组
+      const groupId = await groupService.createGroup(`${targetDate}-备选`);
+      logger.info(`[放量大涨] 备选股票分组ID: ${groupId}`);
+      groupService.addStocksToGroup(groupId, stockCodes);
+    } catch (err) {
+      logger.error(`[放量大涨] 保存备选股票失败: ${(err as Error).message}`);
+    }
+
     return count;
   }
 
-  async getList(dateStr: string): Promise<any[]> {
+  async getList (dateStr: string): Promise<any[]> {
     // 直接使用字符串日期查询
     return VolumeSurge.find({ date: dateStr }).sort({ strategyScore: -1, changePercent: -1 });
   }
@@ -504,8 +519,8 @@ export class VolumeSurgeService {
    * 获取高质量信号（评分>=70分）
    * 这些是策略认为最优质的突破标的
    */
-  async getHighQualitySignals(dateStr: string): Promise<any[]> {
-    return VolumeSurge.find({ 
+  async getHighQualitySignals (dateStr: string): Promise<any[]> {
+    return VolumeSurge.find({
       date: dateStr,
       strategyScore: { $gte: 70 }  // 评分>=70分
     }).sort({ strategyScore: -1 });
@@ -514,7 +529,7 @@ export class VolumeSurgeService {
   /**
    * 获取统计数据（增强版）
    */
-  async getStats(dateStr: string): Promise<{
+  async getStats (dateStr: string): Promise<{
     total: number;
     highQualityCount: number;
     lowRiskCount: number;
@@ -532,7 +547,7 @@ export class VolumeSurgeService {
     };
   }> {
     const all = await VolumeSurge.find({ date: dateStr });
-    
+
     if (all.length === 0) {
       return {
         total: 0,
@@ -552,7 +567,7 @@ export class VolumeSurgeService {
         },
       };
     }
-    
+
     const scores = all.map(s => s.strategyScore || 0);
     const highQualityCount = all.filter(s => (s.strategyScore || 0) >= 70).length;
     const lowRiskCount = all.filter(s => s.riskLevel === 'low').length;
@@ -560,17 +575,17 @@ export class VolumeSurgeService {
     const avgScore = scores.reduce((sum, s) => sum + s, 0) / scores.length;
     const maxScore = Math.max(...scores);
     const minScore = Math.min(...scores);
-    
+
     // 风险等级分布
     const riskDistribution = {
       low: all.filter(s => s.riskLevel === 'low').length,
       medium: all.filter(s => s.riskLevel === 'medium').length,
       high: all.filter(s => s.riskLevel === 'high').length,
     };
-    
+
     // 获取第一条记录（用于获取 indexAboveMa20 等字段）
     const first = all[0];
-    
+
     // 获取市场信息（优先从 marketMoodService 获取，降级使用数据库记录）
     const moodData = marketMoodService.getMoodData(dateStr);
     let marketInfo;
@@ -601,19 +616,19 @@ export class VolumeSurgeService {
         advice: first.marketAdvice || 'normal',
       };
     }
-    
+
     // 按行业分组统计
     const industryMap = new Map<string, number>();
     all.forEach(s => {
       const industry = s.industry || '未知';
       industryMap.set(industry, (industryMap.get(industry) || 0) + 1);
     });
-    
+
     const industryDistribution = Array.from(industryMap.entries())
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
-    
+
     return {
       total: all.length,
       highQualityCount,
@@ -631,8 +646,8 @@ export class VolumeSurgeService {
   /**
    * 获取首板股票列表
    */
-  async getFirstBoardStocks(dateStr: string): Promise<any[]> {
-    return VolumeSurge.find({ 
+  async getFirstBoardStocks (dateStr: string): Promise<any[]> {
+    return VolumeSurge.find({
       date: dateStr,
       isFirstBoard: true
     }).sort({ strategyScore: -1 });
@@ -641,14 +656,14 @@ export class VolumeSurgeService {
   /**
    * 获取低风险股票列表
    */
-  async getLowRiskStocks(dateStr: string): Promise<any[]> {
-    return VolumeSurge.find({ 
+  async getLowRiskStocks (dateStr: string): Promise<any[]> {
+    return VolumeSurge.find({
       date: dateStr,
       riskLevel: 'low'
     }).sort({ strategyScore: -1 });
   }
 
-  async getHistory(days: number = 30): Promise<any[]> {
+  async getHistory (days: number = 30): Promise<any[]> {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
@@ -656,7 +671,7 @@ export class VolumeSurgeService {
     const result = await VolumeSurge.aggregate([
       {
         $match: {
-          date: { $gte: formatDate(startDate,'YYYYMMDD'), $lte: formatDate(endDate,'YYYYMMDD') }
+          date: { $gte: formatDate(startDate, 'YYYYMMDD'), $lte: formatDate(endDate, 'YYYYMMDD') }
         }
       },
       {
@@ -678,14 +693,14 @@ export class VolumeSurgeService {
     }));
   }
 
-  async getAvailableDates(): Promise<string[]> {
+  async getAvailableDates (): Promise<string[]> {
     const result = await VolumeSurge.distinct('date') as string[];
     return result
       .map((d: string) => d.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3'))
       .sort((a, b) => b.localeCompare(a));
   }
 
-  async clearAll(): Promise<void> {
+  async clearAll (): Promise<void> {
     await VolumeSurge.deleteMany({});
   }
 }
