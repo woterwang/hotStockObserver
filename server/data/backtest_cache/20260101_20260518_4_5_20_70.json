@@ -13,17 +13,17 @@
     "marketPanicThreshold": 0,
     "maxBuyCount": 5
   },
-  "totalTrades": 134,
+  "totalTrades": 135,
   "winTrades": 62,
-  "lossTrades": 71,
-  "winRate": 46.27,
-  "totalProfitAmount": 128275.66,
-  "totalProfitPercent": 1.91,
-  "avgProfitPercent": 1.91,
+  "lossTrades": 72,
+  "winRate": 45.93,
+  "totalProfitAmount": 125775.66,
+  "totalProfitPercent": 1.86,
+  "avgProfitPercent": 1.86,
   "avgWinPercent": 9.11,
-  "avgLossPercent": -4.34,
-  "profitLossRatio": 2.1,
-  "totalInvested": 6700000,
+  "avgLossPercent": -4.35,
+  "profitLossRatio": 2.09,
+  "totalInvested": 6750000,
   "maxDrawdown": 35316.06,
   "maxDrawdownPercent": 25.71,
   "maxProfit": 20,
@@ -565,8 +565,12 @@
       "equity": 130775.66
     },
     {
-      "date": "20260518",
+      "date": "20260515",
       "equity": 128275.66
+    },
+    {
+      "date": "20260518",
+      "equity": 125775.66
     }
   ],
   "trades": [
@@ -2829,6 +2833,23 @@
       "profitAmount": 897.69,
       "exitReason": "max_days",
       "buySignalScore": 77,
+      "marketMood": 45
+    },
+    {
+      "stockCode": "000938",
+      "stockName": "紫光股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260514",
+      "buyPrice": 33.88,
+      "sellDate": "20260515",
+      "sellPrice": 32.186,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 76,
       "marketMood": 45
     },
     {
