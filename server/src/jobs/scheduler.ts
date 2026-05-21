@@ -276,28 +276,10 @@ export class JobScheduler {
     // const cronExpression = '58 25 9 * * 1-5';
     // 9.25:58 与 9.25:28 各执行一次，确保任务能被触发 cronExpression 该怎么写？
     const cronExpression = '18 26 9 * * 1-5';
-    
+
     this.auctionJob = cron.schedule(cronExpression, async () => {
       const today = formatDate(new Date(), 'YYYYMMDD');
-      // 1.更新 主线共振 入场条件
-      try {
-        logger.info('开始执行集合竞价后【主线共振策略】入场条件更新');
-        const conceptResonanceResult = await conceptResonanceService.getBuySignalList({ dateStr: today });
-        logger.info(`[主线共振] 生成完成，共 ${conceptResonanceResult.length} 个信号，入场日=${today}`);
-        // 取前3只股票作为当天的主线共振股票添加到当天的分组中
-        const topThree = conceptResonanceResult.filter(item => item.strategyScore > 88).slice(0, 3).map(signal => signal.stockCode);
-        // 创建分组：${日期}-主线共振
-        logger.info(`[主线共振] 今日主线共振股票: ${topThree.join(', ')}`);
-        const groupId = await groupService.createGroup(`${today}-主线共振`);
-        // 将 topThree 股票添加到当天的主线共振分组中
-        if (topThree.length > 0) {
-          await groupService.addStocksToGroup(groupId, topThree);
-        }
-      } catch (error) {
-        logger.error(`[主线共振] 生成失败: ${(error as Error).message}`);
-      }
-
-      // 2. 放量大涨策略
+      // 1. 放量大涨策略
       try {
         logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
         const volumeSurgeResult = await buySignalService.generateBuySignals(today, undefined, 50);
@@ -305,17 +287,36 @@ export class JobScheduler {
         // 按totalBuyScore排序
         volumeSurgeResult.sort((a, b) => b.totalBuyScore - a.totalBuyScore);
         // 取前3只股票作为当天的放量大涨股票添加到当天的分组中
-        const topThree = volumeSurgeResult.filter(item => item.totalBuyScore > 70).slice(0, 3).map(signal => signal.stockCode);
-        // 创建分组：${日期}-放量大涨
-        logger.info(`[放量大涨] 今日放量大涨股票: ${topThree.join(', ')}`);
-        const groupId = await groupService.createGroup(`${today}-放量大涨`);
+        const topThree = volumeSurgeResult.filter(item => item.totalBuyScore > 70).map(signal => signal.stockCode);
         // 将 topThree 股票添加到当天的放量大涨分组中
         if (topThree.length > 0) {
+          // 创建分组：${日期}-放量大涨
+          logger.info(`[放量大涨] 今日放量大涨股票: ${topThree.join(', ')}`);
+          const groupId = await groupService.createGroup(`${today}-放量大涨`);
           await groupService.addStocksToGroup(groupId, topThree);
         }
       } catch (error) {
         logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
       }
+
+      // 2.更新 主线共振 入场条件
+      try {
+        logger.info('开始执行集合竞价后【主线共振策略】入场条件更新');
+        const conceptResonanceResult = await conceptResonanceService.getBuySignalList({ dateStr: today });
+        logger.info(`[主线共振] 生成完成，共 ${conceptResonanceResult.length} 个信号，入场日=${today}`);
+        // 取前3只股票作为当天的主线共振股票添加到当天的分组中
+        const topThree = conceptResonanceResult.filter(item => item.strategyScore > 88).map(signal => signal.stockCode);
+        // 将 topThree 股票添加到当天的主线共振分组中
+        if (topThree.length > 0) {
+          // 创建分组：${日期}-主线共振
+          logger.info(`[主线共振] 今日主线共振股票: ${topThree.join(', ')}`);
+          const groupId = await groupService.createGroup(`${today}-主线共振`);
+          await groupService.addStocksToGroup(groupId, topThree);
+        }
+      } catch (error) {
+        logger.error(`[主线共振] 生成失败: ${(error as Error).message}`);
+      }
+
 
       // 3. 价格突破策略
       try {
