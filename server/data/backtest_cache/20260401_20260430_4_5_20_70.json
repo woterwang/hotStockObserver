@@ -11,21 +11,21 @@
     "takeProfitPercent": 0.2,
     "maxHoldDays": 4,
     "marketPanicThreshold": 0,
-    "maxBuyCount": 10
+    "maxBuyCount": 30
   },
-  "totalTrades": 70,
-  "winTrades": 38,
-  "lossTrades": 32,
-  "winRate": 54.29,
-  "totalProfitAmount": 132097.93,
-  "totalProfitPercent": 3.77,
-  "avgProfitPercent": 3.77,
-  "avgWinPercent": 10.4,
-  "avgLossPercent": -4.09,
-  "profitLossRatio": 2.54,
-  "totalInvested": 3500000,
+  "totalTrades": 73,
+  "winTrades": 40,
+  "lossTrades": 33,
+  "winRate": 54.79,
+  "totalProfitAmount": 138537.13,
+  "totalProfitPercent": 3.8,
+  "avgProfitPercent": 3.8,
+  "avgWinPercent": 10.33,
+  "avgLossPercent": -4.12,
+  "profitLossRatio": 2.51,
+  "totalInvested": 3650000,
   "maxDrawdown": 12000.08,
-  "maxDrawdownPercent": 8.86,
+  "maxDrawdownPercent": 8.45,
   "maxProfit": 20,
   "maxLoss": -5,
   "maxConsecutiveWins": 14,
@@ -169,148 +169,160 @@
       "equity": 126081.20000000003
     },
     {
-      "date": "20260420",
-      "equity": 125136.11000000003
+      "date": "20260417",
+      "equity": 133362.94000000003
     },
     {
-      "date": "20260420",
-      "equity": 126624.97000000003
-    },
-    {
-      "date": "20260420",
-      "equity": 134122.15000000002
+      "date": "20260415",
+      "equity": 130862.94000000003
     },
     {
       "date": "20260417",
-      "equity": 131622.15000000002
-    },
-    {
-      "date": "20260416",
-      "equity": 129122.15000000002
-    },
-    {
-      "date": "20260416",
-      "equity": 126622.15000000002
-    },
-    {
-      "date": "20260421",
-      "equity": 125394.51000000002
-    },
-    {
-      "date": "20260422",
-      "equity": 127122.07000000002
+      "equity": 132520.40000000002
     },
     {
       "date": "20260420",
-      "equity": 124622.07000000002
-    },
-    {
-      "date": "20260422",
-      "equity": 122122.07000000002
-    },
-    {
-      "date": "20260422",
-      "equity": 128732.07000000002
-    },
-    {
-      "date": "20260422",
-      "equity": 127877.30000000002
+      "equity": 131575.31000000003
     },
     {
       "date": "20260420",
-      "equity": 125377.30000000002
+      "equity": 133064.17
+    },
+    {
+      "date": "20260420",
+      "equity": 140561.35
+    },
+    {
+      "date": "20260417",
+      "equity": 138061.35
+    },
+    {
+      "date": "20260416",
+      "equity": 135561.35
+    },
+    {
+      "date": "20260416",
+      "equity": 133061.35
     },
     {
       "date": "20260421",
-      "equity": 122877.30000000002
+      "equity": 131833.71
     },
     {
       "date": "20260422",
-      "equity": 128445.68000000002
+      "equity": 133561.27
+    },
+    {
+      "date": "20260420",
+      "equity": 131061.26999999999
     },
     {
       "date": "20260422",
-      "equity": 127290.71000000002
+      "equity": 128561.26999999999
     },
     {
-      "date": "20260423",
-      "equity": 130054.41000000002
+      "date": "20260422",
+      "equity": 135171.27
     },
     {
-      "date": "20260423",
-      "equity": 129877.42000000001
+      "date": "20260422",
+      "equity": 134316.5
+    },
+    {
+      "date": "20260420",
+      "equity": 131816.5
     },
     {
       "date": "20260421",
-      "equity": 127377.42000000001
+      "equity": 129316.5
+    },
+    {
+      "date": "20260422",
+      "equity": 134884.88
+    },
+    {
+      "date": "20260422",
+      "equity": 133729.91
+    },
+    {
+      "date": "20260423",
+      "equity": 136493.61000000002
+    },
+    {
+      "date": "20260423",
+      "equity": 136316.62000000002
     },
     {
       "date": "20260421",
-      "equity": 124877.42000000001
+      "equity": 133816.62000000002
+    },
+    {
+      "date": "20260421",
+      "equity": 131316.62000000002
     },
     {
       "date": "20260424",
-      "equity": 129752.42000000001
+      "equity": 136191.62000000002
     },
     {
       "date": "20260424",
-      "equity": 127252.42000000001
+      "equity": 133691.62000000002
     },
     {
       "date": "20260427",
-      "equity": 133218.52000000002
+      "equity": 139657.72000000003
     },
     {
       "date": "20260424",
-      "equity": 130718.52000000002
+      "equity": 137157.72000000003
     },
     {
       "date": "20260428",
-      "equity": 132455.09000000003
+      "equity": 138894.29000000004
     },
     {
       "date": "20260428",
-      "equity": 135516.31000000003
+      "equity": 141955.51000000004
     },
     {
       "date": "20260424",
-      "equity": 133016.31000000003
+      "equity": 139455.51000000004
     },
     {
       "date": "20260424",
-      "equity": 130516.31000000003
+      "equity": 136955.51000000004
     },
     {
       "date": "20260506",
-      "equity": 130951.47000000003
+      "equity": 137390.67000000004
     },
     {
       "date": "20260429",
-      "equity": 128451.47000000003
+      "equity": 134890.67000000004
     },
     {
       "date": "20260430",
-      "equity": 125951.47000000003
+      "equity": 132390.67000000004
     },
     {
       "date": "20260508",
-      "equity": 128089.17000000003
+      "equity": 134528.37000000005
     },
     {
       "date": "20260508",
-      "equity": 129060.92000000003
+      "equity": 135500.12000000005
     },
     {
       "date": "20260508",
-      "equity": 131479.13000000003
+      "equity": 137918.33000000005
     },
     {
       "date": "20260508",
-      "equity": 130053.05000000003
+      "equity": 136492.25000000006
     },
     {
       "date": "20260508",
-      "equity": 132097.93000000002
+      "equity": 138537.13000000006
     }
   ],
   "trades": [
@@ -890,6 +902,57 @@
       "profitAmount": -643.34,
       "exitReason": "max_days",
       "buySignalScore": 72,
+      "marketMood": 62
+    },
+    {
+      "stockCode": "300390",
+      "stockName": "天华新能",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260414",
+      "buyPrice": 76.63,
+      "sellDate": "20260417",
+      "sellPrice": 87.79,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 14.56,
+      "profitAmount": 7281.74,
+      "exitReason": "max_days",
+      "buySignalScore": 72,
+      "marketMood": 62
+    },
+    {
+      "stockCode": "603798",
+      "stockName": "康普顿",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260414",
+      "buyPrice": 17.9,
+      "sellDate": "20260415",
+      "sellPrice": 17.005,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 70,
+      "marketMood": 62
+    },
+    {
+      "stockCode": "300395",
+      "stockName": "菲利华",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260414",
+      "buyPrice": 108.6,
+      "sellDate": "20260417",
+      "sellPrice": 112.2,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 3.31,
+      "profitAmount": 1657.46,
+      "exitReason": "max_days",
+      "buySignalScore": 70,
       "marketMood": 62
     },
     {
