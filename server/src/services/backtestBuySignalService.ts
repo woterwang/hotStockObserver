@@ -321,8 +321,16 @@ class BuySignalBacktestService {
           break;
         }
 
-        // 检查止损（当日最低价触及止损位）
-        if (dayKline.low <= stopLossPrice) {
+        // 检查止损（跳空低开时以开盘价卖出，否则以止损价卖出）
+        if (dayKline.open <= stopLossPrice) {
+          // 跳空低开，无法以止损价成交，只能以开盘价卖出
+          sellPrice = dayKline.open;
+          sellDate = dayKline.date;
+          holdDays = i + 1;
+          exitReason = 'stop_loss';
+          break;
+        } else if (dayKline.low <= stopLossPrice) {
+          // 盘中触及止损位，以止损价卖出
           sellPrice = stopLossPrice;
           sellDate = dayKline.date;
           holdDays = i + 1;
@@ -330,8 +338,16 @@ class BuySignalBacktestService {
           break;
         }
 
-        // 检查止盈（当日最高价触及止盈位）
-        if (dayKline.high >= takeProfitPrice) {
+        // 检查止盈（跳空高开时以开盘价卖出，否则以止盈价卖出）
+        if (dayKline.open >= takeProfitPrice) {
+          // 跳空高开，以开盘价卖出（实际收益更高）
+          sellPrice = dayKline.open;
+          sellDate = dayKline.date;
+          holdDays = i + 1;
+          exitReason = 'take_profit';
+          break;
+        } else if (dayKline.high >= takeProfitPrice) {
+          // 盘中触及止盈位，以止盈价卖出
           sellPrice = takeProfitPrice;
           sellDate = dayKline.date;
           holdDays = i + 1;
