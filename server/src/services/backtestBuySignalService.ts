@@ -232,7 +232,7 @@ class BuySignalBacktestService {
       const stockCode = signal.stockCode;
       // 使用 toDateStr 规范化日期（支持 Date 和 String 两种格式）
       const signalDateStr = toDateStr(signal.date) || formatDate(new Date(signal.date), 'YYYYMMDD');
-      console.log('signalDateStr:', signalDateStr);
+      logger.info('signalDateStr:', signalDateStr);
       // 如果不是交易日，跳过
       if (!tradingCalendarService.isTradingDay(signalDateStr)) {
         logger.info(`[回测] ${stockCode} 信号日期=${signalDateStr} 不是交易日，跳过`);
@@ -483,7 +483,7 @@ class BuySignalBacktestService {
     // === 预加载 K 线数据 ===
     if (signals.length > 0) {
       // 取出分值最高的前4条记录（每天最多买入4只股票）
-      console.log('预加载 K 线数据:', signals.length, '只股票');
+      logger.info('预加载 K 线数据:', signals.length, '只股票');
       const stockCodes = signals.map(s => s.stockCode);
       // 使用 toDateStr 统一日期格式（数据库已迁移为字符串格式）
       const signalDates = signals.map(s => toDateStr(s.date));

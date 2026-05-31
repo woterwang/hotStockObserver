@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { logger, sleep, toDateStr, getToday } from '../utils';
 import { tradingCalendarService } from './tradingCalendarService';
+const thsUtils = require('../utils/thsUtils');
 import {
   OpenData,
 } from '../types/conceptEnhancement';
@@ -130,15 +131,17 @@ class KlineCacheService {
       const marketId = stockCode.startsWith('6') ? 17 : 33;
       const url = `https://d.10jqka.com.cn/v6/line/${marketId}_${stockCode}/01/last${days}.js`;
 
+      logger.info(`fetchKlineFromTHS 获取K线 ${stockCode}`, url, days, marketId);
+      const hexinv = thsUtils.update();
+      logger.info(`fetchKlineFromTHS 同花顺 hexin-v: ${hexinv} 开始请求`);
       const response = await axios.get(url, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
           'Referer': 'http://www.10jqka.com.cn/',
-          'hexin-v': String(Date.now()),
+          'hexin-v': hexinv, // 防止被反爬虫识别，保持与同花顺页面一致的 hexin-v 值
         },
         timeout: 30000,
       });
-
       if (response.data && typeof response.data === 'string') {
         const dataStr = response.data;
         const startIdx = dataStr.indexOf('({');
@@ -169,10 +172,10 @@ class KlineCacheService {
         }
       }
     } catch (error) {
-      logger.debug(`获取K线失败 ${stockCode}: ${(error as Error).message}`);
+      logger.warn(`获取K线失败 ${stockCode}: ${(error as Error).message}`);
     }
     // 防刷新过快
-    await sleep(1, 2);
+    await sleep(1, 3);
     return result;
   }
 
@@ -291,7 +294,7 @@ class KlineCacheService {
 
       if (open === 0) {
         // 开盘价为0表示数据无效
-        console.log(`[K线缓存] 腾讯实时行情数据无效 ${stockCode}`);
+        logger.info(`[K线缓存] 腾讯实时行情数据无效 ${stockCode}`);
         return null;
       }
 
@@ -353,7 +356,7 @@ class KlineCacheService {
     startDay = toDateStr(startDay);
     // 计算结束日期
     const endDateStr = tradingCalendarService.getNextTradingDays(startDay, klineDays);
-    console.log('🚀 ~ :353 ~ KlineCacheService ~ getKlinesByStartDay ~ endDateStr:', startDay, endDateStr);
+    logger.info('🚀 ~ :353 ~ KlineCacheService ~ getKlinesByStartDay ~ endDateStr:', startDay, endDateStr);
     // 如果结束日期 >= 今天，则返回空数组
     if (!endDateStr || toDateStr(getToday()) < endDateStr) {
       logger.warn(`[K线缓存] ${stockCode} 结束日期 ${endDateStr} 不在历史范围内，直接跳过`);
@@ -362,7 +365,7 @@ class KlineCacheService {
     let endDateIndex: number = -1;
     // 确保缓存中有足够数据
     let allCachedKlines = this.loadCache(stockCode).map;
-    console.log(`[K线缓存] ${stockCode} 获取从 ${startDay} 开始的 ${klineDays} 天K线`);
+    logger.info(`[K线缓存] ${stockCode} 获取从 ${startDay} 开始的 ${klineDays} 天K线`);
     // 如果缓存中没有起始日期，则从远端拉取数据
     const startDateIndex = Array.from(allCachedKlines.keys()).indexOf(startDay);
     if (startDateIndex < 0) {
@@ -374,7 +377,7 @@ class KlineCacheService {
     if (endDateStr) {
       endDateIndex = Array.from(allCachedKlines.keys()).indexOf(endDateStr);
       // 如果结束日期不在缓存 且 结束日期 <= 今天，则从远端拉取数据
-      console.log(`[K线缓存] ${stockCode} 计算结束日期 ${endDateStr} 在缓存中的索引为 ${endDateIndex}`);
+      logger.info(`[K线缓存] ${stockCode} 计算结束日期 ${endDateStr} 在缓存中的索引为 ${endDateIndex}`);
       if (endDateIndex < 0 && endDateStr <= toDateStr(getToday())) {
         logger.warn(`[K线缓存] ${stockCode} 结束日期 ${endDateStr} 不在缓存中，从远端拉取数据中...`);
         allCachedKlines = await this.ensureKlines(stockCode, { targetDates: [endDateStr] });
@@ -398,8 +401,9 @@ class KlineCacheService {
     let klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
     // 如果本地没有缓存，直接从远端拉取
     if (localKline.size === 0) {
-      console.log(`[K线缓存] ${stockCode} 本地缓存为空，从远端拉取`);
+      logger.info(`[K线缓存] ${stockCode} 本地缓存为空，从远端拉取`);
       localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
+      klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
     }
     // targetDate 是否为交易日
     if (!tradingCalendarService.isTradingDay(targetDate)) {
@@ -428,7 +432,7 @@ class KlineCacheService {
         return klineDates;
       }
       // 缓存中没有目标日期的K线数据，从远端拉取
-      console.log(`[K线缓存] ${stockCode} 缓存中不存在 ${targetDate}，从远端拉取`);
+      logger.info(`[K线缓存] ${stockCode} 缓存中不存在 ${targetDate}，从远端拉取`);
       localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
       this.persistCache(stockCode, localKline, Date.now()); // 更新缓存
     }
@@ -482,7 +486,7 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
       }
       return `sh${cleanCode}`;
     });
-    console.log(`[K线缓存] 腾讯接口请求: ${qqCodes.join(',')}`);
+    logger.info(`[K线缓存] 腾讯接口请求: ${qqCodes.join(',')}`);
     const url = `https://qt.gtimg.cn/q=${qqCodes.join(',')}`;
 
     const response = await axios.get(url, {
@@ -495,8 +499,8 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
     });
     // 腾讯返回 GBK 编码
     const iconv = require('iconv-lite');
-    const dataStr = iconv.decode(response.data, 'gbk'); 
-    writeToFile('/debug/', `tencent_realtime_${dayjs().format('YYYY-MM-DD')}.txt`,dataStr);
+    const dataStr = iconv.decode(response.data, 'gbk');
+    writeToFile('/debug/', `tencent_realtime_${dayjs().format('YYYY-MM-DD')}.txt`, dataStr);
 
     // 响应格式: v_sz000001="..."; v_sz000002="...";
     // 使用正则匹配所有股票数据
@@ -543,7 +547,7 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
         ? `${timeStr.substring(8, 10)}:${timeStr.substring(10, 12)}:${timeStr.substring(12, 14)}`
         : '';
       dataTime = timeStr;
-      console.log(`[K线缓存] 腾讯接口时间: ${date} ${time}`);
+      logger.info(`[K线缓存] 腾讯接口时间: ${date} ${time}`);
 
       // 开盘价为0表示数据可能无效，但仍放入结果中，由调用方判断
       result.set(stockCode, {

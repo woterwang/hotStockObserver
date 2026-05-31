@@ -1,0 +1,248 @@
+{
+  "startDate": "20251101",
+  "endDate": "20251130",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 0,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 4,
+    "marketPanicThreshold": 0,
+    "maxBuyCount": 30
+  },
+  "totalTrades": 10,
+  "winTrades": 6,
+  "lossTrades": 4,
+  "winRate": 60,
+  "totalProfitAmount": 401.44,
+  "totalProfitPercent": 0.08,
+  "avgProfitPercent": 0.08,
+  "avgWinPercent": 3.66,
+  "avgLossPercent": -5.28,
+  "profitLossRatio": 0.69,
+  "totalInvested": 500000,
+  "maxDrawdown": 5005.75,
+  "maxDrawdownPercent": 132.6,
+  "maxProfit": 8.25,
+  "maxLoss": -10.01,
+  "maxConsecutiveWins": 4,
+  "maxConsecutiveLosses": 1,
+  "avgHoldDays": 3.7,
+  "equityCurve": [
+    {
+      "date": "20251105",
+      "equity": -5005.75
+    },
+    {
+      "date": "20251106",
+      "equity": -879.4300000000003
+    },
+    {
+      "date": "20251106",
+      "equity": -970.1700000000003
+    },
+    {
+      "date": "20251113",
+      "equity": 1187.0699999999995
+    },
+    {
+      "date": "20251114",
+      "equity": 2155.0299999999997
+    },
+    {
+      "date": "20251120",
+      "equity": 2837.0699999999997
+    },
+    {
+      "date": "20251128",
+      "equity": 3775.0199999999995
+    },
+    {
+      "date": "20251203",
+      "equity": 802.8599999999997
+    },
+    {
+      "date": "20251128",
+      "equity": 2901.4399999999996
+    },
+    {
+      "date": "20251128",
+      "equity": 401.4399999999996
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "605155",
+      "stockName": "西大门",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251103",
+      "buyPrice": 17.38,
+      "sellDate": "20251105",
+      "sellPrice": 15.64,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": -10.01,
+      "profitAmount": -5005.75,
+      "exitReason": "stop_loss",
+      "buySignalScore": 77,
+      "marketMood": 60
+    },
+    {
+      "stockCode": "688776",
+      "stockName": "国光电气",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251103",
+      "buyPrice": 90.88,
+      "sellDate": "20251106",
+      "sellPrice": 98.38,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 8.25,
+      "profitAmount": 4126.32,
+      "exitReason": "max_days",
+      "buySignalScore": 70,
+      "marketMood": 60
+    },
+    {
+      "stockCode": "000681",
+      "stockName": "视觉中国",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251103",
+      "buyPrice": 22.04,
+      "sellDate": "20251106",
+      "sellPrice": 22,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": -0.18,
+      "profitAmount": -90.74,
+      "exitReason": "max_days",
+      "buySignalScore": 70,
+      "marketMood": 60
+    },
+    {
+      "stockCode": "301286",
+      "stockName": "侨源股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251110",
+      "buyPrice": 31.29,
+      "sellDate": "20251113",
+      "sellPrice": 32.64,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 4.31,
+      "profitAmount": 2157.24,
+      "exitReason": "max_days",
+      "buySignalScore": 72,
+      "marketMood": 60
+    },
+    {
+      "stockCode": "002731",
+      "stockName": "萃华珠宝",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251111",
+      "buyPrice": 14.98,
+      "sellDate": "20251114",
+      "sellPrice": 15.27,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 1.94,
+      "profitAmount": 967.96,
+      "exitReason": "max_days",
+      "buySignalScore": 75,
+      "marketMood": 63
+    },
+    {
+      "stockCode": "688559",
+      "stockName": "海目星",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251117",
+      "buyPrice": 52.05,
+      "sellDate": "20251120",
+      "sellPrice": 52.76,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 1.36,
+      "profitAmount": 682.04,
+      "exitReason": "max_days",
+      "buySignalScore": 72,
+      "marketMood": 73
+    },
+    {
+      "stockCode": "688787",
+      "stockName": "海天瑞声",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251125",
+      "buyPrice": 110.88,
+      "sellDate": "20251128",
+      "sellPrice": 112.96,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 1.88,
+      "profitAmount": 937.95,
+      "exitReason": "max_days",
+      "buySignalScore": 84,
+      "marketMood": 69
+    },
+    {
+      "stockCode": "301073",
+      "stockName": "君亭酒店",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251125",
+      "buyPrice": 26.58,
+      "sellDate": "20251203",
+      "sellPrice": 25,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5.94,
+      "profitAmount": -2972.16,
+      "exitReason": "stop_loss",
+      "buySignalScore": 76,
+      "marketMood": 69
+    },
+    {
+      "stockCode": "300940",
+      "stockName": "南极光",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251125",
+      "buyPrice": 25.97,
+      "sellDate": "20251128",
+      "sellPrice": 27.06,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 4.2,
+      "profitAmount": 2098.58,
+      "exitReason": "max_days",
+      "buySignalScore": 76,
+      "marketMood": 69
+    },
+    {
+      "stockCode": "301396",
+      "stockName": "宏景科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20251125",
+      "buyPrice": 46.12,
+      "sellDate": "20251128",
+      "sellPrice": 43.81399999999999,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 72,
+      "marketMood": 69
+    }
+  ]
+}

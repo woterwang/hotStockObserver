@@ -141,13 +141,13 @@ class BuySignalController {
 
       for (const date of dates) {
         try {
-          const signals = await buySignalService.generateBuySignals(date);
+          const signals = await buySignalService.generateHistoryBuySignals(date);
           results.push({ date, count: signals.length });
           totalGenerated += signals.length;
           successDays++;
           
           // 添加延迟避免请求过快
-          await new Promise(resolve => setTimeout(resolve, 500));
+          await new Promise(resolve => setTimeout(resolve, 1500));
         } catch (error) {
           results.push({ date, count: 0, error: (error as Error).message });
           failedDays++;

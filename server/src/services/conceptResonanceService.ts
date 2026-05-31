@@ -854,7 +854,7 @@ export class ConceptResonanceService {
     
     // 2. 不存在则生成信号
     const prevDateStr = tradingCalendarService.getPrevTradingDay(config.dateStr);
-    console.log('prevDateStr', prevDateStr);
+    logger.info('prevDateStr', prevDateStr);
     const list = await ConceptResonance.find({
       date: prevDateStr,
       strategyScore: { $gte: -1 },
@@ -868,7 +868,7 @@ export class ConceptResonanceService {
     if (tradingCalendarService.isTradingDay(targetDateStr) && targetDateStr === formatDate(getToday(), 'YYYYMMDD')) {
       logger.info(`[ConceptResonance] ${targetDateStr} 为交易日且是今天，使用腾讯数据更新开盘数据`);
       const codes = list.map(v => v.stockCode);
-      console.log('tencentQuotes codes', codes);
+      logger.info('tencentQuotes codes', codes);
       // 批量获取腾讯数据
       tencentQuotes = await fetchTencentRealTimeQuotes(codes);
       // 如果是当天9.30之前 存储一份数据到本地
@@ -893,7 +893,7 @@ export class ConceptResonanceService {
         // 如果数据不为空-证明是当日数据 - 优先使用腾讯数据
         if (tencentQuotes.size > 0) {
           openData = tencentQuotes.get(stockObj.stockCode);
-          console.log(`使用腾讯数据获取开盘数据 ${stockObj.stockCode}:`, openData);
+          logger.info(`使用腾讯数据获取开盘数据 ${stockObj.stockCode}:`, openData);
         } else {
           // 否则使用 buySignalService 获取开盘数据
           openData = await buySignalService.getOpeningData(stockObj.stockCode, config.dateStr);
@@ -1258,7 +1258,7 @@ export class ConceptResonanceService {
     let leaderWins = 0;
 
     for (const candidate of filtered) {
-      console.log(`[ConceptResonance][Backtest] 回测 ${candidate.date} ${candidate.stockCode} ${candidate.stockName}`);
+      logger.info(`[ConceptResonance][Backtest] 回测 ${candidate.date} ${candidate.stockCode} ${candidate.stockName}`);
       // 计算仓位
       let position = basePosition;
 

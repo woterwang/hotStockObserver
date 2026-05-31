@@ -2,7 +2,7 @@
  * @Author: hp.com
  * @Date: 2026-04-14 19:29:05
  * @LastEditors: WRG
- * @LastEditTime: 2026-04-14 21:48:28
+ * @LastEditTime: 2026-05-31 17:51:33
  * @😍: 😃😃
  */
 //curl 'https://apphis.longhuvip.com/w1/api/index.php'  -H 'Host: apphis.longhuvip.com'  -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8'  -H 'Connection: keep-alive'  -H 'Accept: */*'  -H 'User-Agent: lhb/5.20.9 (com.kaipanla.www; build:1; iOS 18.2.1) Alamofire/4.9.1'  -H 'Accept-Language: zh-Hans-CN;q=1.0'  -H 'Content-Length: 166'  -H 'Accept-Encoding: gzip;q=1.0, compress;q=0.5'   --data 'Day=20260401&DeviceID=86c65473e79a0f7906d5b758c190382e3983240a&PhoneOSNew=2&StockID=000617&Token=0&UserID=0&VerSion=5.20.0.9&a=GetStockTrend&apiv=w41&c=StockL2History' --compressed
@@ -38,14 +38,18 @@ export const getStockTrend = async (stockId: string, date: string) => {
 }
 
 // 获取股票的某一分钟的分时数据
-export const getStockTrendMinute = async (stockId: string, date: string, minute: string) => {
+export const getStockTrendMinute = async (stockId: string, date: string, minute: string): Promise<string[] | null> => {
   const data = await getStockTrend(stockId, date);
-  logger.info(`获取股票 ${stockId} 在 ${date} 的分时数据，结果: ${JSON.stringify(data)}`);
+  logger.info(`获取股票 ${stockId} 在 ${date} 的分时数据，结果: ${data.trend.length} 条数据`);
   if (!data) {
     return null;
   }
-  const trendRes = data.trend;
-  const minuteData = trendRes.find((item: any) => item[0] === minute); // 查找指定分钟的数据
+  const trendRes = data.trend; // 获取分时数据
+  const minuteData = trendRes.find((item: any) => {
+    logger.info(`获取股票 ${stockId} 在 ${date} 的分时数据，结果: ${item[0] === minute}`);
+    return item[0] === minute;
+  }); // 查找指定分钟的数据
+  logger.info(`获取股票 ${stockId} 在 ${date} 的${minute}分时数据，结果: ${JSON.stringify(minuteData)}`);
 
   if (!minuteData) {
     return null;
