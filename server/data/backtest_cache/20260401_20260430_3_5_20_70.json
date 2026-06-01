@@ -6,191 +6,191 @@
     "minSignalScore": 70,
     "basePosition": 50000,
     "lowMoodPositionRatio": 0.5,
-    "marketMoodThreshold": 0,
+    "marketMoodThreshold": 50,
     "stopLossPercent": 0.05,
     "takeProfitPercent": 0.2,
-    "maxHoldDays": 4,
-    "marketPanicThreshold": 0,
+    "maxHoldDays": 3,
+    "marketPanicThreshold": 40,
     "maxBuyCount": 3
   },
   "totalTrades": 40,
-  "winTrades": 25,
-  "lossTrades": 15,
-  "winRate": 62.5,
-  "totalProfitAmount": 89846.98,
-  "totalProfitPercent": 4.49,
-  "avgProfitPercent": 4.49,
-  "avgWinPercent": 9.69,
-  "avgLossPercent": -4.17,
-  "profitLossRatio": 2.32,
-  "totalInvested": 2000000,
-  "maxDrawdown": 5379.58,
-  "maxDrawdownPercent": 5.99,
-  "maxProfit": 21.43,
+  "winTrades": 27,
+  "lossTrades": 13,
+  "winRate": 67.5,
+  "totalProfitAmount": 56935.75,
+  "totalProfitPercent": 3.73,
+  "avgProfitPercent": 3.52,
+  "avgWinPercent": 7.05,
+  "avgLossPercent": -3.8,
+  "profitLossRatio": 1.86,
+  "totalInvested": 1525000,
+  "maxDrawdown": 3728.27,
+  "maxDrawdownPercent": 6.48,
+  "maxProfit": 20,
   "maxLoss": -5.76,
   "maxConsecutiveWins": 8,
   "maxConsecutiveLosses": 2,
-  "avgHoldDays": 3.6,
+  "avgHoldDays": 2.8,
   "equityCurve": [
     {
       "date": "20260402",
-      "equity": -2500
+      "equity": -2338.48
+    },
+    {
+      "date": "20260402",
+      "equity": -1465.79
+    },
+    {
+      "date": "20260403",
+      "equity": -626.37
     },
     {
       "date": "20260407",
-      "equity": -1242.3
+      "equity": -2066.16
     },
     {
       "date": "20260408",
-      "equity": 2498.58
+      "equity": -1928.9999999999998
     },
     {
-      "date": "20260407",
-      "equity": -381
-    },
-    {
-      "date": "20260409",
-      "equity": -2881
+      "date": "20260408",
+      "equity": -963.7499999999998
     },
     {
       "date": "20260409",
-      "equity": 4220.49
+      "equity": 7780.82
     },
     {
       "date": "20260410",
-      "equity": 14937.88
+      "equity": 17780.82
     },
     {
       "date": "20260410",
-      "equity": 24937.879999999997
+      "equity": 17043.88
+    },
+    {
+      "date": "20260410",
+      "equity": 21061.74
     },
     {
       "date": "20260413",
-      "equity": 23865.969999999998
-    },
-    {
-      "date": "20260413",
-      "equity": 28955.26
+      "equity": 21354.84
     },
     {
       "date": "20260414",
-      "equity": 29144.92
+      "equity": 25110.61
     },
     {
       "date": "20260415",
-      "equity": 30073.82
-    },
-    {
-      "date": "20260416",
-      "equity": 40073.82
-    },
-    {
-      "date": "20260416",
-      "equity": 50073.82
-    },
-    {
-      "date": "20260416",
-      "equity": 60073.82
-    },
-    {
-      "date": "20260417",
-      "equity": 67116.77
-    },
-    {
-      "date": "20260417",
-      "equity": 77116.77
+      "equity": 27293.71
     },
     {
       "date": "20260415",
-      "equity": 74616.77
+      "equity": 31089.16
+    },
+    {
+      "date": "20260415",
+      "equity": 33817.68
+    },
+    {
+      "date": "20260416",
+      "equity": 36280.25
+    },
+    {
+      "date": "20260416",
+      "equity": 43644.07
+    },
+    {
+      "date": "20260415",
+      "equity": 41144.07
+    },
+    {
+      "date": "20260417",
+      "equity": 41564.11
+    },
+    {
+      "date": "20260417",
+      "equity": 41557.95
+    },
+    {
+      "date": "20260417",
+      "equity": 45095.149999999994
     },
     {
       "date": "20260420",
-      "equity": 73671.68000000001
-    },
-    {
-      "date": "20260420",
-      "equity": 75161.46
-    },
-    {
-      "date": "20260420",
-      "equity": 82658.64000000001
+      "equity": 46049.979999999996
     },
     {
       "date": "20260421",
-      "equity": 81431.00000000001
-    },
-    {
-      "date": "20260422",
-      "equity": 83158.56000000001
+      "equity": 46828.799999999996
     },
     {
       "date": "20260420",
-      "equity": 80658.56000000001
-    },
-    {
-      "date": "20260422",
-      "equity": 78158.56000000001
-    },
-    {
-      "date": "20260423",
-      "equity": 80922.26000000001
-    },
-    {
-      "date": "20260423",
-      "equity": 80745.27
+      "equity": 44328.799999999996
     },
     {
       "date": "20260421",
-      "equity": 78245.27
+      "equity": 43100.53
+    },
+    {
+      "date": "20260422",
+      "equity": 49969.9
+    },
+    {
+      "date": "20260422",
+      "equity": 51002.35
+    },
+    {
+      "date": "20260421",
+      "equity": 48502.35
+    },
+    {
+      "date": "20260423",
+      "equity": 50596.1
+    },
+    {
+      "date": "20260423",
+      "equity": 49678.439999999995
     },
     {
       "date": "20260424",
-      "equity": 83120.27
+      "equity": 54729.28999999999
     },
     {
       "date": "20260424",
-      "equity": 80620.27
+      "equity": 53479.28999999999
     },
     {
       "date": "20260427",
-      "equity": 86586.37000000001
+      "equity": 54847.24999999999
     },
     {
-      "date": "20260424",
-      "equity": 84086.37000000001
-    },
-    {
-      "date": "20260428",
-      "equity": 85822.94000000002
-    },
-    {
-      "date": "20260428",
-      "equity": 88884.16000000002
-    },
-    {
-      "date": "20260506",
-      "equity": 89319.32000000002
-    },
-    {
-      "date": "20260429",
-      "equity": 86819.32000000002
+      "date": "20260427",
+      "equity": 55952.689999999995
     },
     {
       "date": "20260430",
-      "equity": 84319.32000000002
+      "equity": 56115.88
     },
     {
-      "date": "20260508",
-      "equity": 86457.02000000002
+      "date": "20260429",
+      "equity": 54865.88
     },
     {
-      "date": "20260508",
-      "equity": 87428.77000000002
+      "date": "20260430",
+      "equity": 53615.88
     },
     {
-      "date": "20260508",
-      "equity": 89846.98000000003
+      "date": "20260507",
+      "equity": 55739.7
+    },
+    {
+      "date": "20260507",
+      "equity": 57575.86
+    },
+    {
+      "date": "20260507",
+      "equity": 56935.75
     }
   ],
   "trades": [
@@ -202,12 +202,12 @@
       "buyDate": "20260401",
       "buyPrice": 20.74,
       "sellDate": "20260402",
-      "sellPrice": 19.702999999999996,
+      "sellPrice": 19.77,
       "holdDays": 2,
       "position": 50000,
-      "profitPercent": -5,
-      "profitAmount": -2500,
-      "exitReason": "stop_loss",
+      "profitPercent": -4.68,
+      "profitAmount": -2338.48,
+      "exitReason": "market_panic",
       "buySignalScore": 71,
       "marketMood": 61
     },
@@ -218,13 +218,13 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260401",
       "buyPrice": 19.48,
-      "sellDate": "20260407",
-      "sellPrice": 19.97,
-      "holdDays": 4,
+      "sellDate": "20260402",
+      "sellPrice": 19.82,
+      "holdDays": 2,
       "position": 50000,
-      "profitPercent": 2.52,
-      "profitAmount": 1257.7,
-      "exitReason": "max_days",
+      "profitPercent": 1.75,
+      "profitAmount": 872.69,
+      "exitReason": "market_panic",
       "buySignalScore": 70,
       "marketMood": 61
     },
@@ -235,13 +235,13 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260402",
       "buyPrice": 27.4,
-      "sellDate": "20260408",
-      "sellPrice": 29.45,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 7.48,
-      "profitAmount": 3740.88,
-      "exitReason": "max_days",
+      "sellDate": "20260403",
+      "sellPrice": 28.32,
+      "holdDays": 2,
+      "position": 25000,
+      "profitPercent": 3.36,
+      "profitAmount": 839.42,
+      "exitReason": "market_panic",
       "buySignalScore": 74,
       "marketMood": 31
     },
@@ -255,9 +255,9 @@
       "sellDate": "20260407",
       "sellPrice": 9,
       "holdDays": 2,
-      "position": 50000,
+      "position": 25000,
       "profitPercent": -5.76,
-      "profitAmount": -2879.58,
+      "profitAmount": -1439.79,
       "exitReason": "stop_loss",
       "buySignalScore": 75,
       "marketMood": 32
@@ -269,13 +269,13 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260403",
       "buyPrice": 20.05,
-      "sellDate": "20260409",
-      "sellPrice": 19.0475,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": -5,
-      "profitAmount": -2500,
-      "exitReason": "stop_loss",
+      "sellDate": "20260408",
+      "sellPrice": 20.16,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 0.55,
+      "profitAmount": 137.16,
+      "exitReason": "max_days",
       "buySignalScore": 74,
       "marketMood": 32
     },
@@ -286,12 +286,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260403",
       "buyPrice": 36.26,
-      "sellDate": "20260409",
-      "sellPrice": 41.41,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 14.2,
-      "profitAmount": 7101.49,
+      "sellDate": "20260408",
+      "sellPrice": 37.66,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 3.86,
+      "profitAmount": 965.25,
       "exitReason": "max_days",
       "buySignalScore": 73,
       "marketMood": 32
@@ -303,13 +303,13 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260407",
       "buyPrice": 92,
-      "sellDate": "20260410",
-      "sellPrice": 111.72,
-      "holdDays": 4,
+      "sellDate": "20260409",
+      "sellPrice": 108.09,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 21.43,
-      "profitAmount": 10717.39,
-      "exitReason": "take_profit",
+      "profitPercent": 17.49,
+      "profitAmount": 8744.57,
+      "exitReason": "max_days",
       "buySignalScore": 84,
       "marketMood": 68
     },
@@ -337,12 +337,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260408",
       "buyPrice": 22.39,
-      "sellDate": "20260413",
-      "sellPrice": 21.91,
-      "holdDays": 4,
+      "sellDate": "20260410",
+      "sellPrice": 22.06,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": -2.14,
-      "profitAmount": -1071.91,
+      "profitPercent": -1.47,
+      "profitAmount": -736.94,
       "exitReason": "max_days",
       "buySignalScore": 78,
       "marketMood": 88
@@ -354,12 +354,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260408",
       "buyPrice": 28,
-      "sellDate": "20260413",
-      "sellPrice": 30.85,
-      "holdDays": 4,
+      "sellDate": "20260410",
+      "sellPrice": 30.25,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 10.18,
-      "profitAmount": 5089.29,
+      "profitPercent": 8.04,
+      "profitAmount": 4017.86,
       "exitReason": "max_days",
       "buySignalScore": 76,
       "marketMood": 88
@@ -371,12 +371,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260409",
       "buyPrice": 29,
-      "sellDate": "20260414",
-      "sellPrice": 29.11,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 0.38,
-      "profitAmount": 189.66,
+      "sellDate": "20260413",
+      "sellPrice": 29.34,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 1.17,
+      "profitAmount": 293.1,
       "exitReason": "max_days",
       "buySignalScore": 71,
       "marketMood": 41
@@ -388,12 +388,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260410",
       "buyPrice": 99.58,
-      "sellDate": "20260415",
-      "sellPrice": 101.43,
-      "holdDays": 4,
+      "sellDate": "20260414",
+      "sellPrice": 107.06,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 1.86,
-      "profitAmount": 928.9,
+      "profitPercent": 7.51,
+      "profitAmount": 3755.77,
       "exitReason": "max_days",
       "buySignalScore": 71,
       "marketMood": 62
@@ -405,13 +405,13 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260413",
       "buyPrice": 35.5,
-      "sellDate": "20260416",
-      "sellPrice": 42.6,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 20,
-      "profitAmount": 10000,
-      "exitReason": "take_profit",
+      "sellDate": "20260415",
+      "sellPrice": 38.6,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 8.73,
+      "profitAmount": 2183.1,
+      "exitReason": "max_days",
       "buySignalScore": 81,
       "marketMood": 49
     },
@@ -422,13 +422,13 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260413",
       "buyPrice": 66,
-      "sellDate": "20260416",
-      "sellPrice": 79.2,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 20,
-      "profitAmount": 10000,
-      "exitReason": "take_profit",
+      "sellDate": "20260415",
+      "sellPrice": 76.02,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 15.18,
+      "profitAmount": 3795.45,
+      "exitReason": "max_days",
       "buySignalScore": 75,
       "marketMood": 49
     },
@@ -439,13 +439,13 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260413",
       "buyPrice": 69.36,
-      "sellDate": "20260416",
-      "sellPrice": 83.232,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 20,
-      "profitAmount": 10000,
-      "exitReason": "take_profit",
+      "sellDate": "20260415",
+      "sellPrice": 76.93,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 10.91,
+      "profitAmount": 2728.52,
+      "exitReason": "max_days",
       "buySignalScore": 74,
       "marketMood": 49
     },
@@ -456,12 +456,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260414",
       "buyPrice": 50.76,
-      "sellDate": "20260417",
-      "sellPrice": 57.91,
-      "holdDays": 4,
+      "sellDate": "20260416",
+      "sellPrice": 53.26,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 14.09,
-      "profitAmount": 7042.95,
+      "profitPercent": 4.93,
+      "profitAmount": 2462.57,
       "exitReason": "max_days",
       "buySignalScore": 82,
       "marketMood": 62
@@ -473,13 +473,13 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260414",
       "buyPrice": 14.87,
-      "sellDate": "20260417",
-      "sellPrice": 17.843999999999998,
-      "holdDays": 4,
+      "sellDate": "20260416",
+      "sellPrice": 17.06,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 20,
-      "profitAmount": 10000,
-      "exitReason": "take_profit",
+      "profitPercent": 14.73,
+      "profitAmount": 7363.82,
+      "exitReason": "max_days",
       "buySignalScore": 82,
       "marketMood": 62
     },
@@ -507,12 +507,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260415",
       "buyPrice": 33.33,
-      "sellDate": "20260420",
-      "sellPrice": 32.7,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": -1.89,
-      "profitAmount": -945.09,
+      "sellDate": "20260417",
+      "sellPrice": 33.89,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 1.68,
+      "profitAmount": 420.04,
       "exitReason": "max_days",
       "buySignalScore": 77,
       "marketMood": 46
@@ -524,12 +524,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260415",
       "buyPrice": 81.22,
-      "sellDate": "20260420",
-      "sellPrice": 83.64,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 2.98,
-      "profitAmount": 1489.78,
+      "sellDate": "20260417",
+      "sellPrice": 81.2,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": -0.02,
+      "profitAmount": -6.16,
       "exitReason": "max_days",
       "buySignalScore": 73,
       "marketMood": 46
@@ -541,12 +541,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260415",
       "buyPrice": 35.48,
-      "sellDate": "20260420",
-      "sellPrice": 40.8,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 14.99,
-      "profitAmount": 7497.18,
+      "sellDate": "20260417",
+      "sellPrice": 40.5,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 14.15,
+      "profitAmount": 3537.2,
       "exitReason": "max_days",
       "buySignalScore": 72,
       "marketMood": 46
@@ -558,12 +558,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260416",
       "buyPrice": 32.99,
-      "sellDate": "20260421",
-      "sellPrice": 32.18,
-      "holdDays": 4,
+      "sellDate": "20260420",
+      "sellPrice": 33.62,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": -2.46,
-      "profitAmount": -1227.64,
+      "profitPercent": 1.91,
+      "profitAmount": 954.83,
       "exitReason": "max_days",
       "buySignalScore": 73,
       "marketMood": 68
@@ -575,12 +575,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260417",
       "buyPrice": 35.31,
-      "sellDate": "20260422",
-      "sellPrice": 36.53,
-      "holdDays": 4,
+      "sellDate": "20260421",
+      "sellPrice": 35.86,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 3.46,
-      "profitAmount": 1727.56,
+      "profitPercent": 1.56,
+      "profitAmount": 778.82,
       "exitReason": "max_days",
       "buySignalScore": 75,
       "marketMood": 56
@@ -609,13 +609,13 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260417",
       "buyPrice": 361.89,
-      "sellDate": "20260422",
-      "sellPrice": 343.79549999999995,
-      "holdDays": 4,
+      "sellDate": "20260421",
+      "sellPrice": 353,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": -5,
-      "profitAmount": -2500,
-      "exitReason": "stop_loss",
+      "profitPercent": -2.46,
+      "profitAmount": -1228.27,
+      "exitReason": "max_days",
       "buySignalScore": 73,
       "marketMood": 56
     },
@@ -626,12 +626,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260420",
       "buyPrice": 106.56,
-      "sellDate": "20260423",
-      "sellPrice": 112.45,
-      "holdDays": 4,
+      "sellDate": "20260422",
+      "sellPrice": 121.2,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 5.53,
-      "profitAmount": 2763.7,
+      "profitPercent": 13.74,
+      "profitAmount": 6869.37,
       "exitReason": "max_days",
       "buySignalScore": 71,
       "marketMood": 66
@@ -643,12 +643,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260420",
       "buyPrice": 16.95,
-      "sellDate": "20260423",
-      "sellPrice": 16.89,
-      "holdDays": 4,
+      "sellDate": "20260422",
+      "sellPrice": 17.3,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": -0.35,
-      "profitAmount": -176.99,
+      "profitPercent": 2.06,
+      "profitAmount": 1032.45,
       "exitReason": "max_days",
       "buySignalScore": 70,
       "marketMood": 66
@@ -677,12 +677,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260421",
       "buyPrice": 8,
-      "sellDate": "20260424",
-      "sellPrice": 8.78,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 9.75,
-      "profitAmount": 4875,
+      "sellDate": "20260423",
+      "sellPrice": 8.67,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 8.38,
+      "profitAmount": 2093.75,
       "exitReason": "max_days",
       "buySignalScore": 73,
       "marketMood": 43
@@ -694,13 +694,13 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260421",
       "buyPrice": 30.24,
-      "sellDate": "20260424",
-      "sellPrice": 28.727999999999998,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": -5,
-      "profitAmount": -2500,
-      "exitReason": "stop_loss",
+      "sellDate": "20260423",
+      "sellPrice": 29.13,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": -3.67,
+      "profitAmount": -917.66,
+      "exitReason": "max_days",
       "buySignalScore": 72,
       "marketMood": 43
     },
@@ -711,12 +711,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260422",
       "buyPrice": 14.75,
-      "sellDate": "20260427",
-      "sellPrice": 16.51,
-      "holdDays": 4,
+      "sellDate": "20260424",
+      "sellPrice": 16.24,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 11.93,
-      "profitAmount": 5966.1,
+      "profitPercent": 10.1,
+      "profitAmount": 5050.85,
       "exitReason": "max_days",
       "buySignalScore": 72,
       "marketMood": 51
@@ -731,9 +731,9 @@
       "sellDate": "20260424",
       "sellPrice": 33.345,
       "holdDays": 2,
-      "position": 50000,
+      "position": 25000,
       "profitPercent": -5,
-      "profitAmount": -2500,
+      "profitAmount": -1250,
       "exitReason": "stop_loss",
       "buySignalScore": 74,
       "marketMood": 40
@@ -745,12 +745,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260423",
       "buyPrice": 30.52,
-      "sellDate": "20260428",
-      "sellPrice": 31.58,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 3.47,
-      "profitAmount": 1736.57,
+      "sellDate": "20260427",
+      "sellPrice": 32.19,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 5.47,
+      "profitAmount": 1367.96,
       "exitReason": "max_days",
       "buySignalScore": 73,
       "marketMood": 40
@@ -762,12 +762,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260423",
       "buyPrice": 32.34,
-      "sellDate": "20260428",
-      "sellPrice": 34.32,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 6.12,
-      "profitAmount": 3061.22,
+      "sellDate": "20260427",
+      "sellPrice": 33.77,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 4.42,
+      "profitAmount": 1105.44,
       "exitReason": "max_days",
       "buySignalScore": 73,
       "marketMood": 40
@@ -779,12 +779,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260428",
       "buyPrice": 22.98,
-      "sellDate": "20260506",
-      "sellPrice": 23.18,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 0.87,
-      "profitAmount": 435.16,
+      "sellDate": "20260430",
+      "sellPrice": 23.13,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 0.65,
+      "profitAmount": 163.19,
       "exitReason": "max_days",
       "buySignalScore": 72,
       "marketMood": 46
@@ -799,9 +799,9 @@
       "sellDate": "20260429",
       "sellPrice": 66.01549999999999,
       "holdDays": 2,
-      "position": 50000,
+      "position": 25000,
       "profitPercent": -5,
-      "profitAmount": -2500,
+      "profitAmount": -1250,
       "exitReason": "stop_loss",
       "buySignalScore": 72,
       "marketMood": 46
@@ -816,9 +816,9 @@
       "sellDate": "20260430",
       "sellPrice": 41.1825,
       "holdDays": 3,
-      "position": 50000,
+      "position": 25000,
       "profitPercent": -5,
-      "profitAmount": -2500,
+      "profitAmount": -1250,
       "exitReason": "stop_loss",
       "buySignalScore": 71,
       "marketMood": 46
@@ -830,12 +830,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260430",
       "buyPrice": 36.02,
-      "sellDate": "20260508",
-      "sellPrice": 37.56,
-      "holdDays": 4,
+      "sellDate": "20260507",
+      "sellPrice": 37.55,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 4.28,
-      "profitAmount": 2137.7,
+      "profitPercent": 4.25,
+      "profitAmount": 2123.82,
       "exitReason": "max_days",
       "buySignalScore": 72,
       "marketMood": 62
@@ -847,12 +847,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260430",
       "buyPrice": 177,
-      "sellDate": "20260508",
-      "sellPrice": 180.44,
-      "holdDays": 4,
+      "sellDate": "20260507",
+      "sellPrice": 183.5,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 1.94,
-      "profitAmount": 971.75,
+      "profitPercent": 3.67,
+      "profitAmount": 1836.16,
       "exitReason": "max_days",
       "buySignalScore": 71,
       "marketMood": 62
@@ -864,12 +864,12 @@
       "strategyName": "强势资金突破",
       "buyDate": "20260430",
       "buyPrice": 7.03,
-      "sellDate": "20260508",
-      "sellPrice": 7.37,
-      "holdDays": 4,
+      "sellDate": "20260507",
+      "sellPrice": 6.94,
+      "holdDays": 3,
       "position": 50000,
-      "profitPercent": 4.84,
-      "profitAmount": 2418.21,
+      "profitPercent": -1.28,
+      "profitAmount": -640.11,
       "exitReason": "max_days",
       "buySignalScore": 70,
       "marketMood": 62

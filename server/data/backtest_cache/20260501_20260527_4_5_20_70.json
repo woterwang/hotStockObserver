@@ -10,25 +10,25 @@
     "stopLossPercent": 0.05,
     "takeProfitPercent": 0.2,
     "maxHoldDays": 4,
-    "marketPanicThreshold": 0,
+    "marketPanicThreshold": 4,
     "maxBuyCount": 3
   },
   "totalTrades": 27,
   "winTrades": 12,
   "lossTrades": 15,
-  "winRate": 44.44,
-  "totalProfitAmount": 26971.05,
-  "totalProfitPercent": 2,
-  "avgProfitPercent": 2,
-  "avgWinPercent": 11.55,
+  "winRate": 50,
+  "totalProfitAmount": 43963.16,
+  "totalProfitPercent": 2.93,
+  "avgProfitPercent": 2.93,
+  "avgWinPercent": 11.51,
   "avgLossPercent": -5.65,
-  "profitLossRatio": 2.05,
-  "totalInvested": 1350000,
+  "profitLossRatio": 2.04,
+  "totalInvested": 1500000,
   "maxDrawdown": 23593.15,
-  "maxDrawdownPercent": 58.86,
+  "maxDrawdownPercent": 49.12,
   "maxProfit": 23.88,
   "maxLoss": -12.66,
-  "maxConsecutiveWins": 5,
+  "maxConsecutiveWins": 7,
   "maxConsecutiveLosses": 8,
   "avgHoldDays": 2.9,
   "equityCurve": [
@@ -61,84 +61,96 @@
       "equity": 31119.76
     },
     {
-      "date": "20260512",
-      "equity": 28619.76
+      "date": "20260514",
+      "equity": 42583.96
     },
     {
       "date": "20260514",
-      "equity": 40083.96
+      "equity": 48031.03
     },
     {
       "date": "20260513",
-      "equity": 36730.14
+      "equity": 44677.21
     },
     {
       "date": "20260515",
-      "equity": 37970.7
+      "equity": 45917.77
     },
     {
       "date": "20260515",
-      "equity": 37812.469999999994
+      "equity": 45759.53999999999
     },
     {
       "date": "20260515",
-      "equity": 35312.469999999994
+      "equity": 43259.53999999999
     },
     {
       "date": "20260515",
-      "equity": 32812.469999999994
+      "equity": 40759.53999999999
     },
     {
       "date": "20260515",
-      "equity": 30312.469999999994
+      "equity": 38259.53999999999
     },
     {
       "date": "20260518",
-      "equity": 27812.469999999994
+      "equity": 35759.53999999999
     },
     {
       "date": "20260519",
-      "equity": 24903.969999999994
+      "equity": 32851.03999999999
     },
     {
       "date": "20260519",
-      "equity": 21360.159999999993
+      "equity": 29307.229999999992
     },
     {
       "date": "20260521",
-      "equity": 18860.159999999993
+      "equity": 26807.229999999992
     },
     {
       "date": "20260522",
-      "equity": 18990.809999999994
+      "equity": 26937.879999999994
+    },
+    {
+      "date": "20260520",
+      "equity": 24437.879999999994
+    },
+    {
+      "date": "20260525",
+      "equity": 28393.149999999994
+    },
+    {
+      "date": "20260525",
+      "equity": 34308.299999999996
     },
     {
       "date": "20260521",
-      "equity": 16490.809999999994
-    },
-    {
-      "date": "20260525",
-      "equity": 20446.079999999994
-    },
-    {
-      "date": "20260525",
-      "equity": 26361.229999999996
-    },
-    {
-      "date": "20260521",
-      "equity": 38298.95
+      "equity": 46246.02
     },
     {
       "date": "20260522",
-      "equity": 35798.95
+      "equity": 43746.02
     },
     {
       "date": "20260522",
-      "equity": 29471.049999999996
+      "equity": 37418.119999999995
     },
     {
       "date": "20260525",
-      "equity": 26971.049999999996
+      "equity": 34918.119999999995
+    },
+    {
+      "date": "20260528",
+      "equity": 42836.619999999995
+    },
+    {
+      "date": "20260526",
+      "equity": 40336.619999999995
+    },
+    {
+      "date": "20260528",
+      "equity": 43963.159999999996
     }
   ],
   "trades": [
@@ -267,14 +279,14 @@
       "strategyType": "volume_surge",
       "strategyName": "强势资金突破",
       "buyDate": "20260511",
-      "buyPrice": 17.7,
-      "sellDate": "20260512",
-      "sellPrice": 16.814999999999998,
-      "holdDays": 2,
+      "buyPrice": 124.3,
+      "sellDate": "20260514",
+      "sellPrice": 152.8,
+      "holdDays": 4,
       "position": 50000,
-      "profitPercent": -5,
-      "profitAmount": -2500,
-      "exitReason": "stop_loss",
+      "profitPercent": 22.93,
+      "profitAmount": 11464.2,
+      "exitReason": "take_profit",
       "buySignalScore": 73,
       "marketMood": 72
     },
