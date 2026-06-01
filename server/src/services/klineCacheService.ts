@@ -465,7 +465,7 @@ export const klineCacheService = new KlineCacheService();
  * @param codes 股票代码数组（6位数字，如 ['000001', '600693']）
  * @returns Promise<Map<string, TencentRealtimeQuote>> 股票代码 -> 实时行情
  */
-export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<string, OpenData>> {
+export async function fetchTencentRealTimeQuotes (codes: string[], dateStr?: string): Promise<Map<string, OpenData>> {
   const result = new Map<string, OpenData>();
 
   if (!codes || codes.length === 0) {
@@ -519,7 +519,6 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
       if (parts.length < 45) {
         continue;
       }
-
       // 腾讯数据格式（以 ~ 分隔，索引从0开始）:
       // 0:未知 1:名称 2:代码 3:当前价 4:昨收 5:今开 6:成交量(手)
       // 33:最高 34:最低 37:成交额(万)
@@ -527,14 +526,34 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
       // 30:时间戳(YYYYMMDDHHMMSS) 31:涨跌额 32:涨跌幅
       const volumeAndTurnover = parts[35].split('/');
       const stockCode = parts[2];
+      const targetDate = toDateStr(dateStr);
+      let klineData = await klineCacheService.fetchKlineByDate(stockCode, targetDate);
+      if (!klineData || klineData.length === 0) {
+        logger.info(`[BuySignal] getOpeningData ${stockCode} 无K线数据`);
+        klineData = []
+      }
+      // 找到目标日期的K线
+      let targetIdx = klineData?.findIndex(k => {
+        return k.date === targetDate;
+      })??-1;
+
+      // 如果找不到指定日期，使用最新的K线（可能是盘中或当天数据尚未更新）
+      if (targetIdx === -1) {
+        logger.info(`[BuySignal]  ${stockCode} 未找到 ${targetDate} 的K线不存在,无法获取开盘数据,请确认数据已更新`);
+      }
+      const prev = targetIdx > 0 ? klineData[targetIdx] : null;
+      logger.info(`[BuySignal] ${stockCode} 获取到的K线数据条数: ${klineData.length}, targetDate: ${targetDate}, targetIdx: ${targetIdx}, prevDate: ${prev?.date}`);
       const stockName = parts[1];
       const current = parseFloat(parts[3]) || 0;
-      const preClose = parseFloat(parts[4]) || 0;
+      const preClose = prev?.close || 0;
+      logger.info(`[K线缓存] 腾讯接口 ${stockCode} 当前价: ${current}, 昨收: ${preClose}`);
       const open = parseFloat(parts[5]) || 0;
       const high = parseFloat(parts[33]) || 0;
       const low = parseFloat(parts[34]) || 0;
-      const volume = parseFloat(volumeAndTurnover[1]) || 0; // 手
-      const turnover = parseFloat(volumeAndTurnover[2]) || 0; // 万
+      const volume = parseFloat(volumeAndTurnover[1]) || 0; // 股
+      logger.info(`[K线缓存] 腾讯接口 ${stockCode} 成交量: ${volume} 股,prev?.volume: ${prev?.volume}`);
+      const turnover = parseFloat(volumeAndTurnover[2]) || 0; // 元
+      logger.info(`[K线缓存] 腾讯接口 ${stockCode} 成交额: ${turnover} 元,prev?.turnover: ${prev?.turnover}/${(volume / (prev?.volume??volume)) * 100}`);
       const changeAmount = parseFloat(parts[31]) || 0;
       const changePercent = parseFloat(parts[32]) || 0;
 
@@ -553,10 +572,10 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
       result.set(stockCode, {
         openTimes: timeStr,
         openPrice: open,
-        openChangePercent: preClose > 0 ? ((open - preClose) / preClose) * 100 : 0,
-        openVolumeRatio: volume, // 成交量（手）
+        openChangePercent: (open - preClose) / preClose * 100,
+        openVolumeRatio: (volume / (prev?.volume??volume)) * 100, // 成交量（股）
         auctionAmount: turnover, // 成交额（元）
-        auctionAmountRatio: turnover > 0 ? ((turnover - preClose * volume * 100) / (preClose * volume * 100)) * 100 : 0,
+        auctionAmountRatio: (turnover / (prev?.turnover??turnover)) * 100,
         isLimitUp: changePercent >= 9.9, // 简单判断涨停（A股）
       });
     }

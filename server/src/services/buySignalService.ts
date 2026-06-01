@@ -635,7 +635,7 @@ class BuySignalService {
     ) {
       // 腾讯行情优先
       try {
-        const tencentQuotes = await fetchTencentRealTimeQuotes([candidate.stockCode]);
+        const tencentQuotes = await fetchTencentRealTimeQuotes([candidate.stockCode],candidate.date);
         // 如果是当天9.30之前 存储一份数据到本地
         const now = new Date();
         if (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 30)) {
@@ -643,6 +643,7 @@ class BuySignalService {
           writeToFile(`/tencentQuotes/`, `${todayStr}.json`, Array.from(tencentQuotes.entries()));
         }
         openData = tencentQuotes.get(candidate.stockCode);
+        logger.info(`[BuySignal openData] ${JSON.stringify(openData)}`);
         if (openData) {
           logger.info(`[BuySignal] ${candidate.stockCode} 使用腾讯实时行情数据`);
         }
