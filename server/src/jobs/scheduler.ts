@@ -292,7 +292,7 @@ export class JobScheduler {
         if (topThree.length > 0) {
           // 创建分组：${日期}-放量大涨
           logger.info(`[放量大涨] 今日放量大涨股票: ${topThree.join(', ')}`);
-          const groupId = await groupService.createGroup(`${today}-放量大涨`);
+          const groupId = await groupService.createGroup(`${today}-放量大涨L`);
           await groupService.addStocksToGroup(groupId, topThree);
         }
       } catch (error) {
@@ -310,7 +310,7 @@ export class JobScheduler {
         if (topThree.length > 0) {
           // 创建分组：${日期}-主线共振
           logger.info(`[主线共振] 今日主线共振股票: ${topThree.join(', ')}`);
-          const groupId = await groupService.createGroup(`${today}-主线共振`);
+          const groupId = await groupService.createGroup(`${today}-主线共振l`);
           await groupService.addStocksToGroup(groupId, topThree);
         }
       } catch (error) {
