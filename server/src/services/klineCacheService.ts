@@ -567,15 +567,18 @@ export async function fetchTencentRealTimeQuotes (codes: string[], dateStr?: str
         : '';
       dataTime = timeStr;
       logger.info(`[K线缓存] 腾讯接口时间: ${date} ${time}`);
+      const auctionAmountRatio = (turnover / (prev?.turnover??turnover)) * 100;
+      const openVolumeRatio = (volume / (prev?.volume??volume)) * 100;
+      const openChangePercent = (open - preClose) / preClose * 100;
 
       // 开盘价为0表示数据可能无效，但仍放入结果中，由调用方判断
       result.set(stockCode, {
         openTimes: timeStr,
         openPrice: open,
-        openChangePercent: (open - preClose) / preClose * 100,
-        openVolumeRatio: (volume / (prev?.volume??volume)) * 100, // 成交量（股）
+        openChangePercent: Math.round(openChangePercent * 100) / 100, // 开盘价相对于昨收的变化百分比
+        openVolumeRatio: Math.round(openVolumeRatio * 100) / 100, // 相对于上一交易日的成交量变化百分比// 成交量（股）
         auctionAmount: turnover, // 成交额（元）
-        auctionAmountRatio: (turnover / (prev?.turnover??turnover)) * 100,
+        auctionAmountRatio: Math.round(auctionAmountRatio * 100) / 100, // 相对于上一交易日的成交额变化百分比
         isLimitUp: changePercent >= 9.9, // 简单判断涨停（A股）
       });
     }
