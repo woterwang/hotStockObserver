@@ -471,7 +471,7 @@ const BuySignalPage: React.FC = () => {
                     <div>
                       <span className="text-gray-500">开盘涨幅：</span>
                       <span className={ `font-medium ${signal.openChangePercent >= 0 ? 'text-red-600' : 'text-green-600'}` }>
-                        { signal.openChangePercent >= 0 ? '+' : '' }{ signal.openChangePercent.toFixed(2) }%
+                        { signal.openChangePercent >= 0 ? '+' : '' }{ signal.openChangePercent }%
                       </span>
                     </div>
                     <div>
