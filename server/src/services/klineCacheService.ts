@@ -83,6 +83,19 @@ class KlineCacheService {
     return { map, cacheTime };
   }
 
+  //获取本地缓存的K线数据
+  async getKlineFromCache (stockCode: string): Promise<CachedKline[]> {
+    let { map, cacheTime } = this.loadCache(stockCode);
+    if (map.size === 0) {
+      logger.info(`本地K线缓存为空 ${stockCode}`);
+      await this.fetchKlineFromTHS(stockCode, 1800);
+      map = this.loadCache(stockCode).map;
+      this.persistCache(stockCode, map, Date.now());
+    }
+    // 把map转换成[{ close: 9.5, open: 9.2, high: 9.8, low: 9.1, volume: 50000000 }]
+    return Array.from(map.values())
+  }
+
   // 将 Map 落盘，保持 cacheTime 以标识最新写入时间
   private persistCache (stockCode: string, map: Map<string, CachedKline>, cacheTime: number = Date.now()): void {
     const cacheFile = this.getCacheFile(stockCode);
@@ -535,7 +548,7 @@ export async function fetchTencentRealTimeQuotes (codes: string[], dateStr?: str
       // 找到目标日期的K线
       let targetIdx = klineData?.findIndex(k => {
         return k.date === targetDate;
-      })??-1;
+      }) ?? -1;
 
       // 如果找不到指定日期，使用最新的K线（可能是盘中或当天数据尚未更新）
       if (targetIdx === -1) {
@@ -553,7 +566,7 @@ export async function fetchTencentRealTimeQuotes (codes: string[], dateStr?: str
       const volume = parseFloat(volumeAndTurnover[1]) || 0; // 股
       logger.info(`[K线缓存] 腾讯接口 ${stockCode} 成交量: ${volume} 股,prev?.volume: ${prev?.volume}`);
       const turnover = parseFloat(volumeAndTurnover[2]) || 0; // 元
-      logger.info(`[K线缓存] 腾讯接口 ${stockCode} 成交额: ${turnover} 元,prev?.turnover: ${prev?.turnover}/${(volume / (prev?.volume??volume)) * 100}`);
+      logger.info(`[K线缓存] 腾讯接口 ${stockCode} 成交额: ${turnover} 元,prev?.turnover: ${prev?.turnover}/${(volume / (prev?.volume ?? volume)) * 100}`);
       const changeAmount = parseFloat(parts[31]) || 0;
       const changePercent = parseFloat(parts[32]) || 0;
 
@@ -567,9 +580,9 @@ export async function fetchTencentRealTimeQuotes (codes: string[], dateStr?: str
         : '';
       dataTime = timeStr;
       logger.info(`[K线缓存] 腾讯接口时间: ${date} ${time}`);
-      const auctionAmountRatio = (turnover / (prev?.turnover??turnover)) * 100;
-      const openVolumeRatio = (volume / (prev?.volume??volume)) * 100;
-      const openChangePercent = (open - preClose) / preClose * 100;
+      const auctionAmountRatio = ((turnover / (prev?.turnover ?? turnover)) * 100) || 0;
+      const openVolumeRatio = ((volume / (prev?.volume ?? volume)) * 100) || 0;
+      const openChangePercent = ((open - preClose) / preClose * 100) || 0;
 
       // 开盘价为0表示数据可能无效，但仍放入结果中，由调用方判断
       result.set(stockCode, {

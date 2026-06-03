@@ -26,6 +26,7 @@ import { klineCacheService, CachedKline, fetchTencentRealTimeQuotes } from './kl
 import { getStockTrendMinute } from './stockTrendService';
 import { logger } from '../utils';
 import { writeToFile } from '../utils/writeToFile';
+import { StockAnalysisEngine } from './KlineAnalysis';
 
 // 策略类型定义
 type StrategyType = 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover' | 'concept_resonance';
@@ -460,8 +461,9 @@ class BuySignalService {
 
     // 如果小于 9.26 分，直接返回空
     const now = new Date();
-    if (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 26)) {
-      logger.info(`[BuySignal] 当前时间 ${now.getHours()}:${now.getMinutes()} 小于 9:26，跳过生成`);
+    // 如果是今天的信号日期，且当前时间小于9:26，说明还未到开盘时机，不生成信号
+    if (dateStr === dayjs().format('YYYYMMDD') && (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 26))) {
+      logger.info(`[BuySignal] ${dateStr} 当前时间 ${now.getHours()}:${now.getMinutes()} 小于 9:26，跳过生成`);
       return [];
     }
 
@@ -503,11 +505,15 @@ class BuySignalService {
     for (let i = 0; i < candidates.length; i++) {
       const candidate = candidates[i];
       try {
-        // 非首个请求时等待300ms
-        // if (i > 0) {
-        //   await new Promise(resolve => setTimeout(resolve, 300));
-        // }
-        const signal = await this.generateSignalForStock(candidate, signalDate);
+        logger.info(`[BuySignal] 正在处理 ${candidate.stockCode}...`);
+        let signal: IBuySignal | null = null;
+        // 如果signalDate小于今天
+        if (signalDate < dayjs().format('YYYYMMDD')) {
+          logger.info(`[BuySignal] ${candidate.stockCode} 的信号日期小于今天，生成历史信号`);
+          signal = await this.generateHistorySignalForStock(candidate, signalDate);
+        }else{
+          signal = await this.generateSignalForStock(candidate, signalDate);
+        }
         if (signal) {
           signals.push(signal);
         }
@@ -635,7 +641,7 @@ class BuySignalService {
     ) {
       // 腾讯行情优先
       try {
-        const tencentQuotes = await fetchTencentRealTimeQuotes([candidate.stockCode],candidate.date);
+        const tencentQuotes = await fetchTencentRealTimeQuotes([candidate.stockCode], candidate.date);
         // 如果是当天9.30之前 存储一份数据到本地
         const now = new Date();
         if (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 30)) {
@@ -790,6 +796,7 @@ class BuySignalService {
     // 获取开盘数据，若为今日且为交易日，优先用腾讯实时行情
     let openData = null;
     const todayStr = dayjs().format('YYYYMMDD');
+    logger.info(`[BuySignal] 生成历史买入信号，signalDate: ${signalDate}, todayStr: ${todayStr}`);
     if (
       !tradingCalendarService.isTradingDay(signalDate)
     ) {
@@ -801,6 +808,8 @@ class BuySignalService {
       logger.info(`[BuySignal] ${candidate.stockCode} 无法获取开盘数据`);
       return null;
     }
+    // 获取某个股票的K线数据
+    const klineData = await klineCacheService.getKlineFromCache(candidate.stockCode);
     const prevTradingDay = tradingCalendarService.getPrevTradingDay(signalDate);
     // 获取大盘环境
     const marketEnv = await this.getMarketEnvironment(prevTradingDay as string);
@@ -813,7 +822,19 @@ class BuySignalService {
 
     // 计算各项评分
     const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
-    const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
+    // const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
+    const analysisRes = StockAnalysisEngine.run({
+      auctionVol: 0,        // 9:15-9:25 竞价总成交量(股)
+      auctionAmount: 0,    // 竞价总成交额(元)
+      circulateShares: 0,   // 流通总股本(股)
+      circulateMarketValue: 0, // 流通市值(元)
+      klineHistory: klineData,
+    });
+    logger.info(`[BuySignal] ${candidate.stockCode} 盘前分析结果: ${JSON.stringify(analysisRes)}`);
+    const volumeConfirm = {
+      score: analysisRes.trendScore,
+      reason: analysisRes.trendTag,
+    };
     const auction = BuySignalScorer.scoreAuction(openData.auctionAmountRatio);
     const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood);
     const sectorLink = BuySignalScorer.scoreSectorLink(
@@ -977,7 +998,7 @@ class BuySignalService {
           logger.info(`[BuySignal] ${stockCode} openVolume:${volume}`);
           const turnover = volume * Number(openData[2]) || 0; // 成交额 = 成交量 * 成交价
           logger.info(`[BuySignal] ${stockCode} openTurnover:${turnover}`);
-          if(volume > 0 && turnover > 0){
+          if (volume > 0 && turnover > 0) {
             target.volume = volume;
             target.turnover = turnover;
           }
@@ -993,7 +1014,7 @@ class BuySignalService {
       // }
       // 计算与前一日量比（当日竞价成交量 / 前一日成交量）
       logger.info(`[BuySignal] ${stockCode} targetVolume:${target.volume}, prevVolume:${prev?.volume}`);
-      volumeRatio = prev && prev.volume > 0 ? target.volume / (prev?.volume??0) * 100 : 1;
+      volumeRatio = prev && prev.volume > 0 ? target.volume / (prev?.volume ?? 0) * 100 : 1;
       logger.info(`[BuySignal] ${stockCode} volumeRatio:${volumeRatio}`);
 
       // 判断是否涨停（收盘价>=开盘价*1.095 且 收盘=最高）

@@ -2,7 +2,7 @@
  * @Author: hp.com
  * @Date: 2026-04-14 19:29:05
  * @LastEditors: WRG
- * @LastEditTime: 2026-05-31 17:51:33
+ * @LastEditTime: 2026-06-04 00:19:36
  * @😍: 😃😃
  */
 //curl 'https://apphis.longhuvip.com/w1/api/index.php'  -H 'Host: apphis.longhuvip.com'  -H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8'  -H 'Connection: keep-alive'  -H 'Accept: */*'  -H 'User-Agent: lhb/5.20.9 (com.kaipanla.www; build:1; iOS 18.2.1) Alamofire/4.9.1'  -H 'Accept-Language: zh-Hans-CN;q=1.0'  -H 'Content-Length: 166'  -H 'Accept-Encoding: gzip;q=1.0, compress;q=0.5'   --data 'Day=20260401&DeviceID=86c65473e79a0f7906d5b758c190382e3983240a&PhoneOSNew=2&StockID=000617&Token=0&UserID=0&VerSion=5.20.0.9&a=GetStockTrend&apiv=w41&c=StockL2History' --compressed
@@ -54,7 +54,7 @@ export const getStockTrendMinute = async (stockId: string, date: string, minute:
   if (!minuteData) {
     return null;
   }
-
+  await sleep(1); // 等待500ms，避免请求过快
   return minuteData;
 }
 // 测试获取股票的分时数据
