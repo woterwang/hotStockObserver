@@ -355,8 +355,8 @@ const BuySignalPage: React.FC = () => {
                 key={ key }
                 onClick={ () => setFilterStrategy(key) }
                 className={ `px-3 py-1.5 rounded-full text-sm font-medium transition flex items-center gap-1 ${filterStrategy === key
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }` }
               >
                 <span>{ config.icon }</span>
@@ -379,8 +379,8 @@ const BuySignalPage: React.FC = () => {
                 key={ item.value }
                 onClick={ () => setFilterSignal(item.value) }
                 className={ `px-3 py-1.5 rounded-full text-sm font-medium transition ${filterSignal === item.value
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }` }
               >
                 { item.label }
@@ -415,9 +415,9 @@ const BuySignalPage: React.FC = () => {
                       {/* 策略类型标签 */ }
                       { signal.strategyType && (
                         <span className={ `px-2 py-0.5 rounded-full text-xs font-medium ${signal.strategyType === 'volume_surge' ? 'bg-blue-100 text-blue-700' :
-                            signal.strategyType === 'breakthrough' ? 'bg-purple-100 text-purple-700' :
-                              signal.strategyType === 'limit_up' ? 'bg-red-100 text-red-700' :
-                                'bg-green-100 text-green-700'
+                          signal.strategyType === 'breakthrough' ? 'bg-purple-100 text-purple-700' :
+                            signal.strategyType === 'limit_up' ? 'bg-red-100 text-red-700' :
+                              'bg-green-100 text-green-700'
                           }` }>
                           { STRATEGY_CONFIG[signal.strategyType as StrategyFilterType]?.icon }{ ' ' }
                           { signal.strategyName || STRATEGY_CONFIG[signal.strategyType as StrategyFilterType]?.label }
@@ -454,7 +454,7 @@ const BuySignalPage: React.FC = () => {
                         <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
                           <div
                             className={ `h-full rounded-full ${item.score / item.max >= 0.8 ? 'bg-green-500' :
-                                item.score / item.max >= 0.5 ? 'bg-yellow-500' : 'bg-red-500'
+                              item.score / item.max >= 0.5 ? 'bg-yellow-500' : 'bg-red-500'
                               }` }
                             style={ { width: `${(item.score / item.max) * 100}%` } }
                           />
@@ -471,7 +471,7 @@ const BuySignalPage: React.FC = () => {
                     <div>
                       <span className="text-gray-500">开盘涨幅：</span>
                       <span className={ `font-medium ${signal.openChangePercent >= 0 ? 'text-red-600' : 'text-green-600'}` }>
-                        { signal.openChangePercent >= 0 ? '+' : '' }{ signal.openChangePercent }%
+                        { signal.openChangePercent >= 0 ? '+' : '' }{ (signal.openChangePercent || 0).toFixed(2) }%
                       </span>
                     </div>
                     <div>
