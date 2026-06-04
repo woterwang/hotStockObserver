@@ -353,7 +353,7 @@ export class StockAnalysisEngine {
 
     // 5. 返回结果
     // trendScore 最大为 20 分
-    trendScore = Math.min((trendScore * 0.2), 20);
+    trendScore = Math.min((trendScore * 0.3), 30);
 
     return {
       baseGrabScore: Number(baseGrabScore.toFixed(2)),

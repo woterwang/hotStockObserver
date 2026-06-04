@@ -822,7 +822,7 @@ class BuySignalService {
 
     // 计算各项评分
     const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
-    // const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
+    const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
     const analysisRes = StockAnalysisEngine.run({
       auctionVol: 0,        // 9:15-9:25 竞价总成交量(股)
       auctionAmount: 0,    // 竞价总成交额(元)
@@ -831,10 +831,6 @@ class BuySignalService {
       klineHistory: klineData,
     });
     logger.info(`[BuySignal] ${candidate.stockCode} 盘前分析结果: ${JSON.stringify(analysisRes)}`);
-    const volumeConfirm = {
-      score: analysisRes.trendScore,
-      reason: analysisRes.trendTag,
-    };
     const auction = BuySignalScorer.scoreAuction(openData.auctionAmountRatio);
     const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood);
     const sectorLink = BuySignalScorer.scoreSectorLink(
@@ -855,12 +851,13 @@ class BuySignalService {
 
     // 计算总分
     const totalBuyScore =
-      openStrength.score +
-      volumeConfirm.score +
+      Math.min(openStrength.score,20) +
+      volumeConfirm.score + 
       auction.score +
       marketEnvScore.score +
-      sectorLink.score +
-      sealStrength.score +
+      // sectorLink.score +
+      // sealStrength.score +
+      analysisRes.trendScore +
       technical.score;
 
     // 生成买入决策
@@ -921,7 +918,7 @@ class BuySignalService {
       distanceToPressure: technicalData.distanceToPressure,
 
       openStrengthScore: openStrength.score,
-      volumeConfirmScore: volumeConfirm.score,
+      volumeConfirmScore: analysisRes.trendScore,
       auctionScore: auction.score,
       marketEnvScore: marketEnvScore.score,
       sectorLinkScore: sectorLink.score,

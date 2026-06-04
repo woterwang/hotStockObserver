@@ -54,7 +54,7 @@ export const getStockTrendMinute = async (stockId: string, date: string, minute:
   if (!minuteData) {
     return null;
   }
-  await sleep(1); // 等待500ms，避免请求过快
+  await sleep(0.5,1); // 等待500ms，避免请求过快
   return minuteData;
 }
 // 测试获取股票的分时数据
