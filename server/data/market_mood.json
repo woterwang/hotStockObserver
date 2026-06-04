@@ -1,7 +1,34 @@
 {
+<<<<<<< HEAD
   "updatedAt": "2026-05-31T00:18:00.825Z",
   "data": [
     {
+=======
+  "updatedAt": "2026-06-04T00:18:00.183Z",
+  "data": [
+    {
+      "day": "20260603",
+      "strong": 46,
+      "ztjs": 66,
+      "lbgd": 3,
+      "dfNum": 6
+    },
+    {
+      "day": "20260602",
+      "strong": 47,
+      "ztjs": 64,
+      "lbgd": 3,
+      "dfNum": 4
+    },
+    {
+      "day": "20260601",
+      "strong": 69,
+      "ztjs": 118,
+      "lbgd": 4,
+      "dfNum": 9
+    },
+    {
+>>>>>>> 129c3d0 (update cache files)
       "day": "20260529",
       "strong": 41,
       "ztjs": 49,
