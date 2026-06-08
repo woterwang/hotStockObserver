@@ -72,7 +72,6 @@ class BuySignalScorer {
    * - 过高(>5%): 追高风险，获利盘抛压
    */
   static scoreOpenStrength (openChangePercent: number): { score: number; reason: string } {
-    logger.info(`[BuySignalScorer] 开盘涨幅: ${openChangePercent}%`);
     if (openChangePercent >= 1 && openChangePercent <= 3) {
       return { score: 30, reason: '开盘涨幅理想(1-3%)，强势延续且不追高' };
     } else if (openChangePercent > 3 && openChangePercent <= 5) {
@@ -95,7 +94,6 @@ class BuySignalScorer {
    * 开盘量比 >= 1.5 说明资金延续
    */
   static scoreVolumeConfirm (openVolumeRatio: number): { score: number; reason: string } {
-    logger.info(`[BuySignalScorer] 开盘量比: ${openVolumeRatio}`);
     if (openVolumeRatio >= 3) {
       return { score: 15, reason: '开盘量比极高(≥3)，资金强势涌入' };
     } else if (openVolumeRatio >= 2) {
@@ -114,7 +112,6 @@ class BuySignalScorer {
    * 竞价金额占昨日成交额的比例
    */
   static scoreAuction (auctionAmountRatio: number): { score: number; reason: string } {
-    logger.info(`[BuySignalScorer] 竞价金额占比: ${auctionAmountRatio}%`);
     if (auctionAmountRatio >= 5) {
       return { score: 15, reason: '竞价金额占比极高(≥5%)，主力大幅抢筹' };
     } else if (auctionAmountRatio >= 3) {
@@ -986,14 +983,10 @@ class BuySignalService {
       }
       // 计算量比（当日成交量 / 5日平均成交量）
       let volumeRatio = 1;
-      // if (targetIdx >= 5) {
-      //   const avg5Vol = klineData.slice(targetIdx - 5, targetIdx).reduce((sum, k) => sum + k.volume, 0) / 5;
-      //   volumeRatio = avg5Vol > 0 ? target.volume / avg5Vol : 1;
-      // }
-      // 计算与前一日量比（当日竞价成交量 / 前一日成交量）
-      logger.info(`[BuySignal] ${stockCode} targetVolume:${target.volume}, prevVolume:${prev?.volume}`);
-      volumeRatio = prev && prev.volume > 0 ? target.volume / (prev?.volume??0) * 100 : 1;
-      logger.info(`[BuySignal] ${stockCode} volumeRatio:${volumeRatio}`);
+      if (targetIdx >= 5) {
+        const avg5Vol = klineData.slice(targetIdx - 5, targetIdx).reduce((sum, k) => sum + k.volume, 0) / 5;
+        volumeRatio = avg5Vol > 0 ? target.volume / avg5Vol : 1;
+      }
 
       // 判断是否涨停（收盘价>=开盘价*1.095 且 收盘=最高）
       let isLimitUp = prev
@@ -1013,14 +1006,10 @@ class BuySignalService {
       }
 
       // 竞价金额估算（开盘成交约占全天3%）
-      // const auctionAmount = target.turnover * 0.03 / 10000;  // 万元
-      // const auctionAmountRatio = prev && prev.turnover > 0
-      //   ? (target.turnover * 0.03 / prev.turnover) * 100
-      //   : 3;
-      const auctionAmount = target.turnover;  // 元
+      const auctionAmount = target.turnover * 0.03 / 10000;  // 万元
       const auctionAmountRatio = prev && prev.turnover > 0
-        ? (target.turnover / prev.turnover) * 100
-        : 1;
+        ? (target.turnover * 0.03 / prev.turnover) * 100
+        : 3;
 
       return {
         openPrice: target.open,

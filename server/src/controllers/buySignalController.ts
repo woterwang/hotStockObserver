@@ -50,7 +50,7 @@ class BuySignalController {
       
       // 如果没有数据，自动生成
       if (signals.length === 0 && date) {
-        signals = await buySignalService.generateBuySignals(date as string, undefined, scoreThreshold);
+        // signals = await buySignalService.generateBuySignals(date as string, undefined, scoreThreshold);
       }
       
       // 按信号类型筛选
@@ -147,7 +147,7 @@ class BuySignalController {
           successDays++;
           
           // 添加延迟避免请求过快
-          await new Promise(resolve => setTimeout(resolve, 1500));
+          await new Promise(resolve => setTimeout(resolve, 500));
         } catch (error) {
           results.push({ date, count: 0, error: (error as Error).message });
           failedDays++;
