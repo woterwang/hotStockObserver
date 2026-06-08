@@ -1,6 +1,6 @@
 {
   "startDate": "20260501",
-  "endDate": "20260528",
+  "endDate": "20260521",
   "config": {
     "signalFilter": "strong_buy",
     "minSignalScore": 70,
@@ -13,17 +13,17 @@
     "marketPanicThreshold": 0,
     "maxBuyCount": 3
   },
-  "totalTrades": 33,
-  "winTrades": 16,
-  "lossTrades": 17,
-  "winRate": 48.48,
-  "totalProfitAmount": 41814.7,
-  "totalProfitPercent": 2.53,
-  "avgProfitPercent": 2.53,
-  "avgWinPercent": 11.15,
-  "avgLossPercent": -5.57,
-  "profitLossRatio": 2,
-  "totalInvested": 1650000,
+  "totalTrades": 27,
+  "winTrades": 13,
+  "lossTrades": 14,
+  "winRate": 48.15,
+  "totalProfitAmount": 34918.12,
+  "totalProfitPercent": 2.59,
+  "avgProfitPercent": 2.59,
+  "avgWinPercent": 11.5,
+  "avgLossPercent": -5.69,
+  "profitLossRatio": 2.02,
+  "totalInvested": 1350000,
   "maxDrawdown": 23593.15,
   "maxDrawdownPercent": 49.12,
   "maxProfit": 23.88,
@@ -139,30 +139,6 @@
     {
       "date": "20260525",
       "equity": 34918.119999999995
-    },
-    {
-      "date": "20260528",
-      "equity": 42836.619999999995
-    },
-    {
-      "date": "20260526",
-      "equity": 40336.619999999995
-    },
-    {
-      "date": "20260528",
-      "equity": 43963.159999999996
-    },
-    {
-      "date": "20260527",
-      "equity": 41463.159999999996
-    },
-    {
-      "date": "20260529",
-      "equity": 38963.159999999996
-    },
-    {
-      "date": "20260529",
-      "equity": 41814.7
     }
   ],
   "trades": [
@@ -624,108 +600,6 @@
       "exitReason": "stop_loss",
       "buySignalScore": 74,
       "marketMood": 33
-    },
-    {
-      "stockCode": "300502",
-      "stockName": "新易盛",
-      "strategyType": "volume_surge",
-      "strategyName": "强势资金突破",
-      "buyDate": "20260525",
-      "buyPrice": 620.13,
-      "sellDate": "20260528",
-      "sellPrice": 718.34,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 15.84,
-      "profitAmount": 7918.5,
-      "exitReason": "max_days",
-      "buySignalScore": 81,
-      "marketMood": 68
-    },
-    {
-      "stockCode": "301265",
-      "stockName": "华新科技",
-      "strategyType": "volume_surge",
-      "strategyName": "强势资金突破",
-      "buyDate": "20260525",
-      "buyPrice": 28.41,
-      "sellDate": "20260526",
-      "sellPrice": 26.9895,
-      "holdDays": 2,
-      "position": 50000,
-      "profitPercent": -5,
-      "profitAmount": -2500,
-      "exitReason": "stop_loss",
-      "buySignalScore": 79,
-      "marketMood": 68
-    },
-    {
-      "stockCode": "600063",
-      "stockName": "皖维高新",
-      "strategyType": "volume_surge",
-      "strategyName": "强势资金突破",
-      "buyDate": "20260525",
-      "buyPrice": 6.48,
-      "sellDate": "20260528",
-      "sellPrice": 6.95,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 7.25,
-      "profitAmount": 3626.54,
-      "exitReason": "max_days",
-      "buySignalScore": 77,
-      "marketMood": 68
-    },
-    {
-      "stockCode": "002796",
-      "stockName": "世嘉科技",
-      "strategyType": "volume_surge",
-      "strategyName": "强势资金突破",
-      "buyDate": "20260526",
-      "buyPrice": 54.54,
-      "sellDate": "20260527",
-      "sellPrice": 51.812999999999995,
-      "holdDays": 2,
-      "position": 50000,
-      "profitPercent": -5,
-      "profitAmount": -2500,
-      "exitReason": "stop_loss",
-      "buySignalScore": 74,
-      "marketMood": 39
-    },
-    {
-      "stockCode": "300834",
-      "stockName": "星辉环材",
-      "strategyType": "volume_surge",
-      "strategyName": "强势资金突破",
-      "buyDate": "20260526",
-      "buyPrice": 49.51,
-      "sellDate": "20260529",
-      "sellPrice": 47.034499999999994,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": -5,
-      "profitAmount": -2500,
-      "exitReason": "stop_loss",
-      "buySignalScore": 74,
-      "marketMood": 39
-    },
-    {
-      "stockCode": "301626",
-      "stockName": "苏州天脉",
-      "strategyType": "volume_surge",
-      "strategyName": "强势资金突破",
-      "buyDate": "20260526",
-      "buyPrice": 315.97,
-      "sellDate": "20260529",
-      "sellPrice": 333.99,
-      "holdDays": 4,
-      "position": 50000,
-      "profitPercent": 5.7,
-      "profitAmount": 2851.54,
-      "exitReason": "max_days",
-      "buySignalScore": 73,
-      "marketMood": 39
     }
   ]
 }

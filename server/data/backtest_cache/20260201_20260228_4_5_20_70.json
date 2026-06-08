@@ -6,94 +6,236 @@
     "minSignalScore": 70,
     "basePosition": 50000,
     "lowMoodPositionRatio": 0.5,
-    "marketMoodThreshold": 0,
+    "marketMoodThreshold": 4,
     "stopLossPercent": 0.05,
     "takeProfitPercent": 0.2,
     "maxHoldDays": 4,
-    "marketPanicThreshold": 0,
-    "maxBuyCount": 3
+    "marketPanicThreshold": 4,
+    "maxBuyCount": 30
   },
-  "totalTrades": 15,
-  "winTrades": 7,
-  "lossTrades": 8,
-  "winRate": 46.67,
-  "totalProfitAmount": 16385.93,
-  "totalProfitPercent": 2.18,
-  "avgProfitPercent": 2.18,
-  "avgWinPercent": 9.73,
-  "avgLossPercent": -4.41,
-  "profitLossRatio": 2.2,
-  "totalInvested": 750000,
-  "maxDrawdown": 7023.81,
-  "maxDrawdownPercent": 32.78,
-  "maxProfit": 20,
-  "maxLoss": -5,
-  "maxConsecutiveWins": 2,
-  "maxConsecutiveLosses": 2,
-  "avgHoldDays": 3.3,
+  "totalTrades": 42,
+  "winTrades": 24,
+  "lossTrades": 18,
+  "winRate": 57.14,
+  "totalProfitAmount": 70408.83,
+  "totalProfitPercent": 3.35,
+  "avgProfitPercent": 3.35,
+  "avgWinPercent": 9.14,
+  "avgLossPercent": -4.36,
+  "profitLossRatio": 2.09,
+  "totalInvested": 2100000,
+  "maxDrawdown": 15667.59,
+  "maxDrawdownPercent": 22.2,
+  "maxProfit": 22.15,
+  "maxLoss": -9.93,
+  "maxConsecutiveWins": 6,
+  "maxConsecutiveLosses": 5,
+  "avgHoldDays": 3.5,
   "equityCurve": [
     {
+      "date": "20260206",
+      "equity": -2500
+    },
+    {
+      "date": "20260209",
+      "equity": 4038.04
+    },
+    {
       "date": "20260210",
-      "equity": 3792.67
+      "equity": 7830.71
     },
     {
       "date": "20260206",
-      "equity": 13792.67
+      "equity": 17830.71
     },
     {
       "date": "20260210",
-      "equity": 11292.67
+      "equity": 15330.71
     },
     {
       "date": "20260212",
-      "equity": 21292.67
+      "equity": 25330.71
     },
     {
       "date": "20260212",
-      "equity": 18792.67
+      "equity": 22830.71
     },
     {
       "date": "20260210",
-      "equity": 16292.669999999998
+      "equity": 20330.71
+    },
+    {
+      "date": "20260210",
+      "equity": 17638.199999999997
+    },
+    {
+      "date": "20260211",
+      "equity": 15138.199999999997
+    },
+    {
+      "date": "20260211",
+      "equity": 12638.199999999997
     },
     {
       "date": "20260213",
-      "equity": 21428.909999999996
+      "equity": 17774.439999999995
     },
     {
       "date": "20260212",
-      "equity": 18928.909999999996
+      "equity": 15274.439999999995
     },
     {
       "date": "20260213",
-      "equity": 19405.099999999995
+      "equity": 15750.629999999996
+    },
+    {
+      "date": "20260213",
+      "equity": 15433.709999999995
+    },
+    {
+      "date": "20260213",
+      "equity": 12933.709999999995
+    },
+    {
+      "date": "20260211",
+      "equity": 9663.119999999995
+    },
+    {
+      "date": "20260213",
+      "equity": 10971.529999999995
+    },
+    {
+      "date": "20260213",
+      "equity": 12630.439999999995
+    },
+    {
+      "date": "20260213",
+      "equity": 22630.439999999995
+    },
+    {
+      "date": "20260212",
+      "equity": 33705.35999999999
+    },
+    {
+      "date": "20260213",
+      "equity": 33604.009999999995
+    },
+    {
+      "date": "20260213",
+      "equity": 37188.63999999999
     },
     {
       "date": "20260224",
-      "equity": 16905.099999999995
+      "equity": 34688.63999999999
     },
     {
       "date": "20260212",
-      "equity": 14405.099999999995
+      "equity": 32188.639999999992
     },
     {
       "date": "20260225",
-      "equity": 17875.929999999993
+      "equity": 35691.29999999999
     },
     {
       "date": "20260213",
-      "equity": 15375.929999999993
+      "equity": 30724.15999999999
     },
     {
       "date": "20260225",
-      "equity": 16545.739999999994
+      "equity": 31899.28999999999
+    },
+    {
+      "date": "20260225",
+      "equity": 33266.43999999999
+    },
+    {
+      "date": "20260225",
+      "equity": 35958.609999999986
+    },
+    {
+      "date": "20260225",
+      "equity": 37768.26999999999
+    },
+    {
+      "date": "20260225",
+      "equity": 38500.789999999986
+    },
+    {
+      "date": "20260225",
+      "equity": 40498.96999999999
+    },
+    {
+      "date": "20260213",
+      "equity": 37998.96999999999
+    },
+    {
+      "date": "20260225",
+      "equity": 37725.599999999984
+    },
+    {
+      "date": "20260225",
+      "equity": 47725.599999999984
+    },
+    {
+      "date": "20260225",
+      "equity": 55570.00999999998
+    },
+    {
+      "date": "20260225",
+      "equity": 58205.54999999998
+    },
+    {
+      "date": "20260225",
+      "equity": 60741.099999999984
+    },
+    {
+      "date": "20260225",
+      "equity": 63410.82999999999
+    },
+    {
+      "date": "20260226",
+      "equity": 70568.63999999998
     },
     {
       "date": "20260227",
-      "equity": 16385.929999999993
+      "equity": 70408.82999999999
     }
   ],
   "trades": [
+    {
+      "stockCode": "601226",
+      "stockName": "华电科工",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260204",
+      "buyPrice": 11.58,
+      "sellDate": "20260206",
+      "sellPrice": 11.001,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 73,
+      "marketMood": 58
+    },
+    {
+      "stockCode": "605376",
+      "stockName": "博迁新材",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260204",
+      "buyPrice": 92,
+      "sellDate": "20260209",
+      "sellPrice": 104.03,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 13.08,
+      "profitAmount": 6538.04,
+      "exitReason": "max_days",
+      "buySignalScore": 71,
+      "marketMood": 58
+    },
     {
       "stockCode": "300706",
       "stockName": "阿石创",
@@ -197,6 +339,57 @@
       "marketMood": 74
     },
     {
+      "stockCode": "301292",
+      "stockName": "海科新源",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260209",
+      "buyPrice": 58.31,
+      "sellDate": "20260210",
+      "sellPrice": 55.17,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5.39,
+      "profitAmount": -2692.51,
+      "exitReason": "stop_loss",
+      "buySignalScore": 70,
+      "marketMood": 74
+    },
+    {
+      "stockCode": "300843",
+      "stockName": "胜蓝股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260209",
+      "buyPrice": 59,
+      "sellDate": "20260211",
+      "sellPrice": 56.05,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 70,
+      "marketMood": 74
+    },
+    {
+      "stockCode": "300617",
+      "stockName": "安靠智电",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260209",
+      "buyPrice": 49.58,
+      "sellDate": "20260211",
+      "sellPrice": 47.101,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 70,
+      "marketMood": 74
+    },
+    {
       "stockCode": "301052",
       "stockName": "果麦文化",
       "strategyType": "volume_surge",
@@ -248,6 +441,159 @@
       "marketMood": 54
     },
     {
+      "stockCode": "688787",
+      "stockName": "海天瑞声",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260210",
+      "buyPrice": 151.46,
+      "sellDate": "20260213",
+      "sellPrice": 150.5,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": -0.63,
+      "profitAmount": -316.92,
+      "exitReason": "max_days",
+      "buySignalScore": 75,
+      "marketMood": 54
+    },
+    {
+      "stockCode": "688249",
+      "stockName": "晶合集成",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260210",
+      "buyPrice": 37.71,
+      "sellDate": "20260213",
+      "sellPrice": 35.8245,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 75,
+      "marketMood": 54
+    },
+    {
+      "stockCode": "300900",
+      "stockName": "广联航空",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260210",
+      "buyPrice": 42.5,
+      "sellDate": "20260211",
+      "sellPrice": 39.72,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -6.54,
+      "profitAmount": -3270.59,
+      "exitReason": "stop_loss",
+      "buySignalScore": 75,
+      "marketMood": 54
+    },
+    {
+      "stockCode": "000534",
+      "stockName": "万泽股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260210",
+      "buyPrice": 32.1,
+      "sellDate": "20260213",
+      "sellPrice": 32.94,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 2.62,
+      "profitAmount": 1308.41,
+      "exitReason": "max_days",
+      "buySignalScore": 74,
+      "marketMood": 54
+    },
+    {
+      "stockCode": "300383",
+      "stockName": "光环新网",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260210",
+      "buyPrice": 17.18,
+      "sellDate": "20260213",
+      "sellPrice": 17.75,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 3.32,
+      "profitAmount": 1658.91,
+      "exitReason": "max_days",
+      "buySignalScore": 74,
+      "marketMood": 54
+    },
+    {
+      "stockCode": "600673",
+      "stockName": "东阳光",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260210",
+      "buyPrice": 31.95,
+      "sellDate": "20260213",
+      "sellPrice": 38.339999999999996,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 20,
+      "profitAmount": 10000,
+      "exitReason": "take_profit",
+      "buySignalScore": 72,
+      "marketMood": 54
+    },
+    {
+      "stockCode": "300166",
+      "stockName": "东方国信",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260210",
+      "buyPrice": 12.28,
+      "sellDate": "20260212",
+      "sellPrice": 15,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": 22.15,
+      "profitAmount": 11074.92,
+      "exitReason": "take_profit",
+      "buySignalScore": 72,
+      "marketMood": 54
+    },
+    {
+      "stockCode": "000681",
+      "stockName": "视觉中国",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260210",
+      "buyPrice": 29.6,
+      "sellDate": "20260213",
+      "sellPrice": 29.54,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": -0.2,
+      "profitAmount": -101.35,
+      "exitReason": "max_days",
+      "buySignalScore": 71,
+      "marketMood": 54
+    },
+    {
+      "stockCode": "300991",
+      "stockName": "创益通",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260210",
+      "buyPrice": 48.68,
+      "sellDate": "20260213",
+      "sellPrice": 52.17,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 7.17,
+      "profitAmount": 3584.63,
+      "exitReason": "max_days",
+      "buySignalScore": 70,
+      "marketMood": 54
+    },
+    {
       "stockCode": "002517",
       "stockName": "恺英网络",
       "strategyType": "volume_surge",
@@ -287,13 +633,13 @@
       "strategyType": "volume_surge",
       "strategyName": "强势资金突破",
       "buyDate": "20260212",
-      "buyPrice": 55.03,
+      "buyPrice": 54.53,
       "sellDate": "20260225",
-      "sellPrice": 58.85,
+      "sellPrice": 58.35,
       "holdDays": 4,
       "position": 50000,
-      "profitPercent": 6.94,
-      "profitAmount": 3470.83,
+      "profitPercent": 7.01,
+      "profitAmount": 3502.66,
       "exitReason": "max_days",
       "buySignalScore": 87,
       "marketMood": 53
@@ -306,11 +652,11 @@
       "buyDate": "20260212",
       "buyPrice": 39.56,
       "sellDate": "20260213",
-      "sellPrice": 37.582,
+      "sellPrice": 35.63,
       "holdDays": 2,
       "position": 50000,
-      "profitPercent": -5,
-      "profitAmount": -2500,
+      "profitPercent": -9.93,
+      "profitAmount": -4967.14,
       "exitReason": "stop_loss",
       "buySignalScore": 87,
       "marketMood": 53
@@ -321,16 +667,237 @@
       "strategyType": "volume_surge",
       "strategyName": "强势资金突破",
       "buyDate": "20260212",
-      "buyPrice": 26.5,
+      "buyPrice": 26.38,
       "sellDate": "20260225",
-      "sellPrice": 27.12,
+      "sellPrice": 27,
       "holdDays": 4,
       "position": 50000,
-      "profitPercent": 2.34,
-      "profitAmount": 1169.81,
+      "profitPercent": 2.35,
+      "profitAmount": 1175.13,
       "exitReason": "max_days",
       "buySignalScore": 85,
       "marketMood": 53
+    },
+    {
+      "stockCode": "300919",
+      "stockName": "中伟新材",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 55.59,
+      "sellDate": "20260225",
+      "sellPrice": 57.11,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 2.73,
+      "profitAmount": 1367.15,
+      "exitReason": "max_days",
+      "buySignalScore": 82,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "301095",
+      "stockName": "广立微",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 83.39,
+      "sellDate": "20260225",
+      "sellPrice": 87.88,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 5.38,
+      "profitAmount": 2692.17,
+      "exitReason": "max_days",
+      "buySignalScore": 77,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "600549",
+      "stockName": "厦门钨业",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 61.89,
+      "sellDate": "20260225",
+      "sellPrice": 64.13,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 3.62,
+      "profitAmount": 1809.66,
+      "exitReason": "max_days",
+      "buySignalScore": 75,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "601233",
+      "stockName": "桐昆股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 23.89,
+      "sellDate": "20260225",
+      "sellPrice": 24.24,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 1.47,
+      "profitAmount": 732.52,
+      "exitReason": "max_days",
+      "buySignalScore": 75,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "300802",
+      "stockName": "矩子科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 22.02,
+      "sellDate": "20260225",
+      "sellPrice": 22.9,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 4,
+      "profitAmount": 1998.18,
+      "exitReason": "max_days",
+      "buySignalScore": 75,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "301040",
+      "stockName": "中环海陆",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 38.17,
+      "sellDate": "20260213",
+      "sellPrice": 36.2615,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 75,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "301252",
+      "stockName": "同星科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 38.41,
+      "sellDate": "20260225",
+      "sellPrice": 38.2,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": -0.55,
+      "profitAmount": -273.37,
+      "exitReason": "max_days",
+      "buySignalScore": 72,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "001203",
+      "stockName": "大中矿业",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 32.93,
+      "sellDate": "20260225",
+      "sellPrice": 39.516,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 20,
+      "profitAmount": 10000,
+      "exitReason": "take_profit",
+      "buySignalScore": 70,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "000688",
+      "stockName": "国城矿业",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 30.85,
+      "sellDate": "20260225",
+      "sellPrice": 35.69,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 15.69,
+      "profitAmount": 7844.41,
+      "exitReason": "max_days",
+      "buySignalScore": 70,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "301026",
+      "stockName": "浩通科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 33.2,
+      "sellDate": "20260225",
+      "sellPrice": 34.95,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 5.27,
+      "profitAmount": 2635.54,
+      "exitReason": "max_days",
+      "buySignalScore": 70,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "601958",
+      "stockName": "金钼股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 21.1,
+      "sellDate": "20260225",
+      "sellPrice": 22.17,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 5.07,
+      "profitAmount": 2535.55,
+      "exitReason": "max_days",
+      "buySignalScore": 70,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "301292",
+      "stockName": "海科新源",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260212",
+      "buyPrice": 56.56,
+      "sellDate": "20260225",
+      "sellPrice": 59.58,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 5.34,
+      "profitAmount": 2669.73,
+      "exitReason": "max_days",
+      "buySignalScore": 70,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "688629",
+      "stockName": "华丰科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260213",
+      "buyPrice": 109.88,
+      "sellDate": "20260226",
+      "sellPrice": 125.61,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 14.32,
+      "profitAmount": 7157.81,
+      "exitReason": "max_days",
+      "buySignalScore": 71,
+      "marketMood": 35
     },
     {
       "stockCode": "301356",

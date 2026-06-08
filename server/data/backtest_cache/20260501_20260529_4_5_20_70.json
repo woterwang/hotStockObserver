@@ -1,6 +1,6 @@
 {
   "startDate": "20260501",
-  "endDate": "20260528",
+  "endDate": "20260529",
   "config": {
     "signalFilter": "strong_buy",
     "minSignalScore": 70,
@@ -13,24 +13,24 @@
     "marketPanicThreshold": 0,
     "maxBuyCount": 3
   },
-  "totalTrades": 33,
+  "totalTrades": 36,
   "winTrades": 16,
-  "lossTrades": 17,
-  "winRate": 48.48,
-  "totalProfitAmount": 41814.7,
-  "totalProfitPercent": 2.53,
-  "avgProfitPercent": 2.53,
+  "lossTrades": 20,
+  "winRate": 44.44,
+  "totalProfitAmount": 29573.84,
+  "totalProfitPercent": 1.64,
+  "avgProfitPercent": 1.64,
   "avgWinPercent": 11.15,
-  "avgLossPercent": -5.57,
-  "profitLossRatio": 2,
-  "totalInvested": 1650000,
+  "avgLossPercent": -5.96,
+  "profitLossRatio": 1.87,
+  "totalInvested": 1800000,
   "maxDrawdown": 23593.15,
   "maxDrawdownPercent": 49.12,
   "maxProfit": 23.88,
   "maxLoss": -12.66,
   "maxConsecutiveWins": 7,
   "maxConsecutiveLosses": 8,
-  "avgHoldDays": 3,
+  "avgHoldDays": 2.9,
   "equityCurve": [
     {
       "date": "20260511",
@@ -163,6 +163,18 @@
     {
       "date": "20260529",
       "equity": 41814.7
+    },
+    {
+      "date": "20260601",
+      "equity": 37046.52
+    },
+    {
+      "date": "20260601",
+      "equity": 33123.439999999995
+    },
+    {
+      "date": "20260601",
+      "equity": 29573.839999999997
     }
   ],
   "trades": [
@@ -726,6 +738,57 @@
       "exitReason": "max_days",
       "buySignalScore": 73,
       "marketMood": 39
+    },
+    {
+      "stockCode": "002222",
+      "stockName": "福晶科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260529",
+      "buyPrice": 110,
+      "sellDate": "20260601",
+      "sellPrice": 99.51,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -9.54,
+      "profitAmount": -4768.18,
+      "exitReason": "stop_loss",
+      "buySignalScore": 78,
+      "marketMood": 41
+    },
+    {
+      "stockCode": "002730",
+      "stockName": "电光科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260529",
+      "buyPrice": 32.5,
+      "sellDate": "20260601",
+      "sellPrice": 29.95,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -7.85,
+      "profitAmount": -3923.08,
+      "exitReason": "stop_loss",
+      "buySignalScore": 77,
+      "marketMood": 41
+    },
+    {
+      "stockCode": "300872",
+      "stockName": "天阳科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260529",
+      "buyPrice": 21.27,
+      "sellDate": "20260601",
+      "sellPrice": 19.76,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -7.1,
+      "profitAmount": -3549.6,
+      "exitReason": "stop_loss",
+      "buySignalScore": 75,
+      "marketMood": 41
     }
   ]
 }
