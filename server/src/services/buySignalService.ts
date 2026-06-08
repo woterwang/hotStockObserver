@@ -880,11 +880,8 @@ class BuySignalService {
     );
 
     // 趋势评分 (满分15分)
-    const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 60);
+    const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
     const trend = TrendScorer.calculate(KlineData);
-    // 趋势评分映射为15分制，保留高分段区分度
-    const trendScore = TrendScorer.toBuySignalScore(trend.score);
-    logger.info(`[BuySignal] ${candidate.stockCode} 趋势评分: ${trend.score} 转换为 ${trendScore}`);
 
     // 计算总分
     const totalBuyScore =
@@ -895,7 +892,7 @@ class BuySignalService {
       sectorLink.score +
       sealStrength.score +
       technical.score +
-      trendScore;
+      trend.score;
 
     // 生成买入决策
     const decision = this.generateDecision(totalBuyScore, openData, candidate);
@@ -962,7 +959,7 @@ class BuySignalService {
       sealStrengthScore: sealStrength.score,
       technicalScore: technical.score,
       trendRawScore: trend.score,
-      trendScoreContribution: trendScore,
+      trendScoreContribution: 0.15,
       totalBuyScore,
 
       buySignal: decision.signal,

@@ -403,6 +403,8 @@ class KlineCacheService {
     if (localKline.size === 0) {
       logger.info(`[K线缓存] ${stockCode} 本地缓存为空，从远端拉取`);
       localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
+      // 存 写入缓存
+      this.persistCache(stockCode, localKline, Date.now());
       klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
     }
     // targetDate 是否为交易日

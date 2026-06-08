@@ -170,13 +170,35 @@ export class TrendScorer {
     else if (total >= 50) trendTag = 'Mid';
     else if (total >= 35) trendTag = 'Weak';
     else trendTag = 'DownTrend';
-
-    return { score: total, tag: trendTag };
+    // 趋势评分映射为15分制，保留高分段区分度
+    const trendScore = TrendScorer.toBuySignalScore(total, kline);
+    logger.info(`[TrendScorer] 趋势评分: 总分${total} 转换为 ${trendScore}，其中价格评分占比为 ${priceScore}，均线评分占比为 ${maScore}，成交量评分占比为 ${volScore}`);
+    return { score: trendScore, tag: trendTag };
   }
 
-  static toBuySignalScore (rawTrendScore: number): number {
-    const normalized = Math.max(0, Math.min(rawTrendScore, this.MAX_SCORE)) / this.MAX_SCORE;
-    return Math.round(normalized * this.TREND_SCORE_MAX);
+  static toBuySignalScore (rawTrendScore: number,kline: KLineItem[]): number {
+    let normalized = Math.max(0, Math.min(rawTrendScore, this.MAX_SCORE)) / this.MAX_SCORE;
+    // 如果是百日新高，给予额外加分
+    // 这里假设调用isHundredDayNewHigh函数来判断是否为百日新高，如果是，则在原有基础上增加10分的趋势得分
+    // 注意：实际调用时需要传入对应的K线数据
+    // if (this.isHundredDayNewHigh(kline)) {
+    //   logger.info(`[TrendScorer] 百日新高，给定额外10分的趋势得分`);
+    //   normalized += 0.1;
+    // }
+    let resScore = Math.round(normalized * this.TREND_SCORE_MAX);
+    if(this.isHundredDayNewHigh(kline)){
+      logger.info(`[TrendScorer] 百日新高，给定额外10分的趋势得分`);
+      resScore += 10;
+    }
+    return resScore;
+  }
+
+  // 是否为百日新高
+  static isHundredDayNewHigh (kline: KLineItem[]): boolean {
+    if (!kline || kline.length < 100) return false;
+    const recentHigh = Math.max(...kline.slice().map(k => k.high));
+    logger.info(`[TrendScorer] 最近100日最高价: ${recentHigh}, 当日最高价格: ${kline[0].high}`);
+    return kline[0].high > recentHigh;
   }
 
   // ==================== 工具函数 ====================
