@@ -1,6 +1,6 @@
 {
   "startDate": "20260201",
-  "endDate": "20260228",
+  "endDate": "20260227",
   "config": {
     "signalFilter": "strong_buy",
     "minSignalScore": 70,

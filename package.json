@@ -11,5 +11,8 @@
   },
   "dependencies": {
     "simple-git": "^3.36.0"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
   }
 }
