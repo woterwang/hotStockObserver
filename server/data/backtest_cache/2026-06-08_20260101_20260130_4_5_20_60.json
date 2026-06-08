@@ -1,0 +1,290 @@
+{
+  "startDate": "20260101",
+  "endDate": "20260130",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 60,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 0,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 4,
+    "marketPanicThreshold": 0,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 12,
+  "winTrades": 2,
+  "lossTrades": 10,
+  "winRate": 16.67,
+  "totalProfitAmount": -23210.4,
+  "totalProfitPercent": -3.87,
+  "avgProfitPercent": -3.87,
+  "avgWinPercent": 4.99,
+  "avgLossPercent": -5.64,
+  "profitLossRatio": 0.88,
+  "totalInvested": 600000,
+  "maxDrawdown": 27204.48,
+  "maxDrawdownPercent": 681.12,
+  "maxProfit": 7.99,
+  "maxLoss": -10.04,
+  "maxConsecutiveWins": 1,
+  "maxConsecutiveLosses": 6,
+  "avgHoldDays": 2.7,
+  "equityCurve": [
+    {
+      "date": "20260109",
+      "equity": 3994.08
+    },
+    {
+      "date": "20260107",
+      "equity": 1494.08
+    },
+    {
+      "date": "20260109",
+      "equity": -188.05000000000018
+    },
+    {
+      "date": "20260114",
+      "equity": -5206.78
+    },
+    {
+      "date": "20260115",
+      "equity": -7756.389999999999
+    },
+    {
+      "date": "20260116",
+      "equity": -10256.39
+    },
+    {
+      "date": "20260121",
+      "equity": -14202.23
+    },
+    {
+      "date": "20260127",
+      "equity": -13210.4
+    },
+    {
+      "date": "20260127",
+      "equity": -15710.4
+    },
+    {
+      "date": "20260129",
+      "equity": -18210.4
+    },
+    {
+      "date": "20260127",
+      "equity": -20710.4
+    },
+    {
+      "date": "20260129",
+      "equity": -23210.4
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "300450",
+      "stockName": "先导智能",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260106",
+      "buyPrice": 54.08,
+      "sellDate": "20260109",
+      "sellPrice": 58.4,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 7.99,
+      "profitAmount": 3994.08,
+      "exitReason": "max_days",
+      "buySignalScore": 60,
+      "marketMood": 100
+    },
+    {
+      "stockCode": "301113",
+      "stockName": "雅艺科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260106",
+      "buyPrice": 20.13,
+      "sellDate": "20260107",
+      "sellPrice": 19.123499999999996,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 60,
+      "marketMood": 100
+    },
+    {
+      "stockCode": "600232",
+      "stockName": "金鹰股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260106",
+      "buyPrice": 8.62,
+      "sellDate": "20260109",
+      "sellPrice": 8.33,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": -3.36,
+      "profitAmount": -1682.13,
+      "exitReason": "max_days",
+      "buySignalScore": 60,
+      "marketMood": 100
+    },
+    {
+      "stockCode": "300846",
+      "stockName": "首都在线",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260113",
+      "buyPrice": 26.7,
+      "sellDate": "20260114",
+      "sellPrice": 24.02,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -10.04,
+      "profitAmount": -5018.73,
+      "exitReason": "stop_loss",
+      "buySignalScore": 60,
+      "marketMood": 76
+    },
+    {
+      "stockCode": "300723",
+      "stockName": "一品红",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260114",
+      "buyPrice": 43.34,
+      "sellDate": "20260115",
+      "sellPrice": 41.13,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5.1,
+      "profitAmount": -2549.61,
+      "exitReason": "stop_loss",
+      "buySignalScore": 61,
+      "marketMood": 70
+    },
+    {
+      "stockCode": "000960",
+      "stockName": "锡业股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260115",
+      "buyPrice": 40.54,
+      "sellDate": "20260116",
+      "sellPrice": 38.513,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 63,
+      "marketMood": 52
+    },
+    {
+      "stockCode": "688239",
+      "stockName": "航宇科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260120",
+      "buyPrice": 69.06,
+      "sellDate": "20260121",
+      "sellPrice": 63.61,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -7.89,
+      "profitAmount": -3945.84,
+      "exitReason": "stop_loss",
+      "buySignalScore": 62,
+      "marketMood": 67
+    },
+    {
+      "stockCode": "603699",
+      "stockName": "纽威股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260122",
+      "buyPrice": 59.99,
+      "sellDate": "20260127",
+      "sellPrice": 61.18,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 1.98,
+      "profitAmount": 991.83,
+      "exitReason": "max_days",
+      "buySignalScore": 63,
+      "marketMood": 86
+    },
+    {
+      "stockCode": "002125",
+      "stockName": "湘潭电化",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260126",
+      "buyPrice": 15.6,
+      "sellDate": "20260127",
+      "sellPrice": 14.819999999999999,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 63,
+      "marketMood": 52
+    },
+    {
+      "stockCode": "300004",
+      "stockName": "南风股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260126",
+      "buyPrice": 15.98,
+      "sellDate": "20260129",
+      "sellPrice": 15.181,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 63,
+      "marketMood": 52
+    },
+    {
+      "stockCode": "000833",
+      "stockName": "粤桂股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260126",
+      "buyPrice": 23.42,
+      "sellDate": "20260127",
+      "sellPrice": 22.249000000000002,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 60,
+      "marketMood": 52
+    },
+    {
+      "stockCode": "603893",
+      "stockName": "瑞芯微",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260128",
+      "buyPrice": 203.7,
+      "sellDate": "20260129",
+      "sellPrice": 193.515,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 60,
+      "marketMood": 53
+    }
+  ]
+}

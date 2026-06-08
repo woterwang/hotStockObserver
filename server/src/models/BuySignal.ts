@@ -77,6 +77,8 @@ export interface IBuySignal {
   sectorLinkScore: number;        // 板块联动分 (0-10)
   sealStrengthScore: number;      // 承接力度分 (0-10)
   technicalScore: number;         // 技术位置分 (0-10)
+  trendRawScore?: number;         // 趋势原始分 (0-100)
+  trendScoreContribution?: number; // 趋势贡献分 (0-15)
   
   totalBuyScore: number;          // 买入信号总分 (0-100)
   
@@ -178,6 +180,8 @@ const BuySignalSchema = new Schema<BuySignalDocument>(
     sectorLinkScore: { type: Number, default: 0 },
     sealStrengthScore: { type: Number, default: 0 },
     technicalScore: { type: Number, default: 0 },
+    trendRawScore: { type: Number, default: 0 },
+    trendScoreContribution: { type: Number, default: 0 },
     totalBuyScore: { type: Number, default: 0 },
     
     // 买入决策

@@ -9,7 +9,9 @@
     "start": "node dist/app.js",
     "import-data": "tsx src/scripts/importHistoricalData.ts",
     "backfill": "tsx src/scripts/backfillBreakthrough.ts",
-    "test:updateCache": "node test-update-cache.js"
+    "test:updateCache": "node test-update-cache.js",
+    "test:opening601212": "tsx src/scripts/testOpeningAuction601212.ts",
+    "test:trend601212": "tsx src/scripts/testTrendScorer601212.ts"
   },
   "dependencies": {
     "axios": "^1.6.0",

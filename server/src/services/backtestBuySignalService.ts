@@ -57,6 +57,19 @@ export interface BuySignalTradeRecord {
   exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'market_panic' | 'data_end';
   buySignalScore: number;   // 买入信号评分
   marketMood: number;       // 买入时市场情绪
+  trendRawScore: number;    // 趋势原始分 0-100
+  trendScoreContribution: number; // 趋势贡献分 0-15
+}
+
+export interface TrendLayerStat {
+  layer: string;
+  minScore: number;
+  maxScore: number;
+  tradeCount: number;
+  winRate: number;
+  avgProfitPercent: number;
+  totalProfitPercent: number;
+  maxDrawdownPercent: number;
 }
 
 /**
@@ -101,6 +114,9 @@ export interface BuySignalBacktestResult {
 
   // 交易明细
   trades: BuySignalTradeRecord[];
+
+  // 趋势分分层统计（10分位）
+  trendLayers: TrendLayerStat[];
 }
 
 // 使用 klineCacheService 的 CachedKline 类型
@@ -388,6 +404,8 @@ class BuySignalBacktestService {
         exitReason,
         buySignalScore: signal.totalBuyScore || 0,
         marketMood: buyDayMood,
+        trendRawScore: signal.trendRawScore || 0,
+        trendScoreContribution: signal.trendScoreContribution || 0,
       };
     } catch (error) {
       logger.debug(`回测 ${signal.stockCode} 失败: ${(error as Error).message}`);
@@ -443,18 +461,29 @@ class BuySignalBacktestService {
 
     // 将 BuySignal 数据转换为回测需要的格式
     // 仓位规则：strong_buy = 标准仓，buy = 标准仓的一半
-    const allSignals = buySignalRecords.map(bs => ({
-      stockCode: bs.stockCode,
-      stockName: bs.stockName,
-      date: bs.date,
-      strategyType: 'volume_surge',
-      strategyName: '强势资金突破',
-      totalBuyScore: bs.totalBuyScore || 0,
-      marketMood: bs.marketMood || 50,
-      // 根据 buySignal 类型决定仓位比例
-      positionRatio: 1,
-      buySignalType: bs.buySignal,
-    }));
+    const allSignals = buySignalRecords.map(bs => {
+      const trendScoreContribution = typeof (bs as any).trendScoreContribution === 'number'
+        ? (bs as any).trendScoreContribution
+        : 0;
+      const trendRawScore = typeof (bs as any).trendRawScore === 'number'
+        ? (bs as any).trendRawScore
+        : Math.round((trendScoreContribution / 15) * 100);
+
+      return {
+        stockCode: bs.stockCode,
+        stockName: bs.stockName,
+        date: bs.date,
+        strategyType: 'volume_surge',
+        strategyName: '强势资金突破',
+        totalBuyScore: bs.totalBuyScore || 0,
+        marketMood: bs.marketMood || 50,
+        trendRawScore,
+        trendScoreContribution,
+        // 根据 buySignal 类型决定仓位比例
+        positionRatio: 1,
+        buySignalType: bs.buySignal,
+      };
+    });
 
     // 根据 minSignalScore 过滤信号
     let signals = allSignals.filter(s => s.totalBuyScore >= finalConfig.minSignalScore);
@@ -563,6 +592,7 @@ class BuySignalBacktestService {
         avgHoldDays: 0,
         equityCurve: [],
         trades: [],
+        trendLayers: [],
       };
     }
 
@@ -633,6 +663,7 @@ class BuySignalBacktestService {
     }
 
     const maxDrawdownPercent = maxEquity > 0 ? (maxDrawdown / maxEquity) * 100 : 0;
+    const trendLayers = this.calculateTrendLayerStats(trades);
 
     return {
       startDate,
@@ -658,7 +689,68 @@ class BuySignalBacktestService {
       avgHoldDays: Math.round(avgHoldDays * 10) / 10,
       equityCurve,
       trades,
+      trendLayers,
     };
+  }
+
+  private calculateTrendLayerStats (trades: BuySignalTradeRecord[]): TrendLayerStat[] {
+    const layerSize = 10;
+    const layerCount = 10;
+    const layers: TrendLayerStat[] = [];
+
+    for (let i = 0; i < layerCount; i++) {
+      const minScore = i * layerSize;
+      const maxScore = i === layerCount - 1 ? 100 : (i + 1) * layerSize;
+      const layerTrades = trades.filter(t => {
+        if (i === layerCount - 1) return t.trendRawScore >= minScore && t.trendRawScore <= maxScore;
+        return t.trendRawScore >= minScore && t.trendRawScore < maxScore;
+      });
+
+      if (layerTrades.length === 0) {
+        layers.push({
+          layer: `${minScore}-${maxScore}`,
+          minScore,
+          maxScore,
+          tradeCount: 0,
+          winRate: 0,
+          avgProfitPercent: 0,
+          totalProfitPercent: 0,
+          maxDrawdownPercent: 0,
+        });
+        continue;
+      }
+
+      const winTrades = layerTrades.filter(t => t.profitPercent > 0).length;
+      const winRate = (winTrades / layerTrades.length) * 100;
+      const avgProfitPercent = layerTrades.reduce((sum, t) => sum + t.profitPercent, 0) / layerTrades.length;
+      const totalProfitAmount = layerTrades.reduce((sum, t) => sum + t.profitAmount, 0);
+      const totalInvested = layerTrades.reduce((sum, t) => sum + t.position, 0);
+      const totalProfitPercent = totalInvested > 0 ? (totalProfitAmount / totalInvested) * 100 : 0;
+
+      let equity = 0;
+      let maxEquity = 0;
+      let maxDrawdown = 0;
+      const sortedBySellDate = [...layerTrades].sort((a, b) => a.sellDate.localeCompare(b.sellDate));
+      for (const trade of sortedBySellDate) {
+        equity += trade.profitAmount;
+        maxEquity = Math.max(maxEquity, equity);
+        maxDrawdown = Math.max(maxDrawdown, maxEquity - equity);
+      }
+      const maxDrawdownPercent = maxEquity > 0 ? (maxDrawdown / maxEquity) * 100 : 0;
+
+      layers.push({
+        layer: `${minScore}-${maxScore}`,
+        minScore,
+        maxScore,
+        tradeCount: layerTrades.length,
+        winRate: Math.round(winRate * 100) / 100,
+        avgProfitPercent: Math.round(avgProfitPercent * 100) / 100,
+        totalProfitPercent: Math.round(totalProfitPercent * 100) / 100,
+        maxDrawdownPercent: Math.round(maxDrawdownPercent * 100) / 100,
+      });
+    }
+
+    return layers;
   }
 }
 

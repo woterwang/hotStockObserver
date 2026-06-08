@@ -456,6 +456,34 @@ class KlineCacheService {
     }
     return result;
   }
+
+  // 从本地缓存获取个股K线数据
+  // 参数：stockCode: 股票代码；targetDates: 结束日期：endDay(默认今天)，需要的交易日数量：klineDays（默认60天）
+  async loadCacheForHistory (stockCode: string, targetDate: string = toDateStr(getToday()), klineDays: number = 60): Promise<CachedKline[]> {
+    const { map } = this.loadCache(stockCode);
+    let cachedKline:CachedKline[] = Array.from(map.values());
+    // 如果缓存中没有数据，则深度从远端拉取1800天数据
+    if (cachedKline.length < 1) {
+      logger.info(`[K线缓存] ${stockCode} 本地缓存为空，从远端拉取`);
+      const allCachedKlines = await this.fetchKlineFromTHS(stockCode, 1800);
+      this.persistCache(stockCode, allCachedKlines, Date.now()); // 更新缓存
+      cachedKline = Array.from(allCachedKlines.values());
+    }
+    // 过滤出目标日期以及之前的K线数据，并按日期升序排序
+
+    // 第一步： 找到开始日期所在K线的索引位置
+    const startDateIndex = cachedKline.findIndex(kline => kline.date >= targetDate);
+    // 第二步： 找到结束日期所在K线的索引位置（结束日期 = 开始日期 - klineDays）
+    let endDateIndex = startDateIndex - klineDays;
+    if (endDateIndex < 0) {
+      endDateIndex = 0;
+    }
+
+    logger.info(`[K线缓存] ${stockCode} 从缓存中获取历史K线数据，开始日期: ${cachedKline[startDateIndex].date}，结束日期: ${cachedKline[endDateIndex].date}`);
+    const filteredKline = cachedKline.slice(endDateIndex, startDateIndex + 1);
+    logger.info(`[K线缓存] ${stockCode} 从缓存中获取历史K线数据，目标日期: ${targetDate}，需要天数: ${klineDays}，实际返回: ${filteredKline.length} 条`);
+    return filteredKline;
+  }
 }
 
 export const klineCacheService = new KlineCacheService();

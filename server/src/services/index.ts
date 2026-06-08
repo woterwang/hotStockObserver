@@ -8,6 +8,7 @@ export { backtestService, BacktestConfig, BacktestResult, TradeRecord } from './
 export { marketSentimentService } from './marketSentimentService';
 export { tradingCalendarService } from './tradingCalendarService';
 export { marketMoodService, MarketMoodData } from './marketMoodService';
+export { openingAuctionService, OpeningDataSnapshot } from './openingAuctionService';
 export { stockConceptService, StockConceptResult } from './stockConceptService';
 export { conceptRankingService, ConceptRankingResult, ConceptRankingItem } from './conceptRankingService';
 export { thsStockConceptService, ThsStockConceptResult, ThsConceptInfo, ThsRelatedStock } from './thsStockConceptService';
