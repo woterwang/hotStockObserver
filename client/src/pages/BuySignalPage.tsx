@@ -439,9 +439,10 @@ const BuySignalPage: React.FC = () => {
                   </div>
 
                   {/* 评分详情 */ }
-                  <div className="px-4 py-3 grid grid-cols-7 gap-2">
+                  <div className="px-4 py-3 grid grid-cols-8 gap-2">
                     { [
                       { label: '开盘强度', score: signal.openStrengthScore, max: 30 },
+                      { label: '趋势位置', score: signal.totalBuyScore - signal.volumeConfirmScore - signal.auctionScore - signal.marketEnvScore - signal.sectorLinkScore - signal.sealStrengthScore - signal.sealStrengthScore - signal.openStrengthScore, max: 15 },
                       { label: '量能确认', score: signal.volumeConfirmScore, max: 15 },
                       { label: '竞价抢筹', score: signal.auctionScore, max: 15 },
                       { label: '大盘环境', score: signal.marketEnvScore, max: 10 },

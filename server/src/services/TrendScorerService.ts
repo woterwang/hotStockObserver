@@ -196,9 +196,9 @@ export class TrendScorer {
   // 是否为百日新高
   static isHundredDayNewHigh (kline: KLineItem[]): boolean {
     if (!kline || kline.length < 100) return false;
-    const recentHigh = Math.max(...kline.slice().map(k => k.high));
-    logger.info(`[TrendScorer] 最近100日最高价: ${recentHigh}, 当日最高价格: ${kline[0].high}`);
-    return kline[0].high > recentHigh;
+    const recentHigh = Math.max(...kline.slice(0,99).map(k => k.high));
+    logger.info(`[TrendScorer] 最近100日最高价: ${recentHigh}, 当日${kline[kline.length - 1].date}最高价格: ${kline[kline.length - 1].high}`);
+    return kline[kline.length - 1].high > recentHigh;
   }
 
   // ==================== 工具函数 ====================
