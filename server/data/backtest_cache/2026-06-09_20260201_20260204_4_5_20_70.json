@@ -1,0 +1,80 @@
+{
+  "startDate": "20260201",
+  "endDate": "20260204",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 0,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 4,
+    "marketPanicThreshold": 0,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 2,
+  "winTrades": 1,
+  "lossTrades": 1,
+  "winRate": 50,
+  "totalProfitAmount": 4038.04,
+  "totalProfitPercent": 4.04,
+  "avgProfitPercent": 4.04,
+  "avgWinPercent": 13.08,
+  "avgLossPercent": -5,
+  "profitLossRatio": 2.62,
+  "totalInvested": 100000,
+  "maxDrawdown": 2500,
+  "maxDrawdownPercent": 61.91,
+  "maxProfit": 13.08,
+  "maxLoss": -5,
+  "maxConsecutiveWins": 1,
+  "maxConsecutiveLosses": 1,
+  "avgHoldDays": 3.5,
+  "equityCurve": [
+    {
+      "date": "20260206",
+      "equity": -2500
+    },
+    {
+      "date": "20260209",
+      "equity": 4038.04
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "601226",
+      "stockName": "华电科工",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260204",
+      "buyPrice": 11.58,
+      "sellDate": "20260206",
+      "sellPrice": 11.001,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 73,
+      "marketMood": 58
+    },
+    {
+      "stockCode": "605376",
+      "stockName": "博迁新材",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260204",
+      "buyPrice": 92,
+      "sellDate": "20260209",
+      "sellPrice": 104.03,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 13.08,
+      "profitAmount": 6538.04,
+      "exitReason": "max_days",
+      "buySignalScore": 71,
+      "marketMood": 58
+    }
+  ]
+}

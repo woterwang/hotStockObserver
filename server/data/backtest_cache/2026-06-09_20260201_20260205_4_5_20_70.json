@@ -1,0 +1,122 @@
+{
+  "startDate": "20260201",
+  "endDate": "20260205",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 0,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 4,
+    "marketPanicThreshold": 0,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 4,
+  "winTrades": 3,
+  "lossTrades": 1,
+  "winRate": 75,
+  "totalProfitAmount": 17830.71,
+  "totalProfitPercent": 8.92,
+  "avgProfitPercent": 8.92,
+  "avgWinPercent": 13.56,
+  "avgLossPercent": -5,
+  "profitLossRatio": 2.71,
+  "totalInvested": 200000,
+  "maxDrawdown": 2500,
+  "maxDrawdownPercent": 14.02,
+  "maxProfit": 20,
+  "maxLoss": -5,
+  "maxConsecutiveWins": 3,
+  "maxConsecutiveLosses": 1,
+  "avgHoldDays": 3.3,
+  "equityCurve": [
+    {
+      "date": "20260206",
+      "equity": -2500
+    },
+    {
+      "date": "20260209",
+      "equity": 4038.04
+    },
+    {
+      "date": "20260210",
+      "equity": 7830.71
+    },
+    {
+      "date": "20260206",
+      "equity": 17830.71
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "601226",
+      "stockName": "华电科工",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260204",
+      "buyPrice": 11.58,
+      "sellDate": "20260206",
+      "sellPrice": 11.001,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 73,
+      "marketMood": 58
+    },
+    {
+      "stockCode": "605376",
+      "stockName": "博迁新材",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260204",
+      "buyPrice": 92,
+      "sellDate": "20260209",
+      "sellPrice": 104.03,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 13.08,
+      "profitAmount": 6538.04,
+      "exitReason": "max_days",
+      "buySignalScore": 71,
+      "marketMood": 58
+    },
+    {
+      "stockCode": "300706",
+      "stockName": "阿石创",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260205",
+      "buyPrice": 39.55,
+      "sellDate": "20260210",
+      "sellPrice": 42.55,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 7.59,
+      "profitAmount": 3792.67,
+      "exitReason": "max_days",
+      "buySignalScore": 72,
+      "marketMood": 40
+    },
+    {
+      "stockCode": "300436",
+      "stockName": "广生堂",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260205",
+      "buyPrice": 117.78,
+      "sellDate": "20260206",
+      "sellPrice": 141.33599999999998,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": 20,
+      "profitAmount": 10000,
+      "exitReason": "take_profit",
+      "buySignalScore": 70,
+      "marketMood": 40
+    }
+  ]
+}
