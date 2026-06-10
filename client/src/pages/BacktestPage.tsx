@@ -158,11 +158,11 @@ const BacktestPage: React.FC = () => {
     minSignalScore: 70,
     basePosition: 50000,
     lowMoodPositionRatio: 0.5,
-    marketMoodThreshold: 50,
+    marketMoodThreshold: 0,
     stopLossPercent: 0.05,
     takeProfitPercent: 0.20,
-    maxHoldDays: 3,
-    marketPanicThreshold: 40,
+    maxHoldDays: 4,
+    marketPanicThreshold: 0,
     maxBuyCount:3,
   });
 

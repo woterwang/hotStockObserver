@@ -262,6 +262,7 @@ export interface BuySignal {
   sectorLinkScore: number;
   sealStrengthScore: number;
   technicalScore: number;
+  trendScore: number;
   totalBuyScore: number;
   
   // 买入决策

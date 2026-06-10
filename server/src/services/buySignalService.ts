@@ -129,7 +129,7 @@ class BuySignalScorer {
   /**
    * 大盘环境评分 (满分10分)
    */
-/**************************** CodeGeeX Inline Diff ****************************/
+  /**************************** CodeGeeX Inline Diff ****************************/
   static scoreMarketEnv (indexOpenChange: number, marketMood: number): { score: number; reason: string } {
     let envScore = 0;
     let scoreReasons: string[] = [];
@@ -180,7 +180,7 @@ class BuySignalScorer {
     return { score: envScore, reason: scoreReasons.join('，') };
     return { score, reason: reasons.join('，') };
   }
-/******************** 68b39ebf-3dbe-4cad-93b7-7b18dbf718ca ********************/
+  /******************** 68b39ebf-3dbe-4cad-93b7-7b18dbf718ca ********************/
 
   /**
    * 板块联动评分 (满分10分)
@@ -581,9 +581,6 @@ class BuySignalService {
       }
     }
     if (!openData) {
-      openData = await this.getOpeningData(candidate.stockCode, signalDate);
-    }
-    if (!openData) {
       console.log(`[BuySignal] ${candidate.stockCode} 无法获取开盘数据`);
       return null;
     }
@@ -595,7 +592,7 @@ class BuySignalService {
     const sectorData = await this.getSectorData(candidate.industry || '', prevTradingDay as string);
 
     // 获取技术位置
-    const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice);
+    const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, prevTradingDay as string);
 
     // 计算各项评分
     const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
@@ -618,7 +615,7 @@ class BuySignalService {
       technicalData.distanceToPressure
     );
 
-    
+
 
     // 趋势评分 (满分15分)
     const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 60);
@@ -701,6 +698,7 @@ class BuySignalService {
       sectorLinkScore: sectorLink.score,
       sealStrengthScore: sealStrength.score,
       technicalScore: technical.score,
+      trendScore: trend.score,
       totalBuyScore,
 
       buySignal: decision.signal,
@@ -783,7 +781,7 @@ class BuySignalService {
       if (targetIdx >= 5) {
         const avg5Vol = klineData.slice(targetIdx - 5, targetIdx).reduce((sum, k) => sum + k.volume, 0) / 5;
         const countedAvg5Vol = klineData.slice(targetIdx - 5, targetIdx).reduce((sum, k) => sum + k.volume, 0);
-        logger.info(`[BuySignal] ${stockCode},countVol:${countedAvg5Vol} avg5Vol:${countedAvg5Vol/5}`);
+        logger.info(`[BuySignal] ${stockCode},countVol:${countedAvg5Vol} avg5Vol:${countedAvg5Vol / 5}`);
         volumeRatio = (avg5Vol > 0 ? target.volume / avg5Vol : 0) * 100;
         logger.info(`[BuySignal] ${stockCode} volumeRatio:${volumeRatio}`);
       }
@@ -811,7 +809,7 @@ class BuySignalService {
       const auctionAmountRatio = prev && prev.turnover > 0
         ? ((target.turnover) / prev.turnover) * 100
         : 0;
-        logger.info(`[BuySignal] ${stockCode} auctionAmountRatio:${auctionAmountRatio}`);
+      logger.info(`[BuySignal] ${stockCode} auctionAmountRatio:${auctionAmountRatio}`);
 
       return {
         openPrice: target.open,
@@ -1048,14 +1046,14 @@ class BuySignalService {
    * 获取技术位置
    * 从K线数据计算均线位置
    */
-  async getTechnicalPosition (stockCode: string, currentPrice: number): Promise<{
+  async getTechnicalPosition (stockCode: string, currentPrice: number, prevTradingDay: string): Promise<{
     distanceToMa5: number;
     distanceToMa10: number;
     distanceToMa20: number;
     distanceToPressure: number;
   }> {
     try {
-      const klineData = await this.fetchKlineData(stockCode, 30);
+      const klineData = await klineCacheService.loadCacheForHistory(stockCode, prevTradingDay, 20);
 
       if (!klineData || klineData.length < 5) {
         return { distanceToMa5: 0, distanceToMa10: 0, distanceToMa20: 0, distanceToPressure: 5 };
@@ -1501,7 +1499,7 @@ class BuySignalService {
       const sectorData = await this.getSectorData(candidate.industry || '', prevTradingDay as string);
 
       // 获取技术位置
-      const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice);
+      const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, prevTradingDay as string);
 
       // 计算各项评分
       const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
@@ -1524,6 +1522,11 @@ class BuySignalService {
         technicalData.distanceToPressure
       );
 
+      // 趋势评分 (满分15分)
+      const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
+      const trend = TrendScorer.calculate(KlineData);
+      logger.info(`[BuySignal] ${candidate.stockCode} 趋势评分: ${trend.score}`);
+
       // 计算总分
       const totalBuyScore =
         openStrength.score +
@@ -1532,6 +1535,7 @@ class BuySignalService {
         marketEnvScore.score +
         sectorLink.score +
         sealStrength.score +
+        trend.score +
         technical.score;
 
       // 生成买入决策
@@ -1598,6 +1602,7 @@ class BuySignalService {
         sectorLinkScore: sectorLink.score,
         sealStrengthScore: sealStrength.score,
         technicalScore: technical.score,
+        trendScore: trend.score,
         totalBuyScore,
 
         buySignal: decision.signal,

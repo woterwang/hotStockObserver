@@ -37,6 +37,23 @@ export class TrendScorer {
       return { score: 0, tag: 'DownTrend' };
     }
 
+    if (this.isHundredDayNewHigh(kline)) {
+      logger.info(`[TrendScorer] 100日新高，直接给定最高趋势评分`);
+      return { score: 10, tag: 'VeryStrong' };
+    }
+
+    if (this.isSixtyDayNewHigh(kline)) {
+      logger.info(`[TrendScorer] 60日新低，直接给定最低趋势评分`);
+      return { score: 5, tag: 'Strong' };
+    }
+
+    if(this.isTwentyDayNewHigh(kline)) {
+      logger.info(`[TrendScorer] 20日新高，直接给定中趋势评分`);
+      return { score: 2, tag: 'Mid' };
+    }
+
+    return { score: 0, tag:'DownTrend'};
+
     // ==============================================
     // 维度1：价格趋势得分 0~40
     // ==============================================
@@ -170,36 +187,69 @@ export class TrendScorer {
     else if (total >= 50) trendTag = 'Mid';
     else if (total >= 35) trendTag = 'Weak';
     else trendTag = 'DownTrend';
-    // 趋势评分映射为15分制，保留高分段区分度
+    // 趋势评分映射为10分制，保留高分段区分度
     const trendScore = TrendScorer.toBuySignalScore(total, kline);
     logger.info(`[TrendScorer] 趋势评分: 总分${total} 转换为 ${trendScore}，其中价格评分占比为 ${priceScore}，均线评分占比为 ${maScore}，成交量评分占比为 ${volScore}`);
     return { score: trendScore, tag: trendTag };
   }
 
-  static toBuySignalScore (rawTrendScore: number,kline: KLineItem[]): number {
-    // let normalized = Math.max(0, Math.min(rawTrendScore, this.MAX_SCORE)) / this.MAX_SCORE;
+  static toBuySignalScore (rawTrendScore: number, kline: KLineItem[]): number {
+    // 趋势评分映射为10分制，保留高分段区分度
+    rawTrendScore = Math.round(rawTrendScore * 0.1);
     // 如果是百日新高，给予额外加分
-    // 这里假设调用isHundredDayNewHigh函数来判断是否为百日新高，如果是，则在原有基础上增加10分的趋势得分
+    // 这里假设调用isHundredDayNewHigh函数来判断是否为百日新高，如果是，则在原有基础上增加5分的趋势得分
     // 注意：实际调用时需要传入对应的K线数据
-    // if (this.isHundredDayNewHigh(kline)) {
-    //   logger.info(`[TrendScorer] 百日新高，给定额外10分的趋势得分`);
-    //   normalized += 0.1;
-    // }
-    // let resScore = Math.round(normalized * this.TREND_SCORE_MAX);
-    let resScore = 0;
-    if(this.isHundredDayNewHigh(kline)){
-      logger.info(`[TrendScorer] 百日新高，给定额外10分的趋势得分`);
-      resScore += 10;
+    if (this.isHundredDayNewHigh(kline)) {
+      logger.info(`[TrendScorer] 百日新高，给定额外5分的趋势得分`);
+      return rawTrendScore + 5;
     }
-    return resScore;
+    return rawTrendScore;
+  }
+
+  static bundredDayNewHighSore (kline: KLineItem[]): { score: number; tag: AnalysisOutput['trendTag'] } {
+    if (this.isHundredDayNewHigh(kline)) {
+      logger.info(`[TrendScorer] 百日新高，给定额外10分的趋势得分`);
+      return { score: 10, tag: 'VeryStrong' };
+    }
+    return { score: 0, tag: 'DownTrend' };
   }
 
   // 是否为百日新高
   static isHundredDayNewHigh (kline: KLineItem[]): boolean {
     if (!kline || kline.length < 100) return false;
-    const recentHigh = Math.max(...kline.slice(0,99).map(k => k.high));
-    logger.info(`[TrendScorer] 最近100日最高价: ${recentHigh}, 当日${kline[kline.length - 1].date}最高价格: ${kline[kline.length - 1].high}`);
-    return kline[kline.length - 1].high > recentHigh;
+    const lineCount = kline.length;
+    const currentLine = kline[lineCount - 1];
+    const recentHigh = Math.max(...kline.slice(0,-1).map(k => k.high));
+    logger.info(`[TrendScorer] 最近${lineCount}日最高价: ${recentHigh}, 当日${currentLine.date}最高价格: ${currentLine.high}`);
+    return kline[lineCount - 1].high >= recentHigh;
+  }
+
+  // 是否为60日新高
+  static isSixtyDayNewHigh (kline: KLineItem[]): boolean {
+    if (!kline || kline.length < 60) return false;
+    //只比较最近60天的最高价，排除当天的价格
+    //获取最后60天的K线数据
+    const recentKline = kline.slice(-60);
+    if (!recentKline || recentKline.length < 60) return false;
+    const lineCount = recentKline.length;
+    const recentHigh = Math.max(...recentKline.map(k => k.high));
+    const currentLine = kline[lineCount - 1];
+    logger.info(`[TrendScorer] 最近${lineCount}日最高价: ${recentHigh}, 当日${currentLine.date}最高价格: ${currentLine.high}`);
+    return currentLine.high >= recentHigh;
+  }
+
+  // 是否为20日新高
+  static isTwentyDayNewHigh (kline: KLineItem[]): boolean {
+    if (!kline || kline.length < 20) return false;
+    // 只比较最近20天的最高价，排除当天的价格
+     // 获取最近20天的K线数据，排除当天的K线，从前往后数20天
+    const recentKline = kline.slice(-20);
+    if (!recentKline || recentKline.length < 20) return false;
+    const lineCount = recentKline.length;
+    const recentHigh = Math.max(...recentKline.map(k => k.high));
+    const currentLine = kline[lineCount - 1];
+    logger.info(`[TrendScorer] 最近${lineCount}日最高价: ${recentHigh}, 当日${currentLine.date}最高价格: ${currentLine.high}`);
+    return currentLine.high >= recentHigh;
   }
 
   // ==================== 工具函数 ====================
