@@ -76,7 +76,7 @@ class BuySignalScorer {
     if (openChangePercent >= 1 && openChangePercent <= 3) {
       return { score: 30, reason: '开盘涨幅理想(1-3%)，强势延续且不追高' };
     } else if (openChangePercent > 3 && openChangePercent <= 5) {
-      return { score: 25, reason: '开盘偏高(3-5%)，需注意追高风险' };
+      return { score: 20, reason: '开盘偏高(3-5%)，需注意追高风险' };
     } else if (openChangePercent > 5 && openChangePercent <= 7) {
       return { score: 15, reason: '开盘过高(5-7%)，追高风险较大' };
     } else if (openChangePercent > 7) {
