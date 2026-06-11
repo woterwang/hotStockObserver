@@ -1505,22 +1505,38 @@ class BuySignalService {
       const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
       const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
       const auction = BuySignalScorer.scoreAuction(openData.auctionAmountRatio);
+      // const auction = {
+      //   score: 0,
+      //   reason: '竞价数据暂不可用，默认0分'
+      // }
       const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood);
-      const sectorLink = BuySignalScorer.scoreSectorLink(
-        sectorData.sectorOpenChange,
-        sectorData.sectorLimitUpCount,
-        sectorData.sectorLeader
-      );
-      const sealStrength = BuySignalScorer.scoreSealStrength(
-        openData.isLimitUp,
-        openData.sealRatio,
-        parseInt(openData.openTimes?.toString() || '0', 10)
-      );
-      const technical = BuySignalScorer.scoreTechnical(
-        technicalData.distanceToMa5,
-        technicalData.distanceToMa10,
-        technicalData.distanceToPressure
-      );
+      // const sectorLink = BuySignalScorer.scoreSectorLink(
+      //   sectorData.sectorOpenChange,
+      //   sectorData.sectorLimitUpCount,
+      //   sectorData.sectorLeader
+      // );
+      const sectorLink = {
+        score: 0,
+        reason: '板块数据暂不可用，默认0分'
+      }
+      // const sealStrength = BuySignalScorer.scoreSealStrength(
+      //   openData.isLimitUp,
+      //   openData.sealRatio,
+      //   parseInt(openData.openTimes?.toString() || '0', 10)
+      // );
+      const sealStrength = {
+        score: 0,
+        reason: '封单数据暂不可用，默认0分'
+      }
+      // const technical = BuySignalScorer.scoreTechnical(
+      //   technicalData.distanceToMa5,
+      //   technicalData.distanceToMa10,
+      //   technicalData.distanceToPressure
+      // );
+      const technical = {
+        score: 0,
+        reason: '技术数据暂不可用，默认0分'
+      }
 
       // 趋势评分 (满分15分)
       const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
