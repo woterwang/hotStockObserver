@@ -618,7 +618,7 @@ class BuySignalService {
 
 
     // 趋势评分 (满分15分)
-    const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 60);
+    const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
     const trend = TrendScorer.calculate(KlineData);
     logger.info(`[BuySignal] ${candidate.stockCode} 趋势评分: ${trend.score}`);
 
