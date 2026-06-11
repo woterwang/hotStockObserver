@@ -467,10 +467,20 @@ class KlineCacheService {
       this.persistCache(stockCode, allCachedKlines, Date.now()); // 更新缓存
       cachedKline = Array.from(allCachedKlines.values());
     }
-    // 过滤出目标日期以及之前的K线数据，并按日期升序排序
+    // 修复问题2：确保按日期升序排序，Map 插入顺序不保证有序
+    cachedKline.sort((a, b) => a.date.localeCompare(b.date));
 
-    // 第一步： 找到开始日期所在K线的索引位置
-    const startDateIndex = cachedKline.findIndex(kline => kline.date >= targetDate);
+    // 修复问题3：找最后一个 <= targetDate 的索引，而非第一个 >= targetDate
+    // 原 findIndex 在 targetDate 不在缓存中时会指向更晚的日期，导致范围偏移
+    const startDateIndex = cachedKline.reduce((idx, kline, i) =>
+      kline.date <= targetDate ? i : idx, -1);
+
+    // 修复问题1：startDateIndex === -1 表示缓存中所有日期都晚于 targetDate，避免崩溃
+    if (startDateIndex === -1) {
+      logger.warn(`[K线缓存] ${stockCode} 缓存中无 ${targetDate} 及之前的数据，返回空数组`);
+      return [];
+    }
+
     // 第二步： 找到结束日期所在K线的索引位置（结束日期 = 开始日期 - klineDays）
     let endDateIndex = startDateIndex - klineDays;
     if (endDateIndex < 0) {

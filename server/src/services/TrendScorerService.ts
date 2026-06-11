@@ -221,7 +221,7 @@ export class TrendScorer {
     const currentLine = kline[lineCount - 1];
     const recentHigh = Math.max(...kline.slice(0,-1).map(k => k.high));
     logger.info(`[TrendScorer] 最近${lineCount}日最高价: ${recentHigh}, 当日${currentLine.date}最高价格: ${currentLine.high}`);
-    return kline[lineCount - 1].high >= recentHigh;
+    return currentLine.high >= recentHigh;
   }
 
   // 是否为60日新高
