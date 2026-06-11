@@ -1,0 +1,101 @@
+{
+  "startDate": "20260601",
+  "endDate": "20260608",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 50,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 3,
+    "marketPanicThreshold": 40,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 3,
+  "winTrades": 1,
+  "lossTrades": 2,
+  "winRate": 33.33,
+  "totalProfitAmount": -1312.92,
+  "totalProfitPercent": -1.75,
+  "avgProfitPercent": -1.75,
+  "avgWinPercent": 5.24,
+  "avgLossPercent": -5.24,
+  "profitLossRatio": 1,
+  "totalInvested": 75000,
+  "maxDrawdown": 2621.95,
+  "maxDrawdownPercent": 0,
+  "maxProfit": 5.24,
+  "maxLoss": -5.49,
+  "maxConsecutiveWins": 1,
+  "maxConsecutiveLosses": 2,
+  "avgHoldDays": 2.3,
+  "equityCurve": [
+    {
+      "date": "20260603",
+      "equity": -1250
+    },
+    {
+      "date": "20260603",
+      "equity": -2621.95
+    },
+    {
+      "date": "20260604",
+      "equity": -1312.9199999999998
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "600322",
+      "stockName": "津投城开",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260602",
+      "buyPrice": 2.74,
+      "sellDate": "20260603",
+      "sellPrice": 2.603,
+      "holdDays": 2,
+      "position": 25000,
+      "profitPercent": -5,
+      "profitAmount": -1250,
+      "exitReason": "stop_loss",
+      "buySignalScore": 76,
+      "marketMood": 47
+    },
+    {
+      "stockCode": "300792",
+      "stockName": "壹网壹创",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260602",
+      "buyPrice": 36.08,
+      "sellDate": "20260603",
+      "sellPrice": 34.1,
+      "holdDays": 2,
+      "position": 25000,
+      "profitPercent": -5.49,
+      "profitAmount": -1371.95,
+      "exitReason": "stop_loss",
+      "buySignalScore": 74,
+      "marketMood": 47
+    },
+    {
+      "stockCode": "301228",
+      "stockName": "实朴检测",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260602",
+      "buyPrice": 72,
+      "sellDate": "20260604",
+      "sellPrice": 75.77,
+      "holdDays": 3,
+      "position": 25000,
+      "profitPercent": 5.24,
+      "profitAmount": 1309.03,
+      "exitReason": "max_days",
+      "buySignalScore": 73,
+      "marketMood": 47
+    }
+  ]
+}
