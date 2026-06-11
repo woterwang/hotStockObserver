@@ -585,135 +585,148 @@ class BuySignalService {
       return null;
     }
     const prevTradingDay = tradingCalendarService.getPrevTradingDay(signalDate);
-    // 获取大盘环境
-    const marketEnv = await this.getMarketEnvironment(prevTradingDay as string);
+      // 获取大盘环境
+      const marketEnv = await this.getMarketEnvironment(prevTradingDay as string);
 
-    // 获取板块数据
-    const sectorData = await this.getSectorData(candidate.industry || '', prevTradingDay as string);
+      // 获取板块数据
+      const sectorData = await this.getSectorData(candidate.industry || '', prevTradingDay as string);
 
-    // 获取技术位置
-    const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, prevTradingDay as string);
+      // 获取技术位置
+      const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, prevTradingDay as string);
 
-    // 计算各项评分
-    const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
-    const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
-    const auction = BuySignalScorer.scoreAuction(openData.auctionAmountRatio);
-    const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood);
-    const sectorLink = BuySignalScorer.scoreSectorLink(
-      sectorData.sectorOpenChange,
-      sectorData.sectorLimitUpCount,
-      sectorData.sectorLeader
-    );
-    const sealStrength = BuySignalScorer.scoreSealStrength(
-      openData.isLimitUp,
-      openData.sealRatio,
-      parseInt(openData.openTimes?.toString() || '0', 10)
-    );
-    const technical = BuySignalScorer.scoreTechnical(
-      technicalData.distanceToMa5,
-      technicalData.distanceToMa10,
-      technicalData.distanceToPressure
-    );
+      // 计算各项评分
+      const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
+      const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
+      const auction = BuySignalScorer.scoreAuction(openData.auctionAmountRatio);
+      // const auction = {
+      //   score: 0,
+      //   reason: '竞价数据暂不可用，默认0分'
+      // }
+      const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood);
+      // const sectorLink = BuySignalScorer.scoreSectorLink(
+      //   sectorData.sectorOpenChange,
+      //   sectorData.sectorLimitUpCount,
+      //   sectorData.sectorLeader
+      // );
+      const sectorLink = {
+        score: 0,
+        reason: '板块数据暂不可用，默认0分'
+      }
+      // const sealStrength = BuySignalScorer.scoreSealStrength(
+      //   openData.isLimitUp,
+      //   openData.sealRatio,
+      //   parseInt(openData.openTimes?.toString() || '0', 10)
+      // );
+      const sealStrength = {
+        score: 0,
+        reason: '封单数据暂不可用，默认0分'
+      }
+      // const technical = BuySignalScorer.scoreTechnical(
+      //   technicalData.distanceToMa5,
+      //   technicalData.distanceToMa10,
+      //   technicalData.distanceToPressure
+      // );
+      const technical = {
+        score: 0,
+        reason: '技术数据暂不可用，默认0分'
+      }
 
+      // 趋势评分 (满分15分)
+      const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
+      const trend = TrendScorer.calculate(KlineData);
+      logger.info(`[BuySignal] ${candidate.stockCode} 趋势评分: ${trend.score}`);
 
+      // 计算总分
+      const totalBuyScore =
+        openStrength.score +
+        volumeConfirm.score +
+        auction.score +
+        marketEnvScore.score +
+        sectorLink.score +
+        sealStrength.score +
+        trend.score +
+        technical.score;
 
-    // 趋势评分 (满分15分)
-    const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
-    const trend = TrendScorer.calculate(KlineData);
-    logger.info(`[BuySignal] ${candidate.stockCode} 趋势评分: ${trend.score}`);
+      // 生成买入决策
+      const decision = this.generateDecision(totalBuyScore, openData, candidate);
 
+      // 收集风险提示
+      const riskWarnings = this.collectRiskWarnings(
+        openData,
+        marketEnv,
+        sectorData,
+        technicalData,
+        candidate
+      );
 
-    // 计算总分
-    const totalBuyScore =
-      openStrength.score +
-      volumeConfirm.score +
-      auction.score +
-      marketEnvScore.score +
-      sectorLink.score +
-      sealStrength.score +
-      trend.score +
-      technical.score;
+      // 构建买入理由
+      const buyReason = [
+        openStrength.reason,
+        volumeConfirm.reason,
+        auction.reason,
+        marketEnvScore.reason,
+        sectorLink.reason,
+      ].filter(r => r).join('；');
 
-    // 生成买入决策
-    const decision = this.generateDecision(totalBuyScore, openData, candidate);
+      const signal: IBuySignal = {
+        date: signalDate,
+        stockCode: candidate.stockCode,
+        stockName: candidate.stockName,
 
-    // 收集风险提示
-    const riskWarnings = this.collectRiskWarnings(
-      openData,
-      marketEnv,
-      sectorData,
-      technicalData,
-      candidate
-    );
+        strategyType: candidate.strategyType,
+        strategyName: candidate.strategyName,
+        sourceId: candidate._id,
+        selectionDate: candidate.date,
+        selectionScore: candidate.score || 0,
 
-    // 构建买入理由
-    const buyReason = [
-      openStrength.reason,
-      volumeConfirm.reason,
-      auction.reason,
-      marketEnvScore.reason,
-      sectorLink.reason,
-    ].filter(r => r).join('；');
+        openPrice: openData.openPrice,
+        openChangePercent: openData.openChangePercent,
+        openVolumeRatio: openData.openVolumeRatio,
+        auctionAmount: openData.auctionAmount,
+        auctionAmountRatio: openData.auctionAmountRatio,
 
-    const signal: IBuySignal = {
-      date: signalDate,
-      stockCode: candidate.stockCode,
-      stockName: candidate.stockName,
+        indexOpenChange: marketEnv.indexOpenChange,
+        indexMorningTrend: marketEnv.indexMorningTrend,
+        marketMood: marketEnv.marketMood,
 
-      strategyType: candidate.strategyType,
-      strategyName: candidate.strategyName,
-      sourceId: candidate._id,
-      selectionDate: candidate.date,
-      selectionScore: candidate.score || 0,
+        sectorName: candidate.industry || '',
+        sectorOpenChange: sectorData.sectorOpenChange,
+        sectorLimitUpCount: sectorData.sectorLimitUpCount,
+        sectorLeader: sectorData.sectorLeader,
 
-      openPrice: openData.openPrice,
-      openChangePercent: openData.openChangePercent,
-      openVolumeRatio: openData.openVolumeRatio,
-      auctionAmount: openData.auctionAmount,
-      auctionAmountRatio: openData.auctionAmountRatio,
+        isLimitUp: openData.isLimitUp,
+        sealAmount: openData.sealAmount,
+        sealRatio: openData.sealRatio,
+        openTimes: parseInt(openData.openTimes?.toString() || '0', 10),
 
-      indexOpenChange: marketEnv.indexOpenChange,
-      indexMorningTrend: marketEnv.indexMorningTrend,
-      marketMood: marketEnv.marketMood,
+        distanceToMa5: technicalData.distanceToMa5,
+        distanceToMa10: technicalData.distanceToMa10,
+        distanceToMa20: technicalData.distanceToMa20,
+        distanceToPressure: technicalData.distanceToPressure,
 
-      sectorName: candidate.industry || '',
-      sectorOpenChange: sectorData.sectorOpenChange,
-      sectorLimitUpCount: sectorData.sectorLimitUpCount,
-      sectorLeader: sectorData.sectorLeader,
+        openStrengthScore: openStrength.score,
+        volumeConfirmScore: volumeConfirm.score,
+        auctionScore: auction.score,
+        marketEnvScore: marketEnvScore.score,
+        sectorLinkScore: sectorLink.score,
+        sealStrengthScore: sealStrength.score,
+        technicalScore: technical.score,
+        trendScore: trend.score,
+        totalBuyScore,
 
-      isLimitUp: openData.isLimitUp,
-      sealAmount: openData.sealAmount,
-      sealRatio: openData.sealRatio,
-      openTimes: parseInt(openData.openTimes?.toString() || '0', 10),
+        buySignal: decision.signal,
+        suggestedPosition: decision.position,
+        suggestedPrice: decision.price,
+        stopLossPrice: decision.stopLoss,
+        takeProfitPrice: decision.takeProfit,
+        buyReason,
+        riskWarning: riskWarnings,
 
-      distanceToMa5: technicalData.distanceToMa5,
-      distanceToMa10: technicalData.distanceToMa10,
-      distanceToMa20: technicalData.distanceToMa20,
-      distanceToPressure: technicalData.distanceToPressure,
+        executed: false,
+        resultStatus: 'pending',
+      };
 
-      openStrengthScore: openStrength.score,
-      volumeConfirmScore: volumeConfirm.score,
-      auctionScore: auction.score,
-      marketEnvScore: marketEnvScore.score,
-      sectorLinkScore: sectorLink.score,
-      sealStrengthScore: sealStrength.score,
-      technicalScore: technical.score,
-      trendScore: trend.score,
-      totalBuyScore,
-
-      buySignal: decision.signal,
-      suggestedPosition: decision.position,
-      suggestedPrice: decision.price,
-      stopLossPrice: decision.stopLoss,
-      takeProfitPrice: decision.takeProfit,
-      buyReason,
-      riskWarning: riskWarnings,
-
-      executed: false,
-      resultStatus: 'pending',
-    };
-
-    return signal;
+      return signal;
   }
 
   /**
