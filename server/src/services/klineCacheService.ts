@@ -589,7 +589,7 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
       result.set(stockCode, {
         openTimes: timeStr,
         openPrice: open,
-        openChangePercent: preClose > 0 ? ((open - preClose) / preClose) * 100 : 0,
+        openChangePercent: changePercent,
         openVolumeRatio: volume, // 成交量（手）
         auctionAmount: turnover, // 成交额（元）
         auctionAmountRatio: turnover > 0 ? ((turnover - preClose * volume * 100) / (preClose * volume * 100)) * 100 : 0,
