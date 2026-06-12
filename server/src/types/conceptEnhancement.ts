@@ -128,6 +128,7 @@ export interface ConceptResonanceQueryConfig {
 export interface OpenData {
     openPrice: number;
     openChangePercent: number;
+    openVolume?: number;
     openVolumeRatio: number;
     auctionAmount: number;
     auctionAmountRatio: number;

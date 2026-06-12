@@ -585,153 +585,156 @@ class BuySignalService {
       return null;
     }
     const prevTradingDay = tradingCalendarService.getPrevTradingDay(signalDate);
-      // 获取大盘环境
-      const marketEnv = await this.getMarketEnvironment(prevTradingDay as string);
+    // 获取大盘环境
+    const marketEnv = await this.getMarketEnvironment(prevTradingDay as string);
 
-      // 获取板块数据
-      const sectorData = await this.getSectorData(candidate.industry || '', prevTradingDay as string);
+    // 获取板块数据
+    const sectorData = await this.getSectorData(candidate.industry || '', prevTradingDay as string);
 
-      // 获取技术位置
-      const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, prevTradingDay as string);
+    // 获取技术位置
+    const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, prevTradingDay as string);
 
-      // 计算各项评分
-      const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
-      const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
-      const auction = BuySignalScorer.scoreAuction(openData.auctionAmountRatio);
-      // const auction = {
-      //   score: 0,
-      //   reason: '竞价数据暂不可用，默认0分'
-      // }
-      const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood);
-      // const sectorLink = BuySignalScorer.scoreSectorLink(
-      //   sectorData.sectorOpenChange,
-      //   sectorData.sectorLimitUpCount,
-      //   sectorData.sectorLeader
-      // );
-      const sectorLink = {
-        score: 0,
-        reason: '板块数据暂不可用，默认0分'
-      }
-      // const sealStrength = BuySignalScorer.scoreSealStrength(
-      //   openData.isLimitUp,
-      //   openData.sealRatio,
-      //   parseInt(openData.openTimes?.toString() || '0', 10)
-      // );
-      const sealStrength = {
-        score: 0,
-        reason: '封单数据暂不可用，默认0分'
-      }
-      // const technical = BuySignalScorer.scoreTechnical(
-      //   technicalData.distanceToMa5,
-      //   technicalData.distanceToMa10,
-      //   technicalData.distanceToPressure
-      // );
-      const technical = {
-        score: 0,
-        reason: '技术数据暂不可用，默认0分'
-      }
+    // 计算各项评分
+    const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
+    const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
+    const auction = BuySignalScorer.scoreAuction(openData.auctionAmountRatio);
+    // const auction = {
+    //   score: 0,
+    //   reason: '竞价数据暂不可用，默认0分'
+    // }
+    const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood);
+    // const sectorLink = BuySignalScorer.scoreSectorLink(
+    //   sectorData.sectorOpenChange,
+    //   sectorData.sectorLimitUpCount,
+    //   sectorData.sectorLeader
+    // );
+    const sectorLink = {
+      score: 0,
+      reason: '板块数据暂不可用，默认0分'
+    }
+    // const sealStrength = BuySignalScorer.scoreSealStrength(
+    //   openData.isLimitUp,
+    //   openData.sealRatio,
+    //   parseInt(openData.openTimes?.toString() || '0', 10)
+    // );
+    const sealStrength = {
+      score: 0,
+      reason: '封单数据暂不可用，默认0分'
+    }
+    // const technical = BuySignalScorer.scoreTechnical(
+    //   technicalData.distanceToMa5,
+    //   technicalData.distanceToMa10,
+    //   technicalData.distanceToPressure
+    // );
+    const technical = {
+      score: 0,
+      reason: '技术数据暂不可用，默认0分'
+    }
 
-      // 趋势评分 (满分15分)
-      const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
-      const trend = TrendScorer.calculate(KlineData);
-      logger.info(`[BuySignal] ${candidate.stockCode} 趋势评分: ${trend.score}`);
+    // 趋势评分 (满分15分)
+    const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
+    const trend = TrendScorer.calculate(KlineData);
+    logger.info(`[BuySignal] ${candidate.stockCode} 趋势评分: ${trend.score}`);
 
-      // 计算总分
-      const totalBuyScore =
-        openStrength.score +
-        volumeConfirm.score +
-        auction.score +
-        marketEnvScore.score +
-        sectorLink.score +
-        sealStrength.score +
-        trend.score +
-        technical.score;
+    // 计算总分
+    const totalBuyScore =
+      openStrength.score +
+      volumeConfirm.score +
+      auction.score +
+      marketEnvScore.score +
+      sectorLink.score +
+      sealStrength.score +
+      trend.score +
+      technical.score;
 
-      // 生成买入决策
-      const decision = this.generateDecision(totalBuyScore, openData, candidate);
+    // 生成买入决策
+    const decision = this.generateDecision(totalBuyScore, openData, candidate);
 
-      // 收集风险提示
-      const riskWarnings = this.collectRiskWarnings(
-        openData,
-        marketEnv,
-        sectorData,
-        technicalData,
-        candidate
-      );
+    // 收集风险提示
+    const riskWarnings = this.collectRiskWarnings(
+      openData,
+      marketEnv,
+      sectorData,
+      technicalData,
+      candidate
+    );
 
-      // 构建买入理由
-      const buyReason = [
-        openStrength.reason,
-        volumeConfirm.reason,
-        auction.reason,
-        marketEnvScore.reason,
-        sectorLink.reason,
-      ].filter(r => r).join('；');
+    // 构建买入理由
+    const buyReason = [
+      openStrength.reason,
+      volumeConfirm.reason,
+      auction.reason,
+      marketEnvScore.reason,
+      sectorLink.reason,
+    ].filter(r => r).join('；');
 
-      const signal: IBuySignal = {
-        date: signalDate,
-        stockCode: candidate.stockCode,
-        stockName: candidate.stockName,
+    const signal: IBuySignal = {
+      date: signalDate,
+      stockCode: candidate.stockCode,
+      stockName: candidate.stockName,
 
-        strategyType: candidate.strategyType,
-        strategyName: candidate.strategyName,
-        sourceId: candidate._id,
-        selectionDate: candidate.date,
-        selectionScore: candidate.score || 0,
+      strategyType: candidate.strategyType,
+      strategyName: candidate.strategyName,
+      sourceId: candidate._id,
+      selectionDate: candidate.date,
+      selectionScore: candidate.score || 0,
 
-        openPrice: openData.openPrice,
-        openChangePercent: openData.openChangePercent,
-        openVolumeRatio: openData.openVolumeRatio,
-        auctionAmount: openData.auctionAmount,
-        auctionAmountRatio: openData.auctionAmountRatio,
+      openPrice: openData.openPrice,
+      openChangePercent: openData.openChangePercent,
+      openVolumeRatio: openData.openVolumeRatio,
+      auctionAmount: openData.auctionAmount,
+      auctionAmountRatio: openData.auctionAmountRatio,
 
-        indexOpenChange: marketEnv.indexOpenChange,
-        indexMorningTrend: marketEnv.indexMorningTrend,
-        marketMood: marketEnv.marketMood,
+      indexOpenChange: marketEnv.indexOpenChange,
+      indexMorningTrend: marketEnv.indexMorningTrend,
+      marketMood: marketEnv.marketMood,
 
-        sectorName: candidate.industry || '',
-        sectorOpenChange: sectorData.sectorOpenChange,
-        sectorLimitUpCount: sectorData.sectorLimitUpCount,
-        sectorLeader: sectorData.sectorLeader,
+      sectorName: candidate.industry || '',
+      sectorOpenChange: sectorData.sectorOpenChange,
+      sectorLimitUpCount: sectorData.sectorLimitUpCount,
+      sectorLeader: sectorData.sectorLeader,
 
-        isLimitUp: openData.isLimitUp,
-        sealAmount: openData.sealAmount,
-        sealRatio: openData.sealRatio,
-        openTimes: parseInt(openData.openTimes?.toString() || '0', 10),
+      isLimitUp: openData.isLimitUp,
+      sealAmount: openData.sealAmount,
+      sealRatio: openData.sealRatio,
+      openTimes: parseInt(openData.openTimes?.toString() || '0', 10),
 
-        distanceToMa5: technicalData.distanceToMa5,
-        distanceToMa10: technicalData.distanceToMa10,
-        distanceToMa20: technicalData.distanceToMa20,
-        distanceToPressure: technicalData.distanceToPressure,
+      distanceToMa5: technicalData.distanceToMa5,
+      distanceToMa10: technicalData.distanceToMa10,
+      distanceToMa20: technicalData.distanceToMa20,
+      distanceToPressure: technicalData.distanceToPressure,
 
-        openStrengthScore: openStrength.score,
-        volumeConfirmScore: volumeConfirm.score,
-        auctionScore: auction.score,
-        marketEnvScore: marketEnvScore.score,
-        sectorLinkScore: sectorLink.score,
-        sealStrengthScore: sealStrength.score,
-        technicalScore: technical.score,
-        trendScore: trend.score,
-        totalBuyScore,
+      openStrengthScore: openStrength.score,
+      volumeConfirmScore: volumeConfirm.score,
+      auctionScore: auction.score,
+      marketEnvScore: marketEnvScore.score,
+      sectorLinkScore: sectorLink.score,
+      sealStrengthScore: sealStrength.score,
+      technicalScore: technical.score,
+      trendScore: trend.score,
+      totalBuyScore,
 
-        buySignal: decision.signal,
-        suggestedPosition: decision.position,
-        suggestedPrice: decision.price,
-        stopLossPrice: decision.stopLoss,
-        takeProfitPrice: decision.takeProfit,
-        buyReason,
-        riskWarning: riskWarnings,
+      buySignal: decision.signal,
+      suggestedPosition: decision.position,
+      suggestedPrice: decision.price,
+      stopLossPrice: decision.stopLoss,
+      takeProfitPrice: decision.takeProfit,
+      buyReason,
+      riskWarning: riskWarnings,
 
-        executed: false,
-        resultStatus: 'pending',
-      };
+      executed: false,
+      resultStatus: 'pending',
+    };
 
-      return signal;
+    return signal;
   }
 
   /**
    * 获取开盘数据
-   * 从同花顺K线接口获取，不调用问财避免被封
+   * 支持两种模式：
+   * 1) 当日模式：从腾讯实时行情获取开盘价/开盘成交量
+   * 2) 历史模式：从历史分时接口获取开盘价/开盘成交量
+   * 其余评分所需字段继续复用现有计算逻辑
    */
   async getOpeningData (stockCode: string, dateStr: string): Promise<{
     openPrice: number;
@@ -745,50 +748,141 @@ class BuySignalService {
     openTimes?: number;
   } | null> {
     console.log(`[BuySignal] 获取 ${stockCode} ${dateStr} 开盘数据`);
+    const targetDateStr = formatDateStr(dateStr);
+    if (!tradingCalendarService.isTradingDay(targetDateStr)) {
+      console.log(`[BuySignal] ${targetDateStr} 不是交易日，无法获取开盘数据`);
+      return null;
+    }
     try {
-      const targetDateStr = formatDateStr(dateStr);
-      const klineData = await klineCacheService.fetchKlineByDate(stockCode, targetDateStr);
+      const todayStr = dayjs().format('YYYYMMDD');
+      const isTodayMode = targetDateStr === todayStr;
+      const rawKlineData = await klineCacheService.fetchKlineByDate(stockCode, targetDateStr);
 
-      if (!klineData || klineData.length === 0) {
+      if (!rawKlineData || rawKlineData.length === 0) {
         console.log(`[BuySignal] getOpeningData ${stockCode} 无K线数据`);
         return null;
       }
 
+      // 统一按日期升序处理，避免 Map 插入顺序导致前后日判断错误
+      const klineData = [...rawKlineData].sort((a, b) => a.date.localeCompare(b.date));
+
       // 找到目标日期的K线
       let targetIdx = klineData.findIndex(k => k.date === targetDateStr);
+      let prev: CachedKline | null = null;
 
-      // 如果找不到指定日期，使用最新的K线（可能是盘中或当天数据尚未更新）
+      if (targetIdx > 0) {
+        prev = klineData[targetIdx - 1];
+      } else {
+        // 查询上一个交易日期
+        const prevDateStr = tradingCalendarService.getPrevTradingDay(targetDateStr);
+        // 假设最后一条数据就是前一个交易日的K线（如果日期不连续，说明数据缺失）
+        prev = klineData[klineData.length - 1];
+        if (prev.date !== prevDateStr) {
+          console.log(`[BuySignal] ${stockCode} 前一交易日K线数据缺失，无法获取开盘数据`);
+          return null;
+        }
+      }
+
+      let target: CachedKline;
+
+      // 历史模式下，目标日期不存在则直接返回；今日模式下允许构造占位数据继续走腾讯
       if (targetIdx === -1) {
-        console.log(`[BuySignal]  ${stockCode} 未找到 ${targetDateStr} 的K线不存在,无法获取开盘数据,请确认数据已更新`);
+        if (!isTodayMode) {
+          console.log(`[BuySignal] ${stockCode} 未找到 ${targetDateStr} 的K线，无法获取开盘数据，请确认数据已更新`);
+          return null;
+        }
+
+        if (!prev) {
+          console.log(`[BuySignal] ${stockCode} 今日无可用前一交易日K线，无法构造开盘数据`);
+          return null;
+        }
+
+        target = {
+          date: targetDateStr,
+          open: 0,  // 开盘价未知，后续用腾讯数据覆盖
+          high: 0,  // 最高价未知，后续用腾讯数据覆盖
+          low: 0,    // 最低价未知，后续用腾讯数据覆盖
+          close: 0,// 收盘价未知，后续用腾讯数据覆盖
+          volume: 0,// 成交量未知，后续用腾讯数据覆盖
+          turnover: 0,// 成交额未知，后续用腾讯数据覆盖
+        };
+        klineData.push(target);
+        targetIdx = klineData.length - 1;
+        logger.info(`[BuySignal] ${stockCode} ${targetDateStr} 今日暂无日K，已构造开盘占位数据`);
+      } else {
+        target = klineData[targetIdx];
+      }
+
+      console.log(`[BuySignal] ${stockCode} 使用 ${target.date} 的K线数据`);
+      // 打印 target 数据
+      console.log(`[BuySignal] ${stockCode} target:`, target.open, target.close, target.volume, target.turnover, target.high, target.low);
+
+      let resolvedOpenTimes: number | undefined;
+      let realtimeIsLimitUp: boolean | null = null;
+
+      if (isTodayMode) {
+        // 当日模式：腾讯实时行情优先提供开盘价/开盘成交量
+        try {
+          const tencentQuotes = await fetchTencentRealTimeQuotes([stockCode]);
+          const todayQuote = tencentQuotes.get(stockCode);
+
+          if (todayQuote) {
+            logger.info(`[BuySignal] ${stockCode} 使用腾讯实时行情获取开盘数据`);
+
+            const openingPrice = Number(todayQuote.openPrice) || 0;
+            if (openingPrice > 0) {
+              target.open = openingPrice;
+            }
+
+            const openingVolume = Number(todayQuote.openVolume) * 100;
+            const openingTurnover = Number(todayQuote.auctionAmount) || 0;
+            if (openingVolume > 0 && openingTurnover > 0) {
+              target.volume = openingVolume;
+              target.turnover = openingTurnover;
+            }
+          }
+        } catch (err) {
+          console.warn(`[BuySignal] 使用腾讯实时行情获取开盘数据失败，降级本地K线:`, err);
+        }
+      } else {
+        // 历史模式：使用历史分时接口覆盖开盘价/开盘成交量
+        try {
+          const minuteData = await getStockTrendMinute(stockCode, targetDateStr, '09:30');
+          console.log(`[BuySignal] ${stockCode} openData:`, JSON.stringify(minuteData));
+          if (minuteData) {
+            logger.info(`[BuySignal] ${stockCode} 使用历史分时接口获取开盘数据`);
+
+            const openingPrice = Number(minuteData[1]) || 0;
+            const openingVolume = (Number(minuteData[3]) || 0) * 100; // 成交量（股）
+            const openingTurnover = openingVolume * (openingPrice > 0 ? openingPrice : (Number(minuteData[2]) || 0));
+
+            logger.info(`[BuySignal] ${stockCode} openPrice:${openingPrice}`);
+            logger.info(`[BuySignal] ${stockCode} openVolume:${openingVolume}`);
+            logger.info(`[BuySignal] ${stockCode} openTurnover:${openingTurnover}`);
+
+            if (openingPrice > 0) {
+              target.open = openingPrice;
+            }
+            if (openingVolume > 0 && openingTurnover > 0) {
+              target.volume = openingVolume;
+              target.turnover = openingTurnover;
+            }
+          }
+        } catch (err) {
+          console.warn(`[BuySignal] 使用历史分时接口获取开盘数据失败，降级本地K线:`, err);
+        }
+      }
+
+      if (isTodayMode && target.open <= 0) {
+        console.log(`[BuySignal] ${stockCode} 今日模式缺少有效开盘价`);
         return null;
       }
 
-      const target = klineData[targetIdx];
-      const prev = targetIdx > 0 ? klineData[targetIdx - 1] : null;
-      console.log(`[BuySignal] ${stockCode} 使用 ${target.date} 的K线数据`);
-      //打印 target数据
-      console.log(`[BuySignal] ${stockCode} target:`, target.open, target.close, target.volume, target.turnover, target.high, target.low);
       // 计算开盘涨幅
-      const openChangePercent = prev ? ((target.open - prev.close) / prev.close) * 100 : 0;
-      // 获取历史分时数据
-      try {
-        // 竞价成交量
-        const openData = await getStockTrendMinute(stockCode, dateStr, '09:30');
-        console.log(`[BuySignal] ${stockCode} openData:`, JSON.stringify(openData));
-        if (openData) {
-          logger.info(`[BuySignal] ${stockCode} 使用历史分时接口获取开盘数据`);
-          const volume = (Number(openData[3]) || 0) * 100; // 成交量
-          logger.info(`[BuySignal] ${stockCode} openVolume:${volume}`);
-          const turnover = volume * Number(openData[2]) || 0; // 成交额 = 成交量 * 成交价
-          logger.info(`[BuySignal] ${stockCode} openTurnover:${turnover}`);
-          if (volume > 0 && turnover > 0) {
-            target.volume = volume;
-            target.turnover = turnover;
-          }
-        }
-      } catch (err) {
-        console.warn(`[BuySignal] 使用历史分时接口获取开盘数据失败，降级本地K线:`, err);
-      }
+      const openChangePercent = prev && prev.close > 0
+        ? ((target.open - prev.close) / prev.close) * 100
+        : 0;
+
       // 计算量比（当日成交量 / 5日平均成交量）
       let volumeRatio = 1;
       if (targetIdx >= 5) {
@@ -816,8 +910,11 @@ class BuySignalService {
         isLimitUp = target.close >= limitUpPrice;
       }
 
-      // 竞价金额估算（开盘成交约占全天3%）
-      const auctionAmount = target.turnover / 0.03;  // 根据经验，竞价成交额约占全天的3%，这里进行估算
+      if (isTodayMode && realtimeIsLimitUp !== null && target.close === (prev?.close || target.close)) {
+        isLimitUp = realtimeIsLimitUp;
+      }
+
+      const auctionAmount = Math.round(target.turnover);
       logger.info(`[BuySignal] ${stockCode} auctionAmount:${auctionAmount}`);
       const auctionAmountRatio = prev && prev.turnover > 0
         ? ((target.turnover) / prev.turnover) * 100
@@ -828,12 +925,12 @@ class BuySignalService {
         openPrice: target.open,
         openChangePercent: Math.round(openChangePercent * 100) / 100,
         openVolumeRatio: Math.round(volumeRatio * 100) / 100,
-        auctionAmount: Math.round(target.turnover),
+        auctionAmount,
         auctionAmountRatio: Math.round(auctionAmountRatio * 100) / 100,
         isLimitUp,
         sealAmount: undefined,
         sealRatio: undefined,
-        openTimes: undefined,
+        openTimes: resolvedOpenTimes,
       };
     } catch (error) {
       console.error(`[BuySignal] 获取 ${stockCode} 开盘数据失败:`, error);

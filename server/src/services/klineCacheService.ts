@@ -499,7 +499,7 @@ export const klineCacheService = new KlineCacheService();
 /**
  * 批量从腾讯接口获取实时行情数据
  * @param codes 股票代码数组（6位数字，如 ['000001', '600693']）
- * @returns Promise<Map<string, TencentRealtimeQuote>> 股票代码 -> 实时行情
+ * @returns Promise<Map<string, OpenData>> 股票代码 -> 开盘相关数据
  */
 export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<string, OpenData>> {
   const result = new Map<string, OpenData>();
@@ -507,7 +507,6 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
   if (!codes || codes.length === 0) {
     return result;
   }
-  let dataTime = ''
 
   try {
     // 将股票代码转换为腾讯格式并拼接
@@ -544,7 +543,6 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
     let match;
 
     while ((match = regex.exec(dataStr)) !== null) {
-      const qqCode = match[1]; // sh600693 或 sz000001
       const dataContent = match[2];
 
       if (!dataContent) {
@@ -561,17 +559,18 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
       // 33:最高 34:最低 37:成交额(万)
       // 35:6.81/929492/625533800 split by '/' 0:收盘价 1:总手-成交量 2:总额-成交额
       // 30:时间戳(YYYYMMDDHHMMSS) 31:涨跌额 32:涨跌幅
-      const volumeAndTurnover = parts[35].split('/');
       const stockCode = parts[2];
-      const stockName = parts[1];
-      const current = parseFloat(parts[3]) || 0;
       const preClose = parseFloat(parts[4]) || 0;
       const open = parseFloat(parts[5]) || 0;
-      const high = parseFloat(parts[33]) || 0;
-      const low = parseFloat(parts[34]) || 0;
-      const volume = parseFloat(volumeAndTurnover[1]) || 0; // 手
-      const turnover = parseFloat(volumeAndTurnover[2]) || 0; // 万
-      const changeAmount = parseFloat(parts[31]) || 0;
+      const totalVolumeHands = parseFloat(parts[6]) || 0;
+      const volumeAndTurnover = (parts[35] || '').split('/');
+      const totalVolumeHandsFromPair = parseFloat(volumeAndTurnover[1]) || totalVolumeHands;
+      const totalTurnoverYuanFromPair = parseFloat(volumeAndTurnover[2]) || 0;
+      const totalTurnoverWan = parseFloat(parts[37]) || 0;
+      const totalTurnoverYuan = totalTurnoverYuanFromPair > 0
+        ? totalTurnoverYuanFromPair
+        : totalTurnoverWan * 10000;
+      const openVolumeRatio = parseFloat(parts[46]) || 0;
       const changePercent = parseFloat(parts[32]) || 0;
 
       // 解析日期时间 (格式: 20251215161428)
@@ -582,17 +581,22 @@ export async function fetchTencentRealTimeQuotes (codes: string[]): Promise<Map<
       const time = timeStr.length >= 14
         ? `${timeStr.substring(8, 10)}:${timeStr.substring(10, 12)}:${timeStr.substring(12, 14)}`
         : '';
-      dataTime = timeStr;
       logger.info(`[K线缓存] 腾讯接口时间: ${date} ${time}`);
+
+      const openVolume = totalVolumeHandsFromPair * 100; // 手 -> 股
+      const baseAmount = preClose > 0 && totalVolumeHandsFromPair > 0
+        ? preClose * totalVolumeHandsFromPair * 100
+        : 0;
 
       // 开盘价为0表示数据可能无效，但仍放入结果中，由调用方判断
       result.set(stockCode, {
         openTimes: timeStr,
         openPrice: open,
         openChangePercent: changePercent,
-        openVolumeRatio: volume, // 成交量（手）
-        auctionAmount: turnover, // 成交额（元）
-        auctionAmountRatio: turnover > 0 ? ((turnover - preClose * volume * 100) / (preClose * volume * 100)) * 100 : 0,
+        openVolume,
+        openVolumeRatio,
+        auctionAmount: totalTurnoverYuan,
+        auctionAmountRatio: baseAmount > 0 ? ((totalTurnoverYuan - baseAmount) / baseAmount) * 100 : 0,
         isLimitUp: changePercent >= 9.9, // 简单判断涨停（A股）
       });
     }
