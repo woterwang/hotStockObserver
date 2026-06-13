@@ -178,7 +178,7 @@ const BacktestPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // 显示交易明细
-  const [showTrades, setShowTrades] = useState(false);
+  const [showTrades, setShowTrades] = useState(true);
 
   // 缓存状态
   const [cacheStats, setCacheStats] = useState<CacheStats | null>(null);
@@ -648,7 +648,7 @@ const BacktestPage: React.FC = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {result.trades.map((trade, index) => (
                         <tr key={index} className="hover:bg-gray-50">
-                          <td className="px-4 py-3 text-sm font-medium text-blue-600">{trade.stockCode}</td>
+                          <td className="px-4 py-3 text-sm font-medium text-blue-600"><a target='_blank' href={`https://www.iwencai.com/screener/result?w=${trade.stockCode}&querytype=stock`}>{trade.stockCode}</a></td>
                           <td className="px-4 py-3 text-sm text-gray-900">{trade.stockName}</td>
                           <td className="px-4 py-3 text-sm text-center text-gray-600">{trade.entryDate}</td>
                           <td className="px-4 py-3 text-sm text-right text-gray-900">{trade.entryPrice.toFixed(2)}</td>
@@ -799,7 +799,7 @@ const BacktestPage: React.FC = () => {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {buySignalResult.trades.map((trade, index) => (
                         <tr key={index} className="hover:bg-gray-50">
-                          <td className="px-4 py-3 text-sm font-medium text-blue-600">{trade.stockCode}</td>
+                          <td className="px-4 py-3 text-sm font-medium text-blue-600"><a target='_blank' href={`https://www.iwencai.com/screener/result?w=${trade.stockCode}&querytype=stock`}>{trade.stockCode}</a></td>
                           <td className="px-4 py-3 text-sm text-gray-900">{trade.stockName}</td>
                           <td className="px-4 py-3 text-sm text-center">
                             <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">

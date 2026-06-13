@@ -22,7 +22,7 @@ type StrategyFilterType = keyof typeof STRATEGY_CONFIG;
 const BuySignalPage: React.FC = () => {
   const [signals, setSignals] = useState<BuySignal[]>([]);
   const [stats, setStats] = useState<BuySignalStats | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string>(() => dayjs().format('YYYYMMDD'));
+  const [selectedDate, setSelectedDate] = useState<string>(() => dayjs().format('YYYY-MM-DD'));
   const [filterSignal, setFilterSignal] = useState<string>('all');
   const [filterStrategy, setFilterStrategy] = useState<StrategyFilterType>('all');
   const [loading, setLoading] = useState(true);
@@ -170,11 +170,16 @@ const BuySignalPage: React.FC = () => {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <DatePicker
+            {/* <DatePicker
               value={ selectedDate }
               onChange={ setSelectedDate }
               placeholder="选择日期"
-            />
+            /> */}
+            <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              />
             {/* {刷新按钮} */ }
             <button
               onClick={ () => fetchSignals(selectedDate) }
