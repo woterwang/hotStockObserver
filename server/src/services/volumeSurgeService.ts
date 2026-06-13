@@ -95,6 +95,58 @@ export class VolumeSurgeService {
     }
   }
 
+  private async queryWencaiWithGetDataList (question: string, currentDateStr: string): Promise<any[]> {
+    const url = 'https://www.iwencai.com/gateway/urp/v7/landing/getDataList';
+    const hexinV = this.getHexinV();
+
+    const data: Record<string, string | number> = {
+      query: question,
+      urp_sort_way: 'desc',
+      urp_sort_index: `涨跌幅:前复权[${currentDateStr}]`,
+      page: 1,
+      perpage: 100,
+      source: 'Ths_iwencai_Xuangu',
+      urp_use_sort: 1,
+      query_type: 'stock',
+      comp_id: 6933312,
+      business_cat: 'soniu',
+      uuid: 24087,
+    };
+    logger.info(`问财请求参数: ${JSON.stringify(data)}`);
+
+    try {
+      const response = await axios.post(url, data, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'hexin-v': hexinV,
+        },
+        timeout: 30000,
+      });
+
+      // 问财接口响应结构可能变化，需要遍历 components 查找数据
+      const components = response.data?.answer?.components || [];
+
+      for (const comp of components) {
+        if (comp?.data?.datas && Array.isArray(comp.data.datas) && comp.data.datas.length > 0) {
+          logger.info(`问财返回 ${comp.data.datas.length} 条数据 (${comp.show_type})`);
+          return comp.data.datas;
+        }
+      }
+
+      // 兼容旧结构
+      if (response.data?.data?.answer?.[0]?.txt?.[0]?.content?.components?.[0]?.data?.datas) {
+        return response.data.data.answer[0].txt[0].content.components[0].data.datas;
+      }
+
+      logger.warn('问财未返回有效数据');
+      return [];
+    } catch (error) {
+      logger.error(`问财API调用失败: ${(error as Error).message}`);
+      return [];
+    }
+  }
+
   /**
    * 获取上证指数是否站上20日均线
    */
@@ -183,11 +235,11 @@ export class VolumeSurgeService {
 
     const question = [
       // 核心条件（宽松版，确保有数据）
-      `${dateStr}涨幅>7%`,
+      // `${dateStr}涨幅>7%`,
       `${dateStr}成交额排名前200`,
-      `${dateStr}上影线<5%`,
+      `且${dateStr}上影线<5%`,
       // 趋势确认（修正语法：收盘价>10日均线）
-      `${dateStr}收盘价>10日均线`,
+      `且${dateStr}收盘价>10日均线`,
       // 基础过滤
       `非ST`,
       `非新股`,
@@ -198,16 +250,19 @@ export class VolumeSurgeService {
       `${dateStr}量比`,
       `${dateStr}换手率`,
       `${dateStr}振幅`,
+      `${dateStr}涨幅`,
       `${dateStr}下影线`,
       `${dateStr}成交量/前5日平均成交量`,
     ].join('，');
 
     logger.info(`[问财查询] ${question}`);
-    return this.queryWencai(question);
+    return this.queryWencaiWithGetDataList(question, dateStr);
   }
 
   async scanAndSave (dateStr?: string): Promise<number> {
     const targetDate = dateStr || formatDate(getToday(), 'YYYYMMDD');
+
+    // this.fetchFromWencai(targetDate);return 0;
 
     // 🔒 检查目标日期是否为交易日，防止在非交易日存储错误数据
     if (!tradingCalendarService.isTradingDay(targetDate)) {
@@ -303,7 +358,7 @@ export class VolumeSurgeService {
 
         // 动态查找字段
         for (const key in item) {
-          if (key.includes('涨跌幅')) {
+          if (key.includes(`涨跌幅:前复权[${targetDate}]`)) {
             changePercent = parseFloat(item[key] || 0);
           } else if (key.includes('量比')) {
             volumeRatio = parseFloat(item[key] || 0);
@@ -326,6 +381,11 @@ export class VolumeSurgeService {
           } else if (key.includes('涨停原因') || key.includes('异动原因')) {
             limitUpReason = item[key] || '';
           }
+        }
+
+        // 只保留涨幅>7%的数据
+        if (changePercent <= 7) {
+          continue;
         }
 
         // ========================================
