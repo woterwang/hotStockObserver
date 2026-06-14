@@ -413,6 +413,13 @@ class KlineCacheService {
     // 检查缓存中是否有数据
     if (!klineDates || klineDates.length === 0) {
       logger.warn(`[K线缓存] fetchKlineFromTHS ${stockCode} 获取失败`);
+      logger.info(`[K线缓存] ${stockCode} 缓存中不存在 ${targetDate}，从远端拉取`);
+      localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
+      klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
+      this.persistCache(stockCode, localKline, Date.now()); // 更新缓存
+    }
+    if (!klineDates || klineDates.length === 0) {
+      logger.warn(`[K线缓存] ${stockCode} 获取失败`);
       return null;
     }
     // 如果目标日期不在缓存中，尝试补齐
@@ -434,6 +441,7 @@ class KlineCacheService {
       // 缓存中没有目标日期的K线数据，从远端拉取
       logger.info(`[K线缓存] ${stockCode} 缓存中不存在 ${targetDate}，从远端拉取`);
       localKline = await this.fetchKlineFromTHS(stockCode, 1800); // 拉取较多数据以覆盖缺口
+      klineDates = localKline.size > 0 ? Array.from(localKline.values()) : null;
       this.persistCache(stockCode, localKline, Date.now()); // 更新缓存
     }
     // 查找目标日期的K线数据

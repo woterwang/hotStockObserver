@@ -731,9 +731,10 @@ class BuySignalService {
     sealRatio?: number;
     openTimes?: number;
   } | null> {
-    console.log(`[BuySignal] 获取 ${stockCode} ${dateStr} 开盘数据`);
+    console.log(`[BuySignal] getOpeningData 获取 ${stockCode} ${dateStr} 开盘数据`);
     try {
       const targetDateStr = formatDateStr(dateStr);
+      const prevTradingDay = tradingCalendarService.getPrevTradingDay(targetDateStr);
       const klineData = await klineCacheService.fetchKlineByDate(stockCode, targetDateStr);
 
       if (!klineData || klineData.length === 0) {

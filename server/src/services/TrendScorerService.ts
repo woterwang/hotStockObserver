@@ -30,6 +30,7 @@ export class TrendScorer {
   private static readonly TREND_SCORE_MAX = 15;
   private static readonly ADAPTIVE_LOOKBACK = 120;
 
+  /** 计算K线趋势得分 总分数 0-100分 最终压缩到0-30分 */
   static calculate (kline: KLineItem[]): { score: number; tag: AnalysisOutput['trendTag'] } {
     const normalizedKline = this.normalizeKlineOrder(kline);
     if (normalizedKline.length < 20) {
@@ -181,7 +182,7 @@ export class TrendScorer {
   static toBuySignalScore (rawTrendScore: number, kline: KLineItem[]): number {
     const normalizedKline = this.normalizeKlineOrder(kline);
     // 趋势评分映射为10分制，保留高分段区分度
-    rawTrendScore = Math.round(rawTrendScore * 0.23);
+    rawTrendScore = Math.round(rawTrendScore * 0.2);
     // 如果是百日新高，给予额外加分
 
     if (this.isHundredDayNewHigh(normalizedKline)) {

@@ -557,12 +557,12 @@ export class VolumeSurgeService {
       const allSignals = await VolumeSurge.find({ date: targetDate }).sort({ strategyScore: -1, changePercent: -1 });
       logger.info(`[放量大涨] 今日放量大涨股票: ${allSignals.length} 只`);
       // 获取所有股票代码
-      // const stockCodes = allSignals.map(s => s.stockCode);
-      // logger.info(`[放量大涨] 今日备选股票: ${stockCodes.join(', ')}`);
-      // // 创建备选股票分组
-      // const groupId = await groupService.createGroup(`${targetDate}-备选`);
-      // logger.info(`[放量大涨] 备选股票分组ID: ${groupId}`);
-      // groupService.addStocksToGroup(groupId, stockCodes);
+      const stockCodes = allSignals.map(s => s.stockCode);
+      logger.info(`[放量大涨] 今日备选股票: ${stockCodes.join(', ')}`);
+      // 创建备选股票分组
+      const groupId = await groupService.createGroup(`${targetDate}-备选New`);
+      logger.info(`[放量大涨] 备选股票分组ID: ${groupId}`);
+      groupService.addStocksToGroup(groupId, stockCodes);
     } catch (err) {
       logger.error(`[放量大涨] 保存备选股票失败: ${(err as Error).message}`);
     }
