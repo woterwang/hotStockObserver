@@ -439,16 +439,16 @@ const BuySignalPage: React.FC = () => {
                   </div>
 
                   {/* 评分详情 */ }
-                  <div className="px-4 py-3 grid grid-cols-8 gap-2">
+                  <div className="px-4 py-3 grid grid-cols-6 gap-2">
                     { [
                       { label: '开盘强度', score: signal.openStrengthScore, max: 30 },
                       { label: '量能确认', score: signal.volumeConfirmScore, max: 15 },
                       { label: '竞价抢筹', score: signal.auctionScore, max: 15 },
                       { label: '大盘环境', score: signal.marketEnvScore, max: 10 },
-                      { label: '板块联动', score: signal.sectorLinkScore, max: 10 },
-                      { label: '承接力度', score: signal.sealStrengthScore, max: 10 },
-                      { label: '技术位置', score: signal.technicalScore, max: 10 },
-                      { label: '趋势强度', score: signal.trendScore||0, max: 10 },
+                      { label: '板块联动', score: signal.sectorLinkScore, max: 15 },
+                      // { label: '承接力度', score: signal.sealStrengthScore, max: 10 },
+                      // { label: '技术位置', score: signal.technicalScore, max: 10 },
+                      { label: '趋势强度', score: signal.trendScore||0, max: 27 },
                     ].map(item => (
                       <div key={ item.label } className="text-center">
                         <div className="text-xs text-gray-500 mb-1">{ item.label }</div>

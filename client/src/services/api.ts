@@ -1,9 +1,9 @@
 import axios from 'axios';
-import type { 
-  ApiResponse, 
-  MarketOverview, 
-  HotStock, 
-  PeriodStats, 
+import type {
+  ApiResponse,
+  MarketOverview,
+  HotStock,
+  PeriodStats,
   StockDetail,
   MarketIndex,
   Sector,
@@ -132,7 +132,7 @@ export const marketApi = {
   getHotSectors: (limit: number = 10): Promise<ApiResponse<Sector[]>> => {
     return api.get('/market/sectors', { params: { limit } });
   },
-  
+
   /**
    * 获取历史概念热度排行
    */
@@ -328,18 +328,18 @@ export const conceptResonanceApi = {
   },
 
   // 获取候选标的列表
-  getList: (date?: string, leaderOnly?: boolean,filter?:string): Promise<ApiResponse<ConceptResonance[]>> => {
-    return api.get('/concept-resonance/list', { params: { date, leaderOnly ,filter, _t: Date.now() } });
+  getList: (date?: string, leaderOnly?: boolean, filter?: string): Promise<ApiResponse<ConceptResonance[]>> => {
+    return api.get('/concept-resonance/list', { params: { date, leaderOnly, filter, _t: Date.now() } });
   },
 
   // 获取统计数据
   getStats: (date?: string): Promise<ApiResponse<ConceptResonanceStats>> => {
-    return api.get('/concept-resonance/stats', { params: { date , _t: Date.now()} });
+    return api.get('/concept-resonance/stats', { params: { date, _t: Date.now() } });
   },
 
   // 获取概念龙头
   getLeaders: (date?: string): Promise<ApiResponse<ConceptLeader[]>> => {
-    return api.get('/concept-resonance/leaders', { params: { date , _t: Date.now()} });
+    return api.get('/concept-resonance/leaders', { params: { date, _t: Date.now() } });
   },
 
   // 获取可用日期列表
@@ -359,8 +359,8 @@ export const conceptResonanceApi = {
 
   // 回测
   backtest: (
-    startDate: string, 
-    endDate: string, 
+    startDate: string,
+    endDate: string,
     config: Partial<ConceptResonanceBacktestConfig>
   ): Promise<ApiResponse<ConceptResonanceBacktestResult>> => {
     return api.post('/concept-resonance/backtest', { startDate, endDate, config });
