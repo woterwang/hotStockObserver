@@ -56,6 +56,7 @@ export interface BuySignalTradeRecord {
   profitAmount: number;     // 收益金额（元）
   exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'market_panic' | 'data_end';
   buySignalScore: number;   // 买入信号评分
+  selectionScore: number;   // 买入信号选股评分
   marketMood: number;       // 买入时市场情绪
 }
 
@@ -387,6 +388,7 @@ class BuySignalBacktestService {
         profitAmount: Math.round(profitAmount * 100) / 100,
         exitReason,
         buySignalScore: signal.totalBuyScore || 0,
+        selectionScore: signal.selectionScore || 0,
         marketMood: buyDayMood,
       };
     } catch (error) {
@@ -450,6 +452,7 @@ class BuySignalBacktestService {
       strategyType: 'volume_surge',
       strategyName: '强势资金突破',
       totalBuyScore: bs.totalBuyScore || 0,
+      selectionScore: bs.selectionScore || 0,
       marketMood: bs.marketMood || 50,
       // 根据 buySignal 类型决定仓位比例
       positionRatio: 1,

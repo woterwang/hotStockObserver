@@ -225,104 +225,104 @@ class BuySignalScorer {
   /**
    * 承接力度评分 (满分10分) - 涨停股专用
    */
-  static scoreSealStrength(
+  static scoreSealStrength (
     isLimitUp: boolean,
-    sealRatio ?: number,
-    openTimes ?: number
+    sealRatio?: number,
+    openTimes?: number
   ): { score: number; reason: string } {
-  if (!isLimitUp) {
-    // 非涨停股，给基础分
-    return { score: 5, reason: '非涨停股，承接力度中性' };
+    if (!isLimitUp) {
+      // 非涨停股，给基础分
+      return { score: 5, reason: '非涨停股，承接力度中性' };
+    }
+
+    let score = 0;
+    let reasons: string[] = [];
+
+    // 封单比例
+    if (sealRatio && sealRatio >= 5) {
+      score += 6;
+      reasons.push('封单比例极高(≥5倍)');
+    } else if (sealRatio && sealRatio >= 2) {
+      score += 4;
+      reasons.push('封单比例较高(2-5倍)');
+    } else if (sealRatio && sealRatio >= 1) {
+      score += 2;
+      reasons.push('封单比例一般(1-2倍)');
+    } else {
+      score += 0;
+      reasons.push('封单比例偏低');
+    }
+
+    // 开板次数
+    if (openTimes === 0) {
+      score += 4;
+      reasons.push('一字板未开');
+    } else if (openTimes === 1) {
+      score += 3;
+      reasons.push('仅开板1次');
+    } else if (openTimes && openTimes <= 3) {
+      score += 1;
+      reasons.push('多次开板');
+    } else {
+      score += 0;
+      reasons.push('开板频繁');
+    }
+
+    return { score: Math.min(score, 10), reason: reasons.join('，') };
   }
-
-  let score = 0;
-  let reasons: string[] = [];
-
-  // 封单比例
-  if (sealRatio && sealRatio >= 5) {
-    score += 6;
-    reasons.push('封单比例极高(≥5倍)');
-  } else if (sealRatio && sealRatio >= 2) {
-    score += 4;
-    reasons.push('封单比例较高(2-5倍)');
-  } else if (sealRatio && sealRatio >= 1) {
-    score += 2;
-    reasons.push('封单比例一般(1-2倍)');
-  } else {
-    score += 0;
-    reasons.push('封单比例偏低');
-  }
-
-  // 开板次数
-  if (openTimes === 0) {
-    score += 4;
-    reasons.push('一字板未开');
-  } else if (openTimes === 1) {
-    score += 3;
-    reasons.push('仅开板1次');
-  } else if (openTimes && openTimes <= 3) {
-    score += 1;
-    reasons.push('多次开板');
-  } else {
-    score += 0;
-    reasons.push('开板频繁');
-  }
-
-  return { score: Math.min(score, 10), reason: reasons.join('，') };
-}
 
   /**
    * 技术位置评分 (满分10分)
    */
-  static scoreTechnical(
-  distanceToMa5: number,
-  distanceToMa10: number,
-  distanceToPressure: number
-): { score: number; reason: string } {
-  let score = 0;
-  let reasons: string[] = [];
+  static scoreTechnical (
+    distanceToMa5: number,
+    distanceToMa10: number,
+    distanceToPressure: number
+  ): { score: number; reason: string } {
+    let score = 0;
+    let reasons: string[] = [];
 
-  // 距离5日均线
-  if (distanceToMa5 >= 0 && distanceToMa5 <= 5) {
-    score += 3;
-    reasons.push('贴近5日均线支撑');
-  } else if (distanceToMa5 > 5 && distanceToMa5 <= 10) {
-    score += 2;
-    reasons.push('略高于5日均线');
-  } else if (distanceToMa5 > 10) {
-    score += 0;
-    reasons.push('远离5日均线(短期超买)');
-  } else {
-    score += 1;
-    reasons.push('跌破5日均线');
+    // 距离5日均线
+    if (distanceToMa5 >= 0 && distanceToMa5 <= 5) {
+      score += 3;
+      reasons.push('贴近5日均线支撑');
+    } else if (distanceToMa5 > 5 && distanceToMa5 <= 10) {
+      score += 2;
+      reasons.push('略高于5日均线');
+    } else if (distanceToMa5 > 10) {
+      score += 0;
+      reasons.push('远离5日均线(短期超买)');
+    } else {
+      score += 1;
+      reasons.push('跌破5日均线');
+    }
+
+    // 距离10日均线
+    if (distanceToMa10 >= 0 && distanceToMa10 <= 8) {
+      score += 3;
+      reasons.push('10日均线支撑有效');
+    } else if (distanceToMa10 > 8) {
+      score += 1;
+      reasons.push('短期涨幅较大');
+    } else {
+      score += 0;
+      reasons.push('跌破10日均线');
+    }
+
+    // 距离压力位
+    if (distanceToPressure >= 5) {
+      score += 4;
+      reasons.push('上方无明显压力');
+    } else if (distanceToPressure >= 2) {
+      score += 2;
+      reasons.push('距离压力位较近');
+    } else {
+      score += 0;
+      reasons.push('逼近压力位(套牢盘抛压)');
+    }
+
+    return { score: Math.min(score, 10), reason: reasons.join('，') };
   }
-
-  // 距离10日均线
-  if (distanceToMa10 >= 0 && distanceToMa10 <= 8) {
-    score += 3;
-    reasons.push('10日均线支撑有效');
-  } else if (distanceToMa10 > 8) {
-    score += 1;
-    reasons.push('短期涨幅较大');
-  } else {
-    score += 0;
-    reasons.push('跌破10日均线');
-  }
-
-  // 距离压力位
-  if (distanceToPressure >= 5) {
-    score += 4;
-    reasons.push('上方无明显压力');
-  } else if (distanceToPressure >= 2) {
-    score += 2;
-    reasons.push('距离压力位较近');
-  } else {
-    score += 0;
-    reasons.push('逼近压力位(套牢盘抛压)');
-  }
-
-  return { score: Math.min(score, 10), reason: reasons.join('，') };
-}
 }
 
 /**
@@ -458,21 +458,21 @@ class BuySignalService {
   async generateBuySignals (dateStr: string, strategies?: StrategyType[], minScore: number = 0): Promise<IBuySignal[]> {
     // 检查信号日期是否为交易日
     if (!tradingCalendarService.isTradingDay(dateStr)) {
-      console.log(`[BuySignal] ${dateStr} 不是交易日，跳过生成`);
+      logger.info(`[BuySignal] ${dateStr} 不是交易日，跳过生成`);
       return [];
     }
 
     // 如果数据库有今日的数据直接返回
     const existingCount = await BuySignal.countDocuments({ date: formatDateStr(dateStr) });
     if (existingCount > 0) {
-      console.log(`[BuySignal] ${dateStr} 已存在 ${existingCount} 条买入信号数据，跳过生成`);
+      logger.info(`[BuySignal] ${dateStr} 已存在 ${existingCount} 条买入信号数据，跳过生成`);
       return await BuySignal.find({ date: formatDateStr(dateStr) });
     }
 
     // 如果小于 9.26 分，直接返回空
     const now = new Date();
-    if (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 26)) {
-      console.log(`[BuySignal] 当前时间 ${now.getHours()}:${now.getMinutes()} 小于 9:26，跳过生成`);
+    if (dayjs().format('YYYYMMDD') == dateStr && (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 26))) {
+      logger.info(`[BuySignal] 当前时间 ${now.getHours()}:${now.getMinutes()} 小于 9:26，跳过生成`);
       return [];
     }
 
@@ -482,7 +482,7 @@ class BuySignalService {
     // 获取前一个交易日（使用交易日历服务，支持节假日）
     const prevTradingDay = tradingCalendarService.getPrevTradingDay(dateStr);
     if (!prevTradingDay) {
-      console.log(`[BuySignal] 无法获取 ${dateStr} 的前一个交易日，跳过生成`);
+      logger.info(`[BuySignal] 无法获取 ${dateStr} 的前一个交易日，跳过生成`);
       return [];
     }
     // 选股日期就是前一交易日（字符串格式）
@@ -492,21 +492,21 @@ class BuySignalService {
     // 避免在选股数据未生成时使用错误的历史数据
     const volumeSurgeCount = await VolumeSurge.countDocuments({ date: selectionDate });
     if (volumeSurgeCount === 0) {
-      console.log(`[BuySignal] ⚠️ ${prevTradingDay} 的 VolumeSurge 数据尚未生成，无法为 ${dateStr} 生成买入信号`);
-      console.log(`[BuySignal] 请等待 ${prevTradingDay} 收盘后数据更新，或手动触发选股扫描`);
+      logger.info(`[BuySignal] ⚠️ ${prevTradingDay} 的 VolumeSurge 数据尚未生成，无法为 ${dateStr} 生成买入信号`);
+      logger.info(`[BuySignal] 请等待 ${prevTradingDay} 收盘后数据更新，或手动触发选股扫描`);
       return [];
     }
-    console.log(`[BuySignal] ${prevTradingDay} 有 ${volumeSurgeCount} 条 VolumeSurge 数据`);
+    logger.info(`[BuySignal] ${prevTradingDay} 有 ${volumeSurgeCount} 条 VolumeSurge 数据`);
 
     // 获取前一天的选股结果（支持多策略）
     const candidates = await this.getAllCandidates(selectionDate, strategies, minScore);
 
     if (candidates.length === 0) {
-      console.log(`[BuySignal] ${dateStr} 无可处理的候选标的（可能分数低于阈值 ${minScore}）`);
+      logger.info(`[BuySignal] ${dateStr} 无可处理的候选标的（可能分数低于阈值 ${minScore}）`);
       return [];
     }
 
-    console.log(`[BuySignal] ${dateStr} 发现 ${candidates.length} 个候选标的`);
+    logger.info(`[BuySignal] ${dateStr} 发现 ${candidates.length} 个候选标的`);
 
     // 串行处理，每个请求间隔300ms，避免被封IP
     const signals: IBuySignal[] = [];
@@ -537,7 +537,7 @@ class BuySignalService {
         }
       }));
       await BuySignal.bulkWrite(bulkOps);
-      console.log(`[BuySignal] 已保存 ${signals.length} 条买入信号`);
+      logger.info(`[BuySignal] 已保存 ${signals.length} 条买入信号`);
     }
 
     return signals;
@@ -554,12 +554,12 @@ class BuySignalService {
     let openData = null;
     const todayStr = dayjs().format('YYYYMMDD');
     if (!tradingCalendarService.isTradingDay(signalDate)) {
-      console.log(`[BuySignal] ${signalDate} 不是交易日，无法获取开盘数据`);
+      logger.info(`[BuySignal] ${signalDate} 不是交易日，无法获取开盘数据`);
       return null;
     }
-    openData = await this.getOpeningData(candidate.stockCode, signalDate);
+    openData = await this.getOpeningData(candidate.stockCode, candidate.date, signalDate);
     if (!openData) {
-      console.log(`[BuySignal] generateSignalForStock ${candidate.stockCode} 无法获取开盘数据`);
+      logger.info(`[BuySignal] generateSignalForStock ${candidate.stockCode} 无法获取开盘数据`);
       return null;
     }
     const prevTradingDay = tradingCalendarService.getPrevTradingDay(signalDate);
@@ -710,7 +710,7 @@ class BuySignalService {
    * 2) 历史模式：从历史分时接口获取开盘价/开盘成交量
    * 其余评分所需字段继续复用现有计算逻辑
    */
-  async getOpeningData (stockCode: string, dateStr: string): Promise<{
+  async getOpeningData (stockCode: string, preDateStr: string, dateStr: string): Promise<{
     openPrice: number;
     openChangePercent: number;
     openVolumeRatio: number;
@@ -721,10 +721,10 @@ class BuySignalService {
     sealRatio?: number;
     openTimes?: number;
   } | null> {
-    console.log(`[BuySignal] 获取 ${stockCode} ${dateStr} 开盘数据`);
+    logger.info(`[BuySignal] 获取 ${stockCode} ${dateStr} 开盘数据`);
     const targetDateStr = formatDateStr(dateStr);
     if (!tradingCalendarService.isTradingDay(targetDateStr)) {
-      console.log(`[BuySignal] ${targetDateStr} 不是交易日，无法获取开盘数据`);
+      logger.info(`[BuySignal] ${targetDateStr} 不是交易日，无法获取开盘数据`);
       return null;
     }
     try {
@@ -733,7 +733,7 @@ class BuySignalService {
       const rawKlineData = await klineCacheService.fetchKlineByDate(stockCode, targetDateStr);
 
       if (!rawKlineData || rawKlineData.length === 0) {
-        console.log(`[BuySignal] getOpeningData ${stockCode} 无K线数据`);
+        logger.info(`[BuySignal] getOpeningData ${stockCode} 无K线数据`);
         return null;
       }
 
@@ -741,16 +741,15 @@ class BuySignalService {
       const klineData = [...rawKlineData].sort((a, b) => a.date.localeCompare(b.date));
 
       // 找到信号日期的K线
-      let targetIdx = klineData.findIndex(k => k.date === targetDateStr);
-      let prevKline: CachedKline | null = null;
+      let preDayIndex = klineData.findIndex(k => k.date === preDateStr);
 
       // 没找到信号日期的K线数据
-      if (targetIdx === -1) {
-        console.log(`[BuySignal] getOpeningData ${stockCode} 未找到 ${targetDateStr} 的K线，无法获取开盘数据`);
+      if (preDayIndex === -1) {
+        logger.info(`[BuySignal] getOpeningData ${stockCode} 未找到 ${preDateStr} 的K线，无法获取计算开盘数据`);
         return null;
       }
 
-      prevKline = klineData[targetIdx];
+      let prevKline: CachedKline = klineData[preDayIndex];
 
       let target: CachedKline = {
         date: targetDateStr,
@@ -795,9 +794,9 @@ class BuySignalService {
       } else {
         // 历史模式：使用历史分时接口覆盖开盘价/开盘成交量
         try {
-          target = klineData[targetIdx + 1];
+          target = klineData[preDayIndex + 1] || target; // 先用K线数据填充，后续分时数据覆盖开盘相关字段
           const minuteData = await getStockTrendMinute(stockCode, targetDateStr, '09:30');
-          console.log(`[BuySignal] ${stockCode} openData:`, JSON.stringify(minuteData));
+          logger.info(`[BuySignal] ${stockCode} openData:`, JSON.stringify(minuteData));
           if (minuteData) {
             logger.info(`[BuySignal] ${stockCode} 使用历史分时接口获取开盘数据`);
 
@@ -826,17 +825,15 @@ class BuySignalService {
       }
 
       if (isTodayMode && target.open <= 0) {
-        console.log(`[BuySignal] ${stockCode} 今日模式缺少有效开盘价`);
+        logger.info(`[BuySignal] ${stockCode} 今日模式缺少有效开盘价`);
         return null;
       }
       // 打印 target 数据
-      console.log(`[BuySignal] ${stockCode} target:`, target.open, target.close, target.volume, target.turnover, target.high, target.low);
+      logger.info(`[BuySignal] ${stockCode} target:`, target.open, target.close, target.volume, target.turnover, target.high, target.low);
       // 计算量比（当日成交量 / 5日平均成交量）
       let volumeRatio = 1;
-      if (targetIdx >= 5) {
-        const avg5Vol = klineData.slice(targetIdx - 5, targetIdx).reduce((sum, k) => sum + k.volume, 0) / 5;
-        const countedAvg5Vol = klineData.slice(targetIdx - 5, targetIdx).reduce((sum, k) => sum + k.volume, 0);
-        logger.info(`[BuySignal] ${stockCode},countVol:${countedAvg5Vol} avg5Vol:${countedAvg5Vol / 5}`);
+      if (preDayIndex >= 5) {
+        const avg5Vol = klineData.slice(preDayIndex - 5, preDayIndex).reduce((sum, k) => sum + k.volume, 0) / 5;
         volumeRatio = (avg5Vol > 0 ? target.volume / avg5Vol : 0) * 100;
         logger.info(`[BuySignal] ${stockCode} volumeRatio:${volumeRatio}`);
       }
@@ -898,11 +895,11 @@ class BuySignalService {
   }> {
     const defaultResult = { indexOpenChange: 0, indexMorningTrend: 'flat' as const, marketMood: 50 };
     const targetDateStr = formatDateStr(dateStr);
-    console.log(`[BuySignal] getMarketEnvironment: ${targetDateStr}`);
+    logger.info(`[BuySignal] getMarketEnvironment: ${targetDateStr}`);
     // 1. 优先从市场情绪服务获取 strong 值
     const cachedMood = marketMoodService.getMood(targetDateStr);
     if (cachedMood !== null) {
-      console.log(`[BuySignal] 使用缓存的市场情绪: ${targetDateStr} -> ${cachedMood}`);
+      logger.info(`[BuySignal] 使用缓存的市场情绪: ${targetDateStr} -> ${cachedMood}`);
       // 仍需获取指数开盘数据，但情绪值用缓存的
       // TODO: 后续可考虑缓存指数开盘数据，减少请求，这里获取的指数数据是错误的
       // const indexData = await this.fetchIndexData(targetDateStr);
@@ -914,7 +911,7 @@ class BuySignalService {
     }
 
     // 2. 缓存没有，使用原有逻辑（从同花顺K线计算）
-    console.log(`[BuySignal] 市场情绪缓存未命中 ${targetDateStr}，使用K线计算`);
+    logger.info(`[BuySignal] 市场情绪缓存未命中 ${targetDateStr}，使用K线计算`);
     return this.calculateMarketEnvironmentFromKline(targetDateStr, defaultResult);
   }
 
@@ -959,7 +956,7 @@ class BuySignalService {
               // 先尝试找指定日期，找不到则使用最新
               let targetIdx = klineList.findIndex((item: string) => item.split(',')[0] === dateStr);
               if (targetIdx === -1 && klineList.length > 0) {
-                console.log(`[BuySignal] 大盘数据未找到 ${dateStr}，使用最新数据`);
+                logger.info(`[BuySignal] 大盘数据未找到 ${dateStr}，使用最新数据`);
                 targetIdx = klineList.length - 1;
               }
 
@@ -1107,7 +1104,7 @@ class BuySignalService {
    */
   setBatchMode (enabled: boolean): void {
     this.batchMode = enabled;
-    console.log(`[BuySignal] 批量模式: ${enabled ? '开启' : '关闭'}`);
+    logger.info(`[BuySignal] 批量模式: ${enabled ? '开启' : '关闭'}`);
   }
 
   /**
@@ -1125,7 +1122,7 @@ class BuySignalService {
 
     if (elapsed < minInterval && this.lastThsRequestTime > 0) {
       const waitTime = minInterval - elapsed;
-      console.log(`[BuySignal] 批量模式等待 ${Math.round(waitTime / 1000)}s 后请求...`);
+      logger.info(`[BuySignal] 批量模式等待 ${Math.round(waitTime / 1000)}s 后请求...`);
       await new Promise(resolve => setTimeout(resolve, waitTime));
     }
   }
@@ -1375,254 +1372,7 @@ class BuySignalService {
   async deleteBuySignalsByDate (dateStr: string): Promise<void> {
     const targetDateStr = formatDateStr(dateStr);
     await BuySignal.deleteMany({ date: targetDateStr });
-    console.log(`[BuySignal] 已删除 ${targetDateStr} 的买入信号数据`);
-  }
-
-
-  async generateHistoryBuySignals (dateStr: string): Promise<IBuySignal[]> {
-    const targetDateStr = formatDateStr(dateStr);
-    const minScore = 0;  // 生成信号的最低分数阈值
-    console.log(`[BuySignal generateHistoryBuySignals] 生成历史买入信号: ${targetDateStr}`);
-    // 检查信号日期是否为交易日
-    if (!tradingCalendarService.isTradingDay(dateStr)) {
-      console.log(`[BuySignal generateHistoryBuySignals] ${dateStr} 不是交易日，跳过生成`);
-      return [];
-    }
-
-    // 如果数据库有今日的数据直接返回
-    const existingCount = await BuySignal.countDocuments({ date: formatDateStr(dateStr) });
-    if (existingCount > 0) {
-      console.log(`[BuySignal generateHistoryBuySignals] ${dateStr} 已存在 ${existingCount} 条买入信号数据，跳过生成`);
-      return await BuySignal.find({ date: formatDateStr(dateStr) });
-    }
-
-    // 直接使用字符串日期
-    const signalDate = formatDateStr(dateStr);
-
-    // 获取前一个交易日（使用交易日历服务，支持节假日）
-    const prevTradingDay = tradingCalendarService.getPrevTradingDay(dateStr);
-    if (!prevTradingDay) {
-      console.log(`[BuySignal generateHistoryBuySignals] 无法获取 ${dateStr} 的前一个交易日，跳过生成`);
-      return [];
-    }
-    // 选股日期就是前一交易日（字符串格式）
-    const selectionDate = prevTradingDay;
-
-    // 🔒 检查前一交易日的 VolumeSurge 数据是否存在
-    // 避免在选股数据未生成时使用错误的历史数据
-    const volumeSurgeCount = await VolumeSurge.countDocuments({ date: selectionDate });
-    if (volumeSurgeCount === 0) {
-      console.log(`[BuySignal generateHistoryBuySignals] ⚠️ ${prevTradingDay} 的 VolumeSurge 数据尚未生成，无法为 ${dateStr} 生成买入信号`);
-      console.log(`[BuySignal generateHistoryBuySignals] 请等待 ${prevTradingDay} 收盘后数据更新，或手动触发选股扫描`);
-      return [];
-    }
-    console.log(`[BuySignal generateHistoryBuySignals] ${prevTradingDay} 有 ${volumeSurgeCount} 条 VolumeSurge 数据`);
-
-    // 获取前一天的选股结果（支持多策略）
-    const candidates = await this.getAllCandidates(selectionDate, undefined, minScore);  // 获取前一天的选股结果，限制50只
-
-    if (candidates.length === 0) {
-      console.log(`[BuySignal generateHistoryBuySignals] ${dateStr} 无可处理的候选标的（可能分数低于阈值 ${minScore}）`);
-      return [];
-    }
-
-    console.log(`[BuySignal generateHistoryBuySignals] ${dateStr} 发现 ${candidates.length} 个候选标的`);
-
-    // 串行处理，每个请求间隔300ms，避免被封IP
-    const signals: IBuySignal[] = [];
-
-    for (let i = 0; i < candidates.length; i++) {
-      const candidate = candidates[i];
-      try {
-        const signal = await this.generateHistorySignalForStock(candidate, signalDate);
-        if (signal) {
-          signals.push(signal);
-        }
-      } catch (error) {
-        console.error(`[BuySignal] 处理 ${candidate.stockCode} 失败:`, error);
-      }
-    }
-
-    // 批量保存（使用bulkWrite提升性能）
-    if (signals.length > 0) {
-      const bulkOps = signals.map(signal => ({
-        updateOne: {
-          filter: { date: signal.date, stockCode: signal.stockCode },
-          update: { $set: signal },
-          upsert: true,
-        }
-      }));
-      await BuySignal.bulkWrite(bulkOps);
-      console.log(`[BuySignal] 已保存 ${signals.length} 条买入信号`);
-    }
-
-    return signals;
-  }
-
-  /**
- * 为单个股票生成买入信号
- */
-  async generateHistorySignalForStock (
-    candidate: StrategyCandidate,
-    signalDate: string  // YYYYMMDD 格式
-  ): Promise<IBuySignal | null> {
-    // 获取开盘数据，若为今日且为交易日，优先用腾讯实时行情
-    let openData = null;
-    const todayStr = dayjs().format('YYYYMMDD');
-    if (
-      tradingCalendarService.isTradingDay(signalDate)) {
-
-      openData = await this.getOpeningData(candidate.stockCode, signalDate);
-
-      if (!openData) {
-        console.log(`[BuySignal] generateHistorySignalForStock ${candidate.stockCode} 无法获取开盘数据`);
-        return null;
-      }
-      const prevTradingDay = tradingCalendarService.getPrevTradingDay(signalDate);
-      // 获取大盘环境
-      const marketEnv = await this.getMarketEnvironment(prevTradingDay as string);
-
-      // 获取板块数据
-      const sectorData = await this.getSectorData(candidate.industry || '', prevTradingDay as string);
-
-      // 获取技术位置
-      const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, prevTradingDay as string);
-
-      // 计算各项评分
-      const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
-      const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
-      const auction = BuySignalScorer.scoreAuction(openData.auctionAmountRatio);
-      // const auction = {
-      //   score: 0,
-      //   reason: '竞价数据暂不可用，默认0分'
-      // }
-      const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood);
-      // const sectorLink = BuySignalScorer.scoreSectorLink(
-      //   sectorData.sectorOpenChange,
-      //   sectorData.sectorLimitUpCount,
-      //   sectorData.sectorLeader
-      // );
-      const sectorLink = {
-        score: 0,
-        reason: '板块数据暂不可用，默认0分'
-      }
-      // const sealStrength = BuySignalScorer.scoreSealStrength(
-      //   openData.isLimitUp,
-      //   openData.sealRatio,
-      //   parseInt(openData.openTimes?.toString() || '0', 10)
-      // );
-      const sealStrength = {
-        score: 0,
-        reason: '封单数据暂不可用，默认0分'
-      }
-      // const technical = BuySignalScorer.scoreTechnical(
-      //   technicalData.distanceToMa5,
-      //   technicalData.distanceToMa10,
-      //   technicalData.distanceToPressure
-      // );
-      const technical = {
-        score: 0,
-        reason: '技术数据暂不可用，默认0分'
-      }
-
-      // 趋势评分 (满分15分)
-      const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
-      const trend = TrendScorer.calculate(KlineData);
-      logger.info(`[BuySignal] ${candidate.stockCode} 趋势评分: ${trend.score}`);
-
-      // 计算总分
-      const totalBuyScore =
-        openStrength.score +
-        volumeConfirm.score +
-        auction.score +
-        marketEnvScore.score +
-        sectorLink.score +
-        sealStrength.score +
-        trend.score +
-        technical.score;
-
-      // 生成买入决策
-      const decision = this.generateDecision(totalBuyScore, openData, candidate);
-
-      // 收集风险提示
-      const riskWarnings = this.collectRiskWarnings(
-        openData,
-        marketEnv,
-        sectorData,
-        technicalData,
-        candidate
-      );
-
-      // 构建买入理由
-      const buyReason = [
-        openStrength.reason,
-        volumeConfirm.reason,
-        auction.reason,
-        marketEnvScore.reason,
-        sectorLink.reason,
-      ].filter(r => r).join('；');
-
-      const signal: IBuySignal = {
-        date: signalDate,
-        stockCode: candidate.stockCode,
-        stockName: candidate.stockName,
-
-        strategyType: candidate.strategyType,
-        strategyName: candidate.strategyName,
-        sourceId: candidate._id,
-        selectionDate: candidate.date,
-        selectionScore: candidate.score || 0,
-
-        openPrice: openData.openPrice,
-        openChangePercent: openData.openChangePercent,
-        openVolumeRatio: openData.openVolumeRatio,
-        auctionAmount: openData.auctionAmount,
-        auctionAmountRatio: openData.auctionAmountRatio,
-
-        indexOpenChange: marketEnv.indexOpenChange,
-        indexMorningTrend: marketEnv.indexMorningTrend,
-        marketMood: marketEnv.marketMood,
-
-        sectorName: candidate.industry || '',
-        sectorOpenChange: sectorData.sectorOpenChange,
-        sectorLimitUpCount: sectorData.sectorLimitUpCount,
-        sectorLeader: sectorData.sectorLeader,
-
-        isLimitUp: openData.isLimitUp,
-        sealAmount: openData.sealAmount,
-        sealRatio: openData.sealRatio,
-        openTimes: parseInt(openData.openTimes?.toString() || '0', 10),
-
-        distanceToMa5: technicalData.distanceToMa5,
-        distanceToMa10: technicalData.distanceToMa10,
-        distanceToMa20: technicalData.distanceToMa20,
-        distanceToPressure: technicalData.distanceToPressure,
-
-        openStrengthScore: openStrength.score,
-        volumeConfirmScore: volumeConfirm.score,
-        auctionScore: auction.score,
-        marketEnvScore: marketEnvScore.score,
-        sectorLinkScore: sectorLink.score,
-        sealStrengthScore: sealStrength.score,
-        technicalScore: technical.score,
-        trendScore: trend.score,
-        totalBuyScore,
-
-        buySignal: decision.signal,
-        suggestedPosition: decision.position,
-        suggestedPrice: decision.price,
-        stopLossPrice: decision.stopLoss,
-        takeProfitPrice: decision.takeProfit,
-        buyReason,
-        riskWarning: riskWarnings,
-
-        executed: false,
-        resultStatus: 'pending',
-      };
-
-      return signal;
-    }
-    return null;
+    logger.info(`[BuySignal] 已删除 ${targetDateStr} 的买入信号数据`);
   }
 }
 

@@ -1,0 +1,82 @@
+{
+  "startDate": "20260101",
+  "endDate": "20260106",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 0,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 4,
+    "marketPanicThreshold": 0,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 2,
+  "winTrades": 2,
+  "lossTrades": 0,
+  "winRate": 100,
+  "totalProfitAmount": 7429.38,
+  "totalProfitPercent": 7.43,
+  "avgProfitPercent": 7.43,
+  "avgWinPercent": 7.43,
+  "avgLossPercent": 0,
+  "profitLossRatio": 0,
+  "totalInvested": 100000,
+  "maxDrawdown": 0,
+  "maxDrawdownPercent": 0,
+  "maxProfit": 10,
+  "maxLoss": 4.86,
+  "maxConsecutiveWins": 2,
+  "maxConsecutiveLosses": 0,
+  "avgHoldDays": 2.5,
+  "equityCurve": [
+    {
+      "date": "20260109",
+      "equity": 2429.38
+    },
+    {
+      "date": "20260106",
+      "equity": 7429.38
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "603920",
+      "stockName": "世运电路",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260106",
+      "buyPrice": 53.1,
+      "sellDate": "20260109",
+      "sellPrice": 55.68,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 4.86,
+      "profitAmount": 2429.38,
+      "exitReason": "max_days",
+      "buySignalScore": 76,
+      "selectionScore": 102,
+      "marketMood": 100
+    },
+    {
+      "stockCode": "002969",
+      "stockName": "嘉美包装",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260106",
+      "buyPrice": 13.7,
+      "sellDate": "20260106",
+      "sellPrice": 15.07,
+      "holdDays": 1,
+      "position": 50000,
+      "profitPercent": 10,
+      "profitAmount": 5000,
+      "exitReason": "data_end",
+      "buySignalScore": 76,
+      "selectionScore": 67,
+      "marketMood": 100
+    }
+  ]
+}
