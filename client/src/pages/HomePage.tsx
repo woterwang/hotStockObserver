@@ -2,7 +2,7 @@
  * @Author: hp.com
  * @Date: 2025-12-06 11:54:09
  * @LastEditors: WRG
- * @LastEditTime: 2025-12-28 20:38:26
+ * @LastEditTime: 2026-06-14 09:55:29
  * @😍: 😃😃
  */
 import React, { useEffect, useState } from 'react';
@@ -133,13 +133,7 @@ const HomePage: React.FC = () => {
                 ) : (
                   <Empty message="暂无热搜板块数据" />
                 )
-              ) : activeTab === 'history' ? (
-                data.sectors.length > 0 ? (
-                  <HistoryConceptPage />
-                ) : (
-                  <Empty message="暂无板块数据" />
-                )
-              ) : null}
+              ) : activeTab === 'history' ? (<HistoryConceptPage />) : null}
             </div>
           </div>
           

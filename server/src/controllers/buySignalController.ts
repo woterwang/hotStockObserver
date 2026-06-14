@@ -141,7 +141,7 @@ class BuySignalController {
 
       for (const date of dates) {
         try {
-          const signals = await buySignalService.generateHistoryBuySignals(date);
+          const signals = await buySignalService.generateBuySignals(date);
           results.push({ date, count: signals.length });
           totalGenerated += signals.length;
           successDays++;

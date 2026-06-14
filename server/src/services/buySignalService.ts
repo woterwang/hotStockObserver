@@ -577,7 +577,7 @@ class BuySignalService {
           console.log(`[BuySignal] ${candidate.stockCode} 使用腾讯实时行情数据`);
         }
       } catch (err) {
-        console.warn(`[BuySignal] 腾讯实时行情获取失败，降级本地K线:`, err);
+        logger.warn(`[BuySignal] 腾讯实时行情获取失败，降级本地K线:`, err);
       }
     }
     if (!openData) {
