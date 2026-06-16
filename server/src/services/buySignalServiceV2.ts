@@ -131,51 +131,59 @@ class BuySignalScorer {
    * 大盘环境评分 (满分10分)
    */
   /**************************** CodeGeeX Inline Diff ****************************/
-  static scoreMarketEnv (indexOpenChange: number, marketMood: number): { score: number; reason: string } {
+  static scoreMarketEnv (indexOpenChange: number, marketMood: number, prevMarketMood: number): { score: number; reason: string } {
     let envScore = 0;
     let scoreReasons: string[] = [];
     let score = 0;
     let reasons: string[] = [];
 
     // 指数开盘涨跌
-    if (indexOpenChange >= 0.5) {
-      envScore += 5;
-      scoreReasons.push('大盘高开');
-      score += 5;
-      reasons.push('大盘高开');
-    } else if (indexOpenChange >= 0) {
-      envScore += 4;
-      scoreReasons.push('大盘平开');
-      score += 4;
-      reasons.push('大盘平开');
-    } else if (indexOpenChange >= -0.5) {
-      envScore += 2;
-      scoreReasons.push('大盘小幅低开');
-      score += 2;
-      reasons.push('大盘小幅低开');
-    } else {
-      envScore += 0;
-      scoreReasons.push('大盘大幅低开');
-      score += 0;
-      reasons.push('大盘大幅低开');
-    }
+    // if (indexOpenChange >= 0.5) {
+    //   envScore += 5;
+    //   scoreReasons.push('大盘高开');
+    //   score += 5;
+    //   reasons.push('大盘高开');
+    // } else if (indexOpenChange >= 0) {
+    //   envScore += 4;
+    //   scoreReasons.push('大盘平开');
+    //   score += 4;
+    //   reasons.push('大盘平开');
+    // } else if (indexOpenChange >= -0.5) {
+    //   envScore += 2;
+    //   scoreReasons.push('大盘小幅低开');
+    //   score += 2;
+    //   reasons.push('大盘小幅低开');
+    // } else {
+    //   envScore += 0;
+    //   scoreReasons.push('大盘大幅低开');
+    //   score += 0;
+    //   reasons.push('大盘大幅低开');
+    // }
 
-    // 市场情绪
-    if (marketMood >= 70) {
-      envScore += 5;
-      scoreReasons.push('市场情绪高涨');
-      score += 5;
-      reasons.push('市场情绪高涨');
-    } else if (marketMood >= 50) {
-      envScore += 3;
-      scoreReasons.push('市场情绪中性');
-      score += 3;
-      reasons.push('市场情绪中性');
-    } else {
-      envScore += 1;
-      scoreReasons.push('市场情绪低迷');
-      score += 1;
-      reasons.push('市场情绪低迷');
+    // // 市场情绪
+    // if (marketMood >= 70) {
+    //   envScore += 5;
+    //   scoreReasons.push('市场情绪高涨');
+    //   score += 5;
+    //   reasons.push('市场情绪高涨');
+    // } else if (marketMood >= 50) {
+    //   envScore += 3;
+    //   scoreReasons.push('市场情绪中性');
+    //   score += 3;
+    //   reasons.push('市场情绪中性');
+    // } else {
+    //   envScore += 1;
+    //   scoreReasons.push('市场情绪低迷');
+    //   score += 1;
+    //   reasons.push('市场情绪低迷');
+    // }
+
+    //连续两天市场情绪低迷，扣分
+    logger.info(`[BuySignal] 今日市场情绪: ${marketMood}，昨日市场情绪: ${prevMarketMood}`);
+    if (marketMood < 50 && prevMarketMood < 50) {
+      logger.info(`[BuySignal] 连续两天市场情绪低迷，扣分`);
+      envScore = -10;
+      scoreReasons.push('连续两天市场情绪低迷，环境恶劣');
     }
 
     return { score: envScore, reason: scoreReasons.join('，') };
@@ -514,10 +522,6 @@ class BuySignalService {
     for (let i = 0; i < candidates.length; i++) {
       const candidate = candidates[i];
       try {
-        // 非首个请求时等待300ms
-        // if (i > 0) {
-        //   await new Promise(resolve => setTimeout(resolve, 300));
-        // }
         const signal = await this.generateSignalForStock(candidate, signalDate);
         if (signal) {
           signals.push(signal);
@@ -580,7 +584,7 @@ class BuySignalService {
     //   score: 0,
     //   reason: '竞价数据暂不可用，默认0分'
     // }
-    const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood);
+    const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood, marketEnv.preMarketMood);
     const sectorLink = await BuySignalScorer.scoreSectorLink(candidate.stockCode, prevTradingDay as string);
     // const sectorLink = {
     //   score: 0,
@@ -595,15 +599,15 @@ class BuySignalService {
       score: 0,
       reason: '封单数据暂不可用，默认0分'
     }
-    // const technical = BuySignalScorer.scoreTechnical(
-    //   technicalData.distanceToMa5,
-    //   technicalData.distanceToMa10,
-    //   technicalData.distanceToPressure
-    // );
-    const technical = {
-      score: 0,
-      reason: '技术数据暂不可用，默认0分'
-    }
+    const technical = BuySignalScorer.scoreTechnical(
+      technicalData.distanceToMa5,
+      technicalData.distanceToMa10,
+      technicalData.distanceToPressure
+    );
+    // const technical = {
+    //   score: 0,
+    //   reason: '技术数据暂不可用，默认0分'
+    // }
 
     // 趋势评分 (满分30分)
     const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
@@ -892,21 +896,25 @@ class BuySignalService {
     indexOpenChange: number;
     indexMorningTrend: 'up' | 'down' | 'flat';
     marketMood: number;
+    preMarketMood: number;
   }> {
-    const defaultResult = { indexOpenChange: 0, indexMorningTrend: 'flat' as const, marketMood: 50 };
+    const defaultResult = { indexOpenChange: 0, indexMorningTrend: 'flat' as const, marketMood: 50, preMarketMood: 50 };
     const targetDateStr = formatDateStr(dateStr);
+    const preDateStr = tradingCalendarService.getPrevTradingDay(targetDateStr) ?? '';
     logger.info(`[BuySignal] getMarketEnvironment: ${targetDateStr}`);
     // 1. 优先从市场情绪服务获取 strong 值
-    const cachedMood = marketMoodService.getMood(targetDateStr);
-    if (cachedMood !== null) {
-      logger.info(`[BuySignal] 使用缓存的市场情绪: ${targetDateStr} -> ${cachedMood}`);
+    const targetMood = marketMoodService.getMood(targetDateStr);
+    const preMood = marketMoodService.getMood(preDateStr) ?? 50;
+    if (targetMood !== null) {
+      logger.info(`[BuySignal] 使用缓存的市场情绪: ${targetDateStr} -> ${targetMood}`);
       // 仍需获取指数开盘数据，但情绪值用缓存的
       // TODO: 后续可考虑缓存指数开盘数据，减少请求，这里获取的指数数据是错误的
       // const indexData = await this.fetchIndexData(targetDateStr);
       return {
         indexOpenChange: 0,
         indexMorningTrend: 'flat',
-        marketMood: cachedMood,
+        marketMood: targetMood,
+        preMarketMood: preMood,
       };
     }
 
@@ -921,11 +929,12 @@ class BuySignalService {
    */
   private async calculateMarketEnvironmentFromKline (
     dateStr: string,
-    defaultResult: { indexOpenChange: number; indexMorningTrend: 'up' | 'down' | 'flat'; marketMood: number }
+    defaultResult: { indexOpenChange: number; indexMorningTrend: 'up' | 'down' | 'flat'; marketMood: number, preMarketMood: number }
   ): Promise<{
     indexOpenChange: number;
     indexMorningTrend: 'up' | 'down' | 'flat';
     marketMood: number;
+    preMarketMood: number;
   }> {
     // 优先使用v6，再从v1-v5中随机挑选2个版本，共3次重试
     const otherVersions = ['v1', 'v2', 'v3', 'v4', 'v5'].sort(() => Math.random() - 0.5).slice(0, 2);
@@ -985,6 +994,7 @@ class BuySignalService {
                     indexOpenChange: Math.round(indexOpenChange * 100) / 100,
                     indexMorningTrend,
                     marketMood: Math.round(marketMood),
+                    preMarketMood: 50,
                   };
                 }
               }

@@ -2,6 +2,9 @@ import winston from 'winston';
 import path from 'path';
 
 const logDir = path.join(__dirname, '../../logs');
+const enableFileLogging = !['0', 'false', 'no', 'off'].includes(
+  (process.env.LOG_TO_FILE || '').trim().toLowerCase()
+);
 
 // 自定义日志格式
 const logFormat = winston.format.combine(
@@ -12,18 +15,18 @@ const logFormat = winston.format.combine(
   })
 );
 
-// 创建logger实例
-const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
-  format: logFormat,
-  transports: [
-    // 控制台输出
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        logFormat
-      ),
-    }),
+const transports: winston.transport[] = [
+  // 控制台输出
+  new winston.transports.Console({
+    format: winston.format.combine(
+      winston.format.colorize(),
+      logFormat
+    ),
+  }),
+];
+
+if (enableFileLogging) {
+  transports.push(
     // 错误日志文件
     new winston.transports.File({
       filename: path.join(logDir, 'error.log'),
@@ -36,8 +39,15 @@ const logger = winston.createLogger({
       filename: path.join(logDir, 'combined.log'),
       maxsize: 5242880, // 5MB
       maxFiles: 5,
-    }),
-  ],
+    })
+  );
+}
+
+// 创建logger实例
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: logFormat,
+  transports,
 });
 
 export default logger;

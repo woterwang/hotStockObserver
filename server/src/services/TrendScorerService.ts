@@ -181,10 +181,7 @@ export class TrendScorer {
 
   static toBuySignalScore (rawTrendScore: number, kline: KLineItem[]): number {
     const normalizedKline = this.normalizeKlineOrder(kline);
-    // 趋势评分映射为10分制，保留高分段区分度
-    rawTrendScore = Math.round(rawTrendScore * 0.2);
-    // 如果是百日新高，给予额外加分
-
+    // 如果是新高，给予额外加分
     if (this.isHundredDayNewHigh(normalizedKline)) {
       logger.info(`[TrendScorer] 100日新高，直接给定最高趋势评分`);
       rawTrendScore += 5;
@@ -194,6 +191,8 @@ export class TrendScorer {
       logger.info(`[TrendScorer] 60日新高，给予额外趋势评分`);
       rawTrendScore += 2;
     }
+    // 趋势评分映射为10分制，保留高分段区分度
+    rawTrendScore = Math.round(rawTrendScore * 0.2);
     return rawTrendScore;
   }
 
