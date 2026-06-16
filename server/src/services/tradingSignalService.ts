@@ -1,6 +1,6 @@
 import { logger } from '../utils';
-import { TradingSignal, ITradingSignal, EntryConditions, ExitConditions } from '../models/TradingSignal';
-import { PriceBreakthrough } from '../models';
+import { TradingSignal, ITradingSignal, EntryConditions, ExitConditions } from '../../data/concept_cache/models/TradingSignal';
+import { PriceBreakthrough } from '../../data/concept_cache/models';
 import { formatDate } from '../utils/dateUtils';
 import dayjs from 'dayjs';
 import axios from 'axios';

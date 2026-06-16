@@ -1,5 +1,5 @@
 import { logger } from '../utils';
-import { PriceBreakthrough } from '../models';
+import { PriceBreakthrough } from '../../data/concept_cache/models';
 import { formatDate, parseDate } from '../utils/dateUtils';
 import axios from 'axios';
 import * as fs from 'fs';

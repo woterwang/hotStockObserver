@@ -13,7 +13,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
-import { HotStock } from '../models';
+import { HotStock } from '../../data/concept_cache/models';
 import { dataFetchService } from '../services/dataFetchService';
 
 // 加载环境变量

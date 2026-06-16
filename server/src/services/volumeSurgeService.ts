@@ -1,6 +1,6 @@
 import { groupService } from '../services/groupService';
 import { logger } from '../utils';
-import { VolumeSurge } from '../models';
+import { VolumeSurge } from '../../data/concept_cache/models';
 import { getToday, formatDate } from '../utils/dateUtils';
 import axios from 'axios';
 
