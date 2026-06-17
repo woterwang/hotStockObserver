@@ -3,7 +3,7 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { buySignalService } from '../services/buySignalServiceV2';
+import { buySignalService } from '../services/buySignalServiceV3';
 import { tradingCalendarService } from '../services/tradingCalendarService';
 import { BuySignal } from '../../data/concept_cache/models/BuySignal';
 import dayjs from 'dayjs';
