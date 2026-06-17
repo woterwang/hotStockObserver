@@ -13,6 +13,7 @@ import { marketMoodService } from './marketMoodService';
 import { tradingCalendarService } from './tradingCalendarService';
 import { TrendScorer } from '../services/TrendScorerService';
 import { klineCacheService, CachedKline, fetchTencentRealTimeQuotes } from './klineCacheService';
+import { thsConceptHotRankService } from '../services/thsConceptHotRankService';
 
 export class VolumeSurgeService {
 
@@ -497,19 +498,34 @@ export class VolumeSurgeService {
         //   量价因子 ≥ 30	✅ 合格
         //   25–29	⚠️ 勉强（需其他因子补）
         //   < 25	❌ 直接淘汰（尤其均线/放量不达标）
-        logger.info(`[评分] ${stockCode} 基础评分 ${baseScore} - ✅ 合格`);
+        logger.info(`[评分] ${stockCode} 量价关系评分 ${baseScore}`);
         if (baseScore >= 30) {
+          logger.info(`[评分] ${stockCode} 评分 ${baseScore} - ✅ 合格`);
           // ✅ 合格
         } else if (baseScore >= 25) {
+          logger.info(`[评分] ${stockCode} 评分 ${baseScore} - ⚠️ 勉强`);
           // ⚠️ 勉强（需其他因子补）
         } else {
+          logger.info(`[评分] ${stockCode} 评分 ${baseScore} - ❌ 淘汰`);
           // ❌ 直接淘汰（尤其均线/放量不达标）
           continue;
         }
 
         // #### 2. 趋势因子（权重 30%）
         const trendScorer = TrendScorer.calculate(KlineData);
+        logger.info(`[评分] ${stockCode} 趋势评分 ${trendScorer.score}`);
         baseScore += trendScorer.score;
+
+        // #### 3. 热点因子（权重 30%）
+        const hotScorer = await this.scoreSectorLink(stockCode, targetDate, concept);
+        logger.info(`[评分] ${stockCode} 热点因子 ${hotScorer.score}`);
+        baseScore += hotScorer.score;
+
+        // #### 4. 保留总分 > 70分的股票，作为最终入选名单
+        if (baseScore < 70) {
+          logger.info(`[评分] ${stockCode} 评分 ${baseScore} - ❌ 淘汰`);
+          continue;  // 基础分未达标，直接过滤掉
+        }
 
         // ---- 市场环境加分 (-20 ~ +15分) ----
         let marketBonus = 0;
@@ -534,7 +550,7 @@ export class VolumeSurgeService {
         let boardBonus = 0;
 
         if (isFirstBoard) {
-          boardBonus += 15;   // 首板最安全，启动点
+          boardBonus += 5;   // 首板最安全，启动点
         } else if (continuousBoardCount === 2) {
           boardBonus -= 10;   // 2连板说明资金认可
         } else if (continuousBoardCount >= 3) {
@@ -542,7 +558,7 @@ export class VolumeSurgeService {
         }
 
         // ---- 计算最终评分 ----
-        const strategyScore = Math.max(0, Math.min(130, baseScore + marketBonus + boardBonus));
+        const strategyScore = Math.max(0, Math.min(120, baseScore + marketBonus + boardBonus));
 
         // ---- 风险等级判定 ----
         let riskLevel: 'low' | 'medium' | 'high' = 'medium';
@@ -622,6 +638,43 @@ export class VolumeSurgeService {
     // 直接使用字符串日期查询
     return VolumeSurge.find({ date: dateStr }).sort({ strategyScore: -1, changePercent: -1 });
   }
+
+  
+    /**
+     * 板块联动评分 (满分10分)
+     */
+    async scoreSectorLink (stockCode: string, dateStr: string, currentConcepts:string): Promise<{ score: number; reason: string }> {
+      let score = 0;
+      let reasons: string[] = [];
+  
+      // 第一步：解析concept数据
+      const concepts = currentConcepts.split(';');
+      // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${dateStr} 的 ${JSON.stringify(concepts)} 数据: ${concepts}`);
+  
+      // 第二步：获取前一天的热门概念排行数据
+      const conceptData = thsConceptHotRankService.readFromCache(`${dateStr}_concept`)
+      // logger.info(`[BuySignal] scoreSectorLink 获取 ${dateStr} 的数据： ${JSON.stringify(conceptData?.items)}`);
+      // 取前三个概念
+      const topConcepts: string[] = conceptData?.items.slice(0, 3).map((item: any) => item.name) || [];
+      // logger.info(`[BuySignal] scoreSectorLink 获取 ${dateStr} 的 ${JSON.stringify(topConcepts)} 数据: ${topConcepts}`);
+  
+      // 第三步：判断concepts中是否有热门概念
+      const matchedConcepts = concepts.filter((concept:string) => topConcepts.includes(concept));
+      if (matchedConcepts.length > 0) {
+        score += 10;
+        reasons.push(`所属概念${matchedConcepts.join('、')}在前3名热门概念中，板块联动强`);
+        if (matchedConcepts.length > 1) {
+          score += 10;
+          reasons.push(`所属多个概念${matchedConcepts.join('、')}在前3名热门概念中，板块联动更强`);
+        }
+        if (matchedConcepts.length > 2) {
+          score += 10;
+          reasons.push(`所属多个概念${matchedConcepts.join('、')}在前3名热门概念中，板块联动更强`);
+        }
+      }
+  
+      return { score: Math.min(score, 10), reason: reasons.join('，') };
+    }
 
   /**
    * 获取高质量信号（评分>=70分）

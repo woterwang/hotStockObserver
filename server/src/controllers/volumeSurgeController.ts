@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { volumeSurgeService } from '../services';
+import { volumeSurgeService } from '../services/volumeSurgeServiceV2';
 import { logger } from '../utils';
 
 export class VolumeSurgeController {

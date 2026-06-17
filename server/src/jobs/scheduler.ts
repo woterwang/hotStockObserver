@@ -1,5 +1,6 @@
 import cron from 'node-cron';
-import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, volumeSurgeService, tradingCalendarService, marketMoodService, conceptResonanceService } from '../services';
+import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, tradingCalendarService, marketMoodService, conceptResonanceService } from '../services';
+import {volumeSurgeService} from '../services/volumeSurgeServiceV2'
 import { buySignalService } from '../services/buySignalService';
 import { thsConceptHotRankService } from '../services/thsConceptHotRankService';
 import { updateCodeKline } from './updateCodeKline';
