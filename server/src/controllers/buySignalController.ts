@@ -5,7 +5,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { buySignalService } from '../services/buySignalServiceV2';
 import { tradingCalendarService } from '../services/tradingCalendarService';
-import { BuySignal } from '../models/BuySignal';
+import { BuySignal } from '../../data/concept_cache/models/BuySignal';
 import dayjs from 'dayjs';
 
 class BuySignalController {

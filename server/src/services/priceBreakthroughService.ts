@@ -1,5 +1,5 @@
 import { logger } from '../utils';
-import { PriceBreakthrough, HotStock } from '../models';
+import { PriceBreakthrough, HotStock } from '../../data/concept_cache/models';
 import { dataFetchService, HistoryKline } from './dataFetchService';
 import { getToday, formatDate, getDaysAgo } from '../utils/dateUtils';
 import dayjs from 'dayjs';

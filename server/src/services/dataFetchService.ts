@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { logger } from '../utils';
-import { HotStock, StockNews } from '../models';
+import { HotStock, StockNews } from '../../data/concept_cache/models';
 import { toDateStr, getToday, getDaysAgo } from '../utils/dateUtils';
 import iconv from 'iconv-lite';
 

@@ -14,7 +14,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
-import { BuySignal } from '../models';
+import { BuySignal } from '../../data/concept_cache/models';
 
 // 加载环境变量
 dotenv.config({ path: path.join(__dirname, '../../.env') });

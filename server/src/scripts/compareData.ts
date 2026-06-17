@@ -2,8 +2,8 @@
  * 对比 breakthrough 和 signals 数据
  */
 import mongoose from 'mongoose';
-import { PriceBreakthrough } from '../models/PriceBreakthrough';
-import { TradingSignal } from '../models/TradingSignal';
+import { PriceBreakthrough } from '../../data/concept_cache/models/PriceBreakthrough';
+import { TradingSignal } from '../../data/concept_cache/models/TradingSignal';
 
 async function main() {
   await mongoose.connect('mongodb://localhost:27017/hot-stock');

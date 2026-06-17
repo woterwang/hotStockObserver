@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import mongoose from 'mongoose';
-import { VolumeSurge } from '../models';
+import { VolumeSurge } from '../../data/concept_cache/models';
 
 // MongoDB 连接配置
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hot-stock-observer';

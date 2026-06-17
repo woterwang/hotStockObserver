@@ -182,18 +182,18 @@ export class TrendScorer {
   static toBuySignalScore (rawTrendScore: number, kline: KLineItem[]): number {
     const normalizedKline = this.normalizeKlineOrder(kline);
     // 趋势评分映射为10分制，保留高分段区分度
-    rawTrendScore = Math.round(rawTrendScore * 0.2);
-    // 如果是百日新高，给予额外加分
+    rawTrendScore = Math.round(rawTrendScore * 0.3);
+    // // 如果是百日新高，给予额外加分
 
-    if (this.isHundredDayNewHigh(normalizedKline)) {
-      logger.info(`[TrendScorer] 100日新高，直接给定最高趋势评分`);
-      rawTrendScore += 5;
-    }
+    // if (this.isHundredDayNewHigh(normalizedKline)) {
+    //   logger.info(`[TrendScorer] 100日新高，直接给定最高趋势评分`);
+    //   rawTrendScore += 5;
+    // }
 
-    if (this.isSixtyDayNewHigh(normalizedKline)) {
-      logger.info(`[TrendScorer] 60日新高，给予额外趋势评分`);
-      rawTrendScore += 2;
-    }
+    // if (this.isSixtyDayNewHigh(normalizedKline)) {
+    //   logger.info(`[TrendScorer] 60日新高，给予额外趋势评分`);
+    //   rawTrendScore += 2;
+    // }
     return rawTrendScore;
   }
 
@@ -234,7 +234,7 @@ export class TrendScorer {
   }
 
   // ==================== 工具函数 ====================
-  private static normalizeKlineOrder (kline: KLineItem[] | null | undefined): KLineItem[] {
+  static normalizeKlineOrder (kline: KLineItem[] | null | undefined): KLineItem[] {
     if (!Array.isArray(kline) || kline.length === 0) {
       return [];
     }
@@ -253,7 +253,7 @@ export class TrendScorer {
     return kline;
   }
 
-  private static getDateSortKey (date: string | undefined): number {
+  static getDateSortKey (date: string | undefined): number {
     if (!date) return Number.NaN;
 
     const normalized = String(date).replace(/\D/g, '');
@@ -268,30 +268,30 @@ export class TrendScorer {
     return Number.isFinite(timestamp) ? timestamp : Number.NaN;
   }
 
-  private static calcMA (kline: KLineItem[], n: number, skip = 0): number | null {
+  static calcMA (kline: KLineItem[], n: number, skip = 0): number | null {
     if (kline.length < skip + n) return null;
     const slice = kline.slice(skip, skip + n);
     if (slice.length === 0) return null;
     return slice.reduce((s, c) => s + c.close, 0) / slice.length;
   }
 
-  private static calcSlope (current: number | null, prev: number | null): number {
+  static calcSlope (current: number | null, prev: number | null): number {
     if (current === null || prev === null || prev === 0) return 0;
     return (current - prev) / prev;
   }
 
-  private static calcChange (kline: KLineItem[], n: number): number {
+  static calcChange (kline: KLineItem[], n: number): number {
     if (kline.length < n) return 0;
     return (kline[0].close - kline[n - 1].close) / kline[n - 1].close;
   }
 
-  private static calcAvgVol (kline: KLineItem[], n: number, skip = 0): number {
+  static calcAvgVol (kline: KLineItem[], n: number, skip = 0): number {
     const slice = kline.slice(skip, skip + n);
     if (slice.length === 0) return 0;
     return slice.reduce((s, c) => s + c.volume, 0) / slice.length;
   }
 
-  private static countConsecutiveNewHigh (kline: KLineItem[], days: number): number {
+  static countConsecutiveNewHigh (kline: KLineItem[], days: number): number {
     let count = 0;
     for (let i = 0; i + days < kline.length; i++) {
       const window = kline.slice(i + 1, i + 1 + days);
@@ -306,7 +306,7 @@ export class TrendScorer {
     return count;
   }
 
-  private static calcHighLowScore (kline: KLineItem[], n: number): number {
+  static calcHighLowScore (kline: KLineItem[], n: number): number {
     let high = 0, low = 0;
     for (let i = 1; i < n - 1; i++) {
       const c = kline[i].close;
@@ -322,7 +322,7 @@ export class TrendScorer {
     return 0;
   }
 
-  private static countUpDaysWithBigVol (kline: KLineItem[], n: number): number {
+  static countUpDaysWithBigVol (kline: KLineItem[], n: number): number {
     let count = 0;
     for (let i = 0; i < n - 1; i++) {
       const isUp = kline[i].close > kline[i + 1].close;
@@ -332,7 +332,7 @@ export class TrendScorer {
     return count;
   }
 
-  private static checkStrongUpVolume (kline: KLineItem[], n: number): boolean {
+  static checkStrongUpVolume (kline: KLineItem[], n: number): boolean {
     let maxUpVol = 0, maxDownVol = 0;
     for (let i = 0; i < n - 1; i++) {
       const isUp = kline[i].close > kline[i + 1].close;
@@ -343,14 +343,14 @@ export class TrendScorer {
     return maxUpVol > maxDownVol * 1.5;
   }
 
-  private static isConsecutiveVolumeUp (kline: KLineItem[], n: number): boolean {
+  static isConsecutiveVolumeUp (kline: KLineItem[], n: number): boolean {
     for (let i = 0; i < n - 1; i++) {
       if (kline[i].volume <= kline[i + 1].volume) return false;
     }
     return true;
   }
 
-  private static getQuantile (values: number[], quantile: number, fallback: number): number {
+  static getQuantile (values: number[], quantile: number, fallback: number): number {
     if (!values || values.length === 0) return fallback;
     const sorted = [...values].sort((a, b) => a - b);
     const idx = Math.max(0, Math.min(sorted.length - 1, Math.floor((sorted.length - 1) * quantile)));
@@ -358,7 +358,7 @@ export class TrendScorer {
     return Number.isFinite(value) ? value : fallback;
   }
 
-  private static buildChangeSeries (kline: KLineItem[], n: number, lookback: number): number[] {
+  static buildChangeSeries (kline: KLineItem[], n: number, lookback: number): number[] {
     const series: number[] = [];
     const maxOffset = Math.min(lookback, kline.length - n);
     for (let offset = 1; offset <= maxOffset; offset++) {
@@ -370,7 +370,7 @@ export class TrendScorer {
     return series;
   }
 
-  private static buildSlopeSeries (kline: KLineItem[], maPeriod: number, lookback: number): number[] {
+  static buildSlopeSeries (kline: KLineItem[], maPeriod: number, lookback: number): number[] {
     const series: number[] = [];
     for (let offset = 1; offset <= lookback; offset++) {
       const current = this.calcMA(kline, maPeriod, offset - 1);
@@ -381,7 +381,7 @@ export class TrendScorer {
     return series;
   }
 
-  private static buildVolRatioSeries (kline: KLineItem[], lookback: number): number[] {
+  static buildVolRatioSeries (kline: KLineItem[], lookback: number): number[] {
     const series: number[] = [];
     for (let offset = 0; offset < lookback; offset++) {
       const avg5 = this.calcAvgVol(kline, 5, offset);
@@ -393,7 +393,7 @@ export class TrendScorer {
     return series;
   }
 
-  private static buildMADivergenceSeries (kline: KLineItem[], shortPeriod: number, longPeriod: number, lookback: number): number[] {
+  static buildMADivergenceSeries (kline: KLineItem[], shortPeriod: number, longPeriod: number, lookback: number): number[] {
     const series: number[] = [];
     for (let offset = 0; offset < lookback; offset++) {
       const shortMA = this.calcMA(kline, shortPeriod, offset);
@@ -403,5 +403,11 @@ export class TrendScorer {
       if (Number.isFinite(divergence)) series.push(divergence);
     }
     return series;
+  }
+
+  static calcMACD (kline: KLineItem[], shortPeriod: number, longPeriod: number, signalPeriod: number, offset: number): number {
+    const shortMA = this.calcMA(kline, shortPeriod, offset);
+    const longMA = this.calcMA(kline, longPeriod, offset);
+    const macd = shortMA - longMA;
   }
 }

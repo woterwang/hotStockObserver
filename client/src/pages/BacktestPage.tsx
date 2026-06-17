@@ -58,6 +58,7 @@ interface BuySignalTradeRecord {
   profitAmount: number;
   exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'market_panic' | 'data_end';
   buySignalScore: number;
+  selectionScore: number;
   marketMood: number;
 }
 
@@ -786,6 +787,7 @@ const BacktestPage: React.FC = () => {
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">名称</th>
                         <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">市场</th>
                         <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">评分</th>
+                        <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">原始分</th>
                         <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">买入日</th>
                         <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">买入价</th>
                         <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">卖出日</th>
@@ -814,6 +816,9 @@ const BacktestPage: React.FC = () => {
                             }`}>
                               {trade.buySignalScore}
                             </span>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-center">
+                              {trade.selectionScore}
                           </td>
                           <td className="px-4 py-3 text-sm text-center text-gray-600">{trade.buyDate}</td>
                           <td className="px-4 py-3 text-sm text-right text-gray-900">{trade.buyPrice.toFixed(2)}</td>

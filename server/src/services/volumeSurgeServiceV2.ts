@@ -11,6 +11,8 @@ const thsUtils = require('../utils/thsUtils');
 import { marketSentimentService } from './marketSentimentService';
 import { marketMoodService } from './marketMoodService';
 import { tradingCalendarService } from './tradingCalendarService';
+import { TrendScorer } from '../services/TrendScorerService';
+import { klineCacheService, CachedKline, fetchTencentRealTimeQuotes } from './klineCacheService';
 
 export class VolumeSurgeService {
 
@@ -237,22 +239,22 @@ export class VolumeSurgeService {
       // 核心条件（宽松版，确保有数据）
       // `${dateStr}涨幅>7%`,
       `${dateStr}成交额排名前200`,
-      `且${dateStr}上影线<5%`,
-      // 趋势确认（修正语法：收盘价>10日均线）
-      `且${dateStr}收盘价>10日均线`,
-      // 基础过滤
-      `非ST`,
-      `非新股`,
-      `非北交所`,
-      `非退市`,
-      `所属概念`,
+      `${dateStr}上影线`,
       // 额外请求的字段（用于评分计算）
       `${dateStr}量比`,
       `${dateStr}换手率`,
       `${dateStr}振幅`,
       `${dateStr}涨幅`,
       `${dateStr}下影线`,
-      `${dateStr}成交量/前5日平均成交量`,
+      `${dateStr}成交量/前5交易日平均成交量`,
+      // 附加条件
+      `所属概念`,
+      '流通市值',
+      // 其它过滤
+      `非ST`,
+      `非新股`,
+      `非北交所`,
+      `非退市`,
     ].join('，');
 
     logger.info(`[问财查询] ${question}`);
@@ -355,9 +357,21 @@ export class VolumeSurgeService {
         let lowerShadow = 0;      // 下影线
         let volumeRatioTo5Day = 0; // 成交量/5日均量
         let limitUpReason = '';   // 涨停原因
+        let closePrice = 0;       // 收盘价
+        let marketCapitalization = 0;// 流通市值
+        let listingDays = 0;   // 上市交易天数
 
         // 动态查找字段
         for (const key in item) {
+          if (key.includes(`最新价`)) {
+            closePrice = parseFloat(item[key] || 0);
+          }
+          if (key.includes('股市值')) {
+            marketCapitalization = parseFloat(item[key] || 0);
+          }
+          if (key.includes(`上市交易天数`)) {
+            listingDays = parseInt(item[key] || 0);
+          }
           if (key.includes(`涨跌幅:前复权[${targetDate}]`)) {
             changePercent = parseFloat(item[key] || 0);
           } else if (key.includes('量比')) {
@@ -377,10 +391,21 @@ export class VolumeSurgeService {
           } else if (key.includes('下影线')) {
             lowerShadow = parseFloat(item[key] || 0);
           } else if (key.includes(`/}区间日均成交量`)) {
+            // 5日均量比字段
             volumeRatioTo5Day = parseFloat(item[key] || 0);
           } else if (key.includes('涨停原因') || key.includes('异动原因')) {
             limitUpReason = item[key] || '';
           }
+        }
+
+        // 必要条件：量比 ≥ 1.5
+        if (volumeRatio < 1.5) {
+          continue;  // 量能未放大，直接过滤掉
+        }
+
+        // 必要条件：volumeRatioTo5Day ≥ 1.8
+        if (volumeRatioTo5Day < 1.8) {
+          continue;  // 5日均量未放大，直接过滤掉
         }
 
         // 只保留涨幅>7%的数据
@@ -405,65 +430,86 @@ export class VolumeSurgeService {
         // ---- 基础评分 (0-100分) ----
         let baseScore = 0;
 
-        // 1. 涨幅得分 (0-20分)：7%-10% 得满分，超过10%适当扣分（追高风险）
-        if (changePercent >= 7 && changePercent <= 10) {
-          baseScore += 20;
-        } else if (changePercent > 10 && changePercent <= 15) {
-          baseScore += 15;
-        } else if (changePercent > 15) {
-          baseScore += 10;  // 涨幅过大，追高风险增加
-        }
+        // 量价因子总览  量价因子总分：40 分（占 S_base 的 40%）
+        // 1.量比（8 分）≥ 2.5，2.0-2.5（7 分），1.8-2.0（6 分），1.5-1.8（5 分）
 
-        // 2. 换手率得分 (0-20分)：8%-15% 最佳
-        if (turnoverRate >= 8 && turnoverRate <= 15) {
-          baseScore += 20;
-        } else if (turnoverRate >= 5 && turnoverRate < 8) {
-          baseScore += 15;
-        } else if (turnoverRate > 15 && turnoverRate <= 25) {
-          baseScore += 12;
-        } else if (turnoverRate > 25) {
-          baseScore += 5;  // 换手率过高，筹码分散
-        }
-
-        // 3. 上影线得分 (0-15分)：越小越好
-        if (upperShadow <= 1) {
-          baseScore += 15;
-        } else if (upperShadow <= 2) {
-          baseScore += 12;
-        } else if (upperShadow <= 3) {
+        if (volumeRatio >= 2.5) {
           baseScore += 8;
-        }
-
-        // 4. 下影线得分 (0-15分)：越小越好（说明没有抛压）
-        if (lowerShadow <= 1) {
-          baseScore += 15;
-        } else if (lowerShadow <= 2) {
-          baseScore += 10;
-        } else if (lowerShadow <= 3) {
+        } else if (volumeRatio >= 2.0) {
+          baseScore += 7;
+        } else if (volumeRatio >= 1.8) {
+          baseScore += 6;
+        } else if (volumeRatio >= 1.5) {
           baseScore += 5;
         }
 
-        // 5. 振幅得分 (0-15分)：振幅适中最佳
-        if (amplitude >= 8 && amplitude <= 12) {
-          baseScore += 15;  // 振幅适中，走势健康
-        } else if (amplitude < 8) {
-          baseScore += 12;  // 振幅较小，一字板或接近涨停
-        } else if (amplitude <= 15) {
+        // 2.放量上涨（Vol > MA5Vol × 1.8）（12 分, >= 2.5 12分，>= 2.2 10分，>= 2.0 8分）
+        if (volumeRatioTo5Day >= 2.5) {
+          baseScore += 12;
+        } else if (volumeRatioTo5Day >= 2.2) {
+          baseScore += 10;
+        } else if (volumeRatioTo5Day >= 2.0) {
           baseScore += 8;
-        } else {
-          baseScore += 3;  // 振幅过大，日内震荡剧烈
         }
 
-        // 6. 量能放大得分 (0-15分)
-        if (volumeRatioTo5Day >= 2 && volumeRatioTo5Day <= 4) {
-          baseScore += 15;  // 放量2-4倍最佳
-        } else if (volumeRatioTo5Day > 4 && volumeRatioTo5Day <= 6) {
+        // 3.收盘价 > MA5 / MA10 / MA20（12 分）
+        // K线
+        const KlineData = await klineCacheService.loadCacheForHistory(stockCode, targetDate, 20);
+        const ma5 = await TrendScorer.calcMA(KlineData, 5) ?? 0;
+        const ma10 = await TrendScorer.calcMA(KlineData, 10) ?? 0;
+        const ma20 = await TrendScorer.calcMA(KlineData, 20) ?? 0;
+        // 条件 - 得分
+        // Close > MA5 > MA10 > MA20（完全多头） - 12​
+        // Close > MA5 & MA10 & MA20（允许 MA5<MA10）- 10​
+        // Close > MA5 & MA10，但 ≤ MA20- 6​
+        // Close ≤ MA5 / MA10 / MA20 任一条- 0​
+
+        // 📌 实战建议：
+        // A 股短线，Close > MA5/MA10/MA20 同时成立是强入选条件
+        // 若你希望更严格，可改为：不满足三条同时 > → 0 分
+        if (closePrice > ma5 && ma5 > ma10 && ma10 > ma20) {
           baseScore += 12;
-        } else if (volumeRatioTo5Day > 6) {
-          baseScore += 8;  // 放量过大，可能是出货
-        } else if (volumeRatioTo5Day >= 1.5) {
+        } else if (closePrice > ma5 && closePrice > ma10 && closePrice > ma20) {
           baseScore += 10;
+        } else if (closePrice > ma5 && closePrice > ma10 && closePrice < ma20) {
+          baseScore += 6;
+        } else {
+          baseScore = 0;
         }
+
+        // 4. 无长上影线（8 分）
+        // 上影线比例	得分
+        // ≤ 1.5%	8
+        // ≤ 3.0%	6
+        // ≤ 4.5%	3
+        // > 4.5%	0（长上影，抛压重）
+        if (upperShadow <= 1.5) {
+          baseScore += 8;
+        } else if (upperShadow <= 3) {
+          baseScore += 6;
+        } else if (upperShadow <= 4.5) {
+          baseScore += 3;
+        } else {
+          baseScore = 0;
+        }
+
+        // 场景	处理
+        //   量价因子 ≥ 30	✅ 合格
+        //   25–29	⚠️ 勉强（需其他因子补）
+        //   < 25	❌ 直接淘汰（尤其均线/放量不达标）
+        logger.info(`[评分] ${stockCode} 基础评分 ${baseScore} - ✅ 合格`);
+        if (baseScore >= 30) {
+          // ✅ 合格
+        } else if (baseScore >= 25) {
+          // ⚠️ 勉强（需其他因子补）
+        } else {
+          // ❌ 直接淘汰（尤其均线/放量不达标）
+          continue;
+        }
+
+        // #### 2. 趋势因子（权重 30%）
+        const trendScorer = TrendScorer.calculate(KlineData);
+        baseScore += trendScorer.score;
 
         // ---- 市场环境加分 (-20 ~ +15分) ----
         let marketBonus = 0;
@@ -490,9 +536,9 @@ export class VolumeSurgeService {
         if (isFirstBoard) {
           boardBonus += 15;   // 首板最安全，启动点
         } else if (continuousBoardCount === 2) {
-          boardBonus += 10;   // 2连板说明资金认可
+          boardBonus -= 10;   // 2连板说明资金认可
         } else if (continuousBoardCount >= 3) {
-          boardBonus += 5;    // 3连板及以上，追高风险增加
+          boardBonus -= 15;    // 3连板及以上，追高风险增加
         }
 
         // ---- 计算最终评分 ----
@@ -543,6 +589,8 @@ export class VolumeSurgeService {
             marketBonus,
             boardBonus,
             riskLevel,
+            marketCapitalization,
+            listingDays,
             status: 'pending'
           },
           { upsert: true, new: true }

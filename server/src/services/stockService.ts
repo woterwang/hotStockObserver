@@ -1,4 +1,4 @@
-import { HotStock, MarketIndex, Sector, StockNews } from '../models';
+import { HotStock, MarketIndex, Sector, StockNews } from '../../data/concept_cache/models';
 import { logger } from '../utils';
 import { formatDate, getToday, getDaysAgo, parseDate, toDateStr, toDisplayDate } from '../utils/dateUtils';
 import { PeriodStats } from '../types';

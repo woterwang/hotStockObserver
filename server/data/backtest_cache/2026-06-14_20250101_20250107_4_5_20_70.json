@@ -1,0 +1,60 @@
+{
+  "startDate": "20250101",
+  "endDate": "20250107",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 0,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 4,
+    "marketPanicThreshold": 0,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 1,
+  "winTrades": 0,
+  "lossTrades": 1,
+  "winRate": 0,
+  "totalProfitAmount": -2500,
+  "totalProfitPercent": -5,
+  "avgProfitPercent": -5,
+  "avgWinPercent": 0,
+  "avgLossPercent": -5,
+  "profitLossRatio": 0,
+  "totalInvested": 50000,
+  "maxDrawdown": 2500,
+  "maxDrawdownPercent": 0,
+  "maxProfit": -5,
+  "maxLoss": -5,
+  "maxConsecutiveWins": 0,
+  "maxConsecutiveLosses": 1,
+  "avgHoldDays": 3,
+  "equityCurve": [
+    {
+      "date": "20250106",
+      "equity": -2500
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "002449",
+      "stockName": "国星光电",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20250102",
+      "buyPrice": 13.57,
+      "sellDate": "20250106",
+      "sellPrice": 12.891499999999999,
+      "holdDays": 3,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 76,
+      "selectionScore": 37,
+      "marketMood": 44
+    }
+  ]
+}
