@@ -333,8 +333,10 @@ export class VolumeSurgeService {
     logger.info(`获取到 ${rawData.length} 条原始数据`);
 
     if (rawData.length === 0) {
+      logger.warn(`[VolumeSurge] 无数据，跳过保存`);
       return 0;
     }
+    logger.info(`获取到 ${rawData.length} 条数据`);
 
     // 直接使用字符串日期 YYYYMMDD 格式
     let count = 0;
@@ -375,6 +377,7 @@ export class VolumeSurgeService {
           }
           if (key.includes(`涨跌幅:前复权[${targetDate}]`)) {
             changePercent = parseFloat(item[key] || 0);
+            changePercent = Math.round(changePercent * 100) / 100; // 模拟小数点后两位
           } else if (key.includes('量比')) {
             volumeRatio = parseFloat(item[key] || 0);
           } else if (key.includes('成交额') && !key.includes('排名')) {
@@ -398,21 +401,24 @@ export class VolumeSurgeService {
             limitUpReason = item[key] || '';
           }
         }
-
+        // 只保留涨幅>7%的数据
+        if (changePercent < 7) {
+          logger.info(`[涨幅] ${stockName} 的涨幅 ${changePercent}% 不满足 >7%，跳过保存`);
+          continue;
+        }
+        
         // 必要条件：量比 ≥ 1.5
         if (volumeRatio < 1.5) {
-          continue;  // 量能未放大，直接过滤掉
+          logger.info(`[成交量放大] ${stockName} 的量比 ${volumeRatio} 小于 1.5，跳过保存`);
+          // continue;  // 量能未放大，直接过滤掉
         }
 
         // 必要条件：volumeRatioTo5Day ≥ 1.8
         if (volumeRatioTo5Day < 1.8) {
-          continue;  // 5日均量未放大，直接过滤掉
+          logger.info(`[成交量放大] ${stockName} 的5日均量比 ${volumeRatioTo5Day} 小于 1.8，跳过保存`);
+          // continue;  // 5日均量未放大，直接过滤掉
         }
 
-        // 只保留涨幅>7%的数据
-        if (changePercent <= 7) {
-          continue;
-        }
 
         // ========================================
         // 🔥 判断是否涨停、首板、连板
@@ -430,27 +436,35 @@ export class VolumeSurgeService {
 
         // ---- 基础评分 (0-100分) ----
         let baseScore = 0;
-
+        // 加分日志
+        const addScoreLogs: string[] = [];
         // 量价因子总览  量价因子总分：40 分（占 S_base 的 40%）
         // 1.量比（8 分）≥ 2.5，2.0-2.5（7 分），1.8-2.0（6 分），1.5-1.8（5 分）
 
         if (volumeRatio >= 2.5) {
           baseScore += 8;
+          addScoreLogs.push(`量比 ${volumeRatio} ≥ 2.5，+8分`);
         } else if (volumeRatio >= 2.0) {
           baseScore += 7;
+          addScoreLogs.push(`量比 ${volumeRatio} ≥ 2.0，+7分`);
         } else if (volumeRatio >= 1.8) {
           baseScore += 6;
+          addScoreLogs.push(`量比 ${volumeRatio} ≥ 1.8，+6分`);
         } else if (volumeRatio >= 1.5) {
           baseScore += 5;
+          addScoreLogs.push(`量比 ${volumeRatio} ≥ 1.5，+5分`);
         }
 
         // 2.放量上涨（Vol > MA5Vol × 1.8）（12 分, >= 2.5 12分，>= 2.2 10分，>= 2.0 8分）
         if (volumeRatioTo5Day >= 2.5) {
           baseScore += 12;
+          addScoreLogs.push(`放量上涨 ${volumeRatioTo5Day} ≥ 2.5，+12分`);
         } else if (volumeRatioTo5Day >= 2.2) {
           baseScore += 10;
+          addScoreLogs.push(`放量上涨 ${volumeRatioTo5Day} ≥ 2.2，+10分`);
         } else if (volumeRatioTo5Day >= 2.0) {
           baseScore += 8;
+          addScoreLogs.push(`放量上涨 ${volumeRatioTo5Day} ≥ 2.0，+8分`);
         }
 
         // 3.收盘价 > MA5 / MA10 / MA20（12 分）
@@ -470,12 +484,16 @@ export class VolumeSurgeService {
         // 若你希望更严格，可改为：不满足三条同时 > → 0 分
         if (closePrice > ma5 && ma5 > ma10 && ma10 > ma20) {
           baseScore += 12;
+          addScoreLogs.push(`收盘价 ${closePrice} > MA5 ${ma5} > MA10 ${ma10} > MA20 ${ma20}，+12分`);
         } else if (closePrice > ma5 && closePrice > ma10 && closePrice > ma20) {
           baseScore += 10;
+          addScoreLogs.push(`收盘价 ${closePrice} > MA5 ${ma5} > MA10 ${ma10}，+10分`);
         } else if (closePrice > ma5 && closePrice > ma10 && closePrice < ma20) {
           baseScore += 6;
+          addScoreLogs.push(`收盘价 ${closePrice} > MA5 ${ma5} > MA10 ${ma10}，但 ≤ MA20 ${ma20}，+6分`);
         } else {
           baseScore = 0;
+          addScoreLogs.push(`收盘价 ${closePrice} 不满足 > MA5 ${ma5} / MA10 ${ma10} / MA20 ${ma20} 任一条件，0分`);
         }
 
         // 4. 无长上影线（8 分）
@@ -486,10 +504,13 @@ export class VolumeSurgeService {
         // > 4.5%	0（长上影，抛压重）
         if (upperShadow <= 1.5) {
           baseScore += 8;
+          addScoreLogs.push(`无长上影线 ${upperShadow} ≤ 1.5%，+8分`);
         } else if (upperShadow <= 3) {
           baseScore += 6;
+          addScoreLogs.push(`无长上影线 ${upperShadow} ≤ 3.0%，+6分`);
         } else if (upperShadow <= 4.5) {
           baseScore += 3;
+          addScoreLogs.push(`无长上影线 ${upperShadow} ≤ 4.5%，+3分`);
         } else {
           baseScore = 0;
         }
@@ -514,17 +535,19 @@ export class VolumeSurgeService {
         // #### 2. 趋势因子（权重 30%）
         const trendScorer = TrendScorer.calculate(KlineData);
         logger.info(`[评分] ${stockCode} 趋势评分 ${trendScorer.score}`);
+        addScoreLogs.push(`趋势评分 ${trendScorer.score}`);
         baseScore += trendScorer.score;
 
         // #### 3. 热点因子（权重 30%）
         const hotScorer = await this.scoreSectorLink(stockCode, targetDate, concept);
         logger.info(`[评分] ${stockCode} 热点因子 ${hotScorer.score}`);
+        addScoreLogs.push(`热点因子 ${hotScorer.score} (${hotScorer.reason})`);
         baseScore += hotScorer.score;
 
         // #### 4. 保留总分 > 70分的股票，作为最终入选名单
         if (baseScore < 70) {
           logger.info(`[评分] ${stockCode} 评分 ${baseScore} - ❌ 淘汰`);
-          continue;  // 基础分未达标，直接过滤掉
+          // continue;  // 基础分未达标，直接过滤掉
         }
 
         // ---- 市场环境加分 (-20 ~ +15分) ----
@@ -533,17 +556,22 @@ export class VolumeSurgeService {
         // 涨停家数加分
         if (marketLimitUpCount >= 100) {
           marketBonus += 10;  // 涨停过百，市场情绪火爆
+          addScoreLogs.push(`涨停家数 ${marketLimitUpCount} ≥ 100，+10分`);
         } else if (marketLimitUpCount >= 60) {
           marketBonus += 5;   // 情绪较好
+          addScoreLogs.push(`涨停家数 ${marketLimitUpCount} ≥ 60，+5分`);
         } else if (marketLimitUpCount < 30) {
           marketBonus -= 10;  // 情绪冰点，需要谨慎
+          addScoreLogs.push(`涨停家数 ${marketLimitUpCount} < 30，-10分`);
         }
 
         // 大盘趋势加分
         if (indexAboveMa20) {
           marketBonus += 5;   // 大盘趋势向上
+          addScoreLogs.push(`大盘趋势向上，+5分`);
         } else {
           marketBonus -= 10;  // 大盘趋势向下，风险增加
+          addScoreLogs.push(`大盘趋势向下，-10分`);
         }
 
         // ---- 首板/连板加分 (0 ~ +15分) ----
@@ -551,10 +579,13 @@ export class VolumeSurgeService {
 
         if (isFirstBoard) {
           boardBonus += 5;   // 首板最安全，启动点
+          addScoreLogs.push(`首板，+5分`);
         } else if (continuousBoardCount === 2) {
           boardBonus -= 10;   // 2连板说明资金认可
+          addScoreLogs.push(`2连板说明资金认可，-10分`);
         } else if (continuousBoardCount >= 3) {
           boardBonus -= 15;    // 3连板及以上，追高风险增加
+          addScoreLogs.push(`3连板及以上，-15分`);
         }
 
         // ---- 计算最终评分 ----
@@ -567,7 +598,8 @@ export class VolumeSurgeService {
         } else if (strategyScore < 60 || !indexAboveMa20 || marketLimitUpCount < 30) {
           riskLevel = 'high';
         }
-
+        // 打印加分日志
+        logger.info(`[加分] ${stockCode} ${stockName} ${riskLevel} ${strategyScore} ${addScoreLogs.join(' | ')}`);
         await VolumeSurge.findOneAndUpdate(
           { date: targetDate, stockCode },
           {
@@ -607,7 +639,8 @@ export class VolumeSurgeService {
             riskLevel,
             marketCapitalization,
             listingDays,
-            status: 'pending'
+            status: 'pending',
+            addScoreLogs: addScoreLogs.join('\n'),
           },
           { upsert: true, new: true }
         );

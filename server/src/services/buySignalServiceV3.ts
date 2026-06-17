@@ -186,23 +186,25 @@ class BuySignalScorer {
   /**
    * 板块联动评分 (满分10分)
    */
-  static async scoreSectorLink (stockCode: string, dateStr: string): Promise<{ score: number; reason: string }> {
+  static async scoreSectorLink (stockCode: string, signalDateStr: string, targetDateStr: string): Promise<{ score: number; reason: string }> {
     let score = 0;
     let reasons: string[] = [];
 
     // 第一步：根据stockCode与dateStr从volumeSurges获取concept数据
-    const volumeSurgeData = await VolumeSurge.find({ date: dateStr, stockCode: stockCode });
+    const volumeSurgeData = await VolumeSurge.find({ date: signalDateStr, stockCode: stockCode });
     // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${dateStr} 的 VolumeSurge 数据: ${volumeSurgeData.length} 条`);
     const conceptsArr = stockCode && volumeSurgeData.length > 0 ? volumeSurgeData[0].concept || '' : '';
     // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${dateStr} 的 ${JSON.stringify(volumeSurgeData)} 数据: ${conceptsArr}`);
     const concepts = conceptsArr.split(';');
+    // logger.info(`[BuySignal] scoreSectorLink 1 获取 ${stockCode} 在 ${signalDateStr} 的 ${JSON.stringify(concepts)} 数据: ${concepts}`);
     // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${dateStr} 的 ${JSON.stringify(concepts)} 数据: ${concepts}`);
 
     // 第二步：获取前一天的热门概念排行数据
-    const conceptData = thsConceptHotRankService.readFromCache(`${dateStr}_concept`)
+    const conceptData = thsConceptHotRankService.readFromCache(`${targetDateStr}_concept`)
     // logger.info(`[BuySignal] scoreSectorLink 获取 ${dateStr} 的数据： ${JSON.stringify(conceptData?.items)}`);
     // 取前三个概念
     const topConcepts: string[] = conceptData?.items.slice(0, 10).map((item: any) => item.name) || [];
+    // logger.info(`[BuySignal] scoreSectorLink 2 获取 ${targetDateStr} 的 ${JSON.stringify(topConcepts)} 数据: ${topConcepts}`);
     // logger.info(`[BuySignal] scoreSectorLink 获取 ${dateStr} 的 ${JSON.stringify(topConcepts)} 数据: ${topConcepts}`);
 
     // 第三步：判断concepts是否在热门概念中，如果不在前三个热门概念中则扣分
@@ -210,7 +212,9 @@ class BuySignalScorer {
       const matchedConcepts = concepts.filter((concept: string) => topConcepts.includes(concept));
       if (matchedConcepts.length < 1) {
         score -= 30;
-        reasons.push('属于热门概念');
+        reasons.push('未在热门概念中，扣30分');
+      } else {
+        reasons.push(`匹配热门概念: ${matchedConcepts.join('、')}`);
       }
     } else {
       score = 0;
@@ -607,7 +611,7 @@ class BuySignalService {
       score: 0,
       reason: '大盘数据暂不可用，默认0分'
     }
-    const sectorLink = await BuySignalScorer.scoreSectorLink(candidate.stockCode, todayStr);
+    const sectorLink = await BuySignalScorer.scoreSectorLink(candidate.stockCode, candidate.date, todayStr);
     // const sectorLink = {
     //   score: 0,
     //   reason: '板块数据暂不可用，默认0分'
@@ -661,14 +665,14 @@ class BuySignalService {
       // technical.score;
       sectorLink.score +
       (openDataScore.score * 0.3) +
-      (candidate.strategyScore * 0.5) + 
+      (candidate.strategyScore * 0.5) +
       (marketEnv.marketMood / 10 * 0.2)
 
     //TEST: 打印分数
     openStrength.score = openDataScore.score * 0.3
     trend.score = (candidate.strategyScore * 0.5)
     marketEnvScore.score = marketEnv.marketMood / 10 * 0.2
-    
+
 
 
 
