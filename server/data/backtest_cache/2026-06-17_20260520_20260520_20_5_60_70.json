@@ -1,0 +1,101 @@
+{
+  "startDate": "20260520",
+  "endDate": "20260520",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 70,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 50,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.6,
+    "maxHoldDays": 20,
+    "marketPanicThreshold": 40,
+    "maxBuyCount": 10
+  },
+  "totalTrades": 3,
+  "winTrades": 2,
+  "lossTrades": 1,
+  "winRate": 66.67,
+  "totalProfitAmount": 13848.33,
+  "totalProfitPercent": 9.23,
+  "avgProfitPercent": 9.23,
+  "avgWinPercent": 15.02,
+  "avgLossPercent": -2.35,
+  "profitLossRatio": 6.39,
+  "totalInvested": 150000,
+  "maxDrawdown": 1175.76,
+  "maxDrawdownPercent": 8.49,
+  "maxProfit": 23.88,
+  "maxLoss": -2.35,
+  "maxConsecutiveWins": 1,
+  "maxConsecutiveLosses": 1,
+  "avgHoldDays": 2,
+  "equityCurve": [
+    {
+      "date": "20260521",
+      "equity": 3086.37
+    },
+    {
+      "date": "20260521",
+      "equity": 1910.61
+    },
+    {
+      "date": "20260521",
+      "equity": 13848.33
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "300604",
+      "stockName": "长川科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260520",
+      "buyPrice": 229.72,
+      "sellDate": "20260521",
+      "sellPrice": 243.9,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": 6.17,
+      "profitAmount": 3086.37,
+      "exitReason": "market_panic",
+      "buySignalScore": 75,
+      "marketMood": 52
+    },
+    {
+      "stockCode": "002138",
+      "stockName": "顺络电子",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260520",
+      "buyPrice": 41.25,
+      "sellDate": "20260521",
+      "sellPrice": 40.28,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -2.35,
+      "profitAmount": -1175.76,
+      "exitReason": "market_panic",
+      "buySignalScore": 74,
+      "marketMood": 52
+    },
+    {
+      "stockCode": "301020",
+      "stockName": "密封科技",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260520",
+      "buyPrice": 26.01,
+      "sellDate": "20260521",
+      "sellPrice": 32.22,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": 23.88,
+      "profitAmount": 11937.72,
+      "exitReason": "market_panic",
+      "buySignalScore": 72,
+      "marketMood": 52
+    }
+  ]
+}
