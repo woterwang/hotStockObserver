@@ -535,13 +535,16 @@ class BuySignalService {
 
     // 批量保存（使用bulkWrite提升性能）
     if (signals.length > 0) {
-      const bulkOps = signals.map(signal => ({
-        updateOne: {
-          filter: { date: signal.date, stockCode: signal.stockCode },
-          update: { $set: signal },
-          upsert: true,
-        }
-      }));
+      const bulkOps = signals.map(signal => {
+        const { _id, ...signalWithoutId } = signal;
+        return {
+          updateOne: {
+            filter: { date: signal.date, stockCode: signal.stockCode },
+            update: { $set: signalWithoutId },
+            upsert: true,
+          }
+        };
+      });
       await BuySignal.bulkWrite(bulkOps);
       console.log(`[BuySignal] 已保存 ${signals.length} 条买入信号`);
     }
@@ -1459,13 +1462,16 @@ class BuySignalService {
 
     // 批量保存（使用bulkWrite提升性能）
     if (signals.length > 0) {
-      const bulkOps = signals.map(signal => ({
-        updateOne: {
-          filter: { date: signal.date, stockCode: signal.stockCode },
-          update: { $set: signal },
-          upsert: true,
-        }
-      }));
+      const bulkOps = signals.map(signal => {
+        const { _id, ...signalWithoutId } = signal;
+        return {
+          updateOne: {
+            filter: { date: signal.date, stockCode: signal.stockCode },
+            update: { $set: signalWithoutId },
+            upsert: true,
+          }
+        };
+      });
       await BuySignal.bulkWrite(bulkOps);
       console.log(`[BuySignal] 已保存 ${signals.length} 条买入信号`);
     }

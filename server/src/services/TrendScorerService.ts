@@ -408,6 +408,13 @@ export class TrendScorer {
   static calcMACD (kline: KLineItem[], shortPeriod: number, longPeriod: number, signalPeriod: number, offset: number): number {
     const shortMA = this.calcMA(kline, shortPeriod, offset);
     const longMA = this.calcMA(kline, longPeriod, offset);
+    if (shortMA === null || longMA === null) {
+      return 0;
+    }
     const macd = shortMA - longMA;
+    if (signalPeriod <= 0) {
+      return macd;
+    }
+    return macd;
   }
 }

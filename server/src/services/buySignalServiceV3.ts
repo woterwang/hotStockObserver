@@ -16,10 +16,10 @@
 
 import dayjs from 'dayjs';
 import axios from 'axios';
-import { BuySignal, IBuySignal } from '../../data/concept_cache/models/BuySignal';
-import { VolumeSurge } from '../../data/concept_cache/models/VolumeSurge';
-import { PriceBreakthrough } from '../../data/concept_cache/models/PriceBreakthrough';
-import { ConceptResonance } from '../../data/concept_cache/models/ConceptResonance';
+import { BuySignal, IBuySignal } from '../models/BuySignal';
+import { VolumeSurge } from '../models/VolumeSurge';
+import { PriceBreakthrough } from '../models/PriceBreakthrough';
+import { ConceptResonance } from '../models/ConceptResonance';
 import { tradingCalendarService } from './tradingCalendarService';
 import { marketMoodService } from './marketMoodService';
 import { klineCacheService, CachedKline, fetchTencentRealTimeQuotes } from './klineCacheService';
@@ -358,7 +358,7 @@ class BuySignalService {
       score: r.strategyScore || 0,
       industry: r.industry || '',
       changePercent: r.changePercent,
-      strategyScore: r.strategyScore,
+      strategyScore: r.strategyScore || 0,
     }));
   }
 
@@ -381,7 +381,7 @@ class BuySignalService {
       score: Math.min(100, Math.round(r.turnoverRatio * 30)),  // 根据放量比例评分
       industry: r.sector || '',
       changePercent: r.changePercent,
-      strategyScore: r.strategyScore,
+      strategyScore: Math.min(100, Math.round(r.turnoverRatio * 30)),
     }));
   }
 
@@ -410,7 +410,7 @@ class BuySignalService {
       primaryConcept: r.primaryConcept,
       isConceptLeader: r.isConceptLeader,
       conceptScore: r.conceptScore,
-      strategyScore: r.strategyScore,
+      strategyScore: r.strategyScore || 0,
     }));
   }
 
@@ -539,13 +539,16 @@ class BuySignalService {
 
     // 批量保存（使用bulkWrite提升性能）
     if (signals.length > 0) {
-      const bulkOps = signals.map(signal => ({
-        updateOne: {
-          filter: { date: signal.date, stockCode: signal.stockCode },
-          update: { $set: signal },
-          upsert: true,
-        }
-      }));
+      const bulkOps = signals.map(signal => {
+        const { _id, ...signalWithoutId } = signal;
+        return {
+          updateOne: {
+            filter: { date: signal.date, stockCode: signal.stockCode },
+            update: { $set: signalWithoutId },
+            upsert: true,
+          }
+        };
+      });
       await BuySignal.bulkWrite(bulkOps);
       logger.info(`[BuySignal] 已保存 ${signals.length} 条买入信号`);
     }
