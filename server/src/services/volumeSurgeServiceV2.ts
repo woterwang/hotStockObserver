@@ -589,7 +589,7 @@ export class VolumeSurgeService {
         }
 
         // ---- 计算最终评分 ----
-        const strategyScore = Math.max(0, Math.min(120, baseScore + marketBonus + boardBonus));
+        const strategyScore = Math.max(0, Math.min(100, baseScore + marketBonus + boardBonus));
 
         // ---- 风险等级判定 ----
         let riskLevel: 'low' | 'medium' | 'high' = 'medium';
@@ -674,7 +674,7 @@ export class VolumeSurgeService {
 
   
     /**
-     * 板块联动评分 (满分10分)
+     * 板块联动评分 (满分30分)
      */
     async scoreSectorLink (stockCode: string, dateStr: string, currentConcepts:string): Promise<{ score: number; reason: string }> {
       let score = 0;
@@ -706,7 +706,7 @@ export class VolumeSurgeService {
         }
       }
   
-      return { score: Math.min(score, 10), reason: reasons.join('，') };
+      return { score: score, reason: reasons.join('，') };
     }
 
   /**

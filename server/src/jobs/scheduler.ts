@@ -74,7 +74,7 @@ export class JobScheduler {
     // 按时间段启动各类任务
     this.startPreMarketJobs();
     this.startPostAuctionJobs();
-    this.startMarketHoursJobs();
+    this.startHotStockUpdateJob();
     this.startAfterMarketJobs();
     this.startNightJobs();
     this.startDailyKlineUpdateJob();
@@ -146,15 +146,6 @@ export class JobScheduler {
   private startPostAuctionJobs () {
     // 集合竞价后更新入场信号任务
     this.startAuctionUpdateJob();
-  }
-
-  /**
-   * 盘中任务 (上午9:30-下午15:00)
-   * ==================================================
-   */
-  private startMarketHoursJobs () {
-    // 热搜股票更新任务
-    this.startHotStockUpdateJob();
   }
 
   /**
@@ -372,6 +363,9 @@ export class JobScheduler {
         // 保存到数据库
         const savedCount = await dataFetchService.saveHotStocks(hotStocks);
 
+        // 更新概念热度排名
+        await thsConceptHotRankService.fetchConceptHotRank();
+
         logger.info(`热搜股票更新任务完成，共保存 ${savedCount} 条数据`);
       } catch (error) {
         logger.error(`热搜股票更新任务失败: ${(error as Error).message}`);
@@ -390,7 +384,6 @@ export class JobScheduler {
   private async startTradingCalendarJob () {
     // 每天15:20执行（收盘后20分钟，确保数据稳定）
     const cronExpression = '20 15 * * *';
-    await this.getMarketMoodJob();
     this.tradingCalendarJob = cron.schedule(cronExpression, async () => {
       try {
         // 1. 更新交易日历
@@ -423,11 +416,11 @@ export class JobScheduler {
 
   /**
    * 收盘后串行任务 (按顺序执行各项任务)
-   * 时间: 每个交易日15:30之后
+   * 时间: 每个交易日17:18之后
    */
   private startAfterMarketSequentialJobs () {
     // 在15:30执行，将各项收盘后任务串行执行
-    const cronExpression = '30 15 * * 1-5';
+    const cronExpression = '18 17 * * 1-5';
 
     this.afterMarketJob = cron.schedule(cronExpression, async () => {
       try {
@@ -438,6 +431,8 @@ export class JobScheduler {
         }
 
         logger.info('开始执行收盘后串行任务');
+        // 获取市场情绪数据并更新缓存（确保有最新的市场情绪数据）
+        await this.getMarketMoodJob();
 
         // 1. 强势资金突破（放量大涨）扫描任务 (原15:31)
         try {
