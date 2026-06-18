@@ -68,4 +68,6 @@ const MarketIndexSchema = new Schema<MarketIndexDocument>(
 // 复合索引：日期+指数代码唯一
 MarketIndexSchema.index({ date: 1, indexCode: 1 }, { unique: true });
 
-export const MarketIndex = mongoose.model<MarketIndexDocument>('MarketIndex', MarketIndexSchema);
+export const MarketIndex =
+  (mongoose.models.MarketIndex as mongoose.Model<MarketIndexDocument>) ||
+  mongoose.model<MarketIndexDocument>('MarketIndex', MarketIndexSchema);

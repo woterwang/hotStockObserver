@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, tradingCalendarService, marketMoodService, conceptResonanceService } from '../services';
-import {volumeSurgeService} from '../services/volumeSurgeServiceV2'
+import { volumeSurgeService } from '../services/volumeSurgeServiceV2'
 import { buySignalService } from '../services/buySignalService';
 import { thsConceptHotRankService } from '../services/thsConceptHotRankService';
 import { updateCodeKline } from './updateCodeKline';
@@ -66,10 +66,10 @@ export class JobScheduler {
    * 启动所有定时任务
    */
   async start () {
+    // 获取市场情绪数据并更新缓存（确保在任务开始前就有最新的市场情绪数据）
+    await this.getMarketMoodJob();
     // 初始化交易日历服务
     await tradingCalendarService.init();
-    // 初始化市场情绪服务
-    await marketMoodService.init();
 
     // 按时间段启动各类任务
     this.startPreMarketJobs();
@@ -228,6 +228,19 @@ export class JobScheduler {
     logger.info(`每日热搜板块更新任务已配置，Cron表达式: ${cronExpression}`);
   }
 
+  async getMarketMoodJob () {
+    logger.info('早间市场情绪缓存更新开始');
+    const moodSuccess = await marketMoodService.updateCache();
+    if (moodSuccess) {
+      const moodStatus = marketMoodService.getCacheStatus();
+      logger.info(`早间市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
+    } else {
+      logger.warn('早间市场情绪更新失败，将继续使用旧缓存');
+    }
+    // 初始化市场情绪服务（确保已初始化）
+    await marketMoodService.init();
+  }
+
   /**
    * 早间市场情绪数据更新任务
    * 时间: 每天 08:18 执行
@@ -239,16 +252,8 @@ export class JobScheduler {
       try {
         // 更新市场情绪缓存
         logger.info('开始执行早间市场情绪更新任务');
-        logger.info('早间市场情绪缓存更新开始');
-        const moodSuccess = await marketMoodService.updateCache();
-        if (moodSuccess) {
-          const moodStatus = marketMoodService.getCacheStatus();
-          logger.info(`早间市场情绪更新成功，共缓存 ${moodStatus.count} 条数据，最新日期: ${moodStatus.latestDay}`);
-        } else {
-          logger.warn('早间市场情绪更新失败，将继续使用旧缓存');
-        }
-        // 初始化市场情绪服务（确保已初始化）
-        await marketMoodService.init();
+        await this.getMarketMoodJob();
+
         // 更新K线缓存
         // 获取上一个交易
         const today = dayjs().format('YYYY-MM-DD');
@@ -382,10 +387,10 @@ export class JobScheduler {
    * 交易日历更新任务
    * 时间: 每天 15:20 执行（收盘后）
    */
-  private startTradingCalendarJob () {
+  private async startTradingCalendarJob () {
     // 每天15:20执行（收盘后20分钟，确保数据稳定）
     const cronExpression = '20 15 * * *';
-
+    await this.getMarketMoodJob();
     this.tradingCalendarJob = cron.schedule(cronExpression, async () => {
       try {
         // 1. 更新交易日历

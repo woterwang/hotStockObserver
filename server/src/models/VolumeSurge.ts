@@ -125,4 +125,6 @@ const VolumeSurgeSchema = new Schema<VolumeSurgeDocument>(
 // 复合索引
 VolumeSurgeSchema.index({ date: 1, stockCode: 1 }, { unique: true });
 
-export const VolumeSurge = mongoose.model<VolumeSurgeDocument>('VolumeSurge', VolumeSurgeSchema);
+export const VolumeSurge =
+  (mongoose.models.VolumeSurge as mongoose.Model<VolumeSurgeDocument>) ||
+  mongoose.model<VolumeSurgeDocument>('VolumeSurge', VolumeSurgeSchema);

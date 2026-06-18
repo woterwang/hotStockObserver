@@ -121,10 +121,9 @@ const MarketSentimentSchema = new Schema<MarketSentimentDocument>(
   }
 );
 
-export const MarketSentiment = mongoose.model<MarketSentimentDocument>(
-  'MarketSentiment',
-  MarketSentimentSchema
-);
+export const MarketSentiment =
+  (mongoose.models.MarketSentiment as mongoose.Model<MarketSentimentDocument>) ||
+  mongoose.model<MarketSentimentDocument>('MarketSentiment', MarketSentimentSchema);
 
 /**
  * 计算情绪评分
