@@ -9,8 +9,8 @@
  * 3. 地位验证：个股在板块中是龙头还是跟风
  */
 import { logger } from '../utils';
-import { ConceptResonance } from '../../data/concept_cache/models/ConceptResonance';
-import { ConceptResonanceBuySignals } from '../../data/concept_cache/models/ConceptResonanceBuySignals';
+import { ConceptResonance } from '../models/ConceptResonance';
+import { ConceptResonanceBuySignals } from '../models/ConceptResonanceBuySignals';
 import { getToday, formatDate } from '../utils/dateUtils';
 import { writeToFile } from '../utils/writeToFile';
 import axios from 'axios';

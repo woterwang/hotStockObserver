@@ -1,5 +1,5 @@
 import { logger } from '../utils';
-import { MarketSentiment, IMarketSentiment, calculateSentimentScore, SentimentLevel, TradingAdvice } from '../../data/concept_cache/models/MarketSentiment';
+import { MarketSentiment, IMarketSentiment, calculateSentimentScore, SentimentLevel, TradingAdvice } from '../models/MarketSentiment';
 import { formatDate, parseDate } from '../utils/dateUtils';
 import { marketMoodService } from './marketMoodService';
 import axios from 'axios';

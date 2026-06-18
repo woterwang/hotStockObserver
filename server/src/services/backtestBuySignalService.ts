@@ -6,7 +6,7 @@
 import path from 'path';
 import fs from 'fs/promises';
 import { logger } from '../utils';
-import { BuySignal, VolumeSurge } from '../../data/concept_cache/models';
+import { BuySignal, VolumeSurge } from '../models';
 import { formatDate, parseDate, toDateStr } from '../utils/dateUtils';
 import { marketMoodService } from './marketMoodService';
 import { klineCacheService, CachedKline } from './klineCacheService';

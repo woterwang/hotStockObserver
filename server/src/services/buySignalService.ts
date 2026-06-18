@@ -16,10 +16,10 @@
 
 import dayjs from 'dayjs';
 import axios from 'axios';
-import { BuySignal, IBuySignal } from '../../data/concept_cache/models/BuySignal';
-import { VolumeSurge } from '../../data/concept_cache/models/VolumeSurge';
-import { PriceBreakthrough } from '../../data/concept_cache/models/PriceBreakthrough';
-import { ConceptResonance } from '../../data/concept_cache/models/ConceptResonance';
+import { BuySignal, IBuySignal } from '../models/BuySignal';
+import { VolumeSurge } from '../models/VolumeSurge';
+import { PriceBreakthrough } from '../models/PriceBreakthrough';
+import { ConceptResonance } from '../models/ConceptResonance';
 import { tradingCalendarService } from './tradingCalendarService';
 import { marketMoodService } from './marketMoodService';
 import { klineCacheService, CachedKline, fetchTencentRealTimeQuotes } from './klineCacheService';

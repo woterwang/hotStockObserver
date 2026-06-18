@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import dayjs from 'dayjs';
-import { VolumeSurge } from '../../data/concept_cache/models';
+import { VolumeSurge } from '../models';
 import { klineCacheService } from '../services/klineCacheService';
 import { tradingCalendarService } from '../services/tradingCalendarService';
 import { logger } from '../utils';
