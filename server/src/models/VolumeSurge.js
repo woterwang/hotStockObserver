@@ -52,6 +52,7 @@ const VolumeSurgeSchema = new mongoose_1.Schema({
     upperShadow: { type: Number, default: 0 },
     lowerShadow: { type: Number, default: 0 },
     // 量能指标
+    volume: { type: Number, default: 0 },
     volumeRatioTo5Day: { type: Number, default: 0 },
     // 趋势指标
     aboveMa10: { type: Boolean, default: false },
@@ -79,6 +80,7 @@ const VolumeSurgeSchema = new mongoose_1.Schema({
     nextDay3Change: { type: Number },
     maxProfitIn3Days: { type: Number },
     maxLossIn3Days: { type: Number },
+    addScoreLogs: { type: String, default: '' },
 }, { timestamps: true });
 // 复合索引
 VolumeSurgeSchema.index({ date: 1, stockCode: 1 }, { unique: true });

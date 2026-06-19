@@ -53,6 +53,7 @@ interface StrategyCandidate {
   industry?: string;       // 行业/板块
   changePercent?: number;  // 当日涨幅
   strategyScore: number;  // 基础分
+  marketMood?: number;     // 主线共振策略特有字段
 }
 
 // 格式化日期为 YYYYMMDD 字符串
@@ -221,12 +222,7 @@ class BuySignalScorer {
       reasons.push('不属于任何概念');
     }
 
-    return {
-      score: Math.min(score, 10), reason: reasons.join('，')
-    }
-
-
-    return { score: Math.min(score, 10), reason: reasons.join('，') };
+    return { score: score, reason: reasons.join('，') };
   }
 
   /**
@@ -359,6 +355,7 @@ class BuySignalService {
       industry: r.industry || '',
       changePercent: r.changePercent,
       strategyScore: r.strategyScore || 0,
+      marketMood: r?.marketSentimentScore ?? 0,
     }));
   }
 
@@ -524,10 +521,6 @@ class BuySignalService {
     for (let i = 0; i < candidates.length; i++) {
       const candidate = candidates[i];
       try {
-        // 非首个请求时等待300ms
-        // if (i > 0) {
-        //   await new Promise(resolve => setTimeout(resolve, 300));
-        // }
         const signal = await this.generateSignalForStock(candidate, signalDate);
         if (signal) {
           signals.push(signal);
@@ -575,78 +568,14 @@ class BuySignalService {
       logger.info(`[BuySignal] generateSignalForStock ${candidate.stockCode} 无法获取开盘数据`);
       return null;
     }
-    const prevTradingDay = tradingCalendarService.getPrevTradingDay(signalDate);
-    // 获取大盘环境
-    const marketEnv = await this.getMarketEnvironment(prevTradingDay as string);
-
-    // 获取板块数据
-    // const sectorData = await this.getSectorData(candidate.industry || '', prevTradingDay as string);
-    const sectorData = {
-      sectorOpenChange: 0,
-      sectorLimitUpCount: 0,
-      sectorLeader: true,
-    }
+    // 获取上一交易日期
+    const prevTradingDay = tradingCalendarService.getPrevTradingDay(candidate.date);
 
     // 获取技术位置
     const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, prevTradingDay as string);
 
-    // 计算各项评分
-    // const openStrength = BuySignalScorer.scoreOpenStrength(openData.openChangePercent);
-    // TEST:
-    const openStrength = {
-      score: 0,
-      reason: '开盘数据暂不可用，默认0分'
-    }
-    // const volumeConfirm = BuySignalScorer.scoreVolumeConfirm(openData.openVolumeRatio);
-    // TEST:
-    const volumeConfirm = {
-      score: 0,
-      reason: '量能数据暂不可用，默认0分'
-    }
-    // const auction = BuySignalScorer.scoreAuction(openData.auctionAmountRatio);
-    const auction = {
-      score: 0,
-      reason: '竞价数据暂不可用，默认0分'
-    }
-    // const marketEnvScore = BuySignalScorer.scoreMarketEnv(marketEnv.indexOpenChange, marketEnv.marketMood);
-    // TEST:
-    const marketEnvScore = {
-      score: 0,
-      reason: '大盘数据暂不可用，默认0分'
-    }
+    //板块联动
     const sectorLink = await BuySignalScorer.scoreSectorLink(candidate.stockCode, candidate.date, todayStr);
-    // const sectorLink = {
-    //   score: 0,
-    //   reason: '板块数据暂不可用，默认0分'
-    // }
-
-
-    // const sealStrength = BuySignalScorer.scoreSealStrength(
-    //   openData.isLimitUp,
-    //   openData.sealRatio,
-    //   parseInt(openData.openTimes?.toString() || '0', 10)
-    // );
-    const sealStrength = {
-      score: 0,
-      reason: '封单数据暂不可用，默认0分'
-    }
-    // const technical = BuySignalScorer.scoreTechnical(
-    //   technicalData.distanceToMa5,
-    //   technicalData.distanceToMa10,
-    //   technicalData.distanceToPressure
-    // );
-    const technical = {
-      score: 0,
-      reason: '技术数据暂不可用，默认0分'
-    }
-
-    // 趋势评分 (满分30分)
-    // const KlineData = await klineCacheService.loadCacheForHistory(candidate.stockCode, candidate.date, 100);
-    // const trend = TrendScorer.calculate(KlineData);
-    // logger.info(`[BuySignal] ${candidate.stockCode} 趋势评分: ${trend.score}`);
-    const trend = {
-      score: 0,
-    }
 
     //竞价评分
     const openDataScore = await this.getAuctionScore({
@@ -658,45 +587,29 @@ class BuySignalService {
 
     // 计算总分
     const totalBuyScore =
-      // openStrength.score +
-      // volumeConfirm.score +
-      // auction.score +
-      // marketEnvScore.score +
-      // sectorLink.score +
-      // sealStrength.score +
-      // trend.score +
-      // technical.score;
       sectorLink.score +
       (openDataScore.score * 0.3) +
       (candidate.strategyScore * 0.5) +
-      (marketEnv.marketMood / 10 * 0.2)
-
-    //TEST: 打印分数
-    openStrength.score = openDataScore.score * 0.3
-    trend.score = (candidate.strategyScore * 0.5)
-    marketEnvScore.score = marketEnv.marketMood / 10 * 0.2
-
-
-
+      (((candidate?.marketMood ?? 50) / 10) * 2)
 
     // 生成买入决策
     const decision = this.generateDecision(totalBuyScore, openData, candidate);
 
     // 收集风险提示
-    const riskWarnings = this.collectRiskWarnings(
-      openData,
-      marketEnv,
-      sectorData,
-      technicalData,
-      candidate
-    );
+    const riskWarnings = [
+      `当日板块联动评分为 ${sectorLink.score} 分，原因为：${sectorLink.reason}`,
+      `开盘数据评分为 ${openDataScore.score} 分，压缩后：${(openDataScore.score * 0.3)}，原因为：${openDataScore.reason}`,
+      `策略得分为 ${candidate.strategyScore} 分，压缩后：${(candidate.strategyScore * 0.5)}，原因为：${candidate.strategyName}`,
+      `当前市场情绪评分为 ${candidate.marketMood ?? 0} 分，压缩后：${(((candidate?.marketMood ?? 50) / 10) * 2)}`,
+      // 可以继续添加其他维度的风险提示
+    ];
 
     // 构建买入理由
     const buyReason = [
-      openStrength.reason,
-      volumeConfirm.reason,
-      auction.reason,
-      marketEnvScore.reason,
+      // openStrength.reason,
+      // volumeConfirm.reason,
+      // auction.reason,
+      openDataScore.reason,
       sectorLink.reason,
     ].filter(r => r).join('；');
 
@@ -717,14 +630,14 @@ class BuySignalService {
       auctionAmount: openData.auctionAmount,
       auctionAmountRatio: openData.auctionAmountRatio,
 
-      indexOpenChange: marketEnv.indexOpenChange,
-      indexMorningTrend: marketEnv.indexMorningTrend,
-      marketMood: marketEnv.marketMood,
+      indexOpenChange: 0, // marketEnv.indexOpenChange,
+      indexMorningTrend: "flat",
+      marketMood: candidate.marketMood ?? 0,
 
       sectorName: candidate.industry || '',
-      sectorOpenChange: sectorData.sectorOpenChange,
-      sectorLimitUpCount: sectorData.sectorLimitUpCount,
-      sectorLeader: sectorData.sectorLeader,
+      sectorOpenChange: 0,
+      sectorLimitUpCount: 0,
+      sectorLeader: true,
 
       isLimitUp: openData.isLimitUp,
       sealAmount: openData.sealAmount,
@@ -736,14 +649,14 @@ class BuySignalService {
       distanceToMa20: technicalData.distanceToMa20,
       distanceToPressure: technicalData.distanceToPressure,
 
-      openStrengthScore: openStrength.score,
-      volumeConfirmScore: volumeConfirm.score,
-      auctionScore: auction.score,
-      marketEnvScore: marketEnvScore.score,
+      openStrengthScore: openDataScore.score,
+      volumeConfirmScore: openDataScore.score,
+      auctionScore: 0,
+      marketEnvScore: candidate.marketMood ?? 0,
       sectorLinkScore: sectorLink.score,
-      sealStrengthScore: sealStrength.score,
-      technicalScore: technical.score,
-      trendScore: trend.score,
+      sealStrengthScore: 0,
+      technicalScore: 0,
+      trendScore: 0,
       totalBuyScore,
 
       buySignal: decision.signal,
@@ -768,7 +681,7 @@ class BuySignalService {
    * 2) 历史模式：从历史分时接口获取开盘价/开盘成交量
    * 其余评分所需字段继续复用现有计算逻辑
    */
-  async getOpeningData (stockCode: string, preDateStr: string, dateStr: string): Promise<{
+  async getOpeningData (stockCode: string, targetDate: string, signalDateStr: string): Promise<{
     openPrice: number;
     openChangePercent: number;
     openVolumeRatio: number;
@@ -779,15 +692,15 @@ class BuySignalService {
     sealRatio?: number;
     openTimes?: number;
   } | null> {
-    logger.info(`[BuySignal] 获取 ${stockCode} ${dateStr} 开盘数据`);
-    const targetDateStr = formatDateStr(dateStr);
+    logger.info(`[BuySignal] 获取 ${stockCode} ${signalDateStr} 开盘数据`);
+    const targetDateStr = formatDateStr(targetDate);
     if (!tradingCalendarService.isTradingDay(targetDateStr)) {
       logger.info(`[BuySignal] ${targetDateStr} 不是交易日，无法获取开盘数据`);
       return null;
     }
     try {
       const todayStr = dayjs().format('YYYYMMDD');
-      const isTodayMode = targetDateStr === todayStr;
+      const isTodayMode = signalDateStr === todayStr;
       const rawKlineData = await klineCacheService.fetchKlineByDate(stockCode, targetDateStr);
 
       if (!rawKlineData || rawKlineData.length === 0) {
@@ -799,11 +712,11 @@ class BuySignalService {
       const klineData = [...rawKlineData].sort((a, b) => a.date.localeCompare(b.date));
 
       // 找到信号日期的K线
-      let preDayIndex = klineData.findIndex(k => k.date === preDateStr);
+      let preDayIndex = klineData.findIndex(k => k.date === targetDate);
 
       // 没找到信号日期的K线数据
       if (preDayIndex === -1) {
-        logger.info(`[BuySignal] getOpeningData ${stockCode} 未找到 ${preDateStr} 的K线，无法获取计算开盘数据`);
+        logger.info(`[BuySignal] getOpeningData ${stockCode} 未找到 ${targetDate} 的K线，无法获取计算开盘数据`);
         return null;
       }
 
@@ -890,33 +803,8 @@ class BuySignalService {
       logger.info(`[BuySignal] ${stockCode} target:`, target.open, target.close, target.volume, target.turnover, target.high, target.low);
       // 计算量比（当日成交量 / 5日平均成交量）
       let volumeRatio = 1;
-      if (preDayIndex >= 5) {
-        // const avg5Vol = klineData.slice(preDayIndex - 5, preDayIndex).reduce((sum, k) => sum + k.volume, 0) / 5;
-        // volumeRatio = (avg5Vol > 0 ? target.volume / avg5Vol : 0) * 100;
-        volumeRatio = (prevKline.volume > 0 ? target.volume / prevKline.volume : 0) * 100;
-        logger.info(`[BuySignal] ${stockCode} volumeRatio:${volumeRatio}`);
-      }
-
-      // 判断是否涨停（收盘价>=开盘价*1.095 且 收盘=最高）
-      let isLimitUp = prevKline
-        ? (target.close >= prevKline.close * 1.095 && target.close >= target.high * 0.999)
-        : false;
-
-      // 688 与 300 科创板涨停板不同，需特殊处理
-      if (stockCode.startsWith('688') || stockCode.startsWith('300')) {
-        const limitUpPrice = prevKline ? prevKline.close * 1.20 : 0; // 20% 涨停板
-        isLimitUp = target.close >= limitUpPrice;
-      }
-
-      // 北郊所股票涨停板不同，需特殊处理
-      if (stockCode.startsWith('920')) {
-        const limitUpPrice = prevKline ? prevKline.close * 1.30 : 0; // 9.5% 涨停板
-        isLimitUp = target.close >= limitUpPrice;
-      }
-
-      if (isTodayMode && realtimeIsLimitUp !== null && target.close === (prevKline?.close || target.close)) {
-        isLimitUp = realtimeIsLimitUp;
-      }
+      volumeRatio = target.volume > 0 ? ((target.volume / prevKline.volume) * 100) : 0;
+      logger.info(`[BuySignal] ${stockCode} volumeRatio:${volumeRatio}`);
 
       const auctionAmount = Math.round(target.turnover);
       logger.info(`[BuySignal] ${stockCode} auctionAmount:${auctionAmount}`);
@@ -931,13 +819,13 @@ class BuySignalService {
         openVolumeRatio: Math.round(volumeRatio * 100) / 100,
         auctionAmount,
         auctionAmountRatio: Math.round(auctionAmountRatio * 100) / 100,
-        isLimitUp,
+        isLimitUp: false,
         sealAmount: undefined,
         sealRatio: undefined,
         openTimes: resolvedOpenTimes,
       };
     } catch (error) {
-      console.error(`[BuySignal] 获取 ${stockCode} 开盘数据失败:`, error);
+      logger.error(`[BuySignal] 获取 ${stockCode} 开盘数据失败:`, error);
       return null;
     }
   }
@@ -964,7 +852,7 @@ class BuySignalService {
     // +5% ~ +7%	                35​	                   偏激进，容易高开低走
     // +0.3% ~ +1%	              30​	                    偏弱，但可接受
     // 0% ~ +0.3%	                10​	                    几乎平开，动能不足
-    // < 0%	                      0​	                    ❌ 直接淘汰（竞价砸盘）
+    // < -3%	                    0​	                    ❌ 直接淘汰（竞价砸盘）
     // ≥ +7%	                    0​	                    ❌ 直接淘汰（情绪透支）
 
 
@@ -990,9 +878,9 @@ class BuySignalService {
     let openScore = 0;
     let openState: 'high' | 'flat' | 'low' = 'flat';
 
-    if (openChangePercent < 0) {
+    if (openChangePercent < -3) {
       // 竞价砸盘直接淘汰
-      return { score: 0, reason: '竞价低开(<0%)，直接淘汰' };
+      return { score: 0, reason: '竞价低开(<-3%)，直接淘汰' };
     }
     if (openChangePercent >= 7) {
       // 情绪透支直接淘汰
@@ -1002,38 +890,38 @@ class BuySignalService {
     if (openChangePercent >= 1 && openChangePercent <= 5) {
       openScore = 40;
       openState = 'high';
-      reasons.push('竞价涨幅最优(1%~5%)');
+      reasons.push('竞价涨幅最优(1%~5%)加40分');
     } else if (openChangePercent > 5 && openChangePercent < 7) {
       openScore = 35;
       openState = 'high';
-      reasons.push('竞价涨幅偏激进(5%~7%)');
+      reasons.push('竞价涨幅偏激进(5%~7%)加35分');
     } else if (openChangePercent >= 0.3 && openChangePercent < 1) {
       openScore = 30;
       openState = 'flat';
-      reasons.push('竞价涨幅偏弱(0.3%~1%)');
+      reasons.push('竞价涨幅偏弱(0.3%~1%)加30分');
     } else {
       openScore = 10;
       openState = 'flat';
-      reasons.push('竞价接近平开(0%~0.3%)');
+      reasons.push('竞价接近平开(0%~0.3%)加10分');
     }
 
     // 2) 成交量评分（权重30分，openVolumeRatio 为百分比数值）
     let volumeScore = 0;
     if (openVolumeRatio >= 5) {
       volumeScore = 30;
-      reasons.push('竞价成交量占比高(>=5%)');
+      reasons.push('竞价成交量占比高(>=5%)加30分');
     } else if (openVolumeRatio >= 3) {
       volumeScore = 25;
-      reasons.push('竞价成交量占比良好(3%~5%)');
+      reasons.push('竞价成交量占比良好(3%~5%)加25分');
     } else if (openVolumeRatio >= 2) {
       volumeScore = 15;
-      reasons.push('竞价成交量占比一般(2%~3%)');
+      reasons.push('竞价成交量占比一般(2%~3%)加15分');
     } else if (openVolumeRatio >= 1) {
       volumeScore = 5;
-      reasons.push('竞价成交量占比较低(1%~2%)');
+      reasons.push('竞价成交量占比较低(1%~2%)加5分');
     } else {
       volumeScore = 0;
-      reasons.push('竞价成交量占比不足(<1%)');
+      reasons.push('竞价成交量占比不足(<1%)加0分');
     }
 
     // 3) 量价匹配修正项（±30分）
@@ -1041,35 +929,38 @@ class BuySignalService {
     if (openState === 'high') {
       if (openVolumeRatio >= 3) {
         correctionScore = 30;
-        reasons.push('高开且放量(>=3%)，量价共振');
+        reasons.push('高开且放量(>=3%)，量价共振，加30分');
       } else if (openVolumeRatio >= 1) {
         correctionScore = 15;
-        reasons.push('高开但放量一般(1%~3%)');
+        reasons.push('高开但放量一般(1%~3%)，加15分');
       } else {
         correctionScore = -30;
-        reasons.push('高开缩量(<1%)，冲高回落风险');
+        reasons.push('高开缩量(<1%)，冲高回落风险，减30分');
       }
     } else if (openState === 'flat') {
       if (openVolumeRatio >= 3) {
         correctionScore = 10;
-        reasons.push('平开放量(>=3%)，有抢筹迹象');
+        reasons.push('平开放量(>=3%)，有抢筹迹象，加10分');
       } else {
         correctionScore = -10;
-        reasons.push('平开且量能不足(<3%)');
+        reasons.push('平开且量能不足(<3%)，减10分');
       }
     } else {
       if (openVolumeRatio >= 3) {
         correctionScore = -30;
-        reasons.push('低开放量，抛压较重');
+        reasons.push('低开放量，抛压较重，减30分');
       } else {
         logger.info(`[BuySignal] ${stockCode} ${dateStr} 低开且量能不足，竞价直接淘汰`);
+        reasons.push('低开且量能不足(<3%)，直接淘汰');
         return { score: 0, reason: '低开且量能不足(<3%)，直接淘汰' };
       }
     }
 
     score = openScore + volumeScore + correctionScore;
+    reasons.push(`[BuySignal] 总分: ${score}`);
     // 总分范围限制为 0~100
     score = Math.max(0, Math.min(100, score));
+    logger.info(`[BuySignal] ${stockCode} ${dateStr} 竞价压缩后评分: ${score}`);
 
     return {
       score,

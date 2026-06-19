@@ -15,6 +15,7 @@ export interface IVolumeSurge {
     amplitude?: number;
     upperShadow?: number;
     lowerShadow?: number;
+    volume?: number;
     volumeRatioTo5Day?: number;
     aboveMa10?: boolean;
     is20DayHigh?: boolean;
@@ -37,6 +38,7 @@ export interface IVolumeSurge {
     nextDay3Change?: number;
     maxProfitIn3Days?: number;
     maxLossIn3Days?: number;
+    addScoreLogs?: string;
 }
 export interface VolumeSurgeDocument extends Omit<IVolumeSurge, '_id'>, Document {
 }

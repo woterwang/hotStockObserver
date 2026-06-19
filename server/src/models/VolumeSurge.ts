@@ -24,6 +24,7 @@ export interface IVolumeSurge {
   lowerShadow?: number;       // 下影线 %
   
   // 量能指标
+  volume?: number;            // 当日成交量
   volumeRatioTo5Day?: number; // 成交量/5日均量 倍数
   
   // 趋势指标
@@ -62,6 +63,7 @@ export interface IVolumeSurge {
   nextDay3Change?: number;    // T+3 涨跌幅
   maxProfitIn3Days?: number;  // 3日内最大涨幅
   maxLossIn3Days?: number;    // 3日内最大回撤
+  addScoreLogs?: string;      // 加分日志（字符串）
 }
 
 export interface VolumeSurgeDocument extends Omit<IVolumeSurge, '_id'>, Document {}
@@ -86,6 +88,7 @@ const VolumeSurgeSchema = new Schema<VolumeSurgeDocument>(
     lowerShadow: { type: Number, default: 0 },
     
     // 量能指标
+    volume: { type: Number, default: 0 },
     volumeRatioTo5Day: { type: Number, default: 0 },
     
     // 趋势指标
@@ -118,6 +121,7 @@ const VolumeSurgeSchema = new Schema<VolumeSurgeDocument>(
     nextDay3Change: { type: Number },
     maxProfitIn3Days: { type: Number },
     maxLossIn3Days: { type: Number },
+    addScoreLogs: { type: String, default: '' }
   },
   { timestamps: true }
 );
