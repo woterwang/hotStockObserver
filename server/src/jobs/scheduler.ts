@@ -349,6 +349,8 @@ export class JobScheduler {
 
     this.updateJob = cron.schedule(cronExpression, async () => {
       try {
+        // 更新概念热度排名
+        await thsConceptHotRankService.fetchConceptHotRank();
         // 检查是否是交易日（使用交易日历服务，支持节假日判断）
         if (!tradingCalendarService.isTradingDayByDate()) {
           logger.info('非交易日，跳过更新');
@@ -362,9 +364,6 @@ export class JobScheduler {
 
         // 保存到数据库
         const savedCount = await dataFetchService.saveHotStocks(hotStocks);
-
-        // 更新概念热度排名
-        await thsConceptHotRankService.fetchConceptHotRank();
 
         logger.info(`热搜股票更新任务完成，共保存 ${savedCount} 条数据`);
       } catch (error) {
