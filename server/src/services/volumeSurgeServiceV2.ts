@@ -395,10 +395,10 @@ export class VolumeSurgeService {
             upperShadow = parseFloat(item[key] || 0);
           } else if (key.includes('下影线')) {
             lowerShadow = parseFloat(item[key] || 0);
-          }else if (key.includes(`成交量[${targetDate}]`)) {
+          } else if (key.includes(`成交量[${targetDate}]`)) {
             // 当日成交量（用于计算5日均量比）
-            volume = Number(item[key])||0;
-          } 
+            volume = Number(item[key]) || 0;
+          }
           //else if (key.includes('涨停原因') || key.includes('异动原因')) {
           //   limitUpReason = item[key] || '';
           // }
@@ -415,15 +415,16 @@ export class VolumeSurgeService {
           // continue;  // 量能未放大，直接过滤掉
         }
 
+        // K线
+        const KlineData = await klineCacheService.loadCacheForHistory(stockCode, targetDate, 20, false);
+        // 计算5日均量比
+        volumeRatioTo5Day = await this.getVolumeRatioTo5Day(KlineData, volume);
+
         // 必要条件：volumeRatioTo5Day ≥ 1.8
         if (volumeRatioTo5Day < 1.8) {
           logger.info(`[成交量放大] ${stockName} 的5日均量比 ${volumeRatioTo5Day} 小于 1.8，跳过保存`);
           // continue;  // 5日均量未放大，直接过滤掉
         }
-        // K线
-        const KlineData = await klineCacheService.loadCacheForHistory(stockCode, targetDate, 20);
-        // 计算5日均量比
-        volumeRatioTo5Day = await this.getVolumeRatioTo5Day(KlineData,volume);
 
         // ========================================
         // 🔥 判断是否涨停、首板、连板

@@ -464,8 +464,14 @@ class KlineCacheService {
     }
     return result;
   }
-  // 参数：stockCode: 股票代码；targetDates: 结束日期：endDay(默认今天)，需要的交易日数量：klineDays（默认60天）
-  async loadCacheForHistory (stockCode: string, targetDate: string = toDateStr(getToday()), klineDays: number = 60): Promise<CachedKline[]> {
+  // 参数：stockCode: 股票代码；targetDate: 结束日期（默认今天）；klineDays: 需要的交易日数量（默认60天）；includeTargetDate: 是否包含targetDate当天（默认包含）
+  async loadCacheForHistory (
+    stockCode: string,
+    targetDate: string = toDateStr(getToday()),
+    klineDays: number = 60,
+    includeTargetDate: boolean = true
+  ): Promise<CachedKline[]> {
+    const normalizedTargetDate = toDateStr(targetDate);
     const { map } = this.loadCache(stockCode);
     let cachedKline: CachedKline[] = Array.from(map.values());
     // 如果缓存中没有数据，则深度从远端拉取1800天数据
@@ -478,14 +484,20 @@ class KlineCacheService {
     // 修复问题2：确保按日期升序排序，Map 插入顺序不保证有序
     cachedKline.sort((a, b) => a.date.localeCompare(b.date));
 
-    // 修复问题3：找最后一个 <= targetDate 的索引，而非第一个 >= targetDate
-    // 原 findIndex 在 targetDate 不在缓存中时会指向更晚的日期，导致范围偏移
-    const startDateIndex = cachedKline.reduce((idx, kline, i) =>
-      kline.date <= targetDate ? i : idx, -1);
+    // 找到边界索引：可选包含 targetDate 当天，或仅取 targetDate 之前的最后一个交易日
+    const startDateIndex = cachedKline.reduce((idx, kline, i) => {
+      const matched = includeTargetDate
+        ? kline.date <= normalizedTargetDate
+        : kline.date < normalizedTargetDate;
+      return matched ? i : idx;
+    }, -1);
 
     // 修复问题1：startDateIndex === -1 表示缓存中所有日期都晚于 targetDate，避免崩溃
     if (startDateIndex === -1) {
-      logger.warn(`[K线缓存] ${stockCode} 缓存中无 ${targetDate} 及之前的数据，返回空数组`);
+      const rangeText = includeTargetDate
+        ? `${normalizedTargetDate} 及之前`
+        : `${normalizedTargetDate} 之前`;
+      logger.warn(`[K线缓存] ${stockCode} 缓存中无 ${rangeText} 的数据，返回空数组`);
       return [];
     }
 
@@ -497,7 +509,7 @@ class KlineCacheService {
 
     logger.info(`[K线缓存] ${stockCode} 从缓存中获取历史K线数据，开始日期: ${cachedKline[startDateIndex].date}，结束日期: ${cachedKline[endDateIndex].date}`);
     const filteredKline = cachedKline.slice(endDateIndex, startDateIndex + 1);
-    logger.info(`[K线缓存] ${stockCode} 从缓存中获取历史K线数据，目标日期: ${targetDate}，需要天数: ${klineDays}，实际返回: ${filteredKline.length} 条`);
+    logger.info(`[K线缓存] ${stockCode} 从缓存中获取历史K线数据，目标日期: ${normalizedTargetDate}，需要天数: ${klineDays}，是否包含目标日: ${includeTargetDate}，实际返回: ${filteredKline.length} 条`);
     return filteredKline;
   }
 }
