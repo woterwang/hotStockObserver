@@ -193,17 +193,17 @@ class BuySignalScorer {
 
     // 第一步：根据stockCode与dateStr从volumeSurges获取concept数据
     const volumeSurgeData = await VolumeSurge.find({ date: signalDateStr, stockCode: stockCode });
-    // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${dateStr} 的 VolumeSurge 数据: ${volumeSurgeData.length} 条`);
+    // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${signalDateStr} 的 VolumeSurge 数据: ${volumeSurgeData.length} 条`);
     const conceptsArr = stockCode && volumeSurgeData.length > 0 ? volumeSurgeData[0].concept || '' : '';
-    // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${dateStr} 的 ${JSON.stringify(volumeSurgeData)} 数据: ${conceptsArr}`);
+    // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${signalDateStr} 的 ${JSON.stringify(volumeSurgeData)} 数据: ${conceptsArr}`);
     const concepts = conceptsArr.split(';');
     // logger.info(`[BuySignal] scoreSectorLink 1 获取 ${stockCode} 在 ${signalDateStr} 的 ${JSON.stringify(concepts)} 数据: ${concepts}`);
     // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${dateStr} 的 ${JSON.stringify(concepts)} 数据: ${concepts}`);
 
-    // 第二步：获取前一天的热门概念排行数据
+    // 第二步：获取当天的热门概念排行数据
     const conceptData = thsConceptHotRankService.readFromCache(`${targetDateStr}_concept`)
-    // logger.info(`[BuySignal] scoreSectorLink 获取 ${dateStr} 的数据： ${JSON.stringify(conceptData?.items)}`);
-    // 取前三个概念
+    // logger.info(`[BuySignal] scoreSectorLink 获取 ${targetDateStr} 的数据： ${JSON.stringify(conceptData?.items)}`);
+    // 取前10个概念
     const topConcepts: string[] = conceptData?.items.slice(0, 10).map((item: any) => item.name) || [];
     // logger.info(`[BuySignal] scoreSectorLink 2 获取 ${targetDateStr} 的 ${JSON.stringify(topConcepts)} 数据: ${topConcepts}`);
     // logger.info(`[BuySignal] scoreSectorLink 获取 ${dateStr} 的 ${JSON.stringify(topConcepts)} 数据: ${topConcepts}`);
@@ -212,7 +212,7 @@ class BuySignalScorer {
     if (concepts.length > 0) {
       const matchedConcepts = concepts.filter((concept: string) => topConcepts.includes(concept));
       if (matchedConcepts.length < 1) {
-        score -= 30;
+        score -= 15;
         reasons.push('未在热门概念中，扣30分');
       } else {
         reasons.push(`匹配热门概念: ${matchedConcepts.join('、')}`);
@@ -571,11 +571,14 @@ class BuySignalService {
     // 获取上一交易日期
     const prevTradingDay = tradingCalendarService.getPrevTradingDay(candidate.date);
 
+    // 获取下一交易日
+    const nextTradingDay = tradingCalendarService.getNextTradingDay(candidate.date);
+
     // 获取技术位置
     const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, prevTradingDay as string);
 
     //板块联动
-    const sectorLink = await BuySignalScorer.scoreSectorLink(candidate.stockCode, candidate.date, todayStr);
+    const sectorLink = await BuySignalScorer.scoreSectorLink(candidate.stockCode, candidate.date, nextTradingDay || signalDate);
 
     //竞价评分
     const openDataScore = await this.getAuctionScore({
@@ -586,11 +589,17 @@ class BuySignalService {
     })
 
     // 计算总分
-    const totalBuyScore =
-      sectorLink.score +
-      (openDataScore.score * 0.3) +
-      (candidate.strategyScore * 0.5) +
-      (((candidate?.marketMood ?? 50) / 10) * 2)
+    let totalBuyScore =
+    sectorLink.score +
+    (openDataScore.score * 0.3) +
+    (candidate.strategyScore * 0.5) +
+    (((candidate?.marketMood ?? 50) / 10) * 2)
+    
+    // 竞价评分为0时直接淘汰
+    if (openDataScore.score < 0) {
+      logger.info(`[BuySignal] ${candidate.stockCode} 竞价评分为0，跳过生成买入信号`);
+      totalBuyScore = 0;
+    }
 
     // 生成买入决策
     const decision = this.generateDecision(totalBuyScore, openData, candidate);
@@ -606,9 +615,6 @@ class BuySignalService {
 
     // 构建买入理由
     const buyReason = [
-      // openStrength.reason,
-      // volumeConfirm.reason,
-      // auction.reason,
       openDataScore.reason,
       sectorLink.reason,
     ].filter(r => r).join('；');
@@ -880,11 +886,11 @@ class BuySignalService {
 
     if (openChangePercent < -3) {
       // 竞价砸盘直接淘汰
-      return { score: 0, reason: '竞价低开(<-3%)，直接淘汰' };
+      return { score: -1, reason: '竞价低开(<-3%)，直接淘汰' };
     }
     if (openChangePercent >= 7) {
       // 情绪透支直接淘汰
-      return { score: 0, reason: '竞价过高(>=7%)，情绪透支，直接淘汰' };
+      return { score: -1, reason: '竞价过高(>=7%)，情绪透支，直接淘汰' };
     }
 
     if (openChangePercent >= 1 && openChangePercent <= 5) {
