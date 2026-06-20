@@ -1,0 +1,148 @@
+{
+  "startDate": "20260401",
+  "endDate": "20260430",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 46,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 0,
+    "stopLossPercent": 0.05,
+    "takeProfitPercent": 0.2,
+    "maxHoldDays": 4,
+    "marketPanicThreshold": 0,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 5,
+  "winTrades": 3,
+  "lossTrades": 2,
+  "winRate": 60,
+  "totalProfitAmount": 14088.17,
+  "totalProfitPercent": 5.64,
+  "avgProfitPercent": 5.64,
+  "avgWinPercent": 11.4,
+  "avgLossPercent": -3.01,
+  "profitLossRatio": 3.78,
+  "totalInvested": 250000,
+  "maxDrawdown": 3016.1,
+  "maxDrawdownPercent": 19.63,
+  "maxProfit": 20,
+  "maxLoss": -5,
+  "maxConsecutiveWins": 2,
+  "maxConsecutiveLosses": 2,
+  "avgHoldDays": 3.6,
+  "equityCurve": [
+    {
+      "date": "20260416",
+      "equity": 10000
+    },
+    {
+      "date": "20260420",
+      "equity": 15367.7
+    },
+    {
+      "date": "20260421",
+      "equity": 12867.7
+    },
+    {
+      "date": "20260423",
+      "equity": 12351.6
+    },
+    {
+      "date": "20260428",
+      "equity": 14088.17
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "000967",
+      "stockName": "盈峰环境",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260413",
+      "buyPrice": 10.45,
+      "sellDate": "20260416",
+      "sellPrice": 12.54,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 20,
+      "profitAmount": 10000,
+      "exitReason": "take_profit",
+      "buySignalScore": 50.24,
+      "selectionScore": 56,
+      "marketMood": 49
+    },
+    {
+      "stockCode": "688818",
+      "stockName": "电科蓝天",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260415",
+      "buyPrice": 65.95,
+      "sellDate": "20260420",
+      "sellPrice": 73.03,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 10.74,
+      "profitAmount": 5367.7,
+      "exitReason": "max_days",
+      "buySignalScore": 49.24,
+      "selectionScore": 60,
+      "marketMood": 46
+    },
+    {
+      "stockCode": "000967",
+      "stockName": "盈峰环境",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260420",
+      "buyPrice": 14.19,
+      "sellDate": "20260421",
+      "sellPrice": 13.4805,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -5,
+      "profitAmount": -2500,
+      "exitReason": "stop_loss",
+      "buySignalScore": 57.12,
+      "selectionScore": 76,
+      "marketMood": 66
+    },
+    {
+      "stockCode": "000657",
+      "stockName": "中钨高新",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260420",
+      "buyPrice": 57.16,
+      "sellDate": "20260423",
+      "sellPrice": 56.57,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": -1.03,
+      "profitAmount": -516.1,
+      "exitReason": "max_days",
+      "buySignalScore": 47.12,
+      "selectionScore": 56,
+      "marketMood": 66
+    },
+    {
+      "stockCode": "000938",
+      "stockName": "紫光股份",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260423",
+      "buyPrice": 30.52,
+      "sellDate": "20260428",
+      "sellPrice": 31.58,
+      "holdDays": 4,
+      "position": 50000,
+      "profitPercent": 3.47,
+      "profitAmount": 1736.57,
+      "exitReason": "max_days",
+      "buySignalScore": 52.52,
+      "selectionScore": 67,
+      "marketMood": 40
+    }
+  ]
+}
