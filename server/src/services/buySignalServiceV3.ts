@@ -201,6 +201,11 @@ class BuySignalScorer {
     // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${dateStr} 的 ${JSON.stringify(concepts)} 数据: ${concepts}`);
 
     // 第二步：获取当天的热门概念排行数据
+    // 尝试获取 volumeSurge 当天的热门概念数据，如果没有直接返回0分
+    const signalDayConceptData = thsConceptHotRankService.readFromCache(`${signalDateStr}_concept`)
+    if (!signalDayConceptData) {
+      return { score: 0, reason: '未获取到 signalDateStr 的 concept 数据, 不进行 sectorLink 评分' };
+    }
     const conceptData = thsConceptHotRankService.readFromCache(`${targetDateStr}_concept`)
     // logger.info(`[BuySignal] scoreSectorLink 获取 ${targetDateStr} 的数据： ${JSON.stringify(conceptData?.items)}`);
     // 取前10个概念
@@ -590,11 +595,11 @@ class BuySignalService {
 
     // 计算总分
     let totalBuyScore =
-    sectorLink.score +
-    (openDataScore.score * 0.3) +
-    (candidate.strategyScore * 0.5) +
-    (((candidate?.marketMood ?? 50) / 10) * 2)
-    
+      sectorLink.score +
+      (openDataScore.score * 0.3) +
+      (candidate.strategyScore * 0.5) +
+      (((candidate?.marketMood ?? 50) / 10) * 2)
+
     // 竞价评分为0时直接淘汰
     if (openDataScore.score < 0) {
       logger.info(`[BuySignal] ${candidate.stockCode} 竞价评分为0，跳过生成买入信号`);
