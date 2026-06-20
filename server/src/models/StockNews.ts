@@ -51,4 +51,6 @@ StockNewsSchema.index({ stockCode: 1, publishTime: -1 });
 // 标题唯一索引（避免重复新闻）
 StockNewsSchema.index({ title: 1, stockCode: 1 }, { unique: true });
 
-export const StockNews = mongoose.model<StockNewsDocument>('StockNews', StockNewsSchema);
+export const StockNews =
+  (mongoose.models.StockNews as mongoose.Model<StockNewsDocument>) ||
+  mongoose.model<StockNewsDocument>('StockNews', StockNewsSchema);

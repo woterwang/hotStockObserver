@@ -165,6 +165,8 @@ export interface ITradingSignal {
 
 export interface TradingSignalDocument extends Omit<ITradingSignal, '_id'>, Document {}
 
+type TradingSignalModel = mongoose.Model<TradingSignalDocument>;
+
 const TradingSignalSchema = new Schema<TradingSignalDocument>(
   {
     // 策略类型
@@ -273,7 +275,6 @@ TradingSignalSchema.index({ signalDate: 1, status: 1 });
 TradingSignalSchema.index({ signalDate: 1, entryScore: -1 });
 TradingSignalSchema.index({ strategy: 1, signalDate: 1 });
 
-export const TradingSignal = mongoose.model<TradingSignalDocument>(
-  'TradingSignal',
-  TradingSignalSchema
-);
+export const TradingSignal =
+  (mongoose.models.TradingSignal as TradingSignalModel) ||
+  mongoose.model<TradingSignalDocument>('TradingSignal', TradingSignalSchema);

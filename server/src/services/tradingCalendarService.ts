@@ -167,10 +167,25 @@ class TradingCalendarService {
       return false;
     }
 
+    // 读取本地已有缓存并与新数据合并去重
+    let existingTradingDays: string[] = [];
+    try {
+      if (fs.existsSync(CACHE_FILE_PATH)) {
+        const existingCacheData = JSON.parse(fs.readFileSync(CACHE_FILE_PATH, 'utf-8')) as TradingCalendarCache;
+        if (existingCacheData.tradingDays && Array.isArray(existingCacheData.tradingDays)) {
+          existingTradingDays = existingCacheData.tradingDays;
+        }
+      }
+    } catch (error) {
+      logger.warn(`读取本地交易日历缓存失败，将仅使用新数据: ${(error as Error).message}`);
+    }
+
+    const mergedTradingDays = [...new Set([...existingTradingDays, ...tradingDays])].sort();
+
     // 持久化到文件
     const cacheData: TradingCalendarCache = {
       updatedAt: new Date().toISOString(),
-      tradingDays: tradingDays
+      tradingDays: mergedTradingDays
     };
 
     try {
@@ -181,7 +196,10 @@ class TradingCalendarService {
       }
 
       fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(cacheData, null, 2));
-      logger.info(`交易日历缓存已更新，共 ${tradingDays.length} 个交易日`);
+      const addedCount = mergedTradingDays.length - existingTradingDays.length;
+      logger.info(
+        `交易日历缓存已更新，本地 ${existingTradingDays.length} + 新获取 ${tradingDays.length} => 合并后 ${mergedTradingDays.length}（净新增 ${addedCount}）`
+      );
       return true;
     } catch (error) {
       logger.error(`保存交易日历缓存失败: ${(error as Error).message}`);

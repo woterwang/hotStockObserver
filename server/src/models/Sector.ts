@@ -54,4 +54,6 @@ SectorSchema.index({ date: 1, sectorCode: 1 }, { unique: true });
 // 日期+涨跌幅排序索引
 SectorSchema.index({ date: 1, changePercent: -1 });
 
-export const Sector = mongoose.model<SectorDocument>('Sector', SectorSchema);
+export const Sector =
+  (mongoose.models.Sector as mongoose.Model<SectorDocument>) ||
+  mongoose.model<SectorDocument>('Sector', SectorSchema);

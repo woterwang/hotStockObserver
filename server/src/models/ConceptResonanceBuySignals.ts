@@ -161,4 +161,6 @@ ConceptResonanceBuySignalSchema.index({ date: 1, stockCode: 1 }, { unique: true 
 // 评分索引
 ConceptResonanceBuySignalSchema.index({ date: 1, strategyScore: -1 });
 
-export const ConceptResonanceBuySignals = mongoose.model<ConceptResonanceBuySignalDocument>('ConceptResonanceBuySignals', ConceptResonanceBuySignalSchema);
+export const ConceptResonanceBuySignals =
+  (mongoose.models.ConceptResonanceBuySignals as mongoose.Model<ConceptResonanceBuySignalDocument>) ||
+  mongoose.model<ConceptResonanceBuySignalDocument>('ConceptResonanceBuySignals', ConceptResonanceBuySignalSchema);

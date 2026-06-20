@@ -239,6 +239,8 @@ class BuySignalBacktestService {
         logger.info(`[回测] ${stockCode} 信号日期=${signalDateStr} 不是交易日，跳过`);
         return null;
       }
+      const prevDateStr = tradingCalendarService.getPrevTradingDay(signalDateStr);
+      // logger.info(`[回测] ${stockCode} 信号日期=${signalDateStr}, 前一个交易日=${prevDateStr}`);
       const klineDays = config.maxHoldDays
 
       // 获取K线数据（使用动态计算的天数）
@@ -273,7 +275,7 @@ class BuySignalBacktestService {
       // 确定仓位
       // 规则1: strong_buy = 标准仓, buy = 标准仓的一半 (通过 signal.positionRatio 传入)
       // 规则2: 市场情绪不好时再降低仓位
-      const buyDayMood = marketMoodService.getMood(buyDateStr) ?? 50;
+      const buyDayMood = marketMoodService.getMood(prevDateStr??signalDateStr) ?? 50;
       const signalPositionRatio = (signal as any).positionRatio || 1;  // 默认为1（标准仓）
       let position = config.basePosition * signalPositionRatio;
 
@@ -306,7 +308,6 @@ class BuySignalBacktestService {
         }
 
         const dayKline = klineData[holdIdx];
-        const dayMood = marketMoodService.getMood(dayKline.date) ?? 50;
 
         // 买入当天（i=0）跳过卖出检查，因为刚买入
         if (i === 0) {
@@ -314,7 +315,7 @@ class BuySignalBacktestService {
         }
 
         // 检查市场情绪恶化
-        if (dayMood < config.marketPanicThreshold) {
+        if (buyDayMood < config.marketPanicThreshold) {
           sellPrice = dayKline.open;  // 情绪恶化开盘卖出
           sellDate = dayKline.date;
           holdDays = i + 1;  // 持仓天数（包含买入当天）
@@ -462,29 +463,35 @@ class BuySignalBacktestService {
     // 根据 minSignalScore 过滤信号
     let signals = allSignals.filter(s => s.totalBuyScore >= finalConfig.minSignalScore);
     logger.info(`应用信号评分门槛 (>= ${finalConfig.minSignalScore}分) 后剩余 ${signals.length} 条记录`);
+    // signals = signals.filter(s => {
+    //   logger.info(`信号 ${s.stockName} 日期 ${s.date} 买入评分 ${s.totalBuyScore} 市场情绪 ${s.marketMood}`);
+    //   return s.marketMood >= 40;
+    // });
+    // logger.info(`应用市场情绪门槛 (>= 40%) 后剩余 ${signals.length} 条记录`);
     
     // 限制每天最多买入4只股票（选出每天totalBuyScore最大的前四支股票）
     if (signals.length > 0) {
       // 按日期分组信号
       const signalsByDate: { [date: string]: any[] } = {};
       signals.forEach(signal => {
+        logger.info(`分组信号: 日期 ${signal.date} 股票 ${signal.stockName} 买入评分 ${signal.totalBuyScore} 市场情绪 ${signal.marketMood}`);
         if (!signalsByDate[signal.date]) {
           signalsByDate[signal.date] = [];
         }
         signalsByDate[signal.date].push(signal);
       });
 
-      // 对每天的信号按totalBuyScore排序，并只保留前4个
+      // 对每天的信号按totalBuyScore排序，并只保留前3个
       const filteredSignals: any[] = [];
       Object.keys(signalsByDate).forEach(date => {
         const dailySignals = signalsByDate[date]
           .sort((a, b) => b.totalBuyScore - a.totalBuyScore)
-          .slice(0, finalConfig.maxBuyCount || 4); // 默认每天最多买4只股票
+          .slice(0, finalConfig.maxBuyCount || 3); // 默认每天最多买3只股票
         filteredSignals.push(...dailySignals);
       });
 
       signals = filteredSignals;
-      logger.info(`限制每天最多买入4只股票后剩余 ${signals.length} 条记录`);
+      logger.info(`限制每天最多买入${finalConfig.maxBuyCount}只股票后剩余 ${signals.length} 条记录`);
     }
     
     // === 预加载 K 线数据 ===

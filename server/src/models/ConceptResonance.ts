@@ -204,4 +204,6 @@ ConceptResonanceSchema.index({ date: 1, strategyScore: -1 });
 // 龙头索引（便于快速查询龙头股）
 ConceptResonanceSchema.index({ date: 1, isConceptLeader: 1 });
 
-export const ConceptResonance = mongoose.model<ConceptResonanceDocument>('ConceptResonance', ConceptResonanceSchema);
+export const ConceptResonance =
+  (mongoose.models.ConceptResonance as mongoose.Model<ConceptResonanceDocument>) ||
+  mongoose.model<ConceptResonanceDocument>('ConceptResonance', ConceptResonanceSchema);

@@ -87,7 +87,6 @@ PriceBreakthroughSchema.index({ date: 1, stockCode: 1 }, { unique: true });
 // 日期+涨幅排序索引
 PriceBreakthroughSchema.index({ date: 1, changePercent: -1 });
 
-export const PriceBreakthrough = mongoose.model<PriceBreakthroughDocument>(
-  'PriceBreakthrough',
-  PriceBreakthroughSchema
-);
+export const PriceBreakthrough =
+  (mongoose.models.PriceBreakthrough as mongoose.Model<PriceBreakthroughDocument>) ||
+  mongoose.model<PriceBreakthroughDocument>('PriceBreakthrough', PriceBreakthroughSchema);

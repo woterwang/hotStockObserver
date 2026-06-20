@@ -220,4 +220,6 @@ BuySignalSchema.index({ date: 1, stockCode: 1 }, { unique: true });
 BuySignalSchema.index({ buySignal: 1, date: -1 });
 BuySignalSchema.index({ resultStatus: 1 });
 
-export const BuySignal = mongoose.model<BuySignalDocument>('BuySignal', BuySignalSchema);
+export const BuySignal =
+  (mongoose.models.BuySignal as mongoose.Model<BuySignalDocument>) ||
+  mongoose.model<BuySignalDocument>('BuySignal', BuySignalSchema);

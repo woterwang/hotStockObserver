@@ -80,4 +80,6 @@ HotStockSchema.index({ date: 1, rank: 1 });
 // 连续上榜天数索引
 HotStockSchema.index({ consecutiveDays: -1 });
 
-export const HotStock = mongoose.model<HotStockDocument>('HotStock', HotStockSchema);
+export const HotStock =
+  (mongoose.models.HotStock as mongoose.Model<HotStockDocument>) ||
+  mongoose.model<HotStockDocument>('HotStock', HotStockSchema);

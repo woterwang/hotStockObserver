@@ -349,6 +349,7 @@ export class VolumeSurgeService {
 
         let changePercent = 0;
         let volumeRatio = 0;
+        let volume: number = 0;
         let turnover = 0;
         let turnoverRate = 0;
         let industry = item['所属行业'] || '';
@@ -394,19 +395,20 @@ export class VolumeSurgeService {
             upperShadow = parseFloat(item[key] || 0);
           } else if (key.includes('下影线')) {
             lowerShadow = parseFloat(item[key] || 0);
-          } else if (key.includes(`/}区间日均成交量`)) {
-            // 5日均量比字段
-            volumeRatioTo5Day = parseFloat(item[key] || 0);
-          } else if (key.includes('涨停原因') || key.includes('异动原因')) {
-            limitUpReason = item[key] || '';
-          }
+          }else if (key.includes(`成交量[${targetDate}]`)) {
+            // 当日成交量（用于计算5日均量比）
+            volume = Number(item[key])||0;
+          } 
+          //else if (key.includes('涨停原因') || key.includes('异动原因')) {
+          //   limitUpReason = item[key] || '';
+          // }
         }
         // 只保留涨幅>7%的数据
         if (changePercent < 7) {
           logger.info(`[涨幅] ${stockName} 的涨幅 ${changePercent}% 不满足 >7%，跳过保存`);
           continue;
         }
-        
+
         // 必要条件：量比 ≥ 1.5
         if (volumeRatio < 1.5) {
           logger.info(`[成交量放大] ${stockName} 的量比 ${volumeRatio} 小于 1.5，跳过保存`);
@@ -418,7 +420,10 @@ export class VolumeSurgeService {
           logger.info(`[成交量放大] ${stockName} 的5日均量比 ${volumeRatioTo5Day} 小于 1.8，跳过保存`);
           // continue;  // 5日均量未放大，直接过滤掉
         }
-
+        // K线
+        const KlineData = await klineCacheService.loadCacheForHistory(stockCode, targetDate, 20);
+        // 计算5日均量比
+        volumeRatioTo5Day = await this.getVolumeRatioTo5Day(KlineData,volume);
 
         // ========================================
         // 🔥 判断是否涨停、首板、连板
@@ -429,7 +434,6 @@ export class VolumeSurgeService {
         const isLimitUp = changePercent >= limitThreshold;
         const isFirstBoard = firstBoardSet.has(codeStr);
         const continuousBoardCount = continuousBoardMap.get(codeStr) || (isFirstBoard ? 1 : 0);
-
         // ========================================
         // 🚀 策略评分逻辑（满分100分 + 额外加分）
         // ========================================
@@ -468,8 +472,6 @@ export class VolumeSurgeService {
         }
 
         // 3.收盘价 > MA5 / MA10 / MA20（12 分）
-        // K线
-        const KlineData = await klineCacheService.loadCacheForHistory(stockCode, targetDate, 20);
         const ma5 = await TrendScorer.calcMA(KlineData, 5) ?? 0;
         const ma10 = await TrendScorer.calcMA(KlineData, 10) ?? 0;
         const ma20 = await TrendScorer.calcMA(KlineData, 20) ?? 0;
@@ -640,7 +642,8 @@ export class VolumeSurgeService {
             marketCapitalization,
             listingDays,
             status: 'pending',
-            addScoreLogs: addScoreLogs.join('\n'),
+            addScoreLogs: addScoreLogs.join(';'),
+            volume,
           },
           { upsert: true, new: true }
         );
@@ -672,42 +675,58 @@ export class VolumeSurgeService {
     return VolumeSurge.find({ date: dateStr }).sort({ strategyScore: -1, changePercent: -1 });
   }
 
-  
-    /**
-     * 板块联动评分 (满分10分)
-     */
-    async scoreSectorLink (stockCode: string, dateStr: string, currentConcepts:string): Promise<{ score: number; reason: string }> {
-      let score = 0;
-      let reasons: string[] = [];
-  
-      // 第一步：解析concept数据
-      const concepts = currentConcepts.split(';');
-      // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${dateStr} 的 ${JSON.stringify(concepts)} 数据: ${concepts}`);
-  
-      // 第二步：获取前一天的热门概念排行数据
-      const conceptData = thsConceptHotRankService.readFromCache(`${dateStr}_concept`)
-      // logger.info(`[BuySignal] scoreSectorLink 获取 ${dateStr} 的数据： ${JSON.stringify(conceptData?.items)}`);
-      // 取前三个概念
-      const topConcepts: string[] = conceptData?.items.slice(0, 3).map((item: any) => item.name) || [];
-      // logger.info(`[BuySignal] scoreSectorLink 获取 ${dateStr} 的 ${JSON.stringify(topConcepts)} 数据: ${topConcepts}`);
-  
-      // 第三步：判断concepts中是否有热门概念
-      const matchedConcepts = concepts.filter((concept:string) => topConcepts.includes(concept));
-      if (matchedConcepts.length > 0) {
-        score += 10;
-        reasons.push(`所属概念${matchedConcepts.join('、')}在前3名热门概念中，板块联动强`);
-        if (matchedConcepts.length > 1) {
-          score += 10;
-          reasons.push(`所属多个概念${matchedConcepts.join('、')}在前3名热门概念中，板块联动更强`);
-        }
-        if (matchedConcepts.length > 2) {
-          score += 10;
-          reasons.push(`所属多个概念${matchedConcepts.join('、')}在前3名热门概念中，板块联动更强`);
-        }
-      }
-  
-      return { score: Math.min(score, 10), reason: reasons.join('，') };
+  // 计算成交量/5日均量比
+  async getVolumeRatioTo5Day (KlineData: CachedKline[], currentVolume: number): Promise<number> {
+    if (!KlineData || KlineData.length === 0) {
+      logger.info(`[计算成交量/5日均量比] K线数据为空`);
+      return 0;
     }
+    if (KlineData.length < 5) {
+      logger.info(`[计算成交量/5日均量比] K线数据不足5天`);
+      return 0;
+    }
+    //取最近5天的成交量
+    const recent5DaysVolume = KlineData.slice(-5).map(k => k.volume);
+    const avgVolume5Day = recent5DaysVolume.reduce((sum, v) => sum + v, 0) / recent5DaysVolume.length;
+    return Math.round(((currentVolume / avgVolume5Day) * 10000) / 100);
+  }
+
+
+  /**
+   * 板块联动评分 (满分30分)
+   */
+  async scoreSectorLink (stockCode: string, dateStr: string, currentConcepts: string): Promise<{ score: number; reason: string }> {
+    let score = 0;
+    let reasons: string[] = [];
+
+    // 第一步：解析concept数据
+    const concepts = currentConcepts.split(';');
+    // logger.info(`[BuySignal] scoreSectorLink 获取 ${stockCode} 在 ${dateStr} 的 ${JSON.stringify(concepts)} 数据: ${concepts}`);
+
+    // 第二步：获取前一天的热门概念排行数据
+    const conceptData = thsConceptHotRankService.readFromCache(`${dateStr}_concept`)
+    // logger.info(`[BuySignal] scoreSectorLink 获取 ${dateStr} 的数据： ${JSON.stringify(conceptData?.items)}`);
+    // 取前三个概念
+    const topConcepts: string[] = conceptData?.items.slice(0, 3).map((item: any) => item.name) || [];
+    // logger.info(`[BuySignal] scoreSectorLink 获取 ${dateStr} 的 ${JSON.stringify(topConcepts)} 数据: ${topConcepts}`);
+
+    // 第三步：判断concepts中是否有热门概念
+    const matchedConcepts = concepts.filter((concept: string) => topConcepts.includes(concept));
+    if (matchedConcepts.length > 0) {
+      score += 10;
+      reasons.push(`所属概念${matchedConcepts.join('、')}在前3名热门概念中，板块联动强`);
+      if (matchedConcepts.length > 1) {
+        score += 10;
+        reasons.push(`所属多个概念${matchedConcepts.join('、')}在前3名热门概念中，板块联动更强`);
+      }
+      if (matchedConcepts.length > 2) {
+        score += 10;
+        reasons.push(`所属多个概念${matchedConcepts.join('、')}在前3名热门概念中，板块联动更强`);
+      }
+    }
+
+    return { score: score, reason: reasons.join('，') };
+  }
 
   /**
    * 获取高质量信号（评分>=70分）
