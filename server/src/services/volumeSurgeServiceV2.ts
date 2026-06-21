@@ -336,7 +336,6 @@ export class VolumeSurgeService {
       logger.warn(`[VolumeSurge] 无数据，跳过保存`);
       return 0;
     }
-    logger.info(`获取到 ${rawData.length} 条数据`);
 
     // 直接使用字符串日期 YYYYMMDD 格式
     let count = 0;
@@ -395,9 +394,10 @@ export class VolumeSurgeService {
             upperShadow = parseFloat(item[key] || 0);
           } else if (key.includes('下影线')) {
             lowerShadow = parseFloat(item[key] || 0);
-          } else if (key.includes(`成交量[${targetDate}]`)) {
+          } else if (key.includes(`成交量[${targetDate}]`) && !key.includes('}区间日均成交量')) {
             // 当日成交量（用于计算5日均量比）
             volume = Number(item[key]) || 0;
+            logger.info(`[数据提取] ${stockName} 当日成交量: ${volume}`);
           }
           //else if (key.includes('涨停原因') || key.includes('异动原因')) {
           //   limitUpReason = item[key] || '';
@@ -688,8 +688,10 @@ export class VolumeSurgeService {
     }
     //取最近5天的成交量
     const recent5DaysVolume = KlineData.slice(-5).map(k => k.volume);
+    logger.info(`[计算成交量/5日均量比] 最近5天的成交量: ${recent5DaysVolume}，当前成交量: ${currentVolume}`);
     const avgVolume5Day = recent5DaysVolume.reduce((sum, v) => sum + v, 0) / recent5DaysVolume.length;
-    return Math.round(((currentVolume / avgVolume5Day) * 10000) / 100);
+    logger.info(`[计算成交量/5日均量比] 5日均量: ${avgVolume5Day}`);
+    return (currentVolume / avgVolume5Day);
   }
 
 

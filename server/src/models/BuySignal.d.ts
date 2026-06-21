@@ -18,6 +18,7 @@ export interface IBuySignal {
     openVolumeRatio: number;
     auctionAmount: number;
     auctionAmountRatio: number;
+    volumeRatio: number;
     firstBarChange?: number;
     first15MinHigh?: number;
     first15MinLow?: number;

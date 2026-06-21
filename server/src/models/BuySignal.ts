@@ -27,6 +27,7 @@ export interface IBuySignal {
   openVolumeRatio: number;        // 开盘量比（9:30前5分钟成交量/昨日同期）
   auctionAmount: number;          // 集合竞价成交金额（万）
   auctionAmountRatio: number;     // 竞价金额/昨日成交额 %
+  volumeRatio: number;            // 成交量比
   
   // ========================================
   // 📊 早盘确认指标（9:30-9:45）
@@ -141,6 +142,7 @@ const BuySignalSchema = new Schema<BuySignalDocument>(
     openVolumeRatio: { type: Number, default: 0 },
     auctionAmount: { type: Number, default: 0 },
     auctionAmountRatio: { type: Number, default: 0 },
+    volumeRatio: { type: Number, default: 0 },
     
     // 早盘确认指标
     firstBarChange: { type: Number },

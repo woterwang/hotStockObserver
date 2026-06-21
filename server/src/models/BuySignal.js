@@ -56,6 +56,7 @@ const BuySignalSchema = new mongoose_1.Schema({
     openVolumeRatio: { type: Number, default: 0 },
     auctionAmount: { type: Number, default: 0 },
     auctionAmountRatio: { type: Number, default: 0 },
+    volumeRatio: { type: Number, default: 0 },
     // 早盘确认指标
     firstBarChange: { type: Number },
     first15MinHigh: { type: Number },

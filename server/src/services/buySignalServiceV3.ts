@@ -54,6 +54,7 @@ interface StrategyCandidate {
   changePercent?: number;  // 当日涨幅
   strategyScore: number;  // 基础分
   marketMood?: number;     // 主线共振策略特有字段
+  volumeRatio?: number;   // 当日成交量占比
 }
 
 // 格式化日期为 YYYYMMDD 字符串
@@ -360,6 +361,7 @@ class BuySignalService {
       industry: r.industry || '',
       changePercent: r.changePercent,
       strategyScore: r.strategyScore || 0,
+      volumeRatio: r.volumeRatio || 0,
       marketMood: r?.marketSentimentScore ?? 0,
     }));
   }
@@ -640,6 +642,7 @@ class BuySignalService {
       openVolumeRatio: openData.openVolumeRatio,
       auctionAmount: openData.auctionAmount,
       auctionAmountRatio: openData.auctionAmountRatio,
+      volumeRatio: candidate.volumeRatio || 0,
 
       indexOpenChange: 0, // marketEnv.indexOpenChange,
       indexMorningTrend: "flat",
