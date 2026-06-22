@@ -9,6 +9,7 @@
     "start": "node dist/app.js",
     "import-data": "tsx src/scripts/importHistoricalData.ts",
     "backfill": "tsx src/scripts/backfillBreakthrough.ts",
+    "sync:volumeRatio": "tsx src/scripts/syncVolumeRatioToBuySignals.ts",
     "test:updateCache": "node test-update-cache.js"
   },
   "dependencies": {

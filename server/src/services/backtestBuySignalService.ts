@@ -57,6 +57,7 @@ export interface BuySignalTradeRecord {
   exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'market_panic' | 'data_end';
   buySignalScore: number;   // 买入信号评分
   selectionScore: number;   // 买入信号选股评分
+  volumeRatio: number;      // 成交量比例
   marketMood: number;       // 买入时市场情绪
 }
 
@@ -390,6 +391,7 @@ class BuySignalBacktestService {
         exitReason,
         buySignalScore: signal.totalBuyScore || 0,
         selectionScore: signal.selectionScore || 0,
+        volumeRatio: signal.volumeRatio || 0,
         marketMood: buyDayMood,
       };
     } catch (error) {
@@ -438,6 +440,7 @@ class BuySignalBacktestService {
       strategyType: 'volume_surge',
       // 只回测 "强烈买入" 和 "建议买入" 的标的
       // buySignal: { $in: ['strong_buy', 'buy'] },
+      volumeRatio: { $gte: 2 },
     };
 
     // 从 BuySignal 集合查询数据
@@ -454,6 +457,7 @@ class BuySignalBacktestService {
       strategyName: '强势资金突破',
       totalBuyScore: bs.totalBuyScore || 0,
       selectionScore: bs.selectionScore || 0,
+      volumeRatio: bs.volumeRatio || 0,
       marketMood: bs.marketMood || 50,
       // 根据 buySignal 类型决定仓位比例
       positionRatio: 1,
@@ -463,11 +467,6 @@ class BuySignalBacktestService {
     // 根据 minSignalScore 过滤信号
     let signals = allSignals.filter(s => s.totalBuyScore >= finalConfig.minSignalScore);
     logger.info(`应用信号评分门槛 (>= ${finalConfig.minSignalScore}分) 后剩余 ${signals.length} 条记录`);
-    // signals = signals.filter(s => {
-    //   logger.info(`信号 ${s.stockName} 日期 ${s.date} 买入评分 ${s.totalBuyScore} 市场情绪 ${s.marketMood}`);
-    //   return s.marketMood >= 40;
-    // });
-    // logger.info(`应用市场情绪门槛 (>= 40%) 后剩余 ${signals.length} 条记录`);
     
     // 限制每天最多买入4只股票（选出每天totalBuyScore最大的前四支股票）
     if (signals.length > 0) {
