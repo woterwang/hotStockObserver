@@ -2,7 +2,7 @@
  * @Author: hp.com
  * @Date: 2025-12-04 17:37:06
  * @LastEditors: WRG
- * @LastEditTime: 2026-06-22 18:41:19
+ * @LastEditTime: 2026-06-22 18:44:19
  * @😍: 😃😃
  */
 import { defineConfig } from 'vite';
@@ -33,5 +33,6 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     reportCompressedSize: false,
+    minify: 'esbuild',
   },
 });
