@@ -34,5 +34,39 @@ export default defineConfig({
     sourcemap: false,
     reportCompressedSize: false,
     minify: 'esbuild',
+    rollupOptions: {
+      output: {
+        // Split large third-party dependencies to reduce single chunk pressure.
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return;
+
+          if (
+            id.includes('react') ||
+            id.includes('react-dom') ||
+            id.includes('react-router-dom')
+          ) {
+            return 'react-vendor';
+          }
+
+          if (
+            id.includes('echarts') ||
+            id.includes('echarts-for-react') ||
+            id.includes('zrender')
+          ) {
+            return 'chart-vendor';
+          }
+
+          if (
+            id.includes('axios') ||
+            id.includes('dayjs') ||
+            id.includes('classnames')
+          ) {
+            return 'utils-vendor';
+          }
+
+          return 'vendor';
+        },
+      },
+    },
   },
 });
