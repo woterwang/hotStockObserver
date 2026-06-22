@@ -52,6 +52,7 @@ interface StrategyCandidate {
   score: number;           // 策略得分
   industry?: string;       // 行业/板块
   changePercent?: number;  // 当日涨幅
+  volumeRatio?: number;    // 选股日成交量比
 }
 
 // 格式化日期为 YYYYMMDD 字符串
@@ -351,6 +352,7 @@ class BuySignalService {
       score: r.strategyScore || 0,
       industry: r.industry || '',
       changePercent: r.changePercent,
+      volumeRatio: r.volumeRatio || 0,
     }));
   }
 
@@ -397,6 +399,7 @@ class BuySignalService {
       score: r.strategyScore || 0,
       industry: r.industry || '',
       changePercent: r.changePercent,
+      volumeRatio: r.volumeRatio || 0,
       // 扩展字段，供后续使用
       primaryConcept: r.primaryConcept,
       isConceptLeader: r.isConceptLeader,
@@ -661,6 +664,7 @@ class BuySignalService {
       openVolumeRatio: openData.openVolumeRatio,
       auctionAmount: openData.auctionAmount,
       auctionAmountRatio: openData.auctionAmountRatio,
+      volumeRatio: candidate.volumeRatio || 0,
 
       indexOpenChange: marketEnv.indexOpenChange,
       indexMorningTrend: marketEnv.indexMorningTrend,
