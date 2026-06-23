@@ -49,84 +49,55 @@ export class VolumeSurgeService {
    * 通用问财查询
    */
   private async queryWencai (question: string): Promise<any[]> {
-    const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
-    const hexinV = this.getHexinV();
-
-    const data: Record<string, string | number> = {
-      question,
-      perpage: 200,
-      page: 1,
-      source: 'Ths_iwencai_Xuangu',
-      version: '2.0',
-      query_area: '',
-      block_list: '',
-      add_info: JSON.stringify({ urp: { scene: 1, company: 1, business: 1 }, contentType: 'json', searchInfo: true }),
-      secondary_intent: 'stock',
-      log_info: JSON.stringify({ input_type: 'typewrite' }),
-      rsh: 'Ths_iwencai_Xuangu_0k9ulnwt96k6xiozeacd2z20dhuy0s9b',
-    };
-
     try {
-      const response = await axios.post(url, data, {
+      const hexinV = this.getHexinV();
+
+      const data: Record<string, string | number> = {
+        'query': question,
+        'urp_sort_way': 'desc',
+        'page': '1',
+        'perpage': '100',
+        'codelist': '',
+        'indexnamelimit': '',
+        'logid': 'be61097505c8efcc59284eff7969d029',
+        'ret': 'json_all',
+        'sessionid': 'dbdfebdcdbc8ed20f7d67c017125cf0c',
+        'source': 'Ths_iwencai_Xuangu',
+        'iwc_token': '',
+        'urp_use_sort': '1',
+        'user_id': 'Ths_iwencai_Xuangu_e6cj4nqeyrtoifkfwr4wrqr57qwf4j4c',
+        'uuids[0]': '24087',
+        'query_type': 'stock',
+        'comp_id': '6933312',
+        'business_cat': 'soniu',
+        'uuid': '24087'
+      };
+      let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://www.iwencai.com/gateway/urp/v7/landing/getDataList',
         headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'hexin-v': hexinV,
-        },
-        timeout: 30000,
-      });
-
-      // 问财接口响应结构可能变化，需要遍历 components 查找数据
-      const components = response.data?.data?.answer?.[0]?.txt?.[0]?.content?.components || [];
-
-      for (const comp of components) {
-        if (comp?.data?.datas && Array.isArray(comp.data.datas) && comp.data.datas.length > 0) {
-          logger.debug(`问财返回 ${comp.data.datas.length} 条数据 (${comp.show_type})`);
-          return comp.data.datas;
-        }
-      }
-
-      // 兼容旧结构
-      if (response.data?.data?.answer?.[0]?.txt?.[0]?.content?.components?.[0]?.data?.datas) {
-        return response.data.data.answer[0].txt[0].content.components[0].data.datas;
-      }
-
-      logger.warn('问财未返回有效数据');
-      return [];
-    } catch (error) {
-      logger.error(`问财API调用失败: ${(error as Error).message}`);
-      return [];
-    }
-  }
-
-  private async queryWencaiWithGetDataList (question: string, currentDateStr: string): Promise<any[]> {
-    const url = 'https://www.iwencai.com/gateway/urp/v7/landing/getDataList';
-    const hexinV = this.getHexinV();
-
-    const data: Record<string, string | number> = {
-      query: question,
-      urp_sort_way: 'desc',
-      urp_sort_index: `涨跌幅:前复权[${currentDateStr}]`,
-      page: 1,
-      perpage: 100,
-      source: 'Ths_iwencai_Xuangu',
-      urp_use_sort: 1,
-      query_type: 'stock',
-      comp_id: 6933312,
-      business_cat: 'soniu',
-      uuid: 24087,
-    };
-    logger.info(`问财请求参数: ${JSON.stringify(data)}`);
-
-    try {
-      const response = await axios.post(url, data, {
-        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Accept-Language': 'zh-CN,zh;q=0.9',
+          'Connection': 'keep-alive',
           'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'hexin-v': hexinV,
+          'Origin': 'https://www.iwencai.com',
+          'Referer': `https://www.iwencai.com/screener/result?w=${encodeURIComponent(question)}&querytype=stock&sign=1782221429927`,
+          'Sec-Fetch-Dest': 'empty',
+          'Sec-Fetch-Mode': 'cors',
+          'Sec-Fetch-Site': 'same-origin',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36',
+          'hexin-v': 'A16qrqwWuLNsm-xXsyor-9OQr_-lHyGutO7WrQj4zl6dB_ChcK9yqYRzJufb',
+          'sec-ch-ua': '"Google Chrome";v="149", "Chromium";v="149", "Not)A;Brand";v="24"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"Windows"',
+          'Cookie': `other_uid=Ths_iwencai_Xuangu_e6cj4nqeyrtoifkfwr4wrqr57qwf4j4c; _clck=elr9o9%7C2%7Cg75%7C0%7C0; cid=00fe07961a4b9ab3a0eeb30249290bdc1782221489; _clsk=1tqj3sp1b2wx%7C1782221661119%7C6%7C1%7C; v=${hexinV}; ComputerID=d136bc6a1d3aca1eaa9f3efb043ff0501776084397; WafStatus=0; cid=d136bc6a1d3aca1eaa9f3efb043ff0501776084397`
         },
+        data: data,
         timeout: 30000,
-      });
+      };
+      logger.info(`问财请求参数: ${JSON.stringify(data)}`);
+      const response = await axios.request(config);
 
       // 问财接口响应结构可能变化，需要遍历 components 查找数据
       const components = response.data?.answer?.components || [];
@@ -137,12 +108,76 @@ export class VolumeSurgeService {
           return comp.data.datas;
         }
       }
+      logger.warn('问财未返回有效数据');
+      return [];
+    } catch (error) {
+      logger.error(`问财API调用失败: ${(error as Error).message}`);
+      return [];
+    }
+  }
 
-      // 兼容旧结构
-      if (response.data?.data?.answer?.[0]?.txt?.[0]?.content?.components?.[0]?.data?.datas) {
-        return response.data.data.answer[0].txt[0].content.components[0].data.datas;
+  private async queryWencaiWithGetDataList (question: string, currentDateStr: string): Promise<any[]> {
+    const hexinV = this.getHexinV();
+
+    const data: Record<string, string | number> = {
+      'query': question,
+      'urp_sort_way': 'desc',
+      'urp_sort_index': `涨跌幅:前复权[${currentDateStr}]`,
+      'page': '1',
+      'perpage': '100',
+      'codelist': '',
+      'indexnamelimit': '',
+      'logid': 'be61097505c8efcc59284eff7969d029',
+      'ret': 'json_all',
+      'sessionid': 'dbdfebdcdbc8ed20f7d67c017125cf0c',
+      'source': 'Ths_iwencai_Xuangu',
+      'iwc_token': '',
+      'urp_use_sort': '1',
+      'user_id': 'Ths_iwencai_Xuangu_e6cj4nqeyrtoifkfwr4wrqr57qwf4j4c',
+      'uuids[0]': '24087',
+      'query_type': 'stock',
+      'comp_id': '6933312',
+      'business_cat': 'soniu',
+      'uuid': '24087'
+    };
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://www.iwencai.com/gateway/urp/v7/landing/getDataList',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Origin': 'https://www.iwencai.com',
+        'Referer': `https://www.iwencai.com/screener/result?w=${encodeURIComponent(question)}&querytype=stock&sign=1782221429927`,
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36',
+        'hexin-v': 'A16qrqwWuLNsm-xXsyor-9OQr_-lHyGutO7WrQj4zl6dB_ChcK9yqYRzJufb',
+        'sec-ch-ua': '"Google Chrome";v="149", "Chromium";v="149", "Not)A;Brand";v="24"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'Cookie': `other_uid=Ths_iwencai_Xuangu_e6cj4nqeyrtoifkfwr4wrqr57qwf4j4c; _clck=elr9o9%7C2%7Cg75%7C0%7C0; cid=00fe07961a4b9ab3a0eeb30249290bdc1782221489; _clsk=1tqj3sp1b2wx%7C1782221661119%7C6%7C1%7C; v=${hexinV}; ComputerID=d136bc6a1d3aca1eaa9f3efb043ff0501776084397; WafStatus=0; cid=d136bc6a1d3aca1eaa9f3efb043ff0501776084397`
+      },
+      data: data,
+      timeout: 30000,
+    };
+    logger.info(`问财请求参数: ${JSON.stringify(data)}`);
+
+    try {
+      const response = await axios.request(config);
+
+      // 问财接口响应结构可能变化，需要遍历 components 查找数据
+      const components = response.data?.answer?.components || [];
+
+      for (const comp of components) {
+        if (comp?.data?.datas && Array.isArray(comp.data.datas) && comp.data.datas.length > 0) {
+          logger.info(`问财返回 ${comp.data.datas.length} 条数据 (${comp.show_type})`);
+          return comp.data.datas;
+        }
       }
-
       logger.warn('问财未返回有效数据');
       return [];
     } catch (error) {
