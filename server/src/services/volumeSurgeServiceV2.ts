@@ -14,6 +14,7 @@ import { tradingCalendarService } from './tradingCalendarService';
 import { TrendScorer } from '../services/TrendScorerService';
 import { klineCacheService, CachedKline, fetchTencentRealTimeQuotes } from './klineCacheService';
 import { thsConceptHotRankService } from '../services/thsConceptHotRankService';
+import { top200VolumeParser, type Top200VolumeStockRow } from './top200VolumeParser';
 
 export class VolumeSurgeService {
 
@@ -148,6 +149,75 @@ export class VolumeSurgeService {
       logger.error(`问财API调用失败: ${(error as Error).message}`);
       return [];
     }
+  }
+
+  //查询每日成交量前200的股票
+  private async queryTop200VolumeStocksPage (dateStr: string, page: number): Promise<Top200VolumeStockRow[]> {
+    const logDate = dateStr || 'realtime';
+    const url = `https://q.10jqka.com.cn/index/index/board/all/field/cje/order/desc/page/${page}/ajax/1/`;
+
+    try {
+      const response = await axios.get<string>(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'hexin-v': this.getHexinV(),
+          'accept': 'text/html, */*; q=0.01',
+          'referer': 'https://q.10jqka.com.cn/'
+        },
+        timeout: 30000,
+      });
+
+      const html = typeof response.data === 'string' ? response.data : '';
+      if (!html) {
+        logger.warn(`[成交额TOP200] ${logDate} 第${page}页返回空响应`);
+        return [];
+      }
+
+      const rows = top200VolumeParser.parseTop200VolumeHtml(html);
+      logger.info(`[成交额TOP200] ${logDate} 第${page}页解析完成，共 ${rows.length} 条`);
+      return rows;
+    } catch (error) {
+      logger.error(`[成交额TOP200] ${logDate} 第${page}页查询失败: ${(error as Error).message}`);
+      return [];
+    }
+  }
+
+  private async queryTop200VolumeStocks (dateStr: string = '', targetCount: number = 200): Promise<Top200VolumeStockRow[]> {
+    const logDate = dateStr || 'realtime';
+    const maxRows = Math.max(1, targetCount);
+    const pageSize = 20;
+    const maxPages = Math.ceil(maxRows / pageSize);
+    const rows: Top200VolumeStockRow[] = [];
+    const seenCodes = new Set<string>();
+
+    for (let page = 1; page <= maxPages && rows.length < maxRows; page++) {
+      const pageRows = await this.queryTop200VolumeStocksPage(dateStr, page);
+
+      if (pageRows.length === 0) {
+        break;
+      }
+
+      for (const row of pageRows) {
+        if (seenCodes.has(row.code)) {
+          continue;
+        }
+
+        seenCodes.add(row.code);
+        rows.push(row);
+
+        if (rows.length >= maxRows) {
+          break;
+        }
+      }
+
+      if (pageRows.length < pageSize) {
+        break;
+      }
+    }
+
+    logger.info(`[成交额TOP200] ${logDate} 聚合完成，共 ${rows.length} 条`);
+    return rows;
   }
 
   /**
@@ -306,9 +376,9 @@ export class VolumeSurgeService {
         logger.info(`[市场情绪] 缓存未命中 ${targetDate}，使用 marketSentimentService`);
         let sentiment = await marketSentimentService.fetchAndCalculateSentiment(targetDate);
         if (sentiment) {
-          marketSentimentScore = sentiment.score || 50;
-          marketLimitUpCount = sentiment.limitUpCount || 0;
-          marketAdvice = sentiment.advice || 'normal';
+          marketSentimentScore = sentiment?.score ?? 50;
+          marketLimitUpCount = sentiment?.limitUpCount ?? 0;
+          marketAdvice = sentiment?.advice ?? 'normal';
           logger.info(`[市场情绪] 评分=${marketSentimentScore}, 涨停数=${marketLimitUpCount}, 建议=${marketAdvice}`);
         } else {
           logger.info(`[市场情绪] 无法获取 ${targetDate} 的数据，使用默认值`);
