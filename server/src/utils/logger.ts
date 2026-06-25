@@ -33,7 +33,7 @@ const logger = winston.createLogger({
     }),
     // 组合日志文件
     new winston.transports.File({
-      filename: path.join(logDir, 'combined.log'),
+      filename: path.join(logDir, 'info.log'),
       maxsize: 5242880, // 5MB
       maxFiles: 5,
     }),

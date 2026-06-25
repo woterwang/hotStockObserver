@@ -1,3 +1,10 @@
+/*
+ * @Author: hp.com
+ * @Date: 2026-06-22 21:47:05
+ * @LastEditors: WRG
+ * @LastEditTime: 2026-06-25 21:58:44
+ * @😍: 😃😃
+ */
 import { groupService } from '../services/groupService';
 import { logger } from '../utils';
 import { VolumeSurge } from '../models';
@@ -762,13 +769,13 @@ export class VolumeSurgeService {
       // 查询当天所有放量大涨股票所有备选股票，按照评分倒序排列并添加到当天的分组中
       const allSignals = await VolumeSurge.find({ date: targetDate }).sort({ strategyScore: -1, changePercent: -1 });
       logger.info(`[放量大涨] 今日放量大涨股票: ${allSignals.length} 只`);
-      // // 获取所有股票代码
-      // const stockCodes = allSignals.map(s => s.stockCode);
-      // logger.info(`[放量大涨] 今日备选股票: ${stockCodes.join(', ')}`);
-      // // 创建备选股票分组
-      // const groupId = await groupService.createGroup(`${targetDate}-备选New`);
-      // logger.info(`[放量大涨] 备选股票分组ID: ${groupId}`);
-      // groupService.addStocksToGroup(groupId, stockCodes);
+      // 获取所有股票代码
+      const stockCodes = allSignals.map(s => s.stockCode);
+      logger.info(`[放量大涨] 今日备选股票: ${stockCodes.join(', ')}`);
+      // 创建备选股票分组
+      const groupId = await groupService.createGroup(`${targetDate}-放量大涨备选`);
+      logger.info(`[放量大涨] 备选股票分组ID: ${groupId}`);
+      groupService.addStocksToGroup(groupId, stockCodes);
     } catch (err) {
       logger.error(`[放量大涨] 保存备选股票失败: ${(err as Error).message}`);
     }
