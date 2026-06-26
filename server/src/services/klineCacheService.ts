@@ -469,7 +469,7 @@ class KlineCacheService {
     stockCode: string,
     targetDate: string = toDateStr(getToday()),
     klineDays: number = 60,
-    includeTargetDate: boolean = true
+    includeTargetDate: boolean = true,
   ): Promise<CachedKline[]> {
     const normalizedTargetDate = toDateStr(targetDate);
     const { map } = this.loadCache(stockCode);
@@ -481,30 +481,35 @@ class KlineCacheService {
       this.persistCache(stockCode, allCachedKlines, Date.now()); // 更新缓存
       cachedKline = Array.from(allCachedKlines.values());
     }
+
     // 修复问题2：确保按日期升序排序，Map 插入顺序不保证有序
     cachedKline.sort((a, b) => a.date.localeCompare(b.date));
 
     // 找到边界索引：可选包含 targetDate 当天，或仅取 targetDate 之前的最后一个交易日
-    const startDateIndex = cachedKline.reduce((idx, kline, i) => {
-      const matched = includeTargetDate
-        ? kline.date <= normalizedTargetDate
-        : kline.date < normalizedTargetDate;
-      return matched ? i : idx;
-    }, -1);
+    let startDateIndex = cachedKline.findIndex(kline => kline.date == normalizedTargetDate);
 
     // 修复问题1：startDateIndex === -1 表示缓存中所有日期都晚于 targetDate，避免崩溃
-    if (startDateIndex === -1) {
+    if (startDateIndex < 0) {
       const rangeText = includeTargetDate
         ? `${normalizedTargetDate} 及之前`
         : `${normalizedTargetDate} 之前`;
-      logger.warn(`[K线缓存] ${stockCode} 缓存中无 ${rangeText} 的数据，返回空数组`);
-      return [];
+      logger.warn(`[K线缓存] ${stockCode} 缓存中无 ${rangeText} 的数据，返回空数组,尝试远程拉取一次`);
+      const allCachedKlines = await this.fetchKlineFromTHS(stockCode, 1800);
+      this.persistCache(stockCode, allCachedKlines, Date.now()); // 更新缓存
+      cachedKline = Array.from(allCachedKlines.values());
+      startDateIndex = cachedKline.findIndex(kline => kline.date == normalizedTargetDate);
+      
+      // 如果仍然找不到，说明目标日期不在缓存范围内，返回空数组
+      if (startDateIndex < 0) {
+        logger.warn(`[K线缓存] ${stockCode} 缓存中无 ${rangeText} 的数据，返回空数组`);
+        return [];
+      }
     }
-
+    
     // 第二步： 找到结束日期所在K线的索引位置（结束日期 = 开始日期 - klineDays）
     let endDateIndex = startDateIndex - klineDays;
     if (endDateIndex < 0) {
-      endDateIndex = 0;
+      endDateIndex = 0; // 
     }
 
     logger.info(`[K线缓存] ${stockCode} 从缓存中获取历史K线数据，开始日期: ${cachedKline[startDateIndex].date}，结束日期: ${cachedKline[endDateIndex].date}`);

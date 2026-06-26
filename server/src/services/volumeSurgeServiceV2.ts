@@ -2,13 +2,13 @@
  * @Author: hp.com
  * @Date: 2026-06-22 21:47:05
  * @LastEditors: WRG
- * @LastEditTime: 2026-06-25 21:58:44
+ * @LastEditTime: 2026-06-26 22:06:21
  * @😍: 😃😃
  */
 import { groupService } from '../services/groupService';
 import { logger } from '../utils';
 import { VolumeSurge } from '../models';
-import { getToday, formatDate } from '../utils/dateUtils';
+import { getToday, formatDate, getTodayStr } from '../utils/dateUtils';
 import axios from 'axios';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -376,6 +376,8 @@ export class VolumeSurgeService {
 
   async scanAndSave (dateStr?: string): Promise<number> {
     const targetDate = dateStr || formatDate(getToday(), 'YYYYMMDD');
+    // 记录涨幅不满足条件的股票数量
+    let unsatisfiedCount = 0;
 
     // this.fetchFromWencai(targetDate);return 0;
 
@@ -384,7 +386,6 @@ export class VolumeSurgeService {
       logger.warn(`[VolumeSurge] ${targetDate} 不是交易日，跳过扫描`);
       return 0;
     }
-
     logger.info(`开始扫描放量大涨股票: ${targetDate}`);
 
     // ========================================
@@ -431,11 +432,11 @@ export class VolumeSurgeService {
     }
 
     // 2. 检查上证指数是否站上20日均线
-    const indexAboveMa20 = await this.checkIndexAboveMa20(targetDate);
+    const indexAboveMa20 = true;
     logger.info(`[大盘趋势] 上证指数${indexAboveMa20 ? '站上' : '跌破'}20日均线`);
 
     // 3. 获取涨停股信息（首板+连板，合并为一次API调用）
-    await this.randomDelay();
+    // await this.randomDelay();
     const { firstBoardSet, continuousBoardMap } = await this.getLimitUpBoardInfo(targetDate);
     logger.info(`[涨停检测] 首板数量: ${firstBoardSet.size}, 连板数量: ${continuousBoardMap.size}`);
 
@@ -517,7 +518,8 @@ export class VolumeSurgeService {
         }
         // 只保留涨幅>7%的数据
         if (changePercent < 7) {
-          logger.info(`[涨幅] ${stockName} 的涨幅 ${changePercent}% 不满足 >7%，跳过保存`);
+          // logger.info(`[涨幅] ${stockName} 的涨幅 ${changePercent}% 不满足 >7%，跳过保存`);
+          unsatisfiedCount++;
           continue;
         }
 
@@ -527,8 +529,16 @@ export class VolumeSurgeService {
           // continue;  // 量能未放大，直接过滤掉
         }
 
+        // 获取上一交易日日期，用于计算5日均量比
+        const prevDate = tradingCalendarService.getPrevTradingDay(targetDate);
+        logger.info(`[日期] ${stockName} 的上一交易日日期: ${prevDate}`);
+        if (!prevDate) {
+          logger.info(`[日期] ${stockName} 未找到${targetDate}的上一交易日，跳过保存`);
+          continue;
+        }
+
         // K线
-        const KlineData = await klineCacheService.loadCacheForHistory(stockCode, targetDate, 20, false);
+        const KlineData = await klineCacheService.loadCacheForHistory(stockCode, prevDate, 20, false);
         // 计算5日均量比
         volumeRatioTo5Day = await this.getVolumeRatioTo5Day(KlineData, volume);
 
@@ -715,6 +725,10 @@ export class VolumeSurgeService {
         }
         // 打印加分日志
         logger.info(`[加分] ${stockCode} ${stockName} ${riskLevel} ${strategyScore} ${addScoreLogs.join(' | ')}`);
+        // 打印不满足涨幅条件的股票数量
+        if (unsatisfiedCount > 0) {
+          logger.info(`[涨幅] ${unsatisfiedCount} 只股票涨幅不满足 >7%，已跳过保存`);
+        }
         await VolumeSurge.findOneAndUpdate(
           { date: targetDate, stockCode },
           {
@@ -771,11 +785,13 @@ export class VolumeSurgeService {
       logger.info(`[放量大涨] 今日放量大涨股票: ${allSignals.length} 只`);
       // 获取所有股票代码
       const stockCodes = allSignals.map(s => s.stockCode);
-      logger.info(`[放量大涨] 今日备选股票: ${stockCodes.join(', ')}`);
-      // 创建备选股票分组
-      const groupId = await groupService.createGroup(`${targetDate}-放量大涨备选`);
-      logger.info(`[放量大涨] 备选股票分组ID: ${groupId}`);
-      groupService.addStocksToGroup(groupId, stockCodes);
+      if (stockCodes.length > 0 && targetDate == getTodayStr()) {
+        logger.info(`[放量大涨] 今日备选股票: ${stockCodes.join(', ')}`);
+        // 创建备选股票分组
+        const groupId = await groupService.createGroup(`${targetDate}-放量大涨备选`);
+        logger.info(`[放量大涨] 备选股票分组ID: ${groupId}`);
+        groupService.addStocksToGroup(groupId, stockCodes);
+      }
     } catch (err) {
       logger.error(`[放量大涨] 保存备选股票失败: ${(err as Error).message}`);
     }
@@ -799,8 +815,12 @@ export class VolumeSurgeService {
       return 0;
     }
     //取最近5天的成交量
-    const recent5DaysVolume = KlineData.slice(-5).map(k => k.volume);
-    logger.info(`[计算成交量/5日均量比] 最近5天的成交量: ${recent5DaysVolume}，当前成交量: ${currentVolume}`);
+    let recent5Days: string[] = []
+    const recent5DaysVolume = KlineData.slice(-5).map(k => {
+      recent5Days.push(k.date);
+      return k.volume;
+    });
+    logger.info(`[计算成交量/5日均量比] 最近5天${recent5Days.join(',')}的成交量: ${recent5DaysVolume}，当前成交量: ${currentVolume}`);
     const avgVolume5Day = recent5DaysVolume.reduce((sum, v) => sum + v, 0) / recent5DaysVolume.length;
     logger.info(`[计算成交量/5日均量比] 5日均量: ${avgVolume5Day}`);
     return (currentVolume / avgVolume5Day);
