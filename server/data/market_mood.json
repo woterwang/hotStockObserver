@@ -1,10 +1,13 @@
 {
-<<<<<<< HEAD
-  "updatedAt": "2026-06-25T14:08:49.107Z",
-=======
-  "updatedAt": "2026-06-25T14:06:22.949Z",
->>>>>>> 97eae9e (update cache files)
+  "updatedAt": "2026-06-27T00:18:00.203Z",
   "data": [
+    {
+      "day": "20260626",
+      "strong": 40,
+      "ztjs": 60,
+      "lbgd": 6,
+      "dfNum": 18
+    },
     {
       "day": "20260625",
       "strong": 53,
@@ -6997,13 +7000,6 @@
       "ztjs": 102,
       "lbgd": 11,
       "dfNum": 10
-    },
-    {
-      "day": "20220512",
-      "strong": 72,
-      "ztjs": 78,
-      "lbgd": 10,
-      "dfNum": 21
     }
   ]
 }
