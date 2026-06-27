@@ -47,13 +47,7 @@ class BuySignalController {
       const scoreThreshold = minScore !== undefined ? Number(minScore) : 40;
       
       let signals = await buySignalService.getTodaySignals(date as string);
-      
-      // 如果没有数据，自动生成
-      if (signals.length === 0 && date) {
-        // signals = await buySignalService.generateBuySignals(date as string, undefined, scoreThreshold);
-      }
-      
-      // 按信号类型筛选
+            // 按信号类型筛选
       if (signal && typeof signal === 'string') {
         signals = signals.filter(s => s.buySignal === signal);
       }
