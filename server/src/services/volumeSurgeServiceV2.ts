@@ -2,7 +2,7 @@
  * @Author: hp.com
  * @Date: 2026-06-22 21:47:05
  * @LastEditors: WRG
- * @LastEditTime: 2026-06-26 22:06:21
+ * @LastEditTime: 2026-06-26 22:49:15
  * @😍: 😃😃
  */
 import { groupService } from '../services/groupService';
@@ -510,7 +510,7 @@ export class VolumeSurgeService {
           } else if (key.includes(`成交量[${targetDate}]`) && !key.includes('}区间日均成交量')) {
             // 当日成交量（用于计算5日均量比）
             volume = Number(item[key]) || 0;
-            logger.info(`[数据提取] ${stockName} 当日成交量: ${volume}`);
+            // logger.info(`[数据提取] ${stockName} 当日成交量: ${volume}`);
           }
           //else if (key.includes('涨停原因') || key.includes('异动原因')) {
           //   limitUpReason = item[key] || '';
@@ -725,10 +725,6 @@ export class VolumeSurgeService {
         }
         // 打印加分日志
         logger.info(`[加分] ${stockCode} ${stockName} ${riskLevel} ${strategyScore} ${addScoreLogs.join(' | ')}`);
-        // 打印不满足涨幅条件的股票数量
-        if (unsatisfiedCount > 0) {
-          logger.info(`[涨幅] ${unsatisfiedCount} 只股票涨幅不满足 >7%，已跳过保存`);
-        }
         await VolumeSurge.findOneAndUpdate(
           { date: targetDate, stockCode },
           {
@@ -780,6 +776,10 @@ export class VolumeSurgeService {
       }
     }
     try {
+      // 打印不满足涨幅条件的股票数量
+      if (unsatisfiedCount > 0) {
+        logger.info(`[涨幅] ${unsatisfiedCount} 只股票涨幅不满足 >7%，已跳过保存`);
+      }
       // 查询当天所有放量大涨股票所有备选股票，按照评分倒序排列并添加到当天的分组中
       const allSignals = await VolumeSurge.find({ date: targetDate }).sort({ strategyScore: -1, changePercent: -1 });
       logger.info(`[放量大涨] 今日放量大涨股票: ${allSignals.length} 只`);
