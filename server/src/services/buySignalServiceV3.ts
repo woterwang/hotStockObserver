@@ -695,7 +695,7 @@ class BuySignalService {
    * 2) 历史模式：从历史分时接口获取开盘价/开盘成交量
    * 其余评分所需字段继续复用现有计算逻辑
    */
-  async getOpeningData (stockCode: string, targetDate: string, signalDateStr: string): Promise<{
+  async getOpeningData (stockCode: string, candidateDate: string, signalDateStr: string): Promise<{
     openPrice: number;
     openChangePercent: number;
     openVolumeRatio: number;
@@ -707,15 +707,15 @@ class BuySignalService {
     openTimes?: number;
   } | null> {
     logger.info(`[BuySignal] 获取 ${stockCode} ${signalDateStr} 开盘数据`);
-    const targetDateStr = formatDateStr(targetDate);
-    if (!tradingCalendarService.isTradingDay(targetDateStr)) {
-      logger.info(`[BuySignal] ${targetDateStr} 不是交易日，无法获取开盘数据`);
+    candidateDate = formatDateStr(candidateDate);
+    if (!tradingCalendarService.isTradingDay(signalDateStr)) {
+      logger.info(`[BuySignal] ${signalDateStr} 不是交易日，无法获取开盘数据`);
       return null;
     }
     try {
       const todayStr = dayjs().format('YYYYMMDD');
-      const isTodayMode = signalDateStr === todayStr;
-      const rawKlineData = await klineCacheService.fetchKlineByDate(stockCode, targetDateStr);
+      const isTodayMode = signalDateStr == todayStr;
+      let rawKlineData = await klineCacheService.fetchKlineByDate(stockCode, candidateDate);
 
       if (!rawKlineData || rawKlineData.length === 0) {
         logger.info(`[BuySignal] getOpeningData ${stockCode} 无K线数据`);
@@ -723,21 +723,21 @@ class BuySignalService {
       }
 
       // 统一按日期升序处理，避免 Map 插入顺序导致前后日判断错误
-      const klineData = [...rawKlineData].sort((a, b) => a.date.localeCompare(b.date));
+      let klineData = [...rawKlineData].sort((a, b) => a.date.localeCompare(b.date));
 
       // 找到信号日期的K线
-      let preDayIndex = klineData.findIndex(k => k.date === targetDate);
+      let preDayIndex = klineData.findIndex(k => k.date === candidateDate);
 
       // 没找到信号日期的K线数据
       if (preDayIndex === -1) {
-        logger.info(`[BuySignal] getOpeningData ${stockCode} 未找到 ${targetDate} 的K线，无法获取计算开盘数据`);
+        logger.info(`[BuySignal] getOpeningData ${stockCode} 未找到 ${candidateDate} 的K线，无法获取计算开盘数据`);
         return null;
       }
 
       let prevKline: CachedKline = klineData[preDayIndex];
 
-      let target: CachedKline = {
-        date: targetDateStr,
+      let signalKline: CachedKline = {
+        date: signalDateStr,
         open: 0,  // 开盘价未知，后续用腾讯数据覆盖
         high: 0,  // 最高价未知，后续用腾讯数据覆盖
         low: 0,    // 最低价未知，后续用腾讯数据覆盖
@@ -746,7 +746,6 @@ class BuySignalService {
         turnover: 0,// 成交额未知，后续用腾讯数据覆盖
       };
       let resolvedOpenTimes: number | undefined;
-      let realtimeIsLimitUp: boolean | null = null;
       // 开盘涨幅
       let openChangePercent = 0;
 
@@ -761,14 +760,14 @@ class BuySignalService {
 
             const openingPrice = Number(todayQuote.openPrice) || 0;
             if (openingPrice > 0) {
-              target.open = openingPrice;
+              signalKline.open = openingPrice;
             }
 
             const openingVolume = Number(todayQuote.openVolume) * 100;
             const openingTurnover = Number(todayQuote.auctionAmount) || 0;
             if (openingVolume > 0 && openingTurnover > 0) {
-              target.volume = openingVolume;
-              target.turnover = openingTurnover;
+              signalKline.volume = openingVolume;
+              signalKline.turnover = openingTurnover;
             }
           }
           // 计算开盘涨幅
@@ -779,13 +778,15 @@ class BuySignalService {
       } else {
         // 历史模式：使用历史分时接口覆盖开盘价/开盘成交量
         try {
-          target = klineData[preDayIndex + 1] || target; // 先用K线数据填充，后续分时数据覆盖开盘相关字段
-          const minuteData = await getStockTrendMinute(stockCode, targetDateStr, '09:30');
+          rawKlineData = await klineCacheService.fetchKlineByDate(stockCode, signalDateStr) || [];
+          klineData = [...rawKlineData].sort((a, b) => a.date.localeCompare(b.date));
+          signalKline = klineData[preDayIndex + 1] || signalKline; // 先用K线数据填充，后续分时数据覆盖开盘相关字段
+          const minuteData = await getStockTrendMinute(stockCode, signalDateStr, '09:30');
           logger.info(`[BuySignal] ${stockCode} openData:`, JSON.stringify(minuteData));
           if (minuteData) {
             logger.info(`[BuySignal] ${stockCode} 使用历史分时接口获取开盘数据`);
 
-            const openingPrice = target.open || 0;
+            const openingPrice = Number(signalKline.open || minuteData[2] || 0); // 开盘价
             const openingVolume = (Number(minuteData[3]) || 0) * 100; // 成交量（股）
             const openingTurnover = openingVolume * (openingPrice > 0 ? openingPrice : (Number(minuteData[2]) || 0));
 
@@ -794,41 +795,41 @@ class BuySignalService {
             logger.info(`[BuySignal] ${stockCode} openTurnover:${openingTurnover}`);
 
             if (openingPrice > 0) {
-              target.open = openingPrice;
+              signalKline.open = openingPrice;
             }
             if (openingVolume > 0 && openingTurnover > 0) {
-              target.volume = openingVolume;
-              target.turnover = openingTurnover;
+              signalKline.volume = openingVolume;
+              signalKline.turnover = openingTurnover;
             }
           }
           openChangePercent = prevKline && prevKline.close > 0
-            ? ((target.open - prevKline.close) / prevKline.close) * 100
+            ? ((signalKline.open - prevKline.close) / prevKline.close) * 100
             : 0;
         } catch (err) {
           console.warn(`[BuySignal] 使用历史分时接口获取开盘数据失败，降级本地K线:`, err);
         }
       }
 
-      if (isTodayMode && target.open <= 0) {
+      if (isTodayMode && signalKline.open <= 0) {
         logger.info(`[BuySignal] ${stockCode} 今日模式缺少有效开盘价`);
         return null;
       }
       // 打印 target 数据
-      logger.info(`[BuySignal] ${stockCode} target:`, target.open, target.close, target.volume, target.turnover, target.high, target.low);
+      logger.info(`[BuySignal] ${stockCode} target:`, signalKline.open, signalKline.close, signalKline.volume, signalKline.turnover, signalKline.high, signalKline.low);
       // 计算量比（当日成交量 / 5日平均成交量）
       let volumeRatio = 1;
-      volumeRatio = target.volume > 0 ? ((target.volume / prevKline.volume) * 100) : 0;
+      volumeRatio = signalKline.volume > 0 ? ((signalKline.volume / prevKline.volume) * 100) : 0;
       logger.info(`[BuySignal] ${stockCode} volumeRatio:${volumeRatio}`);
 
-      const auctionAmount = Math.round(target.turnover);
+      const auctionAmount = Math.round(signalKline.turnover);
       logger.info(`[BuySignal] ${stockCode} auctionAmount:${auctionAmount}`);
       const auctionAmountRatio = prevKline && prevKline.turnover > 0
-        ? ((target.turnover) / prevKline.turnover) * 100
+        ? ((signalKline.turnover) / prevKline.turnover) * 100
         : 0;
       logger.info(`[BuySignal] ${stockCode} auctionAmountRatio:${auctionAmountRatio}`);
 
       return {
-        openPrice: target.open,
+        openPrice: signalKline.open,
         openChangePercent: Math.round(openChangePercent * 100) / 100,
         openVolumeRatio: Math.round(volumeRatio * 100) / 100,
         auctionAmount,
