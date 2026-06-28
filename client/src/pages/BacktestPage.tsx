@@ -147,7 +147,7 @@ const BacktestPage: React.FC = () => {
   
   // 突破三天策略配置
   const [config, setConfig] = useState<BacktestConfig>({
-    stopLossPercent: -5,
+    stopLossPercent: 5,
     takeProfitPercent: 10,
     maxHoldDays: 3,
     useDay2LowAsStopLoss: true,
@@ -241,7 +241,10 @@ const BacktestPage: React.FC = () => {
           body: JSON.stringify({ 
             startDate: formatDateForApi(startDate), 
             endDate: formatDateForApi(endDate), 
-            config 
+            config:{
+              ...config,
+              stopLossPercent: -config.stopLossPercent,
+            }
           }),
         });
 

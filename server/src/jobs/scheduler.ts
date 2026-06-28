@@ -328,6 +328,15 @@ export class JobScheduler {
         const result = await tradingSignalService.updateSignalsAfterAuction(today);
 
         logger.info(`入场条件更新完成: 可入场=${result.ready}, 部分满足=${result.partial}, 不满足=${result.rejected}`);
+        if (result.ready > 0) {
+          // 过虑出满足条件的股票，按策略评分排序，取前3只股票作为当天的价格突破股票添加到当天的分组中
+          const topThree = result.signals.filter(item => item.status === 'ready').map(signal => signal.stockCode);
+          // 创建分组：${日期}-主线共振
+          logger.info(`[主线共振] 今日主线共振股票: ${topThree.join(', ')}`);
+          const groupId = await groupService.createGroup(`${today}-百日新高`);
+          await groupService.addStocksToGroup(groupId, topThree);
+        }
+
       } catch (error) {
         logger.error(`入场条件更新失败: ${(error as Error).message}`);
       }
