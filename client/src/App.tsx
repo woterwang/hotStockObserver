@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { HomePage, StatsPage, StockDetailPage, BreakthroughPage, BacktestPage, SignalPage, VolumeSurgePage, BuySignalPage, ConceptResonancePage, HistoryConceptPage } from './pages';
+import { HomePage, StatsPage, StockDetailPage, BreakthroughPage, BacktestPage, SignalPage, VolumeSurgePage, BuySignalPage, ConceptResonancePage, HistoryConceptPage, BacktestAnalysisPage } from './pages';
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
         <Route path="/concept-resonance" element={<ConceptResonancePage />} />
         <Route path="/history-concept" element={<HistoryConceptPage />} />
         <Route path="/backtest" element={<BacktestPage />} />
+        <Route path="/backtest-analysis" element={<BacktestAnalysisPage />} />
         <Route path="/signals" element={<SignalPage />} />
         <Route path="/stock/:code" element={<StockDetailPage />} />
       </Routes>

@@ -284,7 +284,7 @@ export class JobScheduler {
         // 按totalBuyScore排序
         volumeSurgeResult.sort((a, b) => b.totalBuyScore - a.totalBuyScore);
         // 取前3只股票作为当天的放量大涨股票添加到当天的分组中
-        const topThree = volumeSurgeResult.filter(item => item.totalBuyScore > 70).map(signal => signal.stockCode);
+        const topThree = volumeSurgeResult.filter(item => item.totalBuyScore > 40).map(signal => signal.stockCode);
         // 将 topThree 股票添加到当天的放量大涨分组中
         if (topThree.length > 0) {
           // 创建分组：${日期}-放量大涨

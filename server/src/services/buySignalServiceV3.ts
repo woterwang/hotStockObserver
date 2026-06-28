@@ -470,11 +470,14 @@ class BuySignalService {
    * @param minScore 可选，最低分数门槛，默认50
    */
   async generateBuySignals (dateStr: string, strategies?: StrategyType[], minScore: number = 0): Promise<IBuySignal[]> {
+    logger.info(`[BuySignal] 开始生成 ${dateStr} 的买入信号，策略: ${strategies || '默认'}, 最低分数: ${minScore}`);
     // 检查信号日期是否为交易日
     if (!tradingCalendarService.isTradingDay(dateStr)) {
       logger.info(`[BuySignal] ${dateStr} 不是交易日，跳过生成`);
       return [];
     }
+    // 获取前一个交易日（使用交易日历服务，支持节假日）
+    const prevTradingDay = tradingCalendarService.getPrevTradingDay(dateStr);
 
     // 如果数据库有今日的数据直接返回
     const existingCount = await BuySignal.countDocuments({ date: formatDateStr(dateStr) });
@@ -493,18 +496,14 @@ class BuySignalService {
     // 直接使用字符串日期
     const signalDate = formatDateStr(dateStr);
 
-    // 获取前一个交易日（使用交易日历服务，支持节假日）
-    const prevTradingDay = tradingCalendarService.getPrevTradingDay(dateStr);
     if (!prevTradingDay) {
       logger.info(`[BuySignal] 无法获取 ${dateStr} 的前一个交易日，跳过生成`);
       return [];
     }
-    // 选股日期就是前一交易日（字符串格式）
-    const selectionDate = prevTradingDay;
 
     // 🔒 检查前一交易日的 VolumeSurge 数据是否存在
     // 避免在选股数据未生成时使用错误的历史数据
-    const volumeSurgeCount = await VolumeSurge.countDocuments({ date: selectionDate });
+    const volumeSurgeCount = await VolumeSurge.countDocuments({ date: prevTradingDay });
     if (volumeSurgeCount === 0) {
       logger.info(`[BuySignal] ⚠️ ${prevTradingDay} 的 VolumeSurge 数据尚未生成，无法为 ${dateStr} 生成买入信号`);
       logger.info(`[BuySignal] 请等待 ${prevTradingDay} 收盘后数据更新，或手动触发选股扫描`);
@@ -513,7 +512,7 @@ class BuySignalService {
     logger.info(`[BuySignal] ${prevTradingDay} 有 ${volumeSurgeCount} 条 VolumeSurge 数据`);
 
     // 获取前一天的选股结果（支持多策略）
-    const candidates = await this.getAllCandidates(selectionDate, strategies, minScore);
+    const candidates = await this.getAllCandidates(prevTradingDay, strategies, minScore);
 
     if (candidates.length === 0) {
       logger.info(`[BuySignal] ${dateStr} 无可处理的候选标的（可能分数低于阈值 ${minScore}）`);
@@ -565,7 +564,6 @@ class BuySignalService {
   ): Promise<IBuySignal | null> {
     // 获取开盘数据，若为今日且为交易日，优先用腾讯实时行情
     let openData = null;
-    const todayStr = dayjs().format('YYYYMMDD');
     if (!tradingCalendarService.isTradingDay(signalDate)) {
       logger.info(`[BuySignal] ${signalDate} 不是交易日，无法获取开盘数据`);
       return null;
@@ -575,14 +573,11 @@ class BuySignalService {
       logger.info(`[BuySignal] generateSignalForStock ${candidate.stockCode} 无法获取开盘数据`);
       return null;
     }
-    // 获取上一交易日期
-    const prevTradingDay = tradingCalendarService.getPrevTradingDay(candidate.date);
-
     // 获取下一交易日
     const nextTradingDay = tradingCalendarService.getNextTradingDay(candidate.date);
 
     // 获取技术位置
-    const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, prevTradingDay as string);
+    const technicalData = await this.getTechnicalPosition(candidate.stockCode, openData.openPrice, candidate.date);
 
     //板块联动
     const sectorLink = await BuySignalScorer.scoreSectorLink(candidate.stockCode, candidate.date, nextTradingDay || signalDate);
@@ -780,7 +775,8 @@ class BuySignalService {
         try {
           rawKlineData = await klineCacheService.fetchKlineByDate(stockCode, signalDateStr) || [];
           klineData = [...rawKlineData].sort((a, b) => a.date.localeCompare(b.date));
-          signalKline = klineData[preDayIndex + 1] || signalKline; // 先用K线数据填充，后续分时数据覆盖开盘相关字段
+          signalKline = klineData.find(k => k.date === signalDateStr) || signalKline; // 先用K线数据填充，后续分时数据覆盖开盘相关字段
+          logger.info(`[BuySignal] ${stockCode} signalKline:${JSON.stringify(signalKline)}`);
           const minuteData = await getStockTrendMinute(stockCode, signalDateStr, '09:30');
           logger.info(`[BuySignal] ${stockCode} openData:`, JSON.stringify(minuteData));
           if (minuteData) {
