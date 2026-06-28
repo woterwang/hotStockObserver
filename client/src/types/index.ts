@@ -210,6 +210,19 @@ export interface VolumeSurgeHistory {
   stocks: VolumeSurge[];
 }
 
+// 百日新高（沿用放量大涨字段结构）
+export interface HundredDayHigh extends VolumeSurge {}
+
+export interface HundredDayHighStats extends VolumeSurgeStats {}
+
+export interface HundredDayHighHistory {
+  date: string;
+  count: number;
+  successCount: number;
+  avgProfit: number;
+  stocks: HundredDayHigh[];
+}
+
 // 买入信号
 export interface BuySignal {
   _id?: string;

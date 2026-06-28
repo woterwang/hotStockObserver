@@ -23,3 +23,4 @@ __exportStar(require("./TradingSignal"), exports);
 __exportStar(require("./VolumeSurge"), exports);
 __exportStar(require("./BuySignal"), exports);
 __exportStar(require("./ConceptResonance"), exports);
+__exportStar(require("./HundredDayHigh"), exports);

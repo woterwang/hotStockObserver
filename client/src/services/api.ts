@@ -13,6 +13,9 @@ import type {
   VolumeSurge,
   VolumeSurgeHistory,
   VolumeSurgeStats,
+  HundredDayHigh,
+  HundredDayHighHistory,
+  HundredDayHighStats,
   BuySignal,
   BuySignalStats,
   MarketSentiment,
@@ -245,6 +248,36 @@ export const volumeSurgeApi = {
   // 获取统计数据
   getStats: (date?: string): Promise<ApiResponse<VolumeSurgeStats>> => {
     return api.get('/volume-surge/stats', { params: { date } });
+  },
+};
+
+/**
+ * 百日新高API
+ */
+export const hundredDayHighApi = {
+  // 手动触发扫描
+  scan: (date?: string): Promise<ApiResponse<{ count: number }>> => {
+    return api.post('/hundred-day-high/scan', { date });
+  },
+
+  // 获取列表
+  getList: (date?: string): Promise<ApiResponse<HundredDayHigh[]>> => {
+    return api.get('/hundred-day-high/list', { params: { date } });
+  },
+
+  // 获取历史记录
+  getHistory: (days: number = 30): Promise<ApiResponse<HundredDayHighHistory[]>> => {
+    return api.get('/hundred-day-high/history', { params: { days } });
+  },
+
+  // 获取可用日期列表
+  getDates: (): Promise<ApiResponse<string[]>> => {
+    return api.get('/hundred-day-high/dates');
+  },
+
+  // 获取统计数据
+  getStats: (date?: string): Promise<ApiResponse<HundredDayHighStats>> => {
+    return api.get('/hundred-day-high/stats', { params: { date } });
   },
 };
 

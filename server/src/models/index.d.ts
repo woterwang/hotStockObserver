@@ -7,3 +7,4 @@ export * from './TradingSignal';
 export * from './VolumeSurge';
 export * from './BuySignal';
 export * from './ConceptResonance';
+export * from './HundredDayHigh';

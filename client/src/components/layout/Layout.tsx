@@ -8,6 +8,7 @@ const strategyItems = [
   { id: 'breakthrough', name: '价格突破', icon: '🚀', description: '价格突破188日新高扫描', path: '/breakthrough' },
   { id: 'volume_surge', name: '强势资金突破', icon: '🔥', description: '成交额前200+趋势突破', path: '/volume-surge' },
   { id: 'concept_resonance', name: '主线共振', icon: '🎯', description: '量价突破+板块概念共振', path: '/concept-resonance' },
+  { id: 'hundred_day_high', name: '百日新高', icon: '💯', description: '涨幅突破前100交易日新高', path: '/hundred-day-high' },
 ];
 
 /**
@@ -94,7 +95,7 @@ export const Header: React.FC = () => {
                   setShowSignalMenu(false);
                 }}
                 className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  showStrategyMenu || ['/breakthrough', '/volume-surge', '/concept-resonance'].includes(location.pathname)
+                  showStrategyMenu || ['/breakthrough', '/volume-surge', '/concept-resonance', '/hundred-day-high'].includes(location.pathname)
                     ? 'bg-purple-50 text-purple-600'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
