@@ -355,6 +355,79 @@ export interface ApiResponse<T> {
   pageSize?: number;
 }
 
+// 回测分析文件项
+export interface BacktestResultFileItem {
+  fileName: string;
+  size: number;
+  sizeKb: number;
+  modifiedAt: string;
+}
+
+// 回测配置
+export interface BacktestResultConfig {
+  signalFilter?: 'strong_buy' | 'buy' | 'all';
+  minSignalScore?: number;
+  basePosition?: number;
+  lowMoodPositionRatio?: number;
+  marketMoodThreshold?: number;
+  stopLossPercent?: number;
+  takeProfitPercent?: number;
+  maxHoldDays?: number;
+  marketPanicThreshold?: number;
+  maxBuyCount?: number;
+  [key: string]: number | string | boolean | undefined;
+}
+
+export type BacktestExitReason = 'stop_loss' | 'take_profit' | 'max_days' | 'market_panic' | 'data_end';
+
+// 回测交易记录
+export interface BacktestTradeRecord {
+  stockCode: string;
+  stockName: string;
+  strategyType?: string;
+  strategyName?: string;
+  buyDate: string;
+  buyPrice: number;
+  sellDate: string;
+  sellPrice: number;
+  holdDays: number;
+  position: number;
+  profitPercent: number;
+  profitAmount: number;
+  exitReason: BacktestExitReason | string;
+  buySignalScore?: number;
+  selectionScore?: number;
+  volumeRatio?: number;
+  marketMood?: number;
+}
+
+// 回测结果
+export interface BacktestResultData {
+  startDate: string;
+  endDate: string;
+  config: BacktestResultConfig;
+  totalTrades: number;
+  winTrades: number;
+  lossTrades: number;
+  winRate: number;
+  totalProfitAmount?: number;
+  totalProfitPercent: number;
+  avgProfitPercent: number;
+  avgWinPercent: number;
+  avgLossPercent: number;
+  profitLossRatio: number;
+  totalInvested?: number;
+  maxDrawdown?: number;
+  maxDrawdownPercent?: number;
+  maxProfit: number;
+  maxLoss: number;
+  maxConsecutiveWins: number;
+  maxConsecutiveLosses: number;
+  avgHoldDays: number;
+  equityCurve: { date: string; equity: number }[];
+  trades: BacktestTradeRecord[];
+}
+
 // ==========================================
 // 主线共振策略 (Concept Resonance)
 // ==========================================

@@ -25,4 +25,10 @@ router.delete('/cache', backtestController.clearCache);
 // 获取缓存统计
 router.get('/cache/stats', backtestController.getCacheStats);
 
+// 获取回测结果文件列表
+router.get('/results', backtestController.listResultFiles);
+
+// 获取指定回测结果文件内容
+router.get('/results/:fileName', backtestController.getResultFile);
+
 export default router;

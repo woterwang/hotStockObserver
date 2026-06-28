@@ -15,3 +15,4 @@ export { default as VolumeSurgePage } from './VolumeSurgePage';
 export { default as BuySignalPage } from './BuySignalPage';
 export { default as ConceptResonancePage } from './ConceptResonancePage';
 export { default as HistoryConceptPage } from '../pages/HistoryConceptPage';
+export { default as BacktestAnalysisPage } from './BacktestAnalysisPage';

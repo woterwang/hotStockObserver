@@ -23,7 +23,9 @@ import type {
   ConceptLeader,
   ConceptResonanceBacktestResult,
   ConceptResonanceBacktestConfig,
-  ThsConceptHotRankResult
+  ThsConceptHotRankResult,
+  BacktestResultFileItem,
+  BacktestResultData
 } from '../types';
 
 const getErrorMessage = (error: unknown, fallback: string): string => {
@@ -284,6 +286,21 @@ export const buySignalApi = {
   // 删除指定日期的买入信号数据
   deleteByDate: (dateStr: string): Promise<ApiResponse<{ message: string }>> => {
     return api.delete('/buy-signal/deleteByDate', { params: { date: dateStr } });
+  },
+};
+
+/**
+ * 回测结果分析API
+ */
+export const backtestAnalysisApi = {
+  // 获取回测结果文件列表
+  getResultFiles: (): Promise<ApiResponse<BacktestResultFileItem[]>> => {
+    return api.get('/backtest/results');
+  },
+
+  // 获取指定回测结果文件内容
+  getResultByFile: (fileName: string): Promise<ApiResponse<BacktestResultData>> => {
+    return api.get(`/backtest/results/${encodeURIComponent(fileName)}`);
   },
 };
 
