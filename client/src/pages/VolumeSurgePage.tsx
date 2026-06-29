@@ -221,6 +221,8 @@ const VolumeSurgePage: React.FC = () => {
         {/* 补录对话框 */}
         <BackfillDialog
           isOpen={showBackfillDialog}
+          scanEndpoint="/api/volume-surge/scan"
+          strategyName="强势资金突破"
           onClose={() => {
             setShowBackfillDialog(false);
             fetchDates(); // 刷新日期列表

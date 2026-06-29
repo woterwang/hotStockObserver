@@ -16,6 +16,8 @@ import type {
   HundredDayHigh,
   HundredDayHighHistory,
   HundredDayHighStats,
+  HundredDayHighBacktestConfig,
+  HundredDayHighBacktestResult,
   BuySignal,
   BuySignalStats,
   MarketSentiment,
@@ -258,6 +260,15 @@ export const hundredDayHighApi = {
   // 手动触发扫描
   scan: (date?: string): Promise<ApiResponse<{ count: number }>> => {
     return api.post('/hundred-day-high/scan', { date });
+  },
+
+  // 回测
+  backtest: (
+    startDate: string,
+    endDate: string,
+    config: Partial<HundredDayHighBacktestConfig>
+  ): Promise<ApiResponse<HundredDayHighBacktestResult>> => {
+    return api.post('/hundred-day-high/backtest', { startDate, endDate, config });
   },
 
   // 获取列表

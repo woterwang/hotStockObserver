@@ -4,6 +4,7 @@ import { hundredDayHighController } from '../controllers/hundredDayHighControlle
 const router = Router();
 
 router.post('/scan', hundredDayHighController.scan.bind(hundredDayHighController));
+router.post('/backtest', hundredDayHighController.backtest.bind(hundredDayHighController));
 router.get('/list', hundredDayHighController.getList.bind(hundredDayHighController));
 router.get('/stats', hundredDayHighController.getStats.bind(hundredDayHighController));
 router.get('/history', hundredDayHighController.getHistory.bind(hundredDayHighController));

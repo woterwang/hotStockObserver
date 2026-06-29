@@ -4,6 +4,8 @@ import dayjs from 'dayjs';
 interface BackfillDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  scanEndpoint?: string;
+  strategyName?: string;
 }
 
 /**
@@ -12,6 +14,8 @@ interface BackfillDialogProps {
 export const BackfillDialog: React.FC<BackfillDialogProps> = ({
   isOpen,
   onClose,
+  scanEndpoint = '/api/volume-surge/scan',
+  strategyName = '当前策略',
 }) => {
   const [startDate, setStartDate] = useState(() => dayjs().subtract(30, 'day').format('YYYY-MM-DD'));
   const [endDate, setEndDate] = useState(() => dayjs().format('YYYY-MM-DD'));
@@ -70,7 +74,7 @@ export const BackfillDialog: React.FC<BackfillDialogProps> = ({
         setProgress({ current: i + 1, total: dates.length, currentDate: date });
         
         try {
-          const response = await fetch('/api/volume-surge/scan', {
+          const response = await fetch(scanEndpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ date }),
@@ -136,7 +140,7 @@ export const BackfillDialog: React.FC<BackfillDialogProps> = ({
               </button>
             </div>
             <p className="mt-1 text-sm text-gray-500">
-              选择日期范围，系统将自动扫描并保存历史数据用于回测
+              选择日期范围，系统将自动扫描并保存{strategyName}历史数据用于回测
             </p>
           </div>
 

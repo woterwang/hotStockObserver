@@ -2,7 +2,7 @@
  * @Author: hp.com
  * @Date: 2026-06-22 21:47:05
  * @LastEditors: WRG
- * @LastEditTime: 2026-06-29 00:56:04
+ * @LastEditTime: 2026-06-29 21:40:33
  * @😍: 😃😃
  */
 import { groupService } from './groupService';
@@ -22,6 +22,68 @@ import { TrendScorer } from './TrendScorerService';
 import { klineCacheService, CachedKline, fetchTencentRealTimeQuotes } from './klineCacheService';
 import { thsConceptHotRankService } from './thsConceptHotRankService';
 import { top200VolumeParser, type Top200VolumeStockRow } from './top200VolumeParser';
+
+type HundredDayHighBacktestSignalFilter = 'all' | 'high_score' | 'first_board' | 'low_risk';
+
+interface HundredDayHighBacktestConfig {
+  signalFilter: HundredDayHighBacktestSignalFilter;
+  minScore: number;
+  basePosition: number;
+  lowRiskPositionFactor: number;
+  mediumRiskPositionFactor: number;
+  highRiskPositionFactor: number;
+  stopLossPercent: number;
+  takeProfitPercent: number;
+  maxHoldDays: number;
+  maxTradesPerDay: number;
+}
+
+interface HundredDayHighBacktestTradeRecord {
+  stockCode: string;
+  stockName: string;
+  signalDate: string;
+  volumeRatio: number;
+  buyDate: string;
+  buyPrice: number;
+  exitDate: string;
+  exitPrice: number;
+  holdDays: number;
+  position: number;
+  riskFactor: number;
+  profitPercent: number;
+  profitAmount: number;
+  exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'data_end';
+  score: number;
+  strategyScore: number;
+  riskLevel: 'low' | 'medium' | 'high';
+  isFirstBoard: boolean;
+}
+
+interface HundredDayHighBacktestResult {
+  startDate: string;
+  endDate: string;
+  config: HundredDayHighBacktestConfig;
+  totalTrades: number;
+  winTrades: number;
+  lossTrades: number;
+  winRate: number;
+  totalProfitAmount: number;
+  totalProfitPercent: number;
+  avgProfitPercent: number;
+  avgWinPercent: number;
+  avgLossPercent: number;
+  profitLossRatio: number;
+  totalInvested: number;
+  maxPosition: number;
+  maxDrawdown: number;
+  maxDrawdownPercent: number;
+  maxProfit: number;
+  maxLoss: number;
+  maxConsecutiveWins: number;
+  maxConsecutiveLosses: number;
+  avgHoldDays: number;
+  trades: HundredDayHighBacktestTradeRecord[];
+}
 
 export class NewHeightService {
 
@@ -50,6 +112,122 @@ export class NewHeightService {
     const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
     logger.debug(`模拟真人操作，等待 ${(delay / 1000).toFixed(1)} 秒...`);
     await this.delay(delay);
+  }
+
+  private async backtestStock (
+    stockCode: string,
+    buyDate: string,
+    config: HundredDayHighBacktestConfig
+  ): Promise<{
+    buyDate: string;
+    buyPrice: number;
+    exitDate: string;
+    exitPrice: number;
+    holdDays: number;
+    exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'data_end';
+    profitPercent: number;
+  } | null> {
+    if (!tradingCalendarService.isTradingDay(buyDate)) {
+      return null;
+    }
+
+    const klineData = await klineCacheService.getKlinesByStartDay(stockCode, buyDate, config.maxHoldDays);
+    if (!klineData || klineData.length === 0) {
+      return null;
+    }
+
+    const buyIdx = klineData.findIndex((k) => k.date === buyDate);
+    if (buyIdx === -1) {
+      return null;
+    }
+
+    const buyKline = klineData[buyIdx];
+    const buyPrice = buyKline.open;
+    if (buyPrice <= 0) {
+      return null;
+    }
+
+    const stopLossPrice = buyPrice * (1 - Math.abs(config.stopLossPercent));
+    const takeProfitPrice = buyPrice * (1 + Math.abs(config.takeProfitPercent));
+
+    let exitPrice = 0;
+    let exitDate = '';
+    let holdDays = 0;
+    let exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'data_end' = 'data_end';
+
+    for (let i = 0; i < config.maxHoldDays; i++) {
+      const holdIdx = buyIdx + i;
+      if (holdIdx >= klineData.length) {
+        const last = klineData[klineData.length - 1];
+        exitPrice = last.close;
+        exitDate = last.date;
+        holdDays = klineData.length - buyIdx;
+        exitReason = 'data_end';
+        break;
+      }
+
+      const dayKline = klineData[holdIdx];
+
+      if (i === 0) {
+        continue;
+      }
+
+      if (dayKline.open <= stopLossPrice) {
+        exitPrice = dayKline.open;
+        exitDate = dayKline.date;
+        holdDays = i + 1;
+        exitReason = 'stop_loss';
+        break;
+      }
+
+      if (dayKline.low <= stopLossPrice) {
+        exitPrice = stopLossPrice;
+        exitDate = dayKline.date;
+        holdDays = i + 1;
+        exitReason = 'stop_loss';
+        break;
+      }
+
+      if (dayKline.open >= takeProfitPrice) {
+        exitPrice = dayKline.open;
+        exitDate = dayKline.date;
+        holdDays = i + 1;
+        exitReason = 'take_profit';
+        break;
+      }
+
+      if (dayKline.high >= takeProfitPrice) {
+        exitPrice = takeProfitPrice;
+        exitDate = dayKline.date;
+        holdDays = i + 1;
+        exitReason = 'take_profit';
+        break;
+      }
+
+      if (i === config.maxHoldDays - 1) {
+        exitPrice = dayKline.close;
+        exitDate = dayKline.date;
+        holdDays = i + 1;
+        exitReason = 'max_days';
+        break;
+      }
+    }
+
+    if (exitPrice <= 0) {
+      return null;
+    }
+
+    const profitPercent = ((exitPrice - buyPrice) / buyPrice) * 100;
+
+    return {
+      buyDate,
+      buyPrice,
+      exitDate,
+      exitPrice,
+      holdDays,
+      exitReason,
+      profitPercent: Number(profitPercent.toFixed(2)),
+    };
   }
 
   /**
@@ -353,15 +531,7 @@ export class NewHeightService {
       // 核心条件（宽松版，确保有数据）
       // `${dateStr}涨幅>7%`,
       `${dateStr}涨幅>8%`,
-      `${dateStr}收盘价>${dateStr}前${newHeightDays}交易日最高价`,
-      // `${dateStr}上影线<4.5%`,
-      // 额外请求的字段（用于评分计算）
-      `${dateStr}量比`,
-      `${dateStr}换手率`,
-      `${dateStr}振幅`,
-      `${dateStr}涨幅`,
-      // `${dateStr}下影线`,
-      // `${dateStr}成交量/前5交易日平均成交量`,
+      `${dateStr}收盘价创${newHeightDays}日新高`,
       // 附加条件
       `所属概念`,
       '流通市值',
@@ -370,6 +540,14 @@ export class NewHeightService {
       `非新股`,
       `非北交所`,
       `非退市`,
+      // `${dateStr}上影线<4.5%`,
+      // 额外请求的字段（用于评分计算）
+      `${dateStr}量比`,
+      `${dateStr}换手率`,
+      `${dateStr}振幅`,
+      `${dateStr}涨幅`,
+      // `${dateStr}下影线`,
+      // `${dateStr}成交量/前5交易日平均成交量`,
     ].join('，');
 
     logger.info(`[问财查询] ${question}`);
@@ -1011,6 +1189,261 @@ export class NewHeightService {
       date: dateStr,
       riskLevel: 'low'
     }).sort({ strategyScore: -1 });
+  }
+
+  async backtest (
+    startDate: string,
+    endDate: string,
+    config: Partial<HundredDayHighBacktestConfig> = {}
+  ): Promise<HundredDayHighBacktestResult> {
+    const normalizePercent = (value: unknown, fallback: number): number => {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric) || numeric <= 0) {
+        return fallback;
+      }
+      return numeric > 1 ? numeric / 100 : numeric;
+    };
+
+    const normalizeFactor = (value: unknown, fallback: number): number => {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric) || numeric <= 0) {
+        return fallback;
+      }
+      return Number(numeric.toFixed(4));
+    };
+
+    const finalConfig: HundredDayHighBacktestConfig = {
+      signalFilter: (config.signalFilter || 'high_score') as HundredDayHighBacktestSignalFilter,
+      minScore: Math.max(0, Number(config.minScore ?? 70)),
+      basePosition: Math.max(1000, Number(config.basePosition ?? 50000)),
+      lowRiskPositionFactor: normalizeFactor(config.lowRiskPositionFactor, 1.2),
+      mediumRiskPositionFactor: normalizeFactor(config.mediumRiskPositionFactor, 1),
+      highRiskPositionFactor: normalizeFactor(config.highRiskPositionFactor, 0.7),
+      stopLossPercent: normalizePercent(config.stopLossPercent, 0.05),
+      takeProfitPercent: normalizePercent(config.takeProfitPercent, 0.15),
+      maxHoldDays: Math.max(1, Math.floor(Number(config.maxHoldDays ?? 3))),
+      maxTradesPerDay: Math.max(1, Math.floor(Number(config.maxTradesPerDay ?? 3))),
+    };
+
+    const emptyResult: HundredDayHighBacktestResult = {
+      startDate,
+      endDate,
+      config: finalConfig,
+      totalTrades: 0,
+      winTrades: 0,
+      lossTrades: 0,
+      winRate: 0,
+      totalProfitAmount: 0,
+      totalProfitPercent: 0,
+      avgProfitPercent: 0,
+      avgWinPercent: 0,
+      avgLossPercent: 0,
+      profitLossRatio: 0,
+      totalInvested: 0,
+      maxPosition: 0,
+      maxDrawdown: 0,
+      maxDrawdownPercent: 0,
+      maxProfit: 0,
+      maxLoss: 0,
+      maxConsecutiveWins: 0,
+      maxConsecutiveLosses: 0,
+      avgHoldDays: 0,
+      trades: [],
+    };
+
+    const tradingDays = tradingCalendarService.getTradingDaysInRange(startDate, endDate);
+    if (tradingDays.length === 0) {
+      logger.warn(`[百日新高回测] 未找到交易日: ${startDate} - ${endDate}`);
+      return emptyResult;
+    }
+
+    logger.info(`[百日新高回测] 开始回测，日期范围: ${startDate}-${endDate}，交易日: ${tradingDays.length}`);
+
+    const candidates: any[] = [];
+
+    for (const dateStr of tradingDays) {
+      const query: {
+        date: string;
+        strategyScore?: { $gte: number };
+        isFirstBoard?: boolean;
+        riskLevel?: 'low';
+      } = {
+        date: dateStr,
+      };
+
+      if (finalConfig.signalFilter === 'first_board') {
+        query.isFirstBoard = true;
+        query.strategyScore = { $gte: finalConfig.minScore };
+      } else if (finalConfig.signalFilter === 'low_risk') {
+        query.riskLevel = 'low';
+        query.strategyScore = { $gte: finalConfig.minScore };
+      } else {
+        query.strategyScore = { $gte: finalConfig.minScore };
+      }
+
+      const dailyCandidates = await HundredDayHigh.find(query)
+        .sort({ strategyScore: -1, changePercent: -1 })
+        .limit(finalConfig.maxTradesPerDay);
+
+      candidates.push(...dailyCandidates);
+    }
+
+    if (candidates.length === 0) {
+      logger.info('[百日新高回测] 无符合条件的候选股票');
+      return emptyResult;
+    }
+
+    const trades: HundredDayHighBacktestTradeRecord[] = [];
+
+    for (const candidate of candidates) {
+      const signalDate = String(candidate.date || '').replace(/-/g, '');
+      const buyDate = tradingCalendarService.getNextTradingDay(signalDate);
+
+      if (!buyDate) {
+        continue;
+      }
+
+      const backtestRes = await this.backtestStock(String(candidate.stockCode), buyDate, finalConfig);
+      if (!backtestRes) {
+        continue;
+      }
+
+      const riskLevel = (candidate.riskLevel || 'medium') as 'low' | 'medium' | 'high';
+      const riskFactorMap: Record<'low' | 'medium' | 'high', number> = {
+        low: finalConfig.lowRiskPositionFactor,
+        medium: finalConfig.mediumRiskPositionFactor,
+        high: finalConfig.highRiskPositionFactor,
+      };
+      const riskFactor = riskFactorMap[riskLevel] ?? 1;
+      const position = Math.max(1000, Math.round(finalConfig.basePosition * riskFactor));
+
+      const profitAmount = Number(((backtestRes.profitPercent / 100) * position).toFixed(2));
+
+      trades.push({
+        stockCode: String(candidate.stockCode || ''),
+        stockName: String(candidate.stockName || ''),
+        signalDate,
+        volumeRatio: Number(candidate.volumeRatio || 0),
+        buyDate,
+        buyPrice: backtestRes.buyPrice,
+        exitDate: backtestRes.exitDate,
+        exitPrice: backtestRes.exitPrice,
+        holdDays: backtestRes.holdDays,
+        position,
+        riskFactor,
+        profitPercent: backtestRes.profitPercent,
+        profitAmount,
+        exitReason: backtestRes.exitReason,
+        score: Number(candidate.strategyScore || 0),
+        strategyScore: Number(candidate.strategyScore || 0),
+        riskLevel,
+        isFirstBoard: Boolean(candidate.isFirstBoard),
+      });
+    }
+
+    if (trades.length === 0) {
+      logger.info('[百日新高回测] 候选股票存在，但无有效交易记录');
+      return emptyResult;
+    }
+
+    trades.sort((a, b) => {
+      const dateCompare = a.buyDate.localeCompare(b.buyDate);
+      if (dateCompare !== 0) {
+        return dateCompare;
+      }
+      return b.score - a.score;
+    });
+
+    const totalTrades = trades.length;
+    const winTrades = trades.filter((trade) => trade.profitPercent > 0).length;
+    const lossTrades = trades.filter((trade) => trade.profitPercent < 0).length;
+    const winRate = Number(((winTrades / totalTrades) * 100).toFixed(2));
+
+    const totalProfitAmount = Number(trades.reduce((sum, trade) => sum + trade.profitAmount, 0).toFixed(2));
+    const totalInvested = Number(trades.reduce((sum, trade) => sum + trade.position, 0).toFixed(2));
+    const maxPosition = trades.length > 0 ? Math.max(...trades.map((trade) => trade.position)) : 0;
+    const totalProfitPercent = totalInvested > 0
+      ? Number(((totalProfitAmount / totalInvested) * 100).toFixed(2))
+      : 0;
+
+    const avgProfitPercent = Number((trades.reduce((sum, trade) => sum + trade.profitPercent, 0) / totalTrades).toFixed(2));
+
+    const winProfitPercents = trades.filter((trade) => trade.profitPercent > 0).map((trade) => trade.profitPercent);
+    const lossProfitPercents = trades.filter((trade) => trade.profitPercent < 0).map((trade) => trade.profitPercent);
+
+    const avgWinPercent = winProfitPercents.length > 0
+      ? Number((winProfitPercents.reduce((sum, value) => sum + value, 0) / winProfitPercents.length).toFixed(2))
+      : 0;
+    const avgLossPercent = lossProfitPercents.length > 0
+      ? Number((lossProfitPercents.reduce((sum, value) => sum + value, 0) / lossProfitPercents.length).toFixed(2))
+      : 0;
+    const profitLossRatio = avgLossPercent !== 0
+      ? Number((Math.abs(avgWinPercent / avgLossPercent)).toFixed(2))
+      : (avgWinPercent > 0 ? 999 : 0);
+
+    const maxProfit = Number(Math.max(...trades.map((trade) => trade.profitPercent)).toFixed(2));
+    const maxLoss = Number(Math.min(...trades.map((trade) => trade.profitPercent)).toFixed(2));
+
+    let currentWins = 0;
+    let currentLosses = 0;
+    let maxConsecutiveWins = 0;
+    let maxConsecutiveLosses = 0;
+
+    for (const trade of trades) {
+      if (trade.profitPercent > 0) {
+        currentWins += 1;
+        currentLosses = 0;
+        maxConsecutiveWins = Math.max(maxConsecutiveWins, currentWins);
+      } else if (trade.profitPercent < 0) {
+        currentLosses += 1;
+        currentWins = 0;
+        maxConsecutiveLosses = Math.max(maxConsecutiveLosses, currentLosses);
+      } else {
+        currentWins = 0;
+        currentLosses = 0;
+      }
+    }
+
+    const avgHoldDays = Number((trades.reduce((sum, trade) => sum + trade.holdDays, 0) / totalTrades).toFixed(1));
+
+    let cumulativeProfit = 0;
+    let peakProfit = 0;
+    let maxDrawdown = 0;
+    for (const trade of trades) {
+      cumulativeProfit += trade.profitAmount;
+      peakProfit = Math.max(peakProfit, cumulativeProfit);
+      maxDrawdown = Math.max(maxDrawdown, peakProfit - cumulativeProfit);
+    }
+    maxDrawdown = Number(maxDrawdown.toFixed(2));
+    const maxDrawdownPercent = totalInvested > 0
+      ? Number(((maxDrawdown / totalInvested) * 100).toFixed(2))
+      : 0;
+
+    return {
+      startDate,
+      endDate,
+      config: finalConfig,
+      totalTrades,
+      winTrades,
+      lossTrades,
+      winRate,
+      totalProfitAmount,
+      totalProfitPercent,
+      avgProfitPercent,
+      avgWinPercent,
+      avgLossPercent,
+      profitLossRatio,
+      totalInvested,
+      maxPosition,
+      maxDrawdown,
+      maxDrawdownPercent,
+      maxProfit,
+      maxLoss,
+      maxConsecutiveWins,
+      maxConsecutiveLosses,
+      avgHoldDays,
+      trades,
+    };
   }
 
   async getHistory (days: number = 30): Promise<any[]> {

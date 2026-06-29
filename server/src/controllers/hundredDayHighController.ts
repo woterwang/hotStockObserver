@@ -128,6 +128,31 @@ export class HundredDayHighController {
       next(error);
     }
   }
+
+  async backtest(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { startDate, endDate, config } = req.body;
+
+      if (!startDate || !endDate) {
+        return res.status(400).json({
+          success: false,
+          message: '请提供回测日期范围',
+        });
+      }
+
+      logger.info(`[百日新高] 开始回测，日期范围: ${startDate} - ${endDate}`);
+      const result = await hundredDayHighService.backtest(startDate, endDate, config || {});
+
+      res.json({
+        success: true,
+        data: result,
+        message: `回测完成，共 ${result.totalTrades} 笔交易`,
+      });
+    } catch (error) {
+      logger.error(`[百日新高] 回测失败: ${(error as Error).message}`);
+      next(error);
+    }
+  }
 }
 
 export const hundredDayHighController = new HundredDayHighController();

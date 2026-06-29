@@ -213,7 +213,9 @@ export interface VolumeSurgeHistory {
 // 百日新高（沿用放量大涨字段结构）
 export interface HundredDayHigh extends VolumeSurge {}
 
-export interface HundredDayHighStats extends VolumeSurgeStats {}
+export interface HundredDayHighStats extends VolumeSurgeStats {
+  firstBoardCount: number;
+}
 
 export interface HundredDayHighHistory {
   date: string;
@@ -221,6 +223,59 @@ export interface HundredDayHighHistory {
   successCount: number;
   avgProfit: number;
   stocks: HundredDayHigh[];
+}
+
+export interface HundredDayHighBacktestConfig {
+  signalFilter: 'all' | 'high_score' | 'first_board' | 'low_risk';
+  minScore: number;
+  basePosition: number;
+  stopLossPercent: number;
+  takeProfitPercent: number;
+  maxHoldDays: number;
+  maxTradesPerDay: number;
+}
+
+export interface HundredDayHighBacktestTradeRecord {
+  stockCode: string;
+  stockName: string;
+  signalDate: string;
+  buyDate: string;
+  buyPrice: number;
+  exitDate: string;
+  exitPrice: number;
+  holdDays: number;
+  position: number;
+  profitPercent: number;
+  profitAmount: number;
+  exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'data_end';
+  score: number;
+  riskLevel: 'low' | 'medium' | 'high';
+  isFirstBoard: boolean;
+}
+
+export interface HundredDayHighBacktestResult {
+  startDate: string;
+  endDate: string;
+  config: HundredDayHighBacktestConfig;
+  totalTrades: number;
+  winTrades: number;
+  lossTrades: number;
+  winRate: number;
+  totalProfitAmount: number;
+  totalProfitPercent: number;
+  avgProfitPercent: number;
+  avgWinPercent: number;
+  avgLossPercent: number;
+  profitLossRatio: number;
+  totalInvested: number;
+  maxDrawdown: number;
+  maxDrawdownPercent: number;
+  maxProfit: number;
+  maxLoss: number;
+  maxConsecutiveWins: number;
+  maxConsecutiveLosses: number;
+  avgHoldDays: number;
+  trades: HundredDayHighBacktestTradeRecord[];
 }
 
 // 买入信号
