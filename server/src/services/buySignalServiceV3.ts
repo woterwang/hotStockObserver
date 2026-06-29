@@ -30,7 +30,7 @@ import { TrendScorer } from './TrendScorerService';
 import { thsConceptHotRankService } from './thsConceptHotRankService';
 
 // 策略类型定义
-type StrategyType = 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover' | 'concept_resonance';
+type StrategyType = 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover' | 'concept_resonance' | 'hundred_day_high';
 
 // 策略名称映射
 const STRATEGY_NAMES: Record<StrategyType, string> = {
@@ -39,6 +39,7 @@ const STRATEGY_NAMES: Record<StrategyType, string> = {
   limit_up: '涨停板',
   ma_crossover: '均线金叉',
   concept_resonance: '主线共振',
+  hundred_day_high: '百日新高',
 };
 
 // 候选标的接口（统一各策略的数据结构）

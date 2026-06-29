@@ -229,6 +229,9 @@ export interface HundredDayHighBacktestConfig {
   signalFilter: 'all' | 'high_score' | 'first_board' | 'low_risk';
   minScore: number;
   basePosition: number;
+  lowRiskPositionFactor: number;
+  mediumRiskPositionFactor: number;
+  highRiskPositionFactor: number;
   stopLossPercent: number;
   takeProfitPercent: number;
   maxHoldDays: number;
@@ -239,16 +242,19 @@ export interface HundredDayHighBacktestTradeRecord {
   stockCode: string;
   stockName: string;
   signalDate: string;
+  volumeRatio: number;
   buyDate: string;
   buyPrice: number;
   exitDate: string;
   exitPrice: number;
   holdDays: number;
   position: number;
+  riskFactor: number;
   profitPercent: number;
   profitAmount: number;
   exitReason: 'stop_loss' | 'take_profit' | 'max_days' | 'data_end';
   score: number;
+  strategyScore: number;
   riskLevel: 'low' | 'medium' | 'high';
   isFirstBoard: boolean;
 }
@@ -268,6 +274,7 @@ export interface HundredDayHighBacktestResult {
   avgLossPercent: number;
   profitLossRatio: number;
   totalInvested: number;
+  maxPosition: number;
   maxDrawdown: number;
   maxDrawdownPercent: number;
   maxProfit: number;
@@ -286,7 +293,7 @@ export interface BuySignal {
   stockName: string;
   
   // 策略关联
-  strategyType: 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover';
+  strategyType: 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover' | 'concept_resonance' | 'hundred_day_high';
   strategyName: string;
   sourceId?: string;
   selectionDate: string;
@@ -358,6 +365,18 @@ export interface BuySignalStats {
   hold: number;
   pass: number;
   avgScore: number;
+}
+
+export interface HundredDayHighSignal extends BuySignal {
+  strategyType: 'hundred_day_high';
+}
+
+export interface HundredDayHighSignalStats extends BuySignalStats {}
+
+export interface HundredDayHighSignalDateItem {
+  date: string;
+  hasSignal: boolean;
+  candidateCount: number;
 }
 
 // 市场情绪

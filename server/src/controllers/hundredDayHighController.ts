@@ -129,6 +129,143 @@ export class HundredDayHighController {
     }
   }
 
+  async generateSignals(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { date, minScore } = req.body;
+      const scoreThreshold = minScore !== undefined ? Number(minScore) : 70;
+
+      const signals = await hundredDayHighService.generateSignals(date, scoreThreshold);
+
+      res.json({
+        success: true,
+        data: {
+          count: signals.length,
+          signals: signals.slice(0, 10),
+        },
+        message: `成功生成 ${signals.length} 条百日新高买入信号`,
+      });
+    } catch (error) {
+      logger.error(`[百日新高] 生成信号失败: ${(error as Error).message}`);
+      next(error);
+    }
+  }
+
+  async getSignalList(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { date } = req.query;
+      let targetDate: string;
+
+      if (date && typeof date === 'string') {
+        targetDate = date;
+      } else {
+        const availableDates = await hundredDayHighService.getSignalAvailableDates();
+        if (availableDates.length === 0) {
+          return res.json({
+            success: true,
+            data: [],
+            total: 0,
+            date: null,
+            message: '暂无信号数据',
+          });
+        }
+        targetDate = availableDates[0].date;
+      }
+
+      const list = await hundredDayHighService.getSignalList(targetDate);
+
+      res.json({
+        success: true,
+        data: list,
+        total: list.length,
+        date: targetDate,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getSignalStats(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { date } = req.query;
+      let targetDate: string;
+
+      if (date && typeof date === 'string') {
+        targetDate = date;
+      } else {
+        const availableDates = await hundredDayHighService.getSignalAvailableDates();
+        if (availableDates.length === 0) {
+          return res.json({
+            success: true,
+            data: {
+              total: 0,
+              strongBuy: 0,
+              buy: 0,
+              hold: 0,
+              pass: 0,
+              avgScore: 0,
+            },
+            date: null,
+          });
+        }
+        targetDate = availableDates[0].date;
+      }
+
+      const stats = await hundredDayHighService.getSignalStats(targetDate);
+
+      res.json({
+        success: true,
+        data: stats,
+        date: targetDate,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getSignalAvailableDates(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dates = await hundredDayHighService.getSignalAvailableDates();
+      res.json({
+        success: true,
+        data: dates,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async batchGenerateSignals(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { startDate, endDate, minScore } = req.body;
+
+      if (!startDate || !endDate) {
+        return res.status(400).json({
+          success: false,
+          message: '请提供开始日期和结束日期',
+        });
+      }
+
+      const scoreThreshold = minScore !== undefined ? Number(minScore) : 70;
+      const result = await hundredDayHighService.batchGenerateSignals(startDate, endDate, scoreThreshold);
+
+      if (result.totalDays === 0) {
+        return res.status(400).json({
+          success: false,
+          message: '指定日期范围内没有交易日，请检查交易日历缓存',
+        });
+      }
+
+      res.json({
+        success: true,
+        data: result,
+        message: `批量生成完成: ${result.successDays}天成功, ${result.failedDays}天失败, 共生成${result.totalGenerated}条信号`,
+      });
+    } catch (error) {
+      logger.error(`[百日新高] 批量生成信号失败: ${(error as Error).message}`);
+      next(error);
+    }
+  }
+
   async backtest(req: Request, res: Response, next: NextFunction) {
     try {
       const { startDate, endDate, config } = req.body;

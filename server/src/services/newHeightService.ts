@@ -7,9 +7,10 @@
  */
 import { groupService } from './groupService';
 import { logger } from '../utils';
-import { HundredDayHigh } from '../models';
+import { HundredDayHigh, HundredDayHighSignal, IHundredDayHighSignal } from '../models';
 import { getToday, formatDate, getTodayStr } from '../utils/dateUtils';
 import axios from 'axios';
+import { buySignalService } from './buySignalServiceV3';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const thsUtils = require('../utils/thsUtils');
@@ -83,6 +84,29 @@ interface HundredDayHighBacktestResult {
   maxConsecutiveLosses: number;
   avgHoldDays: number;
   trades: HundredDayHighBacktestTradeRecord[];
+}
+
+interface HundredDayHighSignalStats {
+  total: number;
+  strongBuy: number;
+  buy: number;
+  hold: number;
+  pass: number;
+  avgScore: number;
+}
+
+interface HundredDayHighSignalDateItem {
+  date: string;
+  hasSignal: boolean;
+  candidateCount: number;
+}
+
+interface HundredDayHighSignalBatchResult {
+  totalDays: number;
+  successDays: number;
+  failedDays: number;
+  totalGenerated: number;
+  details: { date: string; count: number; error?: string }[];
 }
 
 export class NewHeightService {
@@ -1443,6 +1467,230 @@ export class NewHeightService {
       maxConsecutiveLosses,
       avgHoldDays,
       trades,
+    };
+  }
+
+  async generateSignals (dateStr?: string, minScore: number = 70): Promise<IHundredDayHighSignal[]> {
+    const targetDate = String(dateStr || formatDate(getToday(), 'YYYYMMDD')).replace(/-/g, '').slice(0, 8);
+    const scoreThreshold = Number.isFinite(Number(minScore)) ? Math.max(0, Number(minScore)) : 70;
+
+    if (!tradingCalendarService.isTradingDay(targetDate)) {
+      logger.info(`[百日新高信号] ${targetDate} 不是交易日，跳过生成`);
+      return [];
+    }
+
+    const existingSignals = await HundredDayHighSignal.find({ date: targetDate })
+      .sort({ totalBuyScore: -1 })
+      .lean();
+
+    if (existingSignals.length > 0) {
+      logger.info(`[百日新高信号] ${targetDate} 已存在 ${existingSignals.length} 条信号，跳过生成`);
+      return existingSignals as unknown as IHundredDayHighSignal[];
+    }
+
+    const prevTradingDay = tradingCalendarService.getPrevTradingDay(targetDate);
+    if (!prevTradingDay) {
+      logger.info(`[百日新高信号] ${targetDate} 无法获取前一个交易日`);
+      return [];
+    }
+
+    const candidates = await HundredDayHigh.find({
+      date: prevTradingDay,
+      strategyScore: { $gte: scoreThreshold },
+    }).sort({ strategyScore: -1, changePercent: -1 });
+
+    if (candidates.length === 0) {
+      logger.info(`[百日新高信号] ${prevTradingDay} 无满足分数门槛(${scoreThreshold})的候选`);
+      return [];
+    }
+
+    logger.info(`[百日新高信号] ${targetDate} 开始处理 ${candidates.length} 个候选`);
+
+    const generatedSignals: IHundredDayHighSignal[] = [];
+
+    for (const candidate of candidates) {
+      const signal = await buySignalService.generateSignalForStock(
+        {
+          _id: String(candidate._id || `${prevTradingDay}_${candidate.stockCode}`),
+          stockCode: String(candidate.stockCode || ''),
+          stockName: String(candidate.stockName || ''),
+          date: prevTradingDay,
+          strategyType: 'hundred_day_high',
+          strategyName: '百日新高',
+          score: Number(candidate.strategyScore || 0),
+          industry: String(candidate.industry || ''),
+          changePercent: Number(candidate.changePercent || 0),
+          strategyScore: Number(candidate.strategyScore || 0),
+          marketMood: Number(candidate.marketSentimentScore || 50),
+          volumeRatio: Number(candidate.volumeRatio || 0),
+        },
+        targetDate
+      );
+
+      if (!signal) {
+        continue;
+      }
+
+      generatedSignals.push({
+        ...(signal as unknown as IHundredDayHighSignal),
+        strategyType: 'hundred_day_high',
+        strategyName: '百日新高',
+      });
+    }
+
+    if (generatedSignals.length === 0) {
+      logger.info(`[百日新高信号] ${targetDate} 无有效可落库信号`);
+      return [];
+    }
+
+    const bulkOps = generatedSignals.map((signal) => {
+      const { _id, ...signalWithoutId } = signal;
+      return {
+        updateOne: {
+          filter: { date: signal.date, stockCode: signal.stockCode },
+          update: {
+            $set: {
+              ...signalWithoutId,
+              strategyType: 'hundred_day_high',
+              strategyName: '百日新高',
+            },
+          },
+          upsert: true,
+        },
+      };
+    });
+
+    await HundredDayHighSignal.bulkWrite(bulkOps);
+    logger.info(`[百日新高信号] ${targetDate} 已保存 ${generatedSignals.length} 条信号`);
+
+    const savedSignals = await HundredDayHighSignal.find({ date: targetDate })
+      .sort({ totalBuyScore: -1 })
+      .lean();
+
+    return savedSignals as unknown as IHundredDayHighSignal[];
+  }
+
+  async getSignalList (dateStr: string): Promise<IHundredDayHighSignal[]> {
+    const targetDate = String(dateStr || '').replace(/-/g, '').slice(0, 8);
+    if (!targetDate) {
+      return [];
+    }
+
+    const signals = await HundredDayHighSignal.find({ date: targetDate })
+      .sort({ totalBuyScore: -1 })
+      .lean();
+
+    return signals as unknown as IHundredDayHighSignal[];
+  }
+
+  async getSignalStats (dateStr: string): Promise<HundredDayHighSignalStats> {
+    const targetDate = String(dateStr || '').replace(/-/g, '').slice(0, 8);
+    if (!targetDate) {
+      return { total: 0, strongBuy: 0, buy: 0, hold: 0, pass: 0, avgScore: 0 };
+    }
+
+    const signals = await HundredDayHighSignal.find({ date: targetDate }).lean() as unknown as IHundredDayHighSignal[];
+
+    if (signals.length === 0) {
+      return { total: 0, strongBuy: 0, buy: 0, hold: 0, pass: 0, avgScore: 0 };
+    }
+
+    const avgScore = signals.reduce((sum, signal) => sum + Number(signal.totalBuyScore || 0), 0) / signals.length;
+
+    return {
+      total: signals.length,
+      strongBuy: signals.filter((signal) => signal.buySignal === 'strong_buy').length,
+      buy: signals.filter((signal) => signal.buySignal === 'buy').length,
+      hold: signals.filter((signal) => signal.buySignal === 'hold').length,
+      pass: signals.filter((signal) => signal.buySignal === 'pass').length,
+      avgScore: Number(avgScore.toFixed(1)),
+    };
+  }
+
+  async getSignalAvailableDates (): Promise<HundredDayHighSignalDateItem[]> {
+    const sourceDateStats = await HundredDayHigh.aggregate<{ _id: string; count: number }>([
+      {
+        $group: {
+          _id: '$date',
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: -1 } },
+    ]);
+
+    const generatedDates = new Set((await HundredDayHighSignal.distinct('date')) as string[]);
+    const dateMap = new Map<string, HundredDayHighSignalDateItem>();
+
+    for (const row of sourceDateStats) {
+      const selectionDate = String(row._id || '').replace(/-/g, '').slice(0, 8);
+      const signalDate = tradingCalendarService.getNextTradingDay(selectionDate);
+
+      if (!selectionDate || !signalDate) {
+        continue;
+      }
+
+      const existing = dateMap.get(signalDate);
+      if (existing) {
+        existing.candidateCount += row.count;
+        existing.hasSignal = existing.hasSignal || generatedDates.has(signalDate);
+      } else {
+        dateMap.set(signalDate, {
+          date: signalDate,
+          hasSignal: generatedDates.has(signalDate),
+          candidateCount: row.count,
+        });
+      }
+    }
+
+    return Array.from(dateMap.values()).sort((a, b) => b.date.localeCompare(a.date));
+  }
+
+  async batchGenerateSignals (
+    startDate: string,
+    endDate: string,
+    minScore: number = 70
+  ): Promise<HundredDayHighSignalBatchResult> {
+    const tradingDays = tradingCalendarService.getTradingDaysInRange(startDate, endDate);
+
+    if (tradingDays.length === 0) {
+      return {
+        totalDays: 0,
+        successDays: 0,
+        failedDays: 0,
+        totalGenerated: 0,
+        details: [],
+      };
+    }
+
+    const details: { date: string; count: number; error?: string }[] = [];
+    let successDays = 0;
+    let failedDays = 0;
+    let totalGenerated = 0;
+
+    for (const date of tradingDays) {
+      try {
+        const signals = await this.generateSignals(date, minScore);
+        details.push({ date, count: signals.length });
+        totalGenerated += signals.length;
+        successDays += 1;
+
+        await this.delay(300);
+      } catch (error) {
+        details.push({
+          date,
+          count: 0,
+          error: (error as Error).message,
+        });
+        failedDays += 1;
+      }
+    }
+
+    return {
+      totalDays: tradingDays.length,
+      successDays,
+      failedDays,
+      totalGenerated,
+      details,
     };
   }
 

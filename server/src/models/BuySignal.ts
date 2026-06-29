@@ -13,7 +13,7 @@ export interface IBuySignal {
   // ========================================
   // 📋 关联的选股数据
   // ========================================
-  strategyType: 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover' | 'concept_resonance';  // 策略类型
+  strategyType: 'volume_surge' | 'breakthrough' | 'limit_up' | 'ma_crossover' | 'concept_resonance' | 'hundred_day_high';  // 策略类型
   strategyName: string;           // 策略名称
   sourceId?: string;              // 关联的源记录ID（VolumeSurge/Breakthrough等）
   selectionDate: string;          // 选股日期（T日）YYYYMMDD 格式
@@ -127,7 +127,7 @@ const BuySignalSchema = new Schema<BuySignalDocument>(
     // 关联数据 - 支持多策略
     strategyType: { 
       type: String, 
-      enum: ['volume_surge', 'breakthrough', 'limit_up', 'ma_crossover'],
+      enum: ['volume_surge', 'breakthrough', 'limit_up', 'ma_crossover', 'concept_resonance', 'hundred_day_high'],
       required: true,
       index: true
     },

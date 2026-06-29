@@ -8,6 +8,9 @@ import type {
   HundredDayHighStats,
   HundredDayHighBacktestConfig,
   HundredDayHighBacktestResult,
+  HundredDayHighSignal,
+  HundredDayHighSignalStats,
+  HundredDayHighSignalDateItem,
 } from '../types';
 
 type TabType = 'scan' | 'signal' | 'backtest';
@@ -23,6 +26,19 @@ const HundredDayHighPage: React.FC = () => {
 
   const [list, setList] = useState<HundredDayHigh[]>([]);
   const [stats, setStats] = useState<HundredDayHighStats | null>(null);
+
+  const [signalList, setSignalList] = useState<HundredDayHighSignal[]>([]);
+  const [signalStats, setSignalStats] = useState<HundredDayHighSignalStats | null>(null);
+  const [signalLoading, setSignalLoading] = useState(false);
+  const [signalGenerating, setSignalGenerating] = useState(false);
+  const [signalError, setSignalError] = useState<string | null>(null);
+  const [signalMinScore, setSignalMinScore] = useState(70);
+  const [showSignalBatchDialog, setShowSignalBatchDialog] = useState(false);
+  const [signalBatchStartDate, setSignalBatchStartDate] = useState('');
+  const [signalBatchEndDate, setSignalBatchEndDate] = useState('');
+  const [signalBatchGenerating, setSignalBatchGenerating] = useState(false);
+  const [signalBatchProgress, setSignalBatchProgress] = useState('');
+  const [signalAvailableDates, setSignalAvailableDates] = useState<HundredDayHighSignalDateItem[]>([]);
 
   const [showBackfillDialog, setShowBackfillDialog] = useState(false);
 
@@ -89,6 +105,94 @@ const HundredDayHighPage: React.FC = () => {
     }
   };
 
+  const fetchSignalData = async (date?: string) => {
+    setSignalLoading(true);
+    setSignalError(null);
+
+    try {
+      const [listRes, statsRes] = await Promise.all([
+        hundredDayHighApi.getSignalList(date),
+        hundredDayHighApi.getSignalStats(date),
+      ]);
+
+      if (listRes.success) {
+        setSignalList(listRes.data);
+      }
+      if (statsRes.success) {
+        setSignalStats(statsRes.data);
+      }
+    } catch (err) {
+      setSignalError((err as Error).message);
+    } finally {
+      setSignalLoading(false);
+    }
+  };
+
+  const handleGenerateSignal = async () => {
+    setSignalGenerating(true);
+    setSignalError(null);
+
+    try {
+      const response = await hundredDayHighApi.generateSignal(selectedDate, signalMinScore);
+      if (response.success) {
+        alert(`成功生成 ${response.data.count} 条百日新高买入信号`);
+        await fetchSignalData(selectedDate);
+      }
+    } catch (err) {
+      setSignalError('生成信号失败: ' + (err as Error).message);
+    } finally {
+      setSignalGenerating(false);
+    }
+  };
+
+  const handleOpenSignalBatchDialog = async () => {
+    setShowSignalBatchDialog(true);
+    setSignalBatchProgress('');
+
+    try {
+      const response = await hundredDayHighApi.getSignalAvailableDates();
+      if (response.success) {
+        setSignalAvailableDates(response.data);
+        const pendingDates = response.data.filter((item) => !item.hasSignal);
+        const targetDates = pendingDates.length > 0 ? pendingDates : response.data;
+
+        if (targetDates.length > 0) {
+          setSignalBatchEndDate(targetDates[0].date.replace(/-/g, ''));
+          setSignalBatchStartDate(targetDates[targetDates.length - 1].date.replace(/-/g, ''));
+        }
+      }
+    } catch (err) {
+      setSignalError('获取可用日期失败: ' + (err as Error).message);
+    }
+  };
+
+  const handleBatchGenerateSignal = async () => {
+    if (!signalBatchStartDate || !signalBatchEndDate) {
+      alert('请选择日期范围');
+      return;
+    }
+
+    setSignalBatchGenerating(true);
+    setSignalBatchProgress('正在批量生成中，请稍候...');
+
+    try {
+      const response = await hundredDayHighApi.batchGenerateSignal(signalBatchStartDate, signalBatchEndDate, signalMinScore);
+      if (response.success) {
+        const { successDays, failedDays, totalGenerated } = response.data;
+        setSignalBatchProgress(`完成! ${successDays}天成功, ${failedDays}天失败, 共生成${totalGenerated}条信号`);
+        alert(response.message);
+        setShowSignalBatchDialog(false);
+        await fetchSignalData(selectedDate);
+      }
+    } catch (err) {
+      const message = (err as Error).message;
+      setSignalBatchProgress(`批量生成失败: ${message}`);
+      setSignalError('批量生成失败: ' + message);
+    } finally {
+      setSignalBatchGenerating(false);
+    }
+  };
+
   const handleScan = async () => {
     setScanning(true);
     setError(null);
@@ -140,6 +244,12 @@ const HundredDayHighPage: React.FC = () => {
     }
   }, [activeTab, selectedDate]);
 
+  useEffect(() => {
+    if (activeTab === 'signal' && selectedDate) {
+      fetchSignalData(selectedDate);
+    }
+  }, [activeTab, selectedDate]);
+
   const formatTurnover = (value: number) => {
     if (!value) return '-';
     if (value >= 100000000) return `${(value / 100000000).toFixed(2)}亿`;
@@ -165,9 +275,36 @@ const HundredDayHighPage: React.FC = () => {
     return `https://www.iwencai.com/screener/result?w=${encodeURIComponent(stockCode)}&querytype=stock&sign=${Date.now()}`;
   };
 
+  const getSignalBadge = (signal: string) => {
+    switch (signal) {
+      case 'strong_buy':
+        return { text: '强烈买入', bg: 'bg-red-100', color: 'text-red-700' };
+      case 'buy':
+        return { text: '建议买入', bg: 'bg-green-100', color: 'text-green-700' };
+      case 'hold':
+        return { text: '观望', bg: 'bg-yellow-100', color: 'text-yellow-700' };
+      case 'pass':
+        return { text: '放弃', bg: 'bg-gray-100', color: 'text-gray-700' };
+      default:
+        return { text: signal, bg: 'bg-gray-100', color: 'text-gray-700' };
+    }
+  };
+
+  const formatDateForInput = (dateStr: string) => {
+    if (!dateStr || dateStr.length !== 8) {
+      return '';
+    }
+    return `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}`;
+  };
+
   const sortedList = useMemo(
     () => [...list].sort((a, b) => (b.strategyScore || 0) - (a.strategyScore || 0)),
     [list]
+  );
+
+  const sortedSignalList = useMemo(
+    () => [...signalList].sort((a, b) => (b.totalBuyScore || 0) - (a.totalBuyScore || 0)),
+    [signalList]
   );
 
   return (
@@ -350,23 +487,250 @@ const HundredDayHighPage: React.FC = () => {
 
             {activeTab === 'signal' && (
               <div className="space-y-6">
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                  <h3 className="text-base font-semibold text-amber-800">信号生成功能预留</h3>
-                  <p className="text-sm text-amber-700 mt-2">
-                    按你的要求，“生成信号”服务暂未实现。当前仅保留 Tab 入口，后续可接入专用接口：
-                    <span className="font-medium">生成信号、查看信号列表、信号统计、批量补录</span>。
-                  </p>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex flex-wrap items-end gap-4">
+                    <DatePicker
+                      value={selectedDate}
+                      onChange={setSelectedDate}
+                      placeholder="选择信号日期"
+                    />
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">最低策略分</label>
+                      <input
+                        type="number"
+                        value={signalMinScore}
+                        onChange={(e) => setSignalMinScore(Number(e.target.value))}
+                        className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <button
+                      onClick={() => fetchSignalData(selectedDate)}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+                    >
+                      🔄 刷新
+                    </button>
+
+                    <button
+                      onClick={handleGenerateSignal}
+                      disabled={signalGenerating}
+                      className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                      {signalGenerating && (
+                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                      )}
+                      {signalGenerating ? '生成中...' : '生成信号'}
+                    </button>
+
+                    <button
+                      onClick={handleOpenSignalBatchDialog}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
+                    >
+                      📅 批量生成
+                    </button>
+                  </div>
                 </div>
 
-                <div className="bg-white border rounded-lg p-6">
-                  <h4 className="font-medium text-gray-900 mb-3">建议后续补齐的接口</h4>
-                  <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
-                    <li>POST /api/hundred-day-high/signal/generate</li>
-                    <li>GET /api/hundred-day-high/signal/list</li>
-                    <li>GET /api/hundred-day-high/signal/stats</li>
-                    <li>POST /api/hundred-day-high/signal/batch-generate</li>
-                  </ul>
-                </div>
+                {showSignalBatchDialog && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-xl font-bold text-gray-900">📅 批量生成百日新高信号</h2>
+                        <button
+                          onClick={() => setShowSignalBatchDialog(false)}
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">开始日期</label>
+                            <input
+                              type="date"
+                              value={formatDateForInput(signalBatchStartDate)}
+                              onChange={(e) => setSignalBatchStartDate(e.target.value.replace(/-/g, ''))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">结束日期</label>
+                            <input
+                              type="date"
+                              value={formatDateForInput(signalBatchEndDate)}
+                              onChange={(e) => setSignalBatchEndDate(e.target.value.replace(/-/g, ''))}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">可用信号日期（根据前一交易日候选推导）</label>
+                          <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
+                            <table className="min-w-full divide-y divide-gray-200">
+                              <thead className="bg-gray-50 sticky top-0">
+                                <tr>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">日期</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">候选数</th>
+                                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">状态</th>
+                                </tr>
+                              </thead>
+                              <tbody className="bg-white divide-y divide-gray-200">
+                                {signalAvailableDates.slice(0, 30).map((item) => (
+                                  <tr key={item.date} className={item.hasSignal ? 'bg-green-50' : 'bg-yellow-50'}>
+                                    <td className="px-4 py-2 text-sm text-gray-900">{item.date}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-600">{item.candidateCount} 只</td>
+                                    <td className="px-4 py-2">
+                                      {item.hasSignal ? (
+                                        <span className="text-xs text-green-600 font-medium">✅ 已生成</span>
+                                      ) : (
+                                        <span className="text-xs text-yellow-600 font-medium">⏳ 待生成</span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">显示最近30个日期，黄色表示待生成，绿色表示已生成</p>
+                        </div>
+
+                        {signalBatchProgress && (
+                          <div className="p-3 bg-blue-50 rounded-lg text-sm text-blue-700">
+                            {signalBatchProgress}
+                          </div>
+                        )}
+
+                        <div className="flex justify-end gap-3 pt-4 border-t">
+                          <button
+                            onClick={() => setShowSignalBatchDialog(false)}
+                            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                          >
+                            取消
+                          </button>
+                          <button
+                            onClick={handleBatchGenerateSignal}
+                            disabled={signalBatchGenerating || !signalBatchStartDate || !signalBatchEndDate}
+                            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                          >
+                            {signalBatchGenerating && (
+                              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                              </svg>
+                            )}
+                            {signalBatchGenerating ? '生成中...' : '开始批量生成'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {signalStats && (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div className="bg-white rounded-lg shadow p-4 text-center">
+                      <div className="text-2xl font-bold text-gray-900">{signalStats.total}</div>
+                      <div className="text-sm text-gray-500">总信号数</div>
+                    </div>
+                    <div className="bg-red-50 rounded-lg shadow p-4 text-center">
+                      <div className="text-2xl font-bold text-red-600">{signalStats.strongBuy}</div>
+                      <div className="text-sm text-red-700">强烈买入</div>
+                    </div>
+                    <div className="bg-green-50 rounded-lg shadow p-4 text-center">
+                      <div className="text-2xl font-bold text-green-600">{signalStats.buy}</div>
+                      <div className="text-sm text-green-700">建议买入</div>
+                    </div>
+                    <div className="bg-yellow-50 rounded-lg shadow p-4 text-center">
+                      <div className="text-2xl font-bold text-yellow-600">{signalStats.hold}</div>
+                      <div className="text-sm text-yellow-700">观望</div>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg shadow p-4 text-center">
+                      <div className="text-2xl font-bold text-gray-600">{signalStats.pass}</div>
+                      <div className="text-sm text-gray-700">放弃</div>
+                    </div>
+                    <div className="bg-blue-50 rounded-lg shadow p-4 text-center">
+                      <div className="text-2xl font-bold text-blue-600">{signalStats.avgScore.toFixed(1)}</div>
+                      <div className="text-sm text-blue-700">平均买入分</div>
+                    </div>
+                  </div>
+                )}
+
+                {signalLoading ? (
+                  <Loading />
+                ) : signalError ? (
+                  <ErrorMessage message={signalError} />
+                ) : sortedSignalList.length === 0 ? (
+                  <Empty message="暂无百日新高买入信号，请先执行生成" />
+                ) : (
+                  <div className="bg-white rounded-lg shadow overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">序号</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">代码</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">名称</th>
+                          <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">信号</th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">买入分</th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">策略分</th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">开盘涨幅</th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">开盘量比</th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">建议仓位</th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">建议价</th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">止损价</th>
+                          <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">止盈价</th>
+                          <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">风险提示</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {sortedSignalList.map((signal, index) => {
+                          const signalBadge = getSignalBadge(signal.buySignal);
+                          return (
+                            <tr key={`${signal.date}-${signal.stockCode}`} className="hover:bg-gray-50">
+                              <td className="px-4 py-3 text-sm text-gray-500">{index + 1}</td>
+                              <td className="px-4 py-3 text-sm font-medium text-blue-600">
+                                <button
+                                  onClick={() => goToDetail(signal.stockCode)}
+                                  className="hover:underline"
+                                >
+                                  {signal.stockCode}
+                                </button>
+                              </td>
+                              <td className="px-4 py-3 text-sm text-gray-900">{signal.stockName}</td>
+                              <td className="px-4 py-3 text-sm text-center">
+                                <span className={`px-2 py-1 rounded text-xs ${signalBadge.bg} ${signalBadge.color}`}>
+                                  {signalBadge.text}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-sm text-right text-gray-700">{signal.totalBuyScore?.toFixed(1)}</td>
+                              <td className="px-4 py-3 text-sm text-right text-gray-700">{signal.selectionScore?.toFixed(1)}</td>
+                              <td className="px-4 py-3 text-sm text-right text-gray-700">
+                                {signal.openChangePercent >= 0 ? '+' : ''}{signal.openChangePercent?.toFixed(2)}%
+                              </td>
+                              <td className="px-4 py-3 text-sm text-right text-gray-700">{signal.openVolumeRatio?.toFixed(2)}</td>
+                              <td className="px-4 py-3 text-sm text-right text-gray-700">{signal.suggestedPosition}%</td>
+                              <td className="px-4 py-3 text-sm text-right text-gray-700">{signal.suggestedPrice?.toFixed(2)}</td>
+                              <td className="px-4 py-3 text-sm text-right text-gray-700">{signal.stopLossPrice?.toFixed(2)}</td>
+                              <td className="px-4 py-3 text-sm text-right text-gray-700">{signal.takeProfitPrice?.toFixed(2)}</td>
+                              <td
+                                className="px-4 py-3 text-sm text-gray-600 max-w-[320px] truncate"
+                                title={signal.riskWarning?.join('；') || ''}
+                              >
+                                {signal.riskWarning?.[0] || '-'}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             )}
 

@@ -18,6 +18,9 @@ import type {
   HundredDayHighStats,
   HundredDayHighBacktestConfig,
   HundredDayHighBacktestResult,
+  HundredDayHighSignal,
+  HundredDayHighSignalStats,
+  HundredDayHighSignalDateItem,
   BuySignal,
   BuySignalStats,
   MarketSentiment,
@@ -289,6 +292,37 @@ export const hundredDayHighApi = {
   // 获取统计数据
   getStats: (date?: string): Promise<ApiResponse<HundredDayHighStats>> => {
     return api.get('/hundred-day-high/stats', { params: { date } });
+  },
+
+  // 生成百日新高买入信号
+  generateSignal: (date?: string, minScore: number = 70): Promise<ApiResponse<{ count: number; signals: HundredDayHighSignal[] }>> => {
+    return api.post('/hundred-day-high/signal/generate', { date, minScore });
+  },
+
+  // 批量生成百日新高买入信号
+  batchGenerateSignal: (startDate: string, endDate: string, minScore: number = 70): Promise<ApiResponse<{
+    totalDays: number;
+    successDays: number;
+    failedDays: number;
+    totalGenerated: number;
+    details: { date: string; count: number; error?: string }[];
+  }>> => {
+    return api.post('/hundred-day-high/signal/batch-generate', { startDate, endDate, minScore });
+  },
+
+  // 获取百日新高信号列表
+  getSignalList: (date?: string): Promise<ApiResponse<HundredDayHighSignal[]>> => {
+    return api.get('/hundred-day-high/signal/list', { params: { date } });
+  },
+
+  // 获取百日新高信号统计
+  getSignalStats: (date?: string): Promise<ApiResponse<HundredDayHighSignalStats>> => {
+    return api.get('/hundred-day-high/signal/stats', { params: { date } });
+  },
+
+  // 获取百日新高信号可用日期
+  getSignalAvailableDates: (): Promise<ApiResponse<HundredDayHighSignalDateItem[]>> => {
+    return api.get('/hundred-day-high/signal/available-dates');
   },
 };
 
