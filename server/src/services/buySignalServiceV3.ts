@@ -582,6 +582,10 @@ class BuySignalService {
     //板块联动
     const sectorLink = await BuySignalScorer.scoreSectorLink(candidate.stockCode, candidate.date, nextTradingDay || signalDate);
 
+    //修正引线评分
+    const shadowScore = await this.getShadowScore(candidate.stockCode, candidate.date);
+    candidate.strategyScore += shadowScore.score;
+
     //竞价评分
     const openDataScore = await this.getAuctionScore({
       openChangePercent: openData.openChangePercent,
@@ -619,6 +623,7 @@ class BuySignalService {
     const buyReason = [
       openDataScore.reason,
       sectorLink.reason,
+      shadowScore.reason,
     ].filter(r => r).join('；');
 
     const signal: IBuySignal = {
@@ -682,6 +687,58 @@ class BuySignalService {
 
     return signal;
   }
+
+  async getShadowScore (stockCode: string, dateStr: string): Promise<{
+    score: number;
+    reason: string;
+  }> {
+    let rawKlineData = await klineCacheService.fetchKlineByDate(stockCode, dateStr);
+    let baseScore = 0;
+    let reason = '';
+    if (!rawKlineData || rawKlineData.length === 0) {
+      logger.info(`[BuySignal] getOpeningData ${stockCode} 无K线数据`);
+      return {
+        score: 0,
+        reason: '无K线数据',
+      };
+    }
+    const preKlineData = rawKlineData.find(k => k.date === dateStr);
+    if (!preKlineData) {
+      return {
+        score: 0,
+        reason: `无 ${dateStr} K线数据`,
+      };
+    }
+
+    // 计算上影线
+    const upperShadow = preKlineData.high - preKlineData.low > 0 ? (preKlineData.high - preKlineData.close) / (preKlineData.high - preKlineData.low) : 0;
+
+    // 上影线比例	得分
+    // ≤ 1.5%	    8
+    // ≤ 3.0%	    6
+    // ≤ 4.5%	    3
+    // > 4.5%	    0
+    if (upperShadow <= 1.5) {
+      baseScore += 8;
+      reason = (`无长上影线 ${upperShadow} ≤ 1.5%，+8分`);
+    } else if (upperShadow <= 3) {
+      baseScore += 6;
+      reason = (`上影线 ${upperShadow} ≤ 3.0%，+6分`);
+    } else if (upperShadow <= 4.5) {
+      baseScore += 3;
+      reason = (`上影线 ${upperShadow} ≤ 4.5%，+3分`);
+    } else {
+      baseScore = 0;
+      reason = (`上影线 ${upperShadow} > 4.5%，0分`);
+    }
+
+    return {
+      score: baseScore,
+      reason,
+    };
+
+  }
+
 
   /**
    * 获取开盘数据

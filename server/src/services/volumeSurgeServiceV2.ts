@@ -2,7 +2,7 @@
  * @Author: hp.com
  * @Date: 2026-06-22 21:47:05
  * @LastEditors: WRG
- * @LastEditTime: 2026-06-26 22:49:15
+ * @LastEditTime: 2026-06-29 10:39:38
  * @😍: 😃😃
  */
 import { groupService } from '../services/groupService';
@@ -352,13 +352,13 @@ export class VolumeSurgeService {
       // 核心条件（宽松版，确保有数据）
       // `${dateStr}涨幅>7%`,
       `${dateStr}成交额排名前200`,
-      `${dateStr}上影线`,
       // 额外请求的字段（用于评分计算）
       `${dateStr}量比`,
       `${dateStr}换手率`,
       `${dateStr}振幅`,
       `${dateStr}涨幅`,
-      `${dateStr}下影线`,
+      // `${dateStr}上影线`,
+      // `${dateStr}下影线`,
       `${dateStr}成交量/前5交易日平均成交量`,
       // 附加条件
       `所属概念`,
@@ -627,18 +627,18 @@ export class VolumeSurgeService {
         // ≤ 3.0%	6
         // ≤ 4.5%	3
         // > 4.5%	0（长上影，抛压重）
-        if (upperShadow <= 1.5) {
-          baseScore += 8;
-          addScoreLogs.push(`无长上影线 ${upperShadow} ≤ 1.5%，+8分`);
-        } else if (upperShadow <= 3) {
-          baseScore += 6;
-          addScoreLogs.push(`无长上影线 ${upperShadow} ≤ 3.0%，+6分`);
-        } else if (upperShadow <= 4.5) {
-          baseScore += 3;
-          addScoreLogs.push(`无长上影线 ${upperShadow} ≤ 4.5%，+3分`);
-        } else {
-          baseScore = 0;
-        }
+        // if (upperShadow <= 1.5) {
+        //   baseScore += 8;
+        //   addScoreLogs.push(`无长上影线 ${upperShadow} ≤ 1.5%，+8分`);
+        // } else if (upperShadow <= 3) {
+        //   baseScore += 6;
+        //   addScoreLogs.push(`无长上影线 ${upperShadow} ≤ 3.0%，+6分`);
+        // } else if (upperShadow <= 4.5) {
+        //   baseScore += 3;
+        //   addScoreLogs.push(`无长上影线 ${upperShadow} ≤ 4.5%，+3分`);
+        // } else {
+        //   baseScore = 0;
+        // }
 
         // 场景	处理
         //   量价因子 ≥ 30	✅ 合格
