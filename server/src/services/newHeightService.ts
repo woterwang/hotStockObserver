@@ -28,7 +28,7 @@ type HundredDayHighBacktestSignalFilter = 'all' | 'high_score' | 'first_board' |
 
 interface HundredDayHighBacktestConfig {
   signalFilter: HundredDayHighBacktestSignalFilter;
-  minScore: number;
+  selectionScore: number;
   totalBuyScore: number;
   basePosition: number;
   lowRiskPositionFactor: number;
@@ -44,6 +44,7 @@ interface HundredDayHighBacktestTradeRecord {
   stockCode: string;
   stockName: string;
   signalDate: string;
+  totalBuyScore?: number;
   volumeRatio: number;
   buyDate: string;
   buyPrice: number;
@@ -1221,6 +1222,8 @@ export class NewHeightService {
     endDate: string,
     config: Partial<HundredDayHighBacktestConfig> = {}
   ): Promise<HundredDayHighBacktestResult> {
+    const legacyConfig = config as Partial<HundredDayHighBacktestConfig> & { minScore?: number };
+
     const normalizePercent = (value: unknown, fallback: number): number => {
       const numeric = Number(value);
       if (!Number.isFinite(numeric) || numeric <= 0) {
@@ -1239,8 +1242,8 @@ export class NewHeightService {
 
     const finalConfig: HundredDayHighBacktestConfig = {
       signalFilter: (config.signalFilter || 'high_score') as HundredDayHighBacktestSignalFilter,
-      minScore: Math.max(0, Number(config.minScore ?? 70)),
-      totalBuyScore: Math.max(0, Number(config.totalBuyScore ?? 35)),
+      selectionScore: Math.max(0, Number(legacyConfig.selectionScore ?? legacyConfig.minScore ?? 70)),
+      totalBuyScore: Math.max(0, Number(config.totalBuyScore ?? 40)),
       basePosition: Math.max(1000, Number(config.basePosition ?? 50000)),
       lowRiskPositionFactor: normalizeFactor(config.lowRiskPositionFactor, 1.2),
       mediumRiskPositionFactor: normalizeFactor(config.mediumRiskPositionFactor, 1),
@@ -1286,11 +1289,11 @@ export class NewHeightService {
     logger.info(`[百日新高回测] 开始回测，日期范围: ${startDate}-${endDate}，交易日: ${tradingDays.length}`);
 
     const candidates: any[] = [];
+    const signalMetricsByDateAndCode = new Map<string, { totalBuyScore: number; selectionScore: number }>();
 
     for (const dateStr of tradingDays) {
       const query: {
         date: string;
-        strategyScore?: { $gte: number };
         isFirstBoard?: boolean;
         riskLevel?: 'low';
       } = {
@@ -1299,12 +1302,8 @@ export class NewHeightService {
 
       if (finalConfig.signalFilter === 'first_board') {
         query.isFirstBoard = true;
-        query.strategyScore = { $gte: finalConfig.minScore };
       } else if (finalConfig.signalFilter === 'low_risk') {
         query.riskLevel = 'low';
-        query.strategyScore = { $gte: finalConfig.minScore };
-      } else {
-        query.strategyScore = { $gte: finalConfig.minScore };
       }
 
       const dailyCandidates = await HundredDayHigh.find(query)
@@ -1312,41 +1311,55 @@ export class NewHeightService {
 
       let filteredCandidates = dailyCandidates;
 
-      if (finalConfig.totalBuyScore > 0) {
+      if (finalConfig.totalBuyScore > 0 || finalConfig.selectionScore > 0) {
         const signalDate = tradingCalendarService.getNextTradingDay(dateStr);
         if (!signalDate) {
-          logger.info(`[百日新高回测] ${dateStr} 无下一交易日，跳过 totalBuyScore 过滤`);
+          logger.info(`[百日新高回测] ${dateStr} 无下一交易日，跳过信号分数过滤`);
           continue;
         }
 
         const signalList = await HundredDayHighSignal.find({
           date: signalDate,
+          selectionScore: { $gte: finalConfig.selectionScore },
           totalBuyScore: { $gte: finalConfig.totalBuyScore },
         }).lean();
 
         if (signalList.length === 0) {
-          logger.info(`[百日新高回测] ${signalDate} 无 totalBuyScore>=${finalConfig.totalBuyScore} 的信号`);
+          logger.info(
+            `[百日新高回测] ${signalDate} 无 selectionScore>=${finalConfig.selectionScore} 且 totalBuyScore>=${finalConfig.totalBuyScore} 的信号`
+          );
           continue;
         }
 
-        const signalScoreMap = new Map<string, number>();
+        const signalMetricsByCode = new Map<string, { totalBuyScore: number; selectionScore: number }>();
         for (const signal of signalList) {
           const stockCode = String(signal.stockCode || '');
-          const score = Number(signal.totalBuyScore || 0);
-          const prevScore = signalScoreMap.get(stockCode);
+          const metrics = {
+            totalBuyScore: Number(signal.totalBuyScore || 0),
+            selectionScore: Number(signal.selectionScore || 0),
+          };
+          const prevMetrics = signalMetricsByCode.get(stockCode);
 
-          if (prevScore === undefined || score > prevScore) {
-            signalScoreMap.set(stockCode, score);
+          if (
+            prevMetrics === undefined ||
+            metrics.totalBuyScore > prevMetrics.totalBuyScore ||
+            (metrics.totalBuyScore === prevMetrics.totalBuyScore && metrics.selectionScore > prevMetrics.selectionScore)
+          ) {
+            signalMetricsByCode.set(stockCode, metrics);
+            signalMetricsByDateAndCode.set(`${dateStr}_${stockCode}`, metrics);
           }
         }
 
         filteredCandidates = dailyCandidates
-          .filter((candidate) => signalScoreMap.has(String(candidate.stockCode || '')))
+          .filter((candidate) => signalMetricsByCode.has(String(candidate.stockCode || '')))
           .sort((a, b) => {
-            const bScore = signalScoreMap.get(String(b.stockCode || '')) || 0;
-            const aScore = signalScoreMap.get(String(a.stockCode || '')) || 0;
-            if (bScore !== aScore) {
-              return bScore - aScore;
+            const bMetrics = signalMetricsByCode.get(String(b.stockCode || '')) || { totalBuyScore: 0, selectionScore: 0 };
+            const aMetrics = signalMetricsByCode.get(String(a.stockCode || '')) || { totalBuyScore: 0, selectionScore: 0 };
+            if (bMetrics.totalBuyScore !== aMetrics.totalBuyScore) {
+              return bMetrics.totalBuyScore - aMetrics.totalBuyScore;
+            }
+            if (bMetrics.selectionScore !== aMetrics.selectionScore) {
+              return bMetrics.selectionScore - aMetrics.selectionScore;
             }
             return Number(b.strategyScore || 0) - Number(a.strategyScore || 0);
           });
@@ -1385,11 +1398,15 @@ export class NewHeightService {
       const position = Math.max(1000, Math.round(finalConfig.basePosition * riskFactor));
 
       const profitAmount = Number(((backtestRes.profitPercent / 100) * position).toFixed(2));
+      const stockCode = String(candidate.stockCode || '');
+      const signalMetrics = signalMetricsByDateAndCode.get(`${signalDate}_${stockCode}`);
+      const totalBuyScore = signalMetrics?.totalBuyScore;
 
       trades.push({
-        stockCode: String(candidate.stockCode || ''),
+        stockCode,
         stockName: String(candidate.stockName || ''),
         signalDate,
+        totalBuyScore,
         volumeRatio: Number(candidate.volumeRatio || 0),
         buyDate,
         buyPrice: backtestRes.buyPrice,

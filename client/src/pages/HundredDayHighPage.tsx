@@ -57,7 +57,7 @@ const HundredDayHighPage: React.FC = () => {
 
   const [backtestConfig, setBacktestConfig] = useState<HundredDayHighBacktestConfig>({
     signalFilter: 'high_score',
-    minScore: 70,
+    selectionScore: 70,
     totalBuyScore: 40,
     basePosition: 50000,
     lowRiskPositionFactor: 1.2,
@@ -778,11 +778,11 @@ const HundredDayHighPage: React.FC = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">最低评分</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">最低选股分</label>
                       <input
                         type="number"
-                        value={backtestConfig.minScore}
-                        onChange={(e) => setBacktestConfig({ ...backtestConfig, minScore: Number(e.target.value) })}
+                        value={backtestConfig.selectionScore}
+                        onChange={(e) => setBacktestConfig({ ...backtestConfig, selectionScore: Number(e.target.value) })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -993,6 +993,7 @@ const HundredDayHighPage: React.FC = () => {
                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">代码</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">名称</th>
                                 <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">量比</th>
+                                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">买入分</th>
                                 <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">策略分</th>
                                 <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">买入日</th>
                                 <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">买入价</th>
@@ -1022,6 +1023,9 @@ const HundredDayHighPage: React.FC = () => {
                                   <td className="px-4 py-3 text-sm text-gray-900">{trade.stockName}</td>
                                   <td className="px-4 py-3 text-sm text-right text-gray-700">
                                     {trade.volumeRatio > 0 ? `${trade.volumeRatio.toFixed(2)}x` : '-'}
+                                  </td>
+                                  <td className="px-4 py-3 text-sm text-right text-gray-700">
+                                    {typeof trade.totalBuyScore === 'number' ? trade.totalBuyScore.toFixed(1) : '-'}
                                   </td>
                                   <td className="px-4 py-3 text-sm text-right text-gray-700">
                                     {(trade.strategyScore ?? trade.score ?? 0).toFixed(0)}

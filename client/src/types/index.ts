@@ -227,7 +227,7 @@ export interface HundredDayHighHistory {
 
 export interface HundredDayHighBacktestConfig {
   signalFilter: 'all' | 'high_score' | 'first_board' | 'low_risk';
-  minScore: number;
+  selectionScore: number;
   totalBuyScore: number;
   basePosition: number;
   lowRiskPositionFactor: number;
@@ -243,6 +243,7 @@ export interface HundredDayHighBacktestTradeRecord {
   stockCode: string;
   stockName: string;
   signalDate: string;
+  totalBuyScore?: number;
   volumeRatio: number;
   buyDate: string;
   buyPrice: number;

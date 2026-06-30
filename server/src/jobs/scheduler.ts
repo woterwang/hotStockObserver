@@ -2,6 +2,7 @@ import cron from 'node-cron';
 import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, tradingCalendarService, marketMoodService, conceptResonanceService } from '../services';
 import { volumeSurgeService } from '../services/volumeSurgeServiceV2'
 import { buySignalService } from '../services/buySignalServiceV3';
+import { hundredDayHighService } from '../services/newHeightService';
 import { thsConceptHotRankService } from '../services/thsConceptHotRankService';
 import { updateCodeKline } from './updateCodeKline';
 import { groupService } from '../services/groupService';
@@ -20,7 +21,7 @@ import { autoPush } from './autoGit';
  * 
  * =================== 竞价后任务 (上午9:25:18) ===================
  * 1. 集合竞价后更新入场信号任务 - 每个交易日 09:25:18 执行
- *    更新今日信号的入场条件，包括价格突破策略与放量大涨策略，并更新市场情绪数据
+ *    更新今日信号的入场条件，包括价格突破策略、放量大涨策略、主线共振策略与百日新高策略，并更新市场情绪数据
  * 
  * =================== 盘中任务 (上午9:30-下午15:00) ===================
  * 1. 热搜股票更新任务 - 交易日每15分钟执行一次（9:30-15:00）
@@ -35,8 +36,8 @@ import { autoPush } from './autoGit';
  *    获取当日市场情绪数据
  * 4. 价格突破扫描任务 - 每个交易日 15:30 执行
  *    扫描当天的价格突破股票
- * 5. 盘后信号生成任务 - 每个交易日 15:35 执行
- *    生成次日备选标的，包含多个策略（价格突破、放量大涨等）
+ * 5. 百日新高扫描任务 - 每个交易日收盘后执行
+ *    扫描当天的百日新高备选标的
  * 
  * =================== 晚间任务 (晚上23:58) ===================
  * 1. 每日热搜板块更新任务 - 每天 23:58 执行
@@ -341,6 +342,27 @@ export class JobScheduler {
         logger.error(`入场条件更新失败: ${(error as Error).message}`);
       }
 
+      // 4. 百日新高策略
+      try {
+        logger.info('开始执行集合竞价后【百日新高策略】买入信号生成');
+        const hundredDayHighSignals = await hundredDayHighService.generateSignals(today, 40);
+        logger.info(`[百日新高] 生成完成，共 ${hundredDayHighSignals.length} 个信号，入场日=${today}`);
+
+        hundredDayHighSignals.sort((a, b) => Number(b.totalBuyScore || 0) - Number(a.totalBuyScore || 0));
+
+        const buySignalCodes = hundredDayHighSignals
+          .filter((signal) => ['strong_buy', 'buy'].includes(String(signal.buySignal || '')) && Number(signal.totalBuyScore || 0) >= 40)
+          .map((signal) => signal.stockCode);
+
+        if (buySignalCodes.length > 0) {
+          logger.info(`[百日新高] 今日百日新高买入信号: ${buySignalCodes.join(', ')}`);
+          const groupId = await groupService.createGroup(`${today}-百日新高`);
+          await groupService.addStocksToGroup(groupId, buySignalCodes);
+        }
+      } catch (error) {
+        logger.error(`[百日新高] 生成失败: ${(error as Error).message}`);
+      }
+
     }, {
       timezone: 'Asia/Shanghai',
     });
@@ -493,6 +515,16 @@ export class JobScheduler {
           logger.info(`【第5步完成】主线共振扫描任务完成，共发现 ${count} 个共振信号`);
         } catch (error) {
           logger.error(`【第5步失败】主线共振扫描任务失败: ${(error as Error).message}`);
+        }
+
+        // 6. 百日新高扫描任务
+        try {
+          logger.info('【第6步】开始执行百日新高备选标的扫描任务');
+          const today = formatDate(new Date(), 'YYYYMMDD');
+          const count = await hundredDayHighService.scanAndSave(today);
+          logger.info(`【第6步完成】百日新高扫描任务完成，共发现 ${count} 只备选标的`);
+        } catch (error) {
+          logger.error(`【第6步失败】百日新高扫描任务失败: ${(error as Error).message}`);
         }
 
         logger.info('所有收盘后串行任务执行完毕');
