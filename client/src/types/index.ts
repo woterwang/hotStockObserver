@@ -228,6 +228,7 @@ export interface HundredDayHighHistory {
 export interface HundredDayHighBacktestConfig {
   signalFilter: 'all' | 'high_score' | 'first_board' | 'low_risk';
   minScore: number;
+  totalBuyScore: number;
   basePosition: number;
   lowRiskPositionFactor: number;
   mediumRiskPositionFactor: number;

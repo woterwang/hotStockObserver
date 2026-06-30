@@ -29,6 +29,7 @@ type HundredDayHighBacktestSignalFilter = 'all' | 'high_score' | 'first_board' |
 interface HundredDayHighBacktestConfig {
   signalFilter: HundredDayHighBacktestSignalFilter;
   minScore: number;
+  totalBuyScore: number;
   basePosition: number;
   lowRiskPositionFactor: number;
   mediumRiskPositionFactor: number;
@@ -1239,13 +1240,14 @@ export class NewHeightService {
     const finalConfig: HundredDayHighBacktestConfig = {
       signalFilter: (config.signalFilter || 'high_score') as HundredDayHighBacktestSignalFilter,
       minScore: Math.max(0, Number(config.minScore ?? 70)),
+      totalBuyScore: Math.max(0, Number(config.totalBuyScore ?? 35)),
       basePosition: Math.max(1000, Number(config.basePosition ?? 50000)),
       lowRiskPositionFactor: normalizeFactor(config.lowRiskPositionFactor, 1.2),
       mediumRiskPositionFactor: normalizeFactor(config.mediumRiskPositionFactor, 1),
       highRiskPositionFactor: normalizeFactor(config.highRiskPositionFactor, 0.7),
-      stopLossPercent: normalizePercent(config.stopLossPercent, 0.05),
-      takeProfitPercent: normalizePercent(config.takeProfitPercent, 0.15),
-      maxHoldDays: Math.max(1, Math.floor(Number(config.maxHoldDays ?? 3))),
+      stopLossPercent: normalizePercent(config.stopLossPercent, 0.08),
+      takeProfitPercent: normalizePercent(config.takeProfitPercent, 0.5),
+      maxHoldDays: Math.max(1, Math.floor(Number(config.maxHoldDays ?? 10))),
       maxTradesPerDay: Math.max(1, Math.floor(Number(config.maxTradesPerDay ?? 3))),
     };
 
@@ -1306,10 +1308,51 @@ export class NewHeightService {
       }
 
       const dailyCandidates = await HundredDayHigh.find(query)
-        .sort({ strategyScore: -1, changePercent: -1 })
-        .limit(finalConfig.maxTradesPerDay);
+        .sort({ strategyScore: -1, changePercent: -1 });
 
-      candidates.push(...dailyCandidates);
+      let filteredCandidates = dailyCandidates;
+
+      if (finalConfig.totalBuyScore > 0) {
+        const signalDate = tradingCalendarService.getNextTradingDay(dateStr);
+        if (!signalDate) {
+          logger.info(`[百日新高回测] ${dateStr} 无下一交易日，跳过 totalBuyScore 过滤`);
+          continue;
+        }
+
+        const signalList = await HundredDayHighSignal.find({
+          date: signalDate,
+          totalBuyScore: { $gte: finalConfig.totalBuyScore },
+        }).lean();
+
+        if (signalList.length === 0) {
+          logger.info(`[百日新高回测] ${signalDate} 无 totalBuyScore>=${finalConfig.totalBuyScore} 的信号`);
+          continue;
+        }
+
+        const signalScoreMap = new Map<string, number>();
+        for (const signal of signalList) {
+          const stockCode = String(signal.stockCode || '');
+          const score = Number(signal.totalBuyScore || 0);
+          const prevScore = signalScoreMap.get(stockCode);
+
+          if (prevScore === undefined || score > prevScore) {
+            signalScoreMap.set(stockCode, score);
+          }
+        }
+
+        filteredCandidates = dailyCandidates
+          .filter((candidate) => signalScoreMap.has(String(candidate.stockCode || '')))
+          .sort((a, b) => {
+            const bScore = signalScoreMap.get(String(b.stockCode || '')) || 0;
+            const aScore = signalScoreMap.get(String(a.stockCode || '')) || 0;
+            if (bScore !== aScore) {
+              return bScore - aScore;
+            }
+            return Number(b.strategyScore || 0) - Number(a.strategyScore || 0);
+          });
+      }
+
+      candidates.push(...filteredCandidates.slice(0, finalConfig.maxTradesPerDay));
     }
 
     if (candidates.length === 0) {

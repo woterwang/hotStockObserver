@@ -58,13 +58,14 @@ const HundredDayHighPage: React.FC = () => {
   const [backtestConfig, setBacktestConfig] = useState<HundredDayHighBacktestConfig>({
     signalFilter: 'high_score',
     minScore: 70,
+    totalBuyScore: 40,
     basePosition: 50000,
     lowRiskPositionFactor: 1.2,
     mediumRiskPositionFactor: 1,
     highRiskPositionFactor: 0.7,
-    stopLossPercent: 0.05,
-    takeProfitPercent: 0.15,
-    maxHoldDays: 3,
+    stopLossPercent: 0.08,
+    takeProfitPercent: 0.5,
+    maxHoldDays: 10,
     maxTradesPerDay: 3,
   });
   const [backtestResult, setBacktestResult] = useState<HundredDayHighBacktestResult | null>(null);
@@ -307,58 +308,57 @@ const HundredDayHighPage: React.FC = () => {
     [signalList]
   );
 
+  const tabButtonClass = (tab: TabType) => (
+    `px-3 sm:px-5 py-2.5 text-xs sm:text-sm font-medium rounded-lg transition whitespace-nowrap ${
+      activeTab === tab
+        ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+        : 'text-gray-600 hover:text-gray-900'
+    }`
+  );
+
   return (
     <Layout>
-      <div className="space-y-3 sm:space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">📈 百日新高</h1>
-            <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">
+      <div className="space-y-4 sm:space-y-5">
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-4 sm:p-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div>
+              <p className="text-xs sm:text-sm font-medium text-blue-600">策略看板</p>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">百日新高</h1>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">
               涨幅突破 + 百日新高 + 量价趋势评分
-            </p>
-          </div>
+              </p>
+            </div>
 
-          <button
-            onClick={() => setShowBackfillDialog(true)}
-            className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition flex items-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-            </svg>
-            补录历史
-          </button>
+            <button
+              onClick={() => setShowBackfillDialog(true)}
+              className="px-4 py-2.5 text-gray-700 bg-white hover:bg-gray-100 border border-gray-200 rounded-lg transition flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              补录历史
+            </button>
+          </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow">
-          <div className="border-b border-gray-200 overflow-x-auto">
-            <nav className="flex -mb-px min-w-max">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="px-3 sm:px-6 pt-3 sm:pt-4 border-b border-gray-100 overflow-x-auto">
+            <nav className="flex min-w-max gap-2 rounded-xl bg-gray-100 p-1">
               <button
                 onClick={() => setActiveTab('scan')}
-                className={`px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 transition whitespace-nowrap ${
-                  activeTab === 'scan'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                className={tabButtonClass('scan')}
               >
                 📊 扫描候选
               </button>
               <button
                 onClick={() => setActiveTab('signal')}
-                className={`px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 transition whitespace-nowrap ${
-                  activeTab === 'signal'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                className={tabButtonClass('signal')}
               >
                 🔥 生成信号
               </button>
               <button
                 onClick={() => setActiveTab('backtest')}
-                className={`px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 transition whitespace-nowrap ${
-                  activeTab === 'backtest'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                className={tabButtonClass('backtest')}
               >
                 📈 历史回测
               </button>
@@ -370,51 +370,53 @@ const HundredDayHighPage: React.FC = () => {
             title="当前市场情绪"
             showRecentAverage={true}
             recentDays={5}
-            className="rounded-none sm:rounded-xl"
+            className="rounded-xl border border-gray-100"
           />
 
-          <div className="p-3 sm:p-6">
+          <div className="p-4 sm:p-6">
             {activeTab === 'scan' && (
               <div className="space-y-6">
-                <div className="flex items-center gap-4 flex-wrap">
-                  <DatePicker
-                    value={selectedDate}
-                    onChange={setSelectedDate}
-                    availableDates={availableDates}
-                    placeholder="选择日期"
-                  />
+                <div className="rounded-xl border border-gray-200 bg-gray-50/70 p-4">
+                  <div className="flex items-center gap-4 flex-wrap">
+                    <DatePicker
+                      value={selectedDate}
+                      onChange={setSelectedDate}
+                      availableDates={availableDates}
+                      placeholder="选择日期"
+                    />
 
-                  <button
-                    onClick={handleScan}
-                    disabled={scanning}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
-                  >
-                    {scanning && (
-                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                    )}
-                    {scanning ? '扫描中...' : '开始扫描'}
-                  </button>
+                    <button
+                      onClick={handleScan}
+                      disabled={scanning}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {scanning && (
+                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                      )}
+                      {scanning ? '扫描中...' : '开始扫描'}
+                    </button>
+                  </div>
                 </div>
 
                 {stats && (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4">
-                      <div className="text-3xl font-bold text-blue-600">{stats.total}</div>
+                    <div className="bg-white border border-gray-200 rounded-xl p-4">
+                      <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
                       <div className="text-sm text-gray-600">候选数量</div>
                     </div>
-                    <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4">
-                      <div className="text-3xl font-bold text-green-600">{stats.highQualityCount}</div>
+                    <div className="bg-white border border-gray-200 rounded-xl p-4">
+                      <div className="text-2xl font-bold text-emerald-600">{stats.highQualityCount}</div>
                       <div className="text-sm text-gray-600">高质量(≥70)</div>
                     </div>
-                    <div className="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-4">
-                      <div className="text-3xl font-bold text-orange-600">{stats.firstBoardCount}</div>
+                    <div className="bg-white border border-gray-200 rounded-xl p-4">
+                      <div className="text-2xl font-bold text-amber-600">{stats.firstBoardCount}</div>
                       <div className="text-sm text-gray-600">首板数量</div>
                     </div>
-                    <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4">
-                      <div className="text-3xl font-bold text-purple-600">{stats.avgScore?.toFixed(1) || '-'}</div>
+                    <div className="bg-white border border-gray-200 rounded-xl p-4">
+                      <div className="text-2xl font-bold text-indigo-600">{stats.avgScore?.toFixed(1) || '-'}</div>
                       <div className="text-sm text-gray-600">平均评分</div>
                     </div>
                   </div>
@@ -427,7 +429,7 @@ const HundredDayHighPage: React.FC = () => {
                 ) : sortedList.length === 0 ? (
                   <Empty message="暂无百日新高股票数据，请先执行扫描" />
                 ) : (
-                  <div className="bg-white rounded-lg shadow overflow-x-auto">
+                  <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
@@ -487,7 +489,7 @@ const HundredDayHighPage: React.FC = () => {
 
             {activeTab === 'signal' && (
               <div className="space-y-6">
-                <div className="bg-gray-50 rounded-lg p-4">
+                <div className="bg-gray-50/70 border border-gray-200 rounded-xl p-4">
                   <div className="flex flex-wrap items-end gap-4">
                     <DatePicker
                       value={selectedDate}
@@ -528,7 +530,7 @@ const HundredDayHighPage: React.FC = () => {
 
                     <button
                       onClick={handleOpenSignalBatchDialog}
-                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
+                      className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2"
                     >
                       📅 批量生成
                     </button>
@@ -536,10 +538,10 @@ const HundredDayHighPage: React.FC = () => {
                 </div>
 
                 {showSignalBatchDialog && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <div className="fixed inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center z-50 px-3">
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-2xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
                       <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-bold text-gray-900">📅 批量生成百日新高信号</h2>
+                        <h2 className="text-xl font-bold text-gray-900">批量生成百日新高信号</h2>
                         <button
                           onClick={() => setShowSignalBatchDialog(false)}
                           className="text-gray-500 hover:text-gray-700"
@@ -617,7 +619,7 @@ const HundredDayHighPage: React.FC = () => {
                           <button
                             onClick={handleBatchGenerateSignal}
                             disabled={signalBatchGenerating || !signalBatchStartDate || !signalBatchEndDate}
-                            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                           >
                             {signalBatchGenerating && (
                               <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
@@ -635,27 +637,27 @@ const HundredDayHighPage: React.FC = () => {
 
                 {signalStats && (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <div className="bg-white rounded-lg shadow p-4 text-center">
+                    <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
                       <div className="text-2xl font-bold text-gray-900">{signalStats.total}</div>
                       <div className="text-sm text-gray-500">总信号数</div>
                     </div>
-                    <div className="bg-red-50 rounded-lg shadow p-4 text-center">
+                    <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
                       <div className="text-2xl font-bold text-red-600">{signalStats.strongBuy}</div>
                       <div className="text-sm text-red-700">强烈买入</div>
                     </div>
-                    <div className="bg-green-50 rounded-lg shadow p-4 text-center">
+                    <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
                       <div className="text-2xl font-bold text-green-600">{signalStats.buy}</div>
                       <div className="text-sm text-green-700">建议买入</div>
                     </div>
-                    <div className="bg-yellow-50 rounded-lg shadow p-4 text-center">
+                    <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
                       <div className="text-2xl font-bold text-yellow-600">{signalStats.hold}</div>
                       <div className="text-sm text-yellow-700">观望</div>
                     </div>
-                    <div className="bg-gray-50 rounded-lg shadow p-4 text-center">
+                    <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
                       <div className="text-2xl font-bold text-gray-600">{signalStats.pass}</div>
                       <div className="text-sm text-gray-700">放弃</div>
                     </div>
-                    <div className="bg-blue-50 rounded-lg shadow p-4 text-center">
+                    <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
                       <div className="text-2xl font-bold text-blue-600">{signalStats.avgScore.toFixed(1)}</div>
                       <div className="text-sm text-blue-700">平均买入分</div>
                     </div>
@@ -669,7 +671,7 @@ const HundredDayHighPage: React.FC = () => {
                 ) : sortedSignalList.length === 0 ? (
                   <Empty message="暂无百日新高买入信号，请先执行生成" />
                 ) : (
-                  <div className="bg-white rounded-lg shadow overflow-x-auto">
+                  <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
@@ -736,10 +738,11 @@ const HundredDayHighPage: React.FC = () => {
 
             {activeTab === 'backtest' && (
               <div className="space-y-6">
-                <div className="bg-gray-50 rounded-lg p-4">
+                <div className="bg-gray-50/70 border border-gray-200 rounded-xl p-4 sm:p-5">
                   <h3 className="font-semibold text-gray-900 mb-4">回测参数配置</h3>
+                  <p className="text-xs sm:text-sm text-gray-500 mb-4">建议先在小区间试跑，再扩大日期范围，提升回测体验与效率。</p>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">开始日期</label>
                       <input
@@ -780,6 +783,15 @@ const HundredDayHighPage: React.FC = () => {
                         type="number"
                         value={backtestConfig.minScore}
                         onChange={(e) => setBacktestConfig({ ...backtestConfig, minScore: Number(e.target.value) })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">最低买入分</label>
+                      <input
+                        type="number"
+                        value={backtestConfig.totalBuyScore}
+                        onChange={(e) => setBacktestConfig({ ...backtestConfig, totalBuyScore: Number(e.target.value) })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -870,7 +882,7 @@ const HundredDayHighPage: React.FC = () => {
                   <button
                     onClick={handleBacktest}
                     disabled={backtesting}
-                    className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2 text-lg"
+                    className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2 text-base sm:text-lg"
                   >
                     {backtesting && (
                       <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
@@ -878,7 +890,7 @@ const HundredDayHighPage: React.FC = () => {
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
                     )}
-                    {backtesting ? '回测中...' : '🚀 开始回测'}
+                    {backtesting ? '回测中...' : '开始回测'}
                   </button>
                 </div>
 
@@ -886,7 +898,7 @@ const HundredDayHighPage: React.FC = () => {
 
                 {backtestResult && (
                   <div className="space-y-6">
-                    <div className="bg-white rounded-lg shadow p-6">
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
                       <h3 className="text-lg font-semibold mb-4">📊 回测结果 - 百日新高策略</h3>
 
                       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -962,7 +974,7 @@ const HundredDayHighPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow overflow-hidden">
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                       <div className="p-4 border-b flex items-center justify-between">
                         <h3 className="text-lg font-semibold">交易明细</h3>
                         <button
