@@ -1,4 +1,5 @@
 export * from './common/Loading';
+export { default as Chart } from './common/Chart';
 export * from './common/DatePicker';
 export * from './common/BackfillDialog';
 export * from './common/MarketSentimentCard';

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import ReactECharts from 'echarts-for-react';
-import { Layout, Loading, ErrorMessage, Empty } from '../components';
+import { Layout, Loading, ErrorMessage, Empty, Chart } from '../components';
 import { stockApi } from '../services/api';
 import type { StockDetail, HotStock } from '../types';
 
@@ -274,7 +273,7 @@ const StockDetailPage: React.FC = () => {
           <div className="card">
             <h3 className="card-header">📈 价格走势</h3>
             {history.length > 0 ? (
-              <ReactECharts option={getKlineOptions(history)} style={{ height: '300px' }} />
+              <Chart option={getKlineOptions(history)} style={{ height: '300px' }} />
             ) : (
               <Empty message="暂无历史数据" />
             )}
@@ -284,7 +283,7 @@ const StockDetailPage: React.FC = () => {
           <div className="card">
             <h3 className="card-header">💰 成交额走势</h3>
             {history.length > 0 ? (
-              <ReactECharts option={getTurnoverOptions(history)} style={{ height: '300px' }} />
+              <Chart option={getTurnoverOptions(history)} style={{ height: '300px' }} />
             ) : (
               <Empty message="暂无历史数据" />
             )}

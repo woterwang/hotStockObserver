@@ -57,7 +57,7 @@ const HundredDayHighPage: React.FC = () => {
 
   const [backtestConfig, setBacktestConfig] = useState<HundredDayHighBacktestConfig>({
     signalFilter: 'high_score',
-    selectionScore: 70,
+    selectionScore: 40,
     totalBuyScore: 40,
     basePosition: 50000,
     lowRiskPositionFactor: 1.2,

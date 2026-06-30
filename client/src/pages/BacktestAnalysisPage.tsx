@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import ReactECharts from 'echarts-for-react';
-import { Layout, Loading, ErrorMessage, Empty } from '../components';
+import { Layout, Loading, ErrorMessage, Empty, Chart } from '../components';
 import { backtestAnalysisApi } from '../services/api';
 import type {
   BacktestResultData,
@@ -546,7 +545,7 @@ const BacktestAnalysisPage: React.FC = () => {
               <div className="card">
                 <h3 className="card-header">累计权益曲线</h3>
                 {normalizedEquityCurve.length > 0 ? (
-                  <ReactECharts option={equityOption} style={{ height: '320px' }} />
+                  <Chart option={equityOption} style={{ height: '320px' }} />
                 ) : (
                   <Empty message="暂无权益曲线数据" />
                 )}
@@ -554,7 +553,7 @@ const BacktestAnalysisPage: React.FC = () => {
               <div className="card">
                 <h3 className="card-header">月度收益分布</h3>
                 {monthlyStats.length > 0 ? (
-                  <ReactECharts option={monthlyOption} style={{ height: '320px' }} />
+                  <Chart option={monthlyOption} style={{ height: '320px' }} />
                 ) : (
                   <Empty message="暂无月度收益数据" />
                 )}
@@ -564,7 +563,7 @@ const BacktestAnalysisPage: React.FC = () => {
             <div className="card">
               <h3 className="card-header">单笔收益区间分布</h3>
               {profitDistribution.length > 0 ? (
-                <ReactECharts option={distributionOption} style={{ height: '300px' }} />
+                <Chart option={distributionOption} style={{ height: '300px' }} />
               ) : (
                 <Empty message="暂无收益分布数据" />
               )}

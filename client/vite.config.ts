@@ -49,10 +49,16 @@ export default defineConfig({
           }
 
           if (
-            id.includes('echarts') ||
-            id.includes('echarts-for-react') ||
-            id.includes('zrender')
+            id.includes('echarts-for-react')
           ) {
+            return 'chart-react-vendor';
+          }
+
+          if (id.includes('zrender')) {
+            return 'zrender-vendor';
+          }
+
+          if (id.includes('echarts')) {
             return 'chart-vendor';
           }
 

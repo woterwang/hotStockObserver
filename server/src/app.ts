@@ -1,4 +1,5 @@
 import express from 'express';
+import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
@@ -16,6 +17,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/hot_stock_observer';
+const clientDistPath = path.join(__dirname, '../../client/dist');
 
 // 中间件
 const enableHttpsUpgrade = process.env.ENABLE_HTTPS_UPGRADE === 'true';
@@ -34,6 +36,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(compression({ threshold: 1024 }));
 
 // 请求限流
 const limiter = rateLimit({
@@ -58,9 +61,28 @@ app.post('/api/admin/update', async (req, res) => {
 
 // 静态文件服务（生产环境）
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../../client/dist')));
+  app.use(
+    '/assets',
+    express.static(path.join(clientDistPath, 'assets'), {
+      immutable: true,
+      maxAge: '30d',
+    })
+  );
+  app.use(
+    express.static(clientDistPath, {
+      index: false,
+      setHeaders(res, filePath) {
+        if (filePath.endsWith('.html')) {
+          res.setHeader('Cache-Control', 'no-cache');
+          return;
+        }
+
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+      },
+    })
+  );
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+    res.sendFile(path.join(clientDistPath, 'index.html'));
   });
 }
 

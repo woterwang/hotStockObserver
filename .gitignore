@@ -80,8 +80,9 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
-!client/dist
+dist/
+client/dist/
+server/dist/
 
 # Local caches
 server/data/kline_cache/

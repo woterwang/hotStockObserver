@@ -13,7 +13,9 @@
     "test:updateCache": "node test-update-cache.js"
   },
   "dependencies": {
+    "@types/compression": "^1.8.1",
     "axios": "^1.6.0",
+    "compression": "^1.8.1",
     "dayjs": "^1.11.19",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",

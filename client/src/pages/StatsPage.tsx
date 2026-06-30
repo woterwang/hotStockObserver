@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ReactECharts from 'echarts-for-react';
-import { Layout, Loading, ErrorMessage, Empty } from '../components';
+import { Layout, Loading, ErrorMessage, Empty, Chart } from '../components';
 import { stockApi } from '../services/api';
 import type { PeriodStats } from '../types';
 
@@ -211,7 +210,7 @@ const StatsPage: React.FC = () => {
                       </button>
                     </div>
                     {selectedStock.trendData.length > 0 ? (
-                      <ReactECharts
+                      <Chart
                         option={getChartOptions(selectedStock)}
                         style={{ height: '300px' }}
                       />
