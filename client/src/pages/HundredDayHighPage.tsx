@@ -32,7 +32,7 @@ const HundredDayHighPage: React.FC = () => {
   const [signalLoading, setSignalLoading] = useState(false);
   const [signalGenerating, setSignalGenerating] = useState(false);
   const [signalError, setSignalError] = useState<string | null>(null);
-  const [signalMinScore, setSignalMinScore] = useState(70);
+  const [signalMinScore, setSignalMinScore] = useState(40);
   const [showSignalBatchDialog, setShowSignalBatchDialog] = useState(false);
   const [signalBatchStartDate, setSignalBatchStartDate] = useState('');
   const [signalBatchEndDate, setSignalBatchEndDate] = useState('');
