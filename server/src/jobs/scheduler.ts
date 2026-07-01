@@ -334,7 +334,7 @@ export class JobScheduler {
           const topThree = result.signals.filter(item => item.status === 'ready').map(signal => signal.stockCode);
           // 创建分组：${日期}-主线共振
           logger.info(`[主线共振] 今日主线共振股票: ${topThree.join(', ')}`);
-          const groupId = await groupService.createGroup(`${today}-百日新高`);
+          const groupId = await groupService.createGroup(`${today}-新高T+2`);
           await groupService.addStocksToGroup(groupId, topThree);
         }
 
@@ -356,7 +356,7 @@ export class JobScheduler {
 
         if (buySignalCodes.length > 0) {
           logger.info(`[百日新高] 今日百日新高买入信号: ${buySignalCodes.join(', ')}`);
-          const groupId = await groupService.createGroup(`${today}-百日新高`);
+          const groupId = await groupService.createGroup(`${today}-放量新高T+1`);
           await groupService.addStocksToGroup(groupId, buySignalCodes);
         }
       } catch (error) {
