@@ -1,0 +1,84 @@
+{
+  "startDate": "20260601",
+  "endDate": "20260701",
+  "config": {
+    "signalFilter": "strong_buy",
+    "minSignalScore": 60,
+    "basePosition": 50000,
+    "lowMoodPositionRatio": 0.5,
+    "marketMoodThreshold": 0,
+    "stopLossPercent": 0.08,
+    "takeProfitPercent": 0.5,
+    "maxHoldDays": 10,
+    "marketPanicThreshold": 0,
+    "maxBuyCount": 3
+  },
+  "totalTrades": 2,
+  "winTrades": 0,
+  "lossTrades": 2,
+  "winRate": 0,
+  "totalProfitAmount": -8467.46,
+  "totalProfitPercent": -8.47,
+  "avgProfitPercent": -8.46,
+  "avgWinPercent": 0,
+  "avgLossPercent": -8.46,
+  "profitLossRatio": 0,
+  "totalInvested": 100000,
+  "maxDrawdown": 8467.46,
+  "maxDrawdownPercent": 0,
+  "maxProfit": -8,
+  "maxLoss": -8.93,
+  "maxConsecutiveWins": 0,
+  "maxConsecutiveLosses": 2,
+  "avgHoldDays": 2,
+  "equityCurve": [
+    {
+      "date": "20260629",
+      "equity": -4000
+    },
+    {
+      "date": "20260629",
+      "equity": -8467.46
+    }
+  ],
+  "trades": [
+    {
+      "stockCode": "688025",
+      "stockName": "杰普特",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260626",
+      "buyPrice": 483.34,
+      "sellDate": "20260629",
+      "sellPrice": 444.6728,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -8,
+      "profitAmount": -4000,
+      "exitReason": "stop_loss",
+      "buySignalScore": 63.6,
+      "selectionScore": 76,
+      "volumeRatio": 2.307,
+      "marketMood": 53
+    },
+    {
+      "stockCode": "600531",
+      "stockName": "豫光金铅",
+      "strategyType": "volume_surge",
+      "strategyName": "强势资金突破",
+      "buyDate": "20260626",
+      "buyPrice": 16.9,
+      "sellDate": "20260629",
+      "sellPrice": 15.39,
+      "holdDays": 2,
+      "position": 50000,
+      "profitPercent": -8.93,
+      "profitAmount": -4467.46,
+      "exitReason": "stop_loss",
+      "buySignalScore": 61.1,
+      "selectionScore": 59,
+      "volumeRatio": 2.407,
+      "marketMood": 53
+    }
+  ]
+}

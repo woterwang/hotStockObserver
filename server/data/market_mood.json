@@ -1,6 +1,538 @@
 {
-  "updatedAt": "2026-07-02T09:18:00.358Z",
+  "updatedAt": "2026-10-27T00:18:00.536Z",
   "data": [
+    {
+      "day": "20261026",
+      "strong": 52,
+      "ztjs": 55,
+      "lbgd": 4,
+      "dfNum": 4
+    },
+    {
+      "day": "20261023",
+      "strong": 78,
+      "ztjs": 82,
+      "lbgd": 6,
+      "dfNum": 4
+    },
+    {
+      "day": "20261022",
+      "strong": 31,
+      "ztjs": 33,
+      "lbgd": 5,
+      "dfNum": 19
+    },
+    {
+      "day": "20261021",
+      "strong": 49,
+      "ztjs": 50,
+      "lbgd": 4,
+      "dfNum": 4
+    },
+    {
+      "day": "20261020",
+      "strong": 64,
+      "ztjs": 54,
+      "lbgd": 4,
+      "dfNum": 9
+    },
+    {
+      "day": "20261019",
+      "strong": 45,
+      "ztjs": 46,
+      "lbgd": 3,
+      "dfNum": 3
+    },
+    {
+      "day": "20261016",
+      "strong": 66,
+      "ztjs": 61,
+      "lbgd": 11,
+      "dfNum": 14
+    },
+    {
+      "day": "20261015",
+      "strong": 28,
+      "ztjs": 36,
+      "lbgd": 5,
+      "dfNum": 5
+    },
+    {
+      "day": "20261014",
+      "strong": 38,
+      "ztjs": 36,
+      "lbgd": 4,
+      "dfNum": 12
+    },
+    {
+      "day": "20261013",
+      "strong": 52,
+      "ztjs": 67,
+      "lbgd": 3,
+      "dfNum": 5
+    },
+    {
+      "day": "20261012",
+      "strong": 54,
+      "ztjs": 46,
+      "lbgd": 10,
+      "dfNum": 20
+    },
+    {
+      "day": "20261009",
+      "strong": 68,
+      "ztjs": 69,
+      "lbgd": 9,
+      "dfNum": 4
+    },
+    {
+      "day": "20261008",
+      "strong": 48,
+      "ztjs": 43,
+      "lbgd": 8,
+      "dfNum": 16
+    },
+    {
+      "day": "20260930",
+      "strong": 56,
+      "ztjs": 52,
+      "lbgd": 7,
+      "dfNum": 8
+    },
+    {
+      "day": "20260929",
+      "strong": 61,
+      "ztjs": 57,
+      "lbgd": 6,
+      "dfNum": 4
+    },
+    {
+      "day": "20260928",
+      "strong": 32,
+      "ztjs": 33,
+      "lbgd": 5,
+      "dfNum": 5
+    },
+    {
+      "day": "20260924",
+      "strong": 42,
+      "ztjs": 52,
+      "lbgd": 5,
+      "dfNum": 5
+    },
+    {
+      "day": "20260923",
+      "strong": 47,
+      "ztjs": 51,
+      "lbgd": 4,
+      "dfNum": 9
+    },
+    {
+      "day": "20260922",
+      "strong": 64,
+      "ztjs": 63,
+      "lbgd": 6,
+      "dfNum": 8
+    },
+    {
+      "day": "20260921",
+      "strong": 84,
+      "ztjs": 103,
+      "lbgd": 5,
+      "dfNum": 2
+    },
+    {
+      "day": "20260918",
+      "strong": 69,
+      "ztjs": 78,
+      "lbgd": 4,
+      "dfNum": 7
+    },
+    {
+      "day": "20260917",
+      "strong": 49,
+      "ztjs": 47,
+      "lbgd": 5,
+      "dfNum": 3
+    },
+    {
+      "day": "20260916",
+      "strong": 74,
+      "ztjs": 89,
+      "lbgd": 6,
+      "dfNum": 0
+    },
+    {
+      "day": "20260915",
+      "strong": 34,
+      "ztjs": 32,
+      "lbgd": 5,
+      "dfNum": 8
+    },
+    {
+      "day": "20260914",
+      "strong": 56,
+      "ztjs": 55,
+      "lbgd": 4,
+      "dfNum": 4
+    },
+    {
+      "day": "20260911",
+      "strong": 30,
+      "ztjs": 40,
+      "lbgd": 4,
+      "dfNum": 5
+    },
+    {
+      "day": "20260910",
+      "strong": 33,
+      "ztjs": 35,
+      "lbgd": 4,
+      "dfNum": 10
+    },
+    {
+      "day": "20260909",
+      "strong": 48,
+      "ztjs": 48,
+      "lbgd": 5,
+      "dfNum": 3
+    },
+    {
+      "day": "20260908",
+      "strong": 65,
+      "ztjs": 73,
+      "lbgd": 4,
+      "dfNum": 1
+    },
+    {
+      "day": "20260907",
+      "strong": 69,
+      "ztjs": 93,
+      "lbgd": 6,
+      "dfNum": 1
+    },
+    {
+      "day": "20260904",
+      "strong": 45,
+      "ztjs": 39,
+      "lbgd": 5,
+      "dfNum": 12
+    },
+    {
+      "day": "20260903",
+      "strong": 43,
+      "ztjs": 44,
+      "lbgd": 5,
+      "dfNum": 9
+    },
+    {
+      "day": "20260902",
+      "strong": 43,
+      "ztjs": 52,
+      "lbgd": 4,
+      "dfNum": 12
+    },
+    {
+      "day": "20260901",
+      "strong": 71,
+      "ztjs": 83,
+      "lbgd": 7,
+      "dfNum": 1
+    },
+    {
+      "day": "20260831",
+      "strong": 71,
+      "ztjs": 88,
+      "lbgd": 6,
+      "dfNum": 3
+    },
+    {
+      "day": "20260828",
+      "strong": 68,
+      "ztjs": 82,
+      "lbgd": 7,
+      "dfNum": 7
+    },
+    {
+      "day": "20260827",
+      "strong": 70,
+      "ztjs": 77,
+      "lbgd": 6,
+      "dfNum": 2
+    },
+    {
+      "day": "20260826",
+      "strong": 55,
+      "ztjs": 52,
+      "lbgd": 5,
+      "dfNum": 7
+    },
+    {
+      "day": "20260825",
+      "strong": 66,
+      "ztjs": 65,
+      "lbgd": 5,
+      "dfNum": 2
+    },
+    {
+      "day": "20260824",
+      "strong": 40,
+      "ztjs": 46,
+      "lbgd": 4,
+      "dfNum": 3
+    },
+    {
+      "day": "20260821",
+      "strong": 48,
+      "ztjs": 54,
+      "lbgd": 3,
+      "dfNum": 10
+    },
+    {
+      "day": "20260820",
+      "strong": 64,
+      "ztjs": 79,
+      "lbgd": 4,
+      "dfNum": 8
+    },
+    {
+      "day": "20260819",
+      "strong": 26,
+      "ztjs": 36,
+      "lbgd": 3,
+      "dfNum": 14
+    },
+    {
+      "day": "20260818",
+      "strong": 57,
+      "ztjs": 79,
+      "lbgd": 4,
+      "dfNum": 5
+    },
+    {
+      "day": "20260817",
+      "strong": 78,
+      "ztjs": 106,
+      "lbgd": 4,
+      "dfNum": 0
+    },
+    {
+      "day": "20260814",
+      "strong": 53,
+      "ztjs": 63,
+      "lbgd": 5,
+      "dfNum": 9
+    },
+    {
+      "day": "20260813",
+      "strong": 51,
+      "ztjs": 59,
+      "lbgd": 5,
+      "dfNum": 15
+    },
+    {
+      "day": "20260812",
+      "strong": 78,
+      "ztjs": 92,
+      "lbgd": 7,
+      "dfNum": 1
+    },
+    {
+      "day": "20260811",
+      "strong": 51,
+      "ztjs": 58,
+      "lbgd": 6,
+      "dfNum": 2
+    },
+    {
+      "day": "20260810",
+      "strong": 72,
+      "ztjs": 99,
+      "lbgd": 5,
+      "dfNum": 3
+    },
+    {
+      "day": "20260807",
+      "strong": 63,
+      "ztjs": 74,
+      "lbgd": 4,
+      "dfNum": 4
+    },
+    {
+      "day": "20260806",
+      "strong": 76,
+      "ztjs": 79,
+      "lbgd": 10,
+      "dfNum": 0
+    },
+    {
+      "day": "20260805",
+      "strong": 95,
+      "ztjs": 103,
+      "lbgd": 8,
+      "dfNum": 1
+    },
+    {
+      "day": "20260804",
+      "strong": 92,
+      "ztjs": 138,
+      "lbgd": 7,
+      "dfNum": 0
+    },
+    {
+      "day": "20260803",
+      "strong": 73,
+      "ztjs": 75,
+      "lbgd": 6,
+      "dfNum": 9
+    },
+    {
+      "day": "20260731",
+      "strong": 91,
+      "ztjs": 99,
+      "lbgd": 9,
+      "dfNum": 42
+    },
+    {
+      "day": "20260730",
+      "strong": 50,
+      "ztjs": 52,
+      "lbgd": 8,
+      "dfNum": 13
+    },
+    {
+      "day": "20260729",
+      "strong": 72,
+      "ztjs": 81,
+      "lbgd": 7,
+      "dfNum": 5
+    },
+    {
+      "day": "20260728",
+      "strong": 59,
+      "ztjs": 61,
+      "lbgd": 6,
+      "dfNum": 19
+    },
+    {
+      "day": "20260727",
+      "strong": 82,
+      "ztjs": 111,
+      "lbgd": 5,
+      "dfNum": 2
+    },
+    {
+      "day": "20260724",
+      "strong": 37,
+      "ztjs": 40,
+      "lbgd": 4,
+      "dfNum": 16
+    },
+    {
+      "day": "20260723",
+      "strong": 80,
+      "ztjs": 116,
+      "lbgd": 6,
+      "dfNum": 3
+    },
+    {
+      "day": "20260722",
+      "strong": 44,
+      "ztjs": 46,
+      "lbgd": 5,
+      "dfNum": 11
+    },
+    {
+      "day": "20260721",
+      "strong": 77,
+      "ztjs": 121,
+      "lbgd": 4,
+      "dfNum": 4
+    },
+    {
+      "day": "20260720",
+      "strong": 39,
+      "ztjs": 53,
+      "lbgd": 3,
+      "dfNum": 36
+    },
+    {
+      "day": "20260717",
+      "strong": 27,
+      "ztjs": 32,
+      "lbgd": 4,
+      "dfNum": 26
+    },
+    {
+      "day": "20260716",
+      "strong": 47,
+      "ztjs": 40,
+      "lbgd": 5,
+      "dfNum": 8
+    },
+    {
+      "day": "20260715",
+      "strong": 62,
+      "ztjs": 71,
+      "lbgd": 4,
+      "dfNum": 17
+    },
+    {
+      "day": "20260714",
+      "strong": 60,
+      "ztjs": 79,
+      "lbgd": 3,
+      "dfNum": 2
+    },
+    {
+      "day": "20260713",
+      "strong": 29,
+      "ztjs": 27,
+      "lbgd": 3,
+      "dfNum": 28
+    },
+    {
+      "day": "20260710",
+      "strong": 60,
+      "ztjs": 88,
+      "lbgd": 2,
+      "dfNum": 68
+    },
+    {
+      "day": "20260709",
+      "strong": 60,
+      "ztjs": 74,
+      "lbgd": 8,
+      "dfNum": 3
+    },
+    {
+      "day": "20260708",
+      "strong": 44,
+      "ztjs": 46,
+      "lbgd": 7,
+      "dfNum": 7
+    },
+    {
+      "day": "20260707",
+      "strong": 31,
+      "ztjs": 33,
+      "lbgd": 6,
+      "dfNum": 14
+    },
+    {
+      "day": "20260706",
+      "strong": 46,
+      "ztjs": 64,
+      "lbgd": 5,
+      "dfNum": 29
+    },
+    {
+      "day": "20260703",
+      "strong": 73,
+      "ztjs": 104,
+      "lbgd": 4,
+      "dfNum": 9
+    },
     {
       "day": "20260702",
       "strong": 59,
@@ -6993,27 +7525,6 @@
       "ztjs": 78,
       "lbgd": 8,
       "dfNum": 10
-    },
-    {
-      "day": "20220519",
-      "strong": 68,
-      "ztjs": 72,
-      "lbgd": 7,
-      "dfNum": 10
-    },
-    {
-      "day": "20220518",
-      "strong": 67,
-      "ztjs": 95,
-      "lbgd": 6,
-      "dfNum": 4
-    },
-    {
-      "day": "20220517",
-      "strong": 51,
-      "ztjs": 66,
-      "lbgd": 6,
-      "dfNum": 25
     }
   ]
 }

@@ -1,0 +1,2591 @@
+2026-06-02 22:06:51 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:07:22 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:07:53 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:08:23 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:08:54 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:09:25 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:09:55 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:10:26 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:10:56 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:11:27 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:11:58 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:12:28 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:12:59 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:13:30 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:14:00 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:20:06 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:20:37 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:21:08 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:21:38 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:22:09 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:22:40 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:23:11 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:23:41 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:24:12 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:24:43 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:25:13 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:25:44 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:26:15 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:26:45 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:27:16 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:27:47 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:28:17 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:28:48 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:29:18 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:29:49 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:30:20 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:30:50 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:31:21 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:31:52 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:32:22 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:32:53 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:33:24 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:33:55 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:34:27 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:34:57 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:35:28 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:35:59 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:36:29 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:37:01 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:37:46 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:38:18 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:38:48 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:39:19 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:40:08 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:40:38 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:41:09 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:41:40 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:42:10 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:42:41 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:43:12 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:43:43 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:44:15 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:44:45 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:45:16 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:45:47 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:46:18 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:46:50 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:47:22 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:47:53 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:48:23 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:48:56 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:49:27 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:49:58 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:50:29 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:51:01 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:51:33 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:52:03 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:52:35 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:53:10 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:53:41 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:54:12 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:54:43 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:55:13 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:55:44 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:56:15 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:56:45 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:57:16 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:57:47 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:58:17 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:58:48 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:59:19 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 22:59:50 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:00:20 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:00:51 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:01:22 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:01:52 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:02:23 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:02:54 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:03:24 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:03:55 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:04:27 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:04:58 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:05:28 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:06:23 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:06:54 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:07:24 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:07:55 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:08:27 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:08:58 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:09:29 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:10:23 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:10:54 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:11:24 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:11:55 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:12:26 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:12:56 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:13:27 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:13:57 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:14:28 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:14:59 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:15:30 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-02 23:16:26 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-03 09:28:13 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-03 09:28:14 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-03 09:28:15 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-03 15:30:52 [ERROR]: 获取同花顺个股概念失败(605166): 同花顺接口返回错误: concept detail is empty
+2026-06-03 18:53:24 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-03 19:31:37 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-03 20:47:30 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-03 20:47:30 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-03 20:47:30 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-03 21:16:23 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-03 23:56:07 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-03 23:56:08 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-03 23:56:08 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 00:39:13 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 00:40:13 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 01:27:24 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 01:27:24 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 01:27:26 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 03:52:27 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 04:03:00 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 07:05:36 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 09:06:42 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 09:07:35 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 09:25:46 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 09:25:46 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 09:54:55 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:09:17 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:22:57 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:22:57 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:22:58 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:22:58 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:22:58 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:22:58 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:22:59 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:22:59 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:22:59 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:22:59 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 10:57:36 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 11:00:07 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 12:48:52 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 12:48:55 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 12:48:55 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 12:48:56 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 12:48:56 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 12:49:06 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 12:49:06 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 12:54:19 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 12:54:20 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 14:06:14 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 15:30:28 [ERROR]: 问财API调用失败: Request failed with status code 504
+2026-06-04 16:39:07 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 16:40:15 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 16:52:15 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 16:54:25 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 18:11:09 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 18:23:16 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 19:03:56 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 19:04:24 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 19:04:57 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 19:25:50 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 19:25:50 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 20:45:21 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 20:45:28 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 20:50:33 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 20:50:34 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 20:50:34 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 23:52:18 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 23:52:54 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 23:53:41 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-04 23:53:42 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 00:39:12 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 00:42:32 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 00:47:50 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 01:09:39 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 01:33:56 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 01:40:02 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 02:11:40 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 02:11:43 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 02:11:43 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 02:11:43 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 02:11:43 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 02:11:53 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 02:11:53 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 02:46:20 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 03:03:44 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 03:51:56 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 03:57:11 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 03:57:11 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 05:12:41 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 05:27:26 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:04:24 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:54:48 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:10 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:11 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:11 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:13 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:14 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:14 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:15 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:17 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:19 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:19 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:20 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:20 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:21 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:21 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:22 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 06:56:22 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 08:12:29 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 08:12:29 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 08:18:00 [ERROR]: 早间市场情绪更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:00:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:05:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:10:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:15:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:20:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:23:41 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 09:25:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:26:18 [ERROR]: [放量大涨] 生成失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:26:18 [ERROR]: [主线共振] 生成失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:26:18 [ERROR]: 入场条件更新失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:30:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:35:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:40:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:45:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:50:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 09:55:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:00:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:05:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:10:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:14:35 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 10:15:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:20:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:25:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:30:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:32:46 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 10:35:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:40:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:45:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:50:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 10:55:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:00:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:05:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:10:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:15:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:20:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:25:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:30:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:35:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:37:13 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 11:37:53 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 11:38:35 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 11:40:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:45:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:50:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 11:55:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:00:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:05:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:10:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:15:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:20:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:25:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:30:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:35:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:40:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:45:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:50:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:54:17 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 12:54:43 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 12:55:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 12:59:18 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 13:00:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 13:04:59 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 13:05:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 13:05:01 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 13:05:03 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 13:05:04 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 13:05:08 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 13:05:11 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 13:05:18 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 13:05:18 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 13:05:20 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-05 13:10:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 13:15:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 13:20:00 [ERROR]: 热搜股票更新任务失败: Expected property name or '}' in JSON at position 2
+2026-06-05 13:21:09 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-05 15:30:26 [ERROR]: [放量大涨] 保存备选股票失败: 创建分组失败: version outdated
+2026-06-10 00:14:41 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:15:12 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:15:42 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:16:13 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:16:44 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:17:14 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:17:45 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:18:15 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:18:46 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:19:17 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:19:47 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:20:18 [ERROR]: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1169:11)
+    at NativeConnection.openUri (/codes/hotStockObserver/server/node_modules/mongoose/lib/connection.js:1100:11)
+    at async startServer (/codes/hotStockObserver/server/dist/app.js:82:9)
+2026-06-10 00:21:06 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-12 01:00:10 [ERROR]: autoPush 执行失败: To github.com:woterwang/hotStockObserver.git
+!	refs/heads/feat/20260609:refs/heads/feat/20260609	[remote rejected] (cannot lock ref 'refs/heads/feat/20260609': is at e972b4da93f8d67e10a1785b193ff6a1010b845c but expected 5475c3b2fe81f9e9aa523570d9d17ce2979180e9)
+Done
+Pushing to github.com:woterwang/hotStockObserver.git
+error: failed to push some refs to 'github.com:woterwang/hotStockObserver.git'
+
+2026-06-12 01:00:10 [ERROR]: 自动推送到GitHub任务失败: To github.com:woterwang/hotStockObserver.git
+!	refs/heads/feat/20260609:refs/heads/feat/20260609	[remote rejected] (cannot lock ref 'refs/heads/feat/20260609': is at e972b4da93f8d67e10a1785b193ff6a1010b845c but expected 5475c3b2fe81f9e9aa523570d9d17ce2979180e9)
+Done
+Pushing to github.com:woterwang/hotStockObserver.git
+error: failed to push some refs to 'github.com:woterwang/hotStockObserver.git'
+
+2026-06-14 01:31:55 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-14 15:21:25 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-14 23:03:50 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-14 23:08:50 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-14 23:13:51 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-14 23:18:50 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-14 23:23:50 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-14 23:28:50 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-14 23:33:50 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-15 09:26:19 [ERROR]: [放量大涨] 生成失败: 创建分组失败: version outdated
+2026-06-15 20:56:43 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-16 01:00:04 [ERROR]: autoPush 执行失败: Updating 82df300..91de3a1
+From github.com:woterwang/hotStockObserver
+ * branch            feat/optimzeBuySignalService -> FETCH_HEAD
+   82df300..91de3a1  feat/optimzeBuySignalService -> origin/feat/optimzeBuySignalService
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260615_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-06-16 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 82df300..91de3a1
+From github.com:woterwang/hotStockObserver
+ * branch            feat/optimzeBuySignalService -> FETCH_HEAD
+   82df300..91de3a1  feat/optimzeBuySignalService -> origin/feat/optimzeBuySignalService
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260615_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-06-16 09:26:20 [ERROR]: [放量大涨] 生成失败: 添加股票到分组失败(688362): version outdated
+2026-06-17 01:00:04 [ERROR]: autoPush 执行失败: Updating 82df300..91de3a1
+From github.com:woterwang/hotStockObserver
+ * branch            feat/optimzeBuySignalService -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260615_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-06-17 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 82df300..91de3a1
+From github.com:woterwang/hotStockObserver
+ * branch            feat/optimzeBuySignalService -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260615_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-06-18 17:14:30 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-18 22:04:25 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-18 22:07:25 [ERROR]: 问财API调用失败: aborted
+2026-06-19 01:00:05 [ERROR]: autoPush 执行失败: Updating 311247d..64b47fb
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+   311247d..64b47fb  feat/newVolumeSignal -> origin/feat/newVolumeSignal
+error: Your local changes to the following files would be overwritten by merge:
+	server/data/market_mood.json
+Please commit your changes or stash them before you merge.
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260618_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-06-19 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 311247d..64b47fb
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+   311247d..64b47fb  feat/newVolumeSignal -> origin/feat/newVolumeSignal
+error: Your local changes to the following files would be overwritten by merge:
+	server/data/market_mood.json
+Please commit your changes or stash them before you merge.
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260618_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-06-20 18:28:22 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:28:24 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:28:28 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:28:29 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:29:34 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:29:36 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:29:37 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:29:38 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:30:25 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:30:27 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:30:43 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:30:43 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:31:00 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:31:01 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-20 18:31:55 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-22 17:18:00 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 17:18:10 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 17:18:32 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-22 17:18:53 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-22 17:48:28 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-22 18:34:22 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-22 18:34:24 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-22 18:34:24 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-22 19:16:49 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-22 19:16:51 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-22 19:17:08 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-22 19:17:09 [ERROR]: Error: ENOENT: no such file or directory, stat '/codes/hotStockObserver/client/dist/index.html'
+2026-06-22 19:26:59 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-22 19:28:20 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-22 19:35:37 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 19:35:47 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 19:35:56 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 19:37:06 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 19:37:16 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 19:37:28 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 19:41:12 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 19:43:48 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 19:43:58 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 19:44:08 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 21:45:18 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 21:45:39 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 21:45:55 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 21:46:06 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 21:46:17 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 21:46:31 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 21:46:40 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 21:46:50 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 23:28:40 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 23:28:50 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 23:29:02 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 23:30:03 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-22 23:30:13 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-23 00:27:37 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-23 00:27:48 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-23 00:27:57 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-23 06:53:27 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-23 06:53:36 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-23 06:53:46 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-23 11:44:10 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-23 17:18:01 [ERROR]: 问财API调用失败: Request failed with status code 403
+2026-06-23 17:18:35 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-23 17:18:46 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-23 20:32:49 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-24 17:18:29 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-24 17:18:37 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-24 17:18:47 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-25 17:18:29 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-25 17:18:41 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-25 17:18:53 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-25 19:34:28 [ERROR]: 获取热门板块失败: socket hang up
+2026-06-26 01:00:05 [ERROR]: autoPush 执行失败: Updating eaa763f..6d5be5a
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+   eaa763f..6d5be5a  feat/newVolumeSignal -> origin/feat/newVolumeSignal
+error: Your local changes to the following files would be overwritten by merge:
+	server/data/market_mood.json
+Please commit your changes or stash them before you merge.
+Aborting
+
+2026-06-26 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating eaa763f..6d5be5a
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+   eaa763f..6d5be5a  feat/newVolumeSignal -> origin/feat/newVolumeSignal
+error: Your local changes to the following files would be overwritten by merge:
+	server/data/market_mood.json
+Please commit your changes or stash them before you merge.
+Aborting
+
+2026-06-26 17:18:21 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-26 17:18:43 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-29 17:18:32 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-06-30 01:00:04 [ERROR]: autoPush 执行失败: Updating 30ecc5e..fa8d617
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+   30ecc5e..fa8d617  feat/newVolumeSignal -> origin/feat/newVolumeSignal
+error: Your local changes to the following files would be overwritten by merge:
+	server/data/market_mood.json
+Please commit your changes or stash them before you merge.
+Aborting
+
+2026-06-30 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 30ecc5e..fa8d617
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+   30ecc5e..fa8d617  feat/newVolumeSignal -> origin/feat/newVolumeSignal
+error: Your local changes to the following files would be overwritten by merge:
+	server/data/market_mood.json
+Please commit your changes or stash them before you merge.
+Aborting
+
+2026-06-30 17:18:38 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-01 00:59:58 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-01 17:19:03 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-01 17:19:14 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-01 21:43:13 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-02 16:21:23 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-02 17:18:25 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-02 17:18:35 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-03 09:15:57 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-03 09:55:15 [ERROR]: 获取同花顺板块热度排行失败: timeout of 15000ms exceeded
+2026-07-03 09:55:15 [ERROR]: 热搜股票更新任务失败: timeout of 15000ms exceeded
+2026-07-03 10:05:33 [ERROR]: 热搜股票更新任务失败: timeout of 10000ms exceeded
+2026-07-03 10:10:06 [ERROR]: 获取同花顺板块热度排行失败: Request failed with status code 502
+2026-07-03 10:10:06 [ERROR]: 热搜股票更新任务失败: Request failed with status code 502
+2026-07-03 10:15:36 [ERROR]: 热搜股票更新任务失败: aborted
+2026-07-03 10:20:06 [ERROR]: 获取同花顺板块热度排行失败: Request failed with status code 502
+2026-07-03 10:20:06 [ERROR]: 热搜股票更新任务失败: Request failed with status code 502
+2026-07-03 17:18:51 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-04 08:47:34 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-05 08:33:31 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-06 01:00:05 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+   79a3f61..fc3ef4c  feat/newVolumeSignal -> origin/feat/newVolumeSignal
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-06 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+   79a3f61..fc3ef4c  feat/newVolumeSignal -> origin/feat/newVolumeSignal
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-06 08:59:08 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-06 17:18:38 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-06 17:18:49 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-06 17:18:58 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-07 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-07 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-07 11:39:10 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-07 17:18:42 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-07 17:18:54 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-08 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-08 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-08 09:00:00 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-08 09:00:09 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-09 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-09 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-09 08:37:51 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-09 17:19:27 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-09 17:19:36 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-09 17:19:47 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-10 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-10 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-10 17:18:30 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-10 17:18:40 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-10 17:18:52 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-12 08:21:51 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-13 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-13 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-13 17:18:15 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-13 17:18:24 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-13 17:18:34 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-14 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-14 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-14 01:09:54 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-14 17:19:12 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-14 17:19:22 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-14 17:19:32 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-15 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-15 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-15 17:18:25 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-15 17:18:37 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-15 17:18:48 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-16 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-16 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-16 17:18:28 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-16 17:18:36 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-16 17:18:45 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-17 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-17 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-17 17:18:17 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-17 17:18:28 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-17 17:18:39 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-18 09:01:14 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-19 08:43:16 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-20 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-20 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-20 17:18:49 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-20 17:18:58 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-20 17:19:08 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-21 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-21 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-21 17:20:15 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-21 17:20:25 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-22 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-22 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-22 09:26:18 [ERROR]: [主线共振] 生成失败: 添加股票到分组失败(000676): version error
+2026-07-23 01:00:05 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-23 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-23 17:18:29 [ERROR]: 问财接口请求失败: Request failed with status code 502
+2026-07-23 17:18:41 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-23 17:18:49 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-24 01:00:03 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-24 01:00:03 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-24 13:38:38 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-24 17:18:23 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-24 17:18:34 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-24 17:18:43 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-26 02:03:12 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-27 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-27 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-27 17:19:01 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-27 17:19:10 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-27 17:19:22 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-28 01:00:05 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-28 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-28 12:05:23 [ERROR]: 获取热门板块失败: socket hang up
+2026-07-28 17:18:20 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-28 17:18:29 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-28 17:18:38 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-29 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-29 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-29 17:18:32 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-29 17:18:41 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-29 17:18:53 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-30 01:00:03 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-30 01:00:03 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-30 17:18:20 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-30 17:18:30 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-30 17:18:40 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-31 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-31 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-07-31 17:19:08 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-31 17:19:20 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-07-31 17:19:31 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-01 08:58:13 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-02 08:52:53 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-03 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-03 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-03 09:01:49 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-03 17:18:17 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-03 17:18:28 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-03 17:18:37 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-04 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-04 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-04 02:22:21 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-04 17:20:31 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-05 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-05 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-05 17:19:26 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-05 17:19:38 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-05 17:19:50 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-06 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-06 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-06 17:18:52 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-06 17:19:02 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-06 17:19:13 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-07 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-07 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-07 17:19:32 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-07 17:19:40 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-08 00:17:39 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-08 11:18:20 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-09 00:56:19 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-10 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-10 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-10 17:18:36 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-10 17:18:45 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-11 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-11 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-11 17:18:26 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-11 17:18:34 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-11 17:18:46 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-12 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-12 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-12 17:19:01 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-13 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-13 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-13 17:18:19 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-13 17:18:29 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-13 17:18:39 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-14 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-14 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-14 17:19:08 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-16 09:00:31 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-16 11:27:17 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-17 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-17 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-17 09:11:22 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-17 17:19:26 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-18 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-18 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-18 09:00:53 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-18 17:18:37 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-18 17:18:47 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-18 17:18:57 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-18 20:47:13 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-19 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-19 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-19 07:58:15 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-19 09:09:18 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-19 17:18:26 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-20 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-20 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-20 13:51:31 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-20 13:51:38 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-21 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-21 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-21 17:18:43 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-21 17:18:54 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-21 17:19:04 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-24 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-24 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-24 17:18:20 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-24 17:18:28 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-24 17:18:40 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-25 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-25 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-25 17:18:29 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-25 17:18:39 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-25 17:18:51 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-26 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-26 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-26 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-08-26 17:18:28 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-08-26 17:18:28 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-26 17:18:37 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 401
+2026-08-26 17:18:46 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 401
+2026-08-27 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-27 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-27 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-08-27 17:19:33 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-08-27 17:19:33 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-27 17:19:41 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-27 17:19:51 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-28 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-28 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-28 03:20:17 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-28 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-08-28 12:30:38 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-28 17:18:24 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-08-28 17:18:24 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-28 17:18:34 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-28 17:18:45 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-29 11:12:04 [ERROR]: 获取热门板块失败: socket hang up
+2026-08-31 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-31 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-08-31 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-08-31 17:18:46 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-08-31 17:18:46 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-31 17:18:55 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-08-31 17:19:06 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-01 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-01 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-01 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-09-01 17:18:30 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-09-01 17:18:30 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-01 17:18:42 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-01 17:18:54 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-02 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-02 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-02 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-09-02 12:49:25 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-02 17:18:19 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-09-02 17:18:19 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-02 17:18:29 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-02 17:18:38 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-03 01:00:05 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-03 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-03 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-09-03 17:18:50 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-09-03 17:18:50 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-03 17:18:59 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-03 17:19:08 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-03 17:28:18 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-04 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-04 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-04 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-09-04 17:18:24 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-09-04 17:18:24 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-04 17:18:34 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-04 17:18:45 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-07 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-07 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-07 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-09-07 17:19:24 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-09-07 17:19:24 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-07 17:19:34 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 401
+2026-09-07 17:19:43 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-08 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-08 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-08 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-09-08 17:18:22 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-09-08 17:18:22 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-08 17:18:32 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-08 17:18:42 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-09 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-09 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-09 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-09-09 17:19:00 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-09-09 17:19:00 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 401
+2026-09-09 17:19:10 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 401
+2026-09-09 17:19:19 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-10 01:00:05 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-10 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-10 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-09-10 14:45:21 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-10 14:45:34 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-10 17:18:28 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-09-10 17:18:28 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 401
+2026-09-10 17:18:39 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-10 17:18:51 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 401
+2026-09-11 01:00:03 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-11 01:00:03 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-11 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-09-11 17:18:32 [ERROR]: 问财接口请求失败: Request failed with status code 401
+2026-09-11 17:18:32 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-11 17:18:41 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-11 17:18:51 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-12 09:17:30 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-13 09:07:16 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-14 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-14 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-14 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 401
+2026-09-14 17:18:59 [ERROR]: 问财接口请求失败: Request failed with status code 404
+2026-09-14 17:19:00 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-14 17:19:08 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-14 17:19:20 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-15 01:00:05 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-15 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-15 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 404
+2026-09-15 17:18:35 [ERROR]: 问财接口请求失败: Request failed with status code 404
+2026-09-15 17:18:35 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-15 17:18:44 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 404
+2026-09-15 17:18:52 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-16 01:00:05 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-16 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-16 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 404
+2026-09-16 17:18:49 [ERROR]: 问财接口请求失败: Request failed with status code 404
+2026-09-16 17:18:49 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 404
+2026-09-16 17:18:59 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-16 17:19:08 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 404
+2026-09-17 01:00:05 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-17 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-17 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 404
+2026-09-17 17:18:18 [ERROR]: 问财接口请求失败: Request failed with status code 404
+2026-09-17 17:18:18 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-17 17:18:30 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 404
+2026-09-17 17:18:39 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-18 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-18 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-18 07:32:32 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-18 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-09-18 17:18:31 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-09-18 17:18:31 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-18 17:18:42 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-18 17:18:52 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-19 15:25:57 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-20 14:50:46 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-21 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-21 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-21 08:48:10 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-21 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-09-21 17:18:26 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-09-21 17:18:27 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-21 17:18:36 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-21 17:18:48 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-22 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-22 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-22 09:26:23 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-09-22 17:18:31 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-09-22 17:18:31 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-22 17:18:42 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-22 17:18:53 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-23 01:00:05 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-23 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-23 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-09-23 17:18:21 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-09-23 17:18:21 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-23 17:18:31 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-23 17:18:41 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-24 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-24 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-24 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-09-24 17:18:15 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-09-24 17:18:15 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-24 17:18:24 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-24 17:18:33 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-25 01:00:05 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-25 01:00:05 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-25 20:49:35 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-26 08:50:51 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-27 08:33:41 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-28 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-28 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-28 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-09-28 17:18:24 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-09-28 17:18:24 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-28 17:18:35 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-28 17:18:44 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-29 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-29 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-29 08:43:30 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-29 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-09-29 17:18:27 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-09-29 17:18:27 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-29 17:18:35 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-29 17:18:44 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-30 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-30 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-09-30 09:15:16 [ERROR]: 获取热门板块失败: socket hang up
+2026-09-30 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-09-30 17:18:23 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-09-30 17:18:23 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-30 17:18:34 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-30 17:18:42 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-09-30 22:27:49 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-01 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-01 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-01 10:35:58 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-02 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-02 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-03 03:08:30 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-04 09:02:53 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-05 01:00:03 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-05 01:00:03 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-06 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-06 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-06 22:03:42 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-07 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-07 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-08 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-08 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-08 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-08 17:18:26 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-08 17:18:27 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-08 17:18:38 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-08 17:18:47 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-09 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-09 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-09 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-09 17:18:49 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-09 17:18:49 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-09 17:19:00 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-09 17:19:11 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-12 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-12 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-12 08:42:51 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-12 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-12 17:18:27 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-12 17:18:27 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-12 17:18:36 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-12 17:18:47 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-13 01:00:03 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-13 01:00:03 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-13 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-13 17:18:25 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-13 17:18:26 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-13 17:18:36 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-13 17:18:47 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-14 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-14 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-14 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-14 17:18:18 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-14 17:18:18 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-14 17:18:29 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-14 17:18:38 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-15 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-15 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-15 09:12:45 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-15 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-15 17:18:13 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-15 17:18:13 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-15 17:18:23 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-15 17:18:34 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-16 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-16 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-16 08:24:11 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-16 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-16 17:18:38 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-16 17:18:38 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-16 17:18:50 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-16 17:19:01 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-18 08:39:35 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-19 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-19 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-19 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-19 17:18:18 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-19 17:18:18 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-19 17:18:28 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-19 17:18:37 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-20 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-20 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-20 03:27:57 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-20 05:18:06 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-20 09:26:19 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-20 17:18:44 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-20 17:18:44 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-20 17:18:54 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-20 17:19:05 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-21 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-21 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-21 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-21 17:18:28 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-21 17:18:28 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-21 17:18:37 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-21 17:18:47 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-22 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-22 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-22 09:26:25 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-22 17:18:20 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-22 17:18:20 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-22 17:18:28 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-22 17:18:38 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-23 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-23 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-23 08:21:41 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-23 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-23 17:19:18 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-23 17:19:18 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-23 17:19:29 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-23 17:19:39 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-24 09:45:43 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-24 16:48:53 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-25 08:41:27 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-26 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-26 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-26 08:41:46 [ERROR]: 获取热门板块失败: socket hang up
+2026-10-26 09:26:21 [ERROR]: 问财查询失败: Request failed with status code 403
+2026-10-26 17:18:29 [ERROR]: 问财接口请求失败: Request failed with status code 403
+2026-10-26 17:18:29 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-26 17:18:38 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-26 17:18:47 [ERROR]: [ConceptResonance] 问财API调用失败: Request failed with status code 403
+2026-10-27 01:00:04 [ERROR]: autoPush 执行失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-27 01:00:04 [ERROR]: 自动推送到GitHub任务失败: Updating 79a3f61..fc3ef4c
+From github.com:woterwang/hotStockObserver
+ * branch            feat/newVolumeSignal -> FETCH_HEAD
+error: The following untracked working tree files would be overwritten by merge:
+	server/data/concept_cache/20260703_concept.json
+Please move or remove them before you merge.
+Aborting
+
+2026-10-27 09:26:18 [ERROR]: 问财查询失败: Request failed with status code 403
