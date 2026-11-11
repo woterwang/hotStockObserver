@@ -1,6 +1,13 @@
 {
-  "updatedAt": "2026-11-10T09:18:00.747Z",
+  "updatedAt": "2026-11-11T09:18:00.434Z",
   "data": [
+    {
+      "day": "20261111",
+      "strong": 70,
+      "ztjs": 85,
+      "lbgd": 4,
+      "dfNum": 2
+    },
     {
       "day": "20261110",
       "strong": 84,
@@ -543,7 +550,7 @@
     {
       "day": "20260716",
       "strong": 47,
-      "ztjs": 40,
+      "ztjs": 41,
       "lbgd": 5,
       "dfNum": 8
     },
@@ -557,7 +564,7 @@
     {
       "day": "20260714",
       "strong": 60,
-      "ztjs": 79,
+      "ztjs": 80,
       "lbgd": 3,
       "dfNum": 2
     },
@@ -571,7 +578,7 @@
     {
       "day": "20260710",
       "strong": 60,
-      "ztjs": 88,
+      "ztjs": 90,
       "lbgd": 2,
       "dfNum": 68
     },
@@ -585,7 +592,7 @@
     {
       "day": "20260708",
       "strong": 44,
-      "ztjs": 46,
+      "ztjs": 47,
       "lbgd": 7,
       "dfNum": 7
     },
@@ -606,21 +613,21 @@
     {
       "day": "20260703",
       "strong": 73,
-      "ztjs": 104,
+      "ztjs": 107,
       "lbgd": 4,
       "dfNum": 9
     },
     {
       "day": "20260702",
       "strong": 59,
-      "ztjs": 91,
+      "ztjs": 92,
       "lbgd": 4,
       "dfNum": 18
     },
     {
       "day": "20260701",
       "strong": 89,
-      "ztjs": 149,
+      "ztjs": 150,
       "lbgd": 3,
       "dfNum": 15
     },
@@ -634,7 +641,7 @@
     {
       "day": "20260629",
       "strong": 60,
-      "ztjs": 105,
+      "ztjs": 106,
       "lbgd": 3,
       "dfNum": 14
     },
@@ -648,7 +655,7 @@
     {
       "day": "20260625",
       "strong": 53,
-      "ztjs": 85,
+      "ztjs": 86,
       "lbgd": 5,
       "dfNum": 7
     },
@@ -662,14 +669,14 @@
     {
       "day": "20260623",
       "strong": 67,
-      "ztjs": 94,
+      "ztjs": 96,
       "lbgd": 5,
       "dfNum": 22
     },
     {
       "day": "20260622",
       "strong": 79,
-      "ztjs": 132,
+      "ztjs": 134,
       "lbgd": 5,
       "dfNum": 5
     },
@@ -683,14 +690,14 @@
     {
       "day": "20260617",
       "strong": 56,
-      "ztjs": 85,
+      "ztjs": 86,
       "lbgd": 3,
       "dfNum": 3
     },
     {
       "day": "20260616",
       "strong": 79,
-      "ztjs": 116,
+      "ztjs": 117,
       "lbgd": 4,
       "dfNum": 7
     },
@@ -704,7 +711,7 @@
     {
       "day": "20260612",
       "strong": 65,
-      "ztjs": 88,
+      "ztjs": 89,
       "lbgd": 4,
       "dfNum": 37
     },
@@ -725,28 +732,28 @@
     {
       "day": "20260609",
       "strong": 71,
-      "ztjs": 127,
+      "ztjs": 129,
       "lbgd": 3,
       "dfNum": 6
     },
     {
       "day": "20260608",
       "strong": 41,
-      "ztjs": 55,
+      "ztjs": 57,
       "lbgd": 6,
       "dfNum": 5
     },
     {
       "day": "20260605",
       "strong": 55,
-      "ztjs": 71,
+      "ztjs": 73,
       "lbgd": 5,
       "dfNum": 7
     },
     {
       "day": "20260604",
       "strong": 46,
-      "ztjs": 78,
+      "ztjs": 79,
       "lbgd": 4,
       "dfNum": 7
     },
@@ -760,14 +767,14 @@
     {
       "day": "20260602",
       "strong": 47,
-      "ztjs": 64,
+      "ztjs": 66,
       "lbgd": 3,
       "dfNum": 4
     },
     {
       "day": "20260601",
       "strong": 69,
-      "ztjs": 118,
+      "ztjs": 120,
       "lbgd": 4,
       "dfNum": 9
     },
@@ -781,7 +788,7 @@
     {
       "day": "20260528",
       "strong": 60,
-      "ztjs": 101,
+      "ztjs": 102,
       "lbgd": 4,
       "dfNum": 2
     },
@@ -816,7 +823,7 @@
     {
       "day": "20260521",
       "strong": 33,
-      "ztjs": 33,
+      "ztjs": 34,
       "lbgd": 7,
       "dfNum": 37
     },
@@ -837,7 +844,7 @@
     {
       "day": "20260518",
       "strong": 57,
-      "ztjs": 81,
+      "ztjs": 82,
       "lbgd": 6,
       "dfNum": 8
     },
@@ -851,14 +858,14 @@
     {
       "day": "20260514",
       "strong": 45,
-      "ztjs": 54,
+      "ztjs": 55,
       "lbgd": 5,
       "dfNum": 13
     },
     {
       "day": "20260513",
       "strong": 73,
-      "ztjs": 112,
+      "ztjs": 113,
       "lbgd": 6,
       "dfNum": 2
     },
@@ -872,49 +879,49 @@
     {
       "day": "20260511",
       "strong": 72,
-      "ztjs": 92,
+      "ztjs": 94,
       "lbgd": 5,
       "dfNum": 5
     },
     {
       "day": "20260508",
       "strong": 70,
-      "ztjs": 97,
+      "ztjs": 98,
       "lbgd": 4,
       "dfNum": 2
     },
     {
       "day": "20260507",
       "strong": 74,
-      "ztjs": 99,
+      "ztjs": 100,
       "lbgd": 5,
       "dfNum": 1
     },
     {
       "day": "20260506",
       "strong": 75,
-      "ztjs": 100,
+      "ztjs": 101,
       "lbgd": 4,
       "dfNum": 3
     },
     {
       "day": "20260430",
       "strong": 62,
-      "ztjs": 78,
+      "ztjs": 79,
       "lbgd": 4,
       "dfNum": 8
     },
     {
       "day": "20260429",
       "strong": 66,
-      "ztjs": 99,
+      "ztjs": 100,
       "lbgd": 3,
       "dfNum": 0
     },
     {
       "day": "20260428",
       "strong": 46,
-      "ztjs": 58,
+      "ztjs": 59,
       "lbgd": 5,
       "dfNum": 3
     },
@@ -942,7 +949,7 @@
     {
       "day": "20260422",
       "strong": 51,
-      "ztjs": 54,
+      "ztjs": 55,
       "lbgd": 4,
       "dfNum": 2
     },
@@ -963,7 +970,7 @@
     {
       "day": "20260417",
       "strong": 56,
-      "ztjs": 69,
+      "ztjs": 71,
       "lbgd": 7,
       "dfNum": 3
     },
@@ -1012,7 +1019,7 @@
     {
       "day": "20260408",
       "strong": 88,
-      "ztjs": 122,
+      "ztjs": 123,
       "lbgd": 4,
       "dfNum": 3
     },
@@ -1033,7 +1040,7 @@
     {
       "day": "20260402",
       "strong": 31,
-      "ztjs": 27,
+      "ztjs": 28,
       "lbgd": 5,
       "dfNum": 1
     },
@@ -1152,7 +1159,7 @@
     {
       "day": "20260310",
       "strong": 64,
-      "ztjs": 55,
+      "ztjs": 56,
       "lbgd": 5,
       "dfNum": 2
     },
@@ -1173,7 +1180,7 @@
     {
       "day": "20260305",
       "strong": 57,
-      "ztjs": 68,
+      "ztjs": 69,
       "lbgd": 2,
       "dfNum": 8
     },
@@ -1187,14 +1194,14 @@
     {
       "day": "20260303",
       "strong": 56,
-      "ztjs": 76,
+      "ztjs": 82,
       "lbgd": 3,
       "dfNum": 8
     },
     {
       "day": "20260302",
       "strong": 51,
-      "ztjs": 87,
+      "ztjs": 88,
       "lbgd": 3,
       "dfNum": 5
     },
@@ -1334,35 +1341,35 @@
     {
       "day": "20260123",
       "strong": 96,
-      "ztjs": 102,
+      "ztjs": 104,
       "lbgd": 18,
       "dfNum": 2
     },
     {
       "day": "20260122",
       "strong": 86,
-      "ztjs": 72,
+      "ztjs": 73,
       "lbgd": 17,
       "dfNum": 3
     },
     {
       "day": "20260121",
       "strong": 77,
-      "ztjs": 78,
+      "ztjs": 79,
       "lbgd": 16,
       "dfNum": 1
     },
     {
       "day": "20260120",
       "strong": 67,
-      "ztjs": 53,
+      "ztjs": 54,
       "lbgd": 15,
       "dfNum": 5
     },
     {
       "day": "20260119",
       "strong": 80,
-      "ztjs": 87,
+      "ztjs": 88,
       "lbgd": 14,
       "dfNum": 6
     },
@@ -1383,28 +1390,28 @@
     {
       "day": "20260114",
       "strong": 70,
-      "ztjs": 99,
+      "ztjs": 102,
       "lbgd": 5,
       "dfNum": 10
     },
     {
       "day": "20260113",
       "strong": 76,
-      "ztjs": 65,
+      "ztjs": 66,
       "lbgd": 13,
       "dfNum": 76
     },
     {
       "day": "20260112",
       "strong": 100,
-      "ztjs": 178,
+      "ztjs": 183,
       "lbgd": 12,
       "dfNum": 4
     },
     {
       "day": "20260109",
       "strong": 88,
-      "ztjs": 92,
+      "ztjs": 94,
       "lbgd": 11,
       "dfNum": 9
     },
@@ -1425,28 +1432,28 @@
     {
       "day": "20260106",
       "strong": 100,
-      "ztjs": 117,
+      "ztjs": 120,
       "lbgd": 13,
       "dfNum": 4
     },
     {
       "day": "20260105",
       "strong": 81,
-      "ztjs": 107,
+      "ztjs": 108,
       "lbgd": 7,
       "dfNum": 2
     },
     {
       "day": "20251231",
       "strong": 54,
-      "ztjs": 56,
+      "ztjs": 57,
       "lbgd": 6,
       "dfNum": 4
     },
     {
       "day": "20251230",
       "strong": 60,
-      "ztjs": 53,
+      "ztjs": 54,
       "lbgd": 10,
       "dfNum": 11
     },
@@ -1488,7 +1495,7 @@
     {
       "day": "20251222",
       "strong": 66,
-      "ztjs": 79,
+      "ztjs": 80,
       "lbgd": 7,
       "dfNum": 6
     },
@@ -1502,7 +1509,7 @@
     {
       "day": "20251218",
       "strong": 60,
-      "ztjs": 59,
+      "ztjs": 61,
       "lbgd": 6,
       "dfNum": 4
     },
@@ -1516,28 +1523,28 @@
     {
       "day": "20251216",
       "strong": 36,
-      "ztjs": 40,
+      "ztjs": 42,
       "lbgd": 4,
       "dfNum": 7
     },
     {
       "day": "20251215",
       "strong": 52,
-      "ztjs": 57,
+      "ztjs": 59,
       "lbgd": 6,
       "dfNum": 3
     },
     {
       "day": "20251212",
       "strong": 58,
-      "ztjs": 77,
+      "ztjs": 78,
       "lbgd": 5,
       "dfNum": 3
     },
     {
       "day": "20251211",
       "strong": 33,
-      "ztjs": 32,
+      "ztjs": 34,
       "lbgd": 5,
       "dfNum": 13
     },
@@ -1593,7 +1600,7 @@
     {
       "day": "20251201",
       "strong": 65,
-      "ztjs": 63,
+      "ztjs": 64,
       "lbgd": 6,
       "dfNum": 5
     },
@@ -1691,7 +1698,7 @@
     {
       "day": "20251111",
       "strong": 63,
-      "ztjs": 66,
+      "ztjs": 67,
       "lbgd": 6,
       "dfNum": 11
     },
@@ -1719,7 +1726,7 @@
     {
       "day": "20251105",
       "strong": 68,
-      "ztjs": 66,
+      "ztjs": 67,
       "lbgd": 7,
       "dfNum": 2
     },
@@ -1754,14 +1761,14 @@
     {
       "day": "20251029",
       "strong": 54,
-      "ztjs": 56,
+      "ztjs": 60,
       "lbgd": 6,
       "dfNum": 6
     },
     {
       "day": "20251028",
       "strong": 55,
-      "ztjs": 57,
+      "ztjs": 58,
       "lbgd": 7,
       "dfNum": 3
     },
@@ -1796,14 +1803,14 @@
     {
       "day": "20251021",
       "strong": 72,
-      "ztjs": 76,
+      "ztjs": 78,
       "lbgd": 6,
       "dfNum": 0
     },
     {
       "day": "20251020",
       "strong": 64,
-      "ztjs": 75,
+      "ztjs": 76,
       "lbgd": 5,
       "dfNum": 0
     },
@@ -1838,7 +1845,7 @@
     {
       "day": "20251013",
       "strong": 46,
-      "ztjs": 58,
+      "ztjs": 59,
       "lbgd": 4,
       "dfNum": 5
     },
@@ -1852,7 +1859,7 @@
     {
       "day": "20251009",
       "strong": 56,
-      "ztjs": 86,
+      "ztjs": 88,
       "lbgd": 4,
       "dfNum": 6
     },
@@ -1873,7 +1880,7 @@
     {
       "day": "20250926",
       "strong": 43,
-      "ztjs": 46,
+      "ztjs": 47,
       "lbgd": 5,
       "dfNum": 7
     },
@@ -1887,7 +1894,7 @@
     {
       "day": "20250924",
       "strong": 69,
-      "ztjs": 77,
+      "ztjs": 78,
       "lbgd": 4,
       "dfNum": 7
     },
@@ -1915,14 +1922,14 @@
     {
       "day": "20250918",
       "strong": 57,
-      "ztjs": 53,
+      "ztjs": 55,
       "lbgd": 12,
       "dfNum": 7
     },
     {
       "day": "20250917",
       "strong": 55,
-      "ztjs": 67,
+      "ztjs": 69,
       "lbgd": 4,
       "dfNum": 4
     },
@@ -1943,7 +1950,7 @@
     {
       "day": "20250912",
       "strong": 53,
-      "ztjs": 65,
+      "ztjs": 66,
       "lbgd": 4,
       "dfNum": 3
     },
@@ -1978,49 +1985,49 @@
     {
       "day": "20250905",
       "strong": 72,
-      "ztjs": 91,
+      "ztjs": 96,
       "lbgd": 4,
       "dfNum": 0
     },
     {
       "day": "20250904",
       "strong": 38,
-      "ztjs": 37,
+      "ztjs": 41,
       "lbgd": 3,
       "dfNum": 18
     },
     {
       "day": "20250903",
       "strong": 40,
-      "ztjs": 32,
+      "ztjs": 34,
       "lbgd": 9,
       "dfNum": 9
     },
     {
       "day": "20250902",
       "strong": 44,
-      "ztjs": 42,
+      "ztjs": 44,
       "lbgd": 8,
       "dfNum": 24
     },
     {
       "day": "20250901",
       "strong": 70,
-      "ztjs": 102,
+      "ztjs": 104,
       "lbgd": 7,
       "dfNum": 3
     },
     {
       "day": "20250829",
       "strong": 50,
-      "ztjs": 63,
+      "ztjs": 64,
       "lbgd": 6,
       "dfNum": 8
     },
     {
       "day": "20250828",
       "strong": 59,
-      "ztjs": 57,
+      "ztjs": 58,
       "lbgd": 5,
       "dfNum": 3
     },
@@ -2041,7 +2048,7 @@
     {
       "day": "20250825",
       "strong": 66,
-      "ztjs": 76,
+      "ztjs": 77,
       "lbgd": 6,
       "dfNum": 5
     },
@@ -2062,7 +2069,7 @@
     {
       "day": "20250820",
       "strong": 68,
-      "ztjs": 85,
+      "ztjs": 86,
       "lbgd": 5,
       "dfNum": 12
     },
@@ -2076,14 +2083,14 @@
     {
       "day": "20250818",
       "strong": 89,
-      "ztjs": 103,
+      "ztjs": 108,
       "lbgd": 6,
       "dfNum": 2
     },
     {
       "day": "20250815",
       "strong": 77,
-      "ztjs": 85,
+      "ztjs": 86,
       "lbgd": 5,
       "dfNum": 1
     },
@@ -2132,7 +2139,7 @@
     {
       "day": "20250806",
       "strong": 62,
-      "ztjs": 62,
+      "ztjs": 63,
       "lbgd": 5,
       "dfNum": 6
     },
@@ -2188,42 +2195,42 @@
     {
       "day": "20250725",
       "strong": 49,
-      "ztjs": 45,
+      "ztjs": 46,
       "lbgd": 5,
       "dfNum": 14
     },
     {
       "day": "20250724",
       "strong": 70,
-      "ztjs": 72,
+      "ztjs": 73,
       "lbgd": 4,
       "dfNum": 5
     },
     {
       "day": "20250723",
       "strong": 51,
-      "ztjs": 49,
+      "ztjs": 50,
       "lbgd": 4,
       "dfNum": 37
     },
     {
       "day": "20250722",
       "strong": 100,
-      "ztjs": 99,
+      "ztjs": 105,
       "lbgd": 10,
       "dfNum": 1
     },
     {
       "day": "20250721",
       "strong": 80,
-      "ztjs": 117,
+      "ztjs": 121,
       "lbgd": 9,
       "dfNum": 2
     },
     {
       "day": "20250718",
       "strong": 57,
-      "ztjs": 45,
+      "ztjs": 46,
       "lbgd": 8,
       "dfNum": 7
     },
@@ -2258,21 +2265,21 @@
     {
       "day": "20250711",
       "strong": 59,
-      "ztjs": 60,
+      "ztjs": 61,
       "lbgd": 5,
       "dfNum": 7
     },
     {
       "day": "20250710",
       "strong": 61,
-      "ztjs": 59,
+      "ztjs": 61,
       "lbgd": 6,
       "dfNum": 7
     },
     {
       "day": "20250709",
       "strong": 51,
-      "ztjs": 53,
+      "ztjs": 54,
       "lbgd": 5,
       "dfNum": 4
     },
@@ -2307,14 +2314,14 @@
     {
       "day": "20250702",
       "strong": 48,
-      "ztjs": 59,
+      "ztjs": 60,
       "lbgd": 5,
       "dfNum": 7
     },
     {
       "day": "20250701",
       "strong": 55,
-      "ztjs": 63,
+      "ztjs": 64,
       "lbgd": 4,
       "dfNum": 14
     },
@@ -2335,21 +2342,21 @@
     {
       "day": "20250626",
       "strong": 53,
-      "ztjs": 61,
+      "ztjs": 62,
       "lbgd": 5,
       "dfNum": 9
     },
     {
       "day": "20250625",
       "strong": 75,
-      "ztjs": 66,
+      "ztjs": 68,
       "lbgd": 7,
       "dfNum": 3
     },
     {
       "day": "20250624",
       "strong": 74,
-      "ztjs": 71,
+      "ztjs": 72,
       "lbgd": 6,
       "dfNum": 5
     },
@@ -2363,7 +2370,7 @@
     {
       "day": "20250620",
       "strong": 42,
-      "ztjs": 44,
+      "ztjs": 45,
       "lbgd": 6,
       "dfNum": 7
     },
@@ -2384,7 +2391,7 @@
     {
       "day": "20250617",
       "strong": 43,
-      "ztjs": 45,
+      "ztjs": 46,
       "lbgd": 3,
       "dfNum": 7
     },
@@ -2398,35 +2405,35 @@
     {
       "day": "20250613",
       "strong": 37,
-      "ztjs": 56,
+      "ztjs": 57,
       "lbgd": 5,
       "dfNum": 11
     },
     {
       "day": "20250612",
       "strong": 60,
-      "ztjs": 64,
+      "ztjs": 65,
       "lbgd": 7,
       "dfNum": 4
     },
     {
       "day": "20250611",
       "strong": 58,
-      "ztjs": 50,
+      "ztjs": 51,
       "lbgd": 6,
       "dfNum": 8
     },
     {
       "day": "20250610",
       "strong": 45,
-      "ztjs": 43,
+      "ztjs": 45,
       "lbgd": 7,
       "dfNum": 7
     },
     {
       "day": "20250609",
       "strong": 69,
-      "ztjs": 64,
+      "ztjs": 65,
       "lbgd": 6,
       "dfNum": 2
     },
@@ -2440,7 +2447,7 @@
     {
       "day": "20250605",
       "strong": 54,
-      "ztjs": 65,
+      "ztjs": 66,
       "lbgd": 4,
       "dfNum": 10
     },
@@ -2454,21 +2461,21 @@
     {
       "day": "20250603",
       "strong": 63,
-      "ztjs": 67,
+      "ztjs": 68,
       "lbgd": 5,
       "dfNum": 4
     },
     {
       "day": "20250530",
       "strong": 40,
-      "ztjs": 41,
+      "ztjs": 42,
       "lbgd": 4,
       "dfNum": 19
     },
     {
       "day": "20250529",
       "strong": 86,
-      "ztjs": 106,
+      "ztjs": 108,
       "lbgd": 6,
       "dfNum": 1
     },
@@ -2489,7 +2496,7 @@
     {
       "day": "20250526",
       "strong": 58,
-      "ztjs": 61,
+      "ztjs": 62,
       "lbgd": 4,
       "dfNum": 1
     },
@@ -2510,21 +2517,21 @@
     {
       "day": "20250521",
       "strong": 50,
-      "ztjs": 54,
+      "ztjs": 55,
       "lbgd": 5,
       "dfNum": 11
     },
     {
       "day": "20250520",
       "strong": 74,
-      "ztjs": 75,
+      "ztjs": 77,
       "lbgd": 4,
       "dfNum": 15
     },
     {
       "day": "20250519",
       "strong": 79,
-      "ztjs": 83,
+      "ztjs": 84,
       "lbgd": 9,
       "dfNum": 4
     },
@@ -2538,14 +2545,14 @@
     {
       "day": "20250515",
       "strong": 51,
-      "ztjs": 49,
+      "ztjs": 50,
       "lbgd": 7,
       "dfNum": 8
     },
     {
       "day": "20250514",
       "strong": 56,
-      "ztjs": 61,
+      "ztjs": 63,
       "lbgd": 6,
       "dfNum": 3
     },
@@ -2559,7 +2566,7 @@
     {
       "day": "20250512",
       "strong": 60,
-      "ztjs": 50,
+      "ztjs": 51,
       "lbgd": 5,
       "dfNum": 3
     },
@@ -2573,28 +2580,28 @@
     {
       "day": "20250508",
       "strong": 63,
-      "ztjs": 65,
+      "ztjs": 66,
       "lbgd": 4,
       "dfNum": 11
     },
     {
       "day": "20250507",
       "strong": 68,
-      "ztjs": 64,
+      "ztjs": 65,
       "lbgd": 6,
       "dfNum": 5
     },
     {
       "day": "20250506",
       "strong": 82,
-      "ztjs": 98,
+      "ztjs": 100,
       "lbgd": 5,
       "dfNum": 1
     },
     {
       "day": "20250430",
       "strong": 57,
-      "ztjs": 71,
+      "ztjs": 73,
       "lbgd": 4,
       "dfNum": 5
     },
@@ -2636,7 +2643,7 @@
     {
       "day": "20250422",
       "strong": 66,
-      "ztjs": 80,
+      "ztjs": 81,
       "lbgd": 6,
       "dfNum": 6
     },
@@ -2650,7 +2657,7 @@
     {
       "day": "20250418",
       "strong": 54,
-      "ztjs": 59,
+      "ztjs": 61,
       "lbgd": 5,
       "dfNum": 13
     },
@@ -2671,56 +2678,56 @@
     {
       "day": "20250415",
       "strong": 48,
-      "ztjs": 57,
+      "ztjs": 58,
       "lbgd": 4,
       "dfNum": 6
     },
     {
       "day": "20250414",
       "strong": 78,
-      "ztjs": 102,
+      "ztjs": 103,
       "lbgd": 7,
       "dfNum": 3
     },
     {
       "day": "20250411",
       "strong": 70,
-      "ztjs": 83,
+      "ztjs": 84,
       "lbgd": 6,
       "dfNum": 7
     },
     {
       "day": "20250410",
       "strong": 97,
-      "ztjs": 149,
+      "ztjs": 154,
       "lbgd": 6,
       "dfNum": 3
     },
     {
       "day": "20250409",
       "strong": 89,
-      "ztjs": 112,
+      "ztjs": 125,
       "lbgd": 6,
       "dfNum": 7
     },
     {
       "day": "20250408",
       "strong": 73,
-      "ztjs": 120,
+      "ztjs": 127,
       "lbgd": 5,
       "dfNum": 0
     },
     {
       "day": "20250407",
       "strong": 25,
-      "ztjs": 22,
+      "ztjs": 24,
       "lbgd": 4,
       "dfNum": 15
     },
     {
       "day": "20250403",
       "strong": 41,
-      "ztjs": 51,
+      "ztjs": 53,
       "lbgd": 3,
       "dfNum": 3
     },
@@ -2734,7 +2741,7 @@
     {
       "day": "20250401",
       "strong": 57,
-      "ztjs": 55,
+      "ztjs": 56,
       "lbgd": 4,
       "dfNum": 2
     },
@@ -2755,7 +2762,7 @@
     {
       "day": "20250327",
       "strong": 43,
-      "ztjs": 49,
+      "ztjs": 50,
       "lbgd": 5,
       "dfNum": 18
     },
@@ -2769,14 +2776,14 @@
     {
       "day": "20250325",
       "strong": 44,
-      "ztjs": 47,
+      "ztjs": 48,
       "lbgd": 3,
       "dfNum": 11
     },
     {
       "day": "20250324",
       "strong": 41,
-      "ztjs": 48,
+      "ztjs": 49,
       "lbgd": 5,
       "dfNum": 11
     },
@@ -2804,161 +2811,161 @@
     {
       "day": "20250318",
       "strong": 62,
-      "ztjs": 65,
+      "ztjs": 66,
       "lbgd": 6,
       "dfNum": 0
     },
     {
       "day": "20250317",
       "strong": 63,
-      "ztjs": 65,
+      "ztjs": 69,
       "lbgd": 5,
       "dfNum": 7
     },
     {
       "day": "20250314",
       "strong": 79,
-      "ztjs": 81,
+      "ztjs": 87,
       "lbgd": 9,
       "dfNum": 5
     },
     {
       "day": "20250313",
       "strong": 46,
-      "ztjs": 43,
+      "ztjs": 47,
       "lbgd": 8,
       "dfNum": 9
     },
     {
       "day": "20250312",
       "strong": 63,
-      "ztjs": 77,
+      "ztjs": 79,
       "lbgd": 7,
       "dfNum": 10
     },
     {
       "day": "20250311",
       "strong": 57,
-      "ztjs": 53,
+      "ztjs": 54,
       "lbgd": 6,
       "dfNum": 1
     },
     {
       "day": "20250310",
       "strong": 59,
-      "ztjs": 78,
+      "ztjs": 80,
       "lbgd": 5,
       "dfNum": 11
     },
     {
       "day": "20250307",
       "strong": 49,
-      "ztjs": 51,
+      "ztjs": 55,
       "lbgd": 5,
       "dfNum": 17
     },
     {
       "day": "20250306",
       "strong": 78,
-      "ztjs": 108,
+      "ztjs": 111,
       "lbgd": 4,
       "dfNum": 3
     },
     {
       "day": "20250305",
       "strong": 52,
-      "ztjs": 62,
+      "ztjs": 63,
       "lbgd": 5,
       "dfNum": 4
     },
     {
       "day": "20250304",
       "strong": 63,
-      "ztjs": 76,
+      "ztjs": 81,
       "lbgd": 4,
       "dfNum": 4
     },
     {
       "day": "20250303",
       "strong": 53,
-      "ztjs": 60,
+      "ztjs": 64,
       "lbgd": 4,
       "dfNum": 14
     },
     {
       "day": "20250228",
       "strong": 36,
-      "ztjs": 44,
+      "ztjs": 48,
       "lbgd": 6,
       "dfNum": 20
     },
     {
       "day": "20250227",
       "strong": 57,
-      "ztjs": 74,
+      "ztjs": 77,
       "lbgd": 5,
       "dfNum": 13
     },
     {
       "day": "20250226",
       "strong": 73,
-      "ztjs": 97,
+      "ztjs": 99,
       "lbgd": 4,
       "dfNum": 8
     },
     {
       "day": "20250225",
       "strong": 48,
-      "ztjs": 56,
+      "ztjs": 57,
       "lbgd": 5,
       "dfNum": 7
     },
     {
       "day": "20250224",
       "strong": 66,
-      "ztjs": 85,
+      "ztjs": 86,
       "lbgd": 6,
       "dfNum": 13
     },
     {
       "day": "20250221",
       "strong": 76,
-      "ztjs": 110,
+      "ztjs": 112,
       "lbgd": 8,
       "dfNum": 8
     },
     {
       "day": "20250220",
       "strong": 79,
-      "ztjs": 93,
+      "ztjs": 96,
       "lbgd": 7,
       "dfNum": 8
     },
     {
       "day": "20250219",
       "strong": 81,
-      "ztjs": 107,
+      "ztjs": 109,
       "lbgd": 6,
       "dfNum": 0
     },
     {
       "day": "20250218",
       "strong": 42,
-      "ztjs": 46,
+      "ztjs": 47,
       "lbgd": 6,
       "dfNum": 23
     },
     {
       "day": "20250217",
       "strong": 84,
-      "ztjs": 101,
+      "ztjs": 103,
       "lbgd": 9,
       "dfNum": 15
     },
     {
       "day": "20250214",
       "strong": 65,
-      "ztjs": 78,
+      "ztjs": 81,
       "lbgd": 8,
       "dfNum": 11
     },
@@ -2972,42 +2979,42 @@
     {
       "day": "20250212",
       "strong": 76,
-      "ztjs": 81,
+      "ztjs": 83,
       "lbgd": 10,
       "dfNum": 5
     },
     {
       "day": "20250211",
       "strong": 65,
-      "ztjs": 69,
+      "ztjs": 73,
       "lbgd": 9,
       "dfNum": 16
     },
     {
       "day": "20250210",
       "strong": 95,
-      "ztjs": 118,
+      "ztjs": 123,
       "lbgd": 8,
       "dfNum": 3
     },
     {
       "day": "20250207",
       "strong": 82,
-      "ztjs": 79,
+      "ztjs": 83,
       "lbgd": 7,
       "dfNum": 1
     },
     {
       "day": "20250206",
       "strong": 87,
-      "ztjs": 88,
+      "ztjs": 90,
       "lbgd": 6,
       "dfNum": 1
     },
     {
       "day": "20250205",
       "strong": 66,
-      "ztjs": 76,
+      "ztjs": 77,
       "lbgd": 5,
       "dfNum": 5
     },
@@ -3021,7 +3028,7 @@
     {
       "day": "20250124",
       "strong": 68,
-      "ztjs": 66,
+      "ztjs": 67,
       "lbgd": 6,
       "dfNum": 2
     },
@@ -3077,7 +3084,7 @@
     {
       "day": "20250114",
       "strong": 99,
-      "ztjs": 132,
+      "ztjs": 136,
       "lbgd": 9,
       "dfNum": 1
     },
@@ -3098,14 +3105,14 @@
     {
       "day": "20250109",
       "strong": 69,
-      "ztjs": 86,
+      "ztjs": 87,
       "lbgd": 7,
       "dfNum": 5
     },
     {
       "day": "20250108",
       "strong": 58,
-      "ztjs": 66,
+      "ztjs": 68,
       "lbgd": 6,
       "dfNum": 4
     },
@@ -3119,14 +3126,14 @@
     {
       "day": "20250106",
       "strong": 50,
-      "ztjs": 59,
+      "ztjs": 60,
       "lbgd": 4,
       "dfNum": 7
     },
     {
       "day": "20250103",
       "strong": 41,
-      "ztjs": 45,
+      "ztjs": 47,
       "lbgd": 7,
       "dfNum": 20
     },
@@ -3140,7 +3147,7 @@
     {
       "day": "20241231",
       "strong": 34,
-      "ztjs": 46,
+      "ztjs": 47,
       "lbgd": 5,
       "dfNum": 9
     },
@@ -3161,7 +3168,7 @@
     {
       "day": "20241226",
       "strong": 73,
-      "ztjs": 95,
+      "ztjs": 96,
       "lbgd": 6,
       "dfNum": 3
     },
@@ -3182,21 +3189,21 @@
     {
       "day": "20241223",
       "strong": 31,
-      "ztjs": 31,
+      "ztjs": 32,
       "lbgd": 4,
       "dfNum": 19
     },
     {
       "day": "20241220",
       "strong": 75,
-      "ztjs": 83,
+      "ztjs": 84,
       "lbgd": 8,
       "dfNum": 9
     },
     {
       "day": "20241219",
       "strong": 59,
-      "ztjs": 74,
+      "ztjs": 75,
       "lbgd": 7,
       "dfNum": 22
     },
@@ -3224,7 +3231,7 @@
     {
       "day": "20241213",
       "strong": 64,
-      "ztjs": 97,
+      "ztjs": 98,
       "lbgd": 6,
       "dfNum": 20
     },
@@ -3245,7 +3252,7 @@
     {
       "day": "20241210",
       "strong": 90,
-      "ztjs": 109,
+      "ztjs": 112,
       "lbgd": 11,
       "dfNum": 39
     },
@@ -3259,140 +3266,140 @@
     {
       "day": "20241206",
       "strong": 100,
-      "ztjs": 120,
+      "ztjs": 121,
       "lbgd": 9,
       "dfNum": 15
     },
     {
       "day": "20241205",
       "strong": 100,
-      "ztjs": 129,
+      "ztjs": 131,
       "lbgd": 8,
       "dfNum": 6
     },
     {
       "day": "20241204",
       "strong": 66,
-      "ztjs": 85,
+      "ztjs": 86,
       "lbgd": 9,
       "dfNum": 39
     },
     {
       "day": "20241203",
       "strong": 100,
-      "ztjs": 116,
+      "ztjs": 119,
       "lbgd": 12,
       "dfNum": 38
     },
     {
       "day": "20241202",
       "strong": 100,
-      "ztjs": 165,
+      "ztjs": 169,
       "lbgd": 11,
       "dfNum": 7
     },
     {
       "day": "20241129",
       "strong": 100,
-      "ztjs": 128,
+      "ztjs": 134,
       "lbgd": 10,
       "dfNum": 9
     },
     {
       "day": "20241128",
       "strong": 80,
-      "ztjs": 91,
+      "ztjs": 95,
       "lbgd": 9,
       "dfNum": 15
     },
     {
       "day": "20241127",
       "strong": 85,
-      "ztjs": 98,
+      "ztjs": 103,
       "lbgd": 8,
       "dfNum": 5
     },
     {
       "day": "20241126",
       "strong": 68,
-      "ztjs": 91,
+      "ztjs": 92,
       "lbgd": 7,
       "dfNum": 49
     },
     {
       "day": "20241125",
       "strong": 100,
-      "ztjs": 154,
+      "ztjs": 157,
       "lbgd": 11,
       "dfNum": 6
     },
     {
       "day": "20241122",
       "strong": 66,
-      "ztjs": 70,
+      "ztjs": 74,
       "lbgd": 10,
       "dfNum": 26
     },
     {
       "day": "20241121",
       "strong": 97,
-      "ztjs": 105,
+      "ztjs": 112,
       "lbgd": 13,
       "dfNum": 15
     },
     {
       "day": "20241120",
       "strong": 100,
-      "ztjs": 151,
+      "ztjs": 158,
       "lbgd": 12,
       "dfNum": 3
     },
     {
       "day": "20241119",
       "strong": 90,
-      "ztjs": 95,
+      "ztjs": 97,
       "lbgd": 11,
       "dfNum": 8
     },
     {
       "day": "20241118",
       "strong": 65,
-      "ztjs": 81,
+      "ztjs": 86,
       "lbgd": 10,
       "dfNum": 23
     },
     {
       "day": "20241115",
       "strong": 49,
-      "ztjs": 67,
+      "ztjs": 73,
       "lbgd": 9,
       "dfNum": 11
     },
     {
       "day": "20241114",
       "strong": 37,
-      "ztjs": 33,
+      "ztjs": 35,
       "lbgd": 8,
       "dfNum": 36
     },
     {
       "day": "20241113",
       "strong": 57,
-      "ztjs": 66,
+      "ztjs": 72,
       "lbgd": 7,
       "dfNum": 14
     },
     {
       "day": "20241112",
       "strong": 59,
-      "ztjs": 83,
+      "ztjs": 85,
       "lbgd": 6,
       "dfNum": 41
     },
     {
       "day": "20241111",
       "strong": 100,
-      "ztjs": 157,
+      "ztjs": 158,
       "lbgd": 5,
       "dfNum": 13
     },
@@ -4638,7 +4645,7 @@
     {
       "day": "20240208",
       "strong": 100,
-      "ztjs": 504,
+      "ztjs": 505,
       "lbgd": 6,
       "dfNum": 11
     },
