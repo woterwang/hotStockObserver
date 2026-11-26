@@ -1,5 +1,6 @@
 import cron from 'node-cron';
-import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, tradingCalendarService, marketMoodService, conceptResonanceService } from '../services';
+import { dataFetchService, priceBreakthroughService, tradingSignalService, marketSentimentService, tradingCalendarService, marketMoodService, conceptResonanceService, wechatWorkNotifyService } from '../services';
+import type { WeChatStockSignalSummary } from '../services';
 import { volumeSurgeService } from '../services/volumeSurgeServiceV2'
 import { buySignalService } from '../services/buySignalServiceV3';
 import { hundredDayHighService } from '../services/newHeightService';
@@ -277,6 +278,13 @@ export class JobScheduler {
 
     this.auctionJob = cron.schedule(cronExpression, async () => {
       const today = formatDate(new Date(), 'YYYYMMDD');
+      if (!tradingCalendarService.isTradingDayByDate()) {
+        logger.info('非交易日，跳过集合竞价后入场条件更新');
+        return;
+      }
+
+      const notificationSummaries: WeChatStockSignalSummary[] = [];
+
       // 1. 放量大涨策略
       try {
         logger.info('开始执行集合竞价后【放量大涨策略】入场条件更新');
@@ -285,13 +293,17 @@ export class JobScheduler {
         // 按totalBuyScore排序
         volumeSurgeResult.sort((a, b) => b.totalBuyScore - a.totalBuyScore);
         // 取前3只股票作为当天的放量大涨股票添加到当天的分组中
-        const topThree = volumeSurgeResult.filter(item => item.totalBuyScore > 40).map(signal => signal.stockCode);
+        const topThree = volumeSurgeResult
+          .filter(item => item.totalBuyScore > 40)
+          .slice(0, 3)
+          .map(signal => signal.stockCode);
         // 将 topThree 股票添加到当天的放量大涨分组中
         if (topThree.length > 0) {
           // 创建分组：${日期}-放量大涨
           logger.info(`[放量大涨] 今日放量大涨股票: ${topThree.join(', ')}`);
           const groupId = await groupService.createGroup(`${today}-放量大涨`);
           await groupService.addStocksToGroup(groupId, topThree);
+          notificationSummaries.push({ strategy: '放量大涨', stockCodes: topThree });
         }
       } catch (error) {
         logger.error(`[放量大涨] 生成失败: ${(error as Error).message}`);
@@ -303,13 +315,17 @@ export class JobScheduler {
         const conceptResonanceResult = await conceptResonanceService.getBuySignalList({ dateStr: today });
         logger.info(`[主线共振] 生成完成，共 ${conceptResonanceResult.length} 个信号，入场日=${today}`);
         // 取前3只股票作为当天的主线共振股票添加到当天的分组中
-        const topThree = conceptResonanceResult.filter(item => item.strategyScore > 88).map(signal => signal.stockCode);
+        const topThree = conceptResonanceResult
+          .filter(item => item.strategyScore > 88)
+          .slice(0, 3)
+          .map(signal => signal.stockCode);
         // 将 topThree 股票添加到当天的主线共振分组中
         if (topThree.length > 0) {
           // 创建分组：${日期}-主线共振
           logger.info(`[主线共振] 今日主线共振股票: ${topThree.join(', ')}`);
           const groupId = await groupService.createGroup(`${today}-主线共振`);
           await groupService.addStocksToGroup(groupId, topThree);
+          notificationSummaries.push({ strategy: '主线共振', stockCodes: topThree });
         }
       } catch (error) {
         logger.error(`[主线共振] 生成失败: ${(error as Error).message}`);
@@ -318,12 +334,6 @@ export class JobScheduler {
 
       // 3. 价格突破策略
       try {
-        // 检查是否是交易日（使用交易日历服务，支持节假日判断）
-        if (!tradingCalendarService.isTradingDayByDate()) {
-          logger.info('非交易日，跳过入场条件更新');
-          return;
-        }
-
         logger.info('开始执行集合竞价后【价格突破策略】入场条件更新');
         await tradingSignalService.generateSignalsForEntryDate(today);
         const result = await tradingSignalService.updateSignalsAfterAuction(today);
@@ -331,15 +341,25 @@ export class JobScheduler {
         logger.info(`入场条件更新完成: 可入场=${result.ready}, 部分满足=${result.partial}, 不满足=${result.rejected}`);
         if (result.ready > 0) {
           // 过虑出满足条件的股票，按策略评分排序，取前3只股票作为当天的价格突破股票添加到当天的分组中
-          const topThree = result.signals.filter(item => item.status === 'ready').map(signal => signal.stockCode);
-          // 创建分组：${日期}-主线共振
-          logger.info(`[主线共振] 今日主线共振股票: ${topThree.join(', ')}`);
+          const topThree = result.signals
+            .filter(item => item.status === 'ready')
+            .sort((a, b) => (b.entryScore || 0) - (a.entryScore || 0))
+            .slice(0, 3)
+            .map(signal => signal.stockCode);
+          logger.info(`[价格突破] 今日价格突破股票: ${topThree.join(', ')}`);
           const groupId = await groupService.createGroup(`${today}-新高T+2`);
           await groupService.addStocksToGroup(groupId, topThree);
+          notificationSummaries.push({ strategy: '价格突破', stockCodes: topThree });
         }
 
       } catch (error) {
         logger.error(`入场条件更新失败: ${(error as Error).message}`);
+      }
+
+      try {
+        await wechatWorkNotifyService.sendStockSignalSummary(today, notificationSummaries);
+      } catch (error) {
+        logger.error(`[企业微信通知] 推送失败: ${(error as Error).message}`);
       }
 
       // 4. 百日新高策略

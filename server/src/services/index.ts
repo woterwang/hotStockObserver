@@ -14,3 +14,5 @@ export { thsStockConceptService, ThsStockConceptResult, ThsConceptInfo, ThsRelat
 export { thsConceptHotRankService, ThsConceptHotRankResult, ThsConceptHotItem, ThsPlateType } from './thsConceptHotRankService';
 export { conceptResonanceService, ConceptResonanceService } from './conceptResonanceService';
 export { testPanService, TestPanService } from './testPanService';
+export { wechatWorkNotifyService } from './wechatWorkNotifyService';
+export type { WeChatStockSignalSummary } from './wechatWorkNotifyService';
