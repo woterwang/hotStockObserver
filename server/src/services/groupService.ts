@@ -3,8 +3,6 @@ import { logger } from '../utils';
 
 const GROUP_API_BASE = 'https://ugc.10jqka.com.cn/optdata/selfgroup/open/api';
 
-const Cookies = 'v=BADDy5VprsPdaVjQPIVvgHAF0wV3ABoAsQBsALsATgAVD-QAP_w6A0YAWANw; IFUserCookieKey={"userid":"263055735","escapename":"woter_wang","custid":"100104455815"}; cuc=070dc70807d548ac8532745f86a711e3; escapename=woter_wang; sess_tk=eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6InNlc3NfdGtfMSIsImJ0eSI6InNlc3NfdGsifQ.eyJqdGkiOiIwMDJjYzk4NDlkMmE0MjAxMTA2NjQxZmNmOTE4OGE4YjEiLCJpYXQiOjE3NzU2MTQ1MDksImV4cCI6MTc3NjIxOTMwOSwic3ViIjoiMjYzMDU1NzM1IiwiaXNzIjoidXBhc3MuMTBqcWthLmNvbS5jbiIsImF1ZCI6IjIwMjMwODA0OTA3NTEyOTIiLCJhY3QiOiJvZmMiLCJjdWhzIjoiNmNiMjI5MzkxYjI5ODgzNjA0MTA3ZGVkNzAzZTdiMGI4ZGU5OTMzYjAzZmFjZTFmNTc0MjcyNDMyYjc5ODYxZSJ9.wRpPtZ3vefagXnAZPef_SpmRXZLs104Ogfe058dpMWYEhDK1DdDnyIpO2yrtECO6Mf9jr6BGoMpRRIWFtN8mqQ; ticket=93108f91486453e83748e5dad2115b28; u_name=woter_wang; user=MDp3b3Rlcl93YW5nOjpOb25lOjUwMDoyNzMwNTU3MzU6NywxMTExMTExMTExMSw0MDs0NCwxMSw0MDs2LDEsNDA7NSwxLDQwOzEsMTAxLDQwOzIsMSw0MDszLDEsNDA7NSwxLDQwOzgsMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDEsNDA7MTAyLDEsNDA6MjQ6OjoyNjMwNTU3MzU6MTc3NTYxNDUwOTo6OjE0MzM1NzU4MDA6NjA0ODAwOjA6MThiOGExOGY5ZmM0MTY2MTAwMTQyMmE5ZDg0YzkyYzAwOjow; user_status=0; userid=263055735; _clck=vyi5nl%7C2%7Cg4w%7C0%7C0'
-
 /**
  * 获取股票的同花顺市场代码
  * 上证(6开头) = 17, 深证(0/3开头) = 33,
@@ -19,18 +17,16 @@ class GroupService {
 	private version = 0;
 
 	private getCookie (): string {
-		const cookie = process.env.THS_AUTH_COOKIE || Cookies;
-		if (!cookie) {
-			throw new Error('THS_AUTH_COOKIE 环境变量未配置');
-		}
-
 		const ticket = process.env.THS_TICKET?.trim();
+		const user = process.env.THS_USER?.trim();
 		if (!ticket) {
 			throw new Error('THS_TICKET 环境变量未配置');
 		}
+		if (!user) {
+			throw new Error('THS_USER 环境变量未配置');
+		}
 
-		const cookieWithoutTicket = cookie.replace(/(?:^|;\s*)ticket=[^;]*/i, '');
-		return `${cookieWithoutTicket.replace(/;\s*$/, '')}; ticket=${ticket}`;
+		return `ticket=${ticket}; user=${user}`;
 	}
 
 	private getHeaders () {

@@ -65,6 +65,69 @@ class WeChatWorkNotifyService {
     return true;
   }
 
+  async sendTicketExpiryReminder (
+    expiresAt: string,
+    remainingDays: number,
+    webhookUrl: string
+  ): Promise<boolean> {
+    const state = remainingDays < 0
+      ? `已过期 <font color="warning">${Math.abs(remainingDays)}</font> 天`
+      : remainingDays === 0
+        ? '今天到期'
+        : `剩余 <font color="warning">${remainingDays}</font> 天`;
+    const content = [
+      '## 同花顺 Ticket 到期提醒',
+      `> 当前状态：${state}`,
+      `> 到期日期：${expiresAt}`,
+      '',
+      '请及时更新 `THS_TICKET`。更新后同步修改 `THS_TICKET_EXPIRES_AT`，并重启服务。',
+    ].join('\n');
+
+    return this.sendMarkdown(webhookUrl, content, 'Ticket到期提醒');
+  }
+
+  private async sendMarkdown (
+    webhookUrl: string,
+    content: string,
+    notificationName: string
+  ): Promise<boolean> {
+    const normalizedUrl = webhookUrl.trim();
+    if (!normalizedUrl || normalizedUrl.includes('YOUR_KEY_HERE')) {
+      logger.warn(`[企业微信通知] ${notificationName} Webhook 尚未配置，跳过推送`);
+      return false;
+    }
+
+    this.validateWebhookUrl(normalizedUrl);
+
+    const response = await axios.post<WeChatWebhookResponse>(
+      normalizedUrl,
+      {
+        msgtype: 'markdown',
+        markdown: { content },
+      },
+      { timeout: Number(process.env.WECHAT_NOTIFY_TIMEOUT || 10000) }
+    );
+
+    if (response.data.errcode !== 0) {
+      throw new Error(`企业微信机器人返回错误: ${response.data.errmsg || '未知错误'}`);
+    }
+
+    logger.info(`[企业微信通知] ${notificationName}推送成功`);
+    return true;
+  }
+
+  private validateWebhookUrl (webhookUrl: string): void {
+    const parsedUrl = new URL(webhookUrl);
+    if (
+      parsedUrl.protocol !== 'https:'
+      || parsedUrl.hostname !== 'qyapi.weixin.qq.com'
+      || parsedUrl.pathname !== '/cgi-bin/webhook/send'
+      || !parsedUrl.searchParams.get('key')
+    ) {
+      throw new Error('企业微信机器人 Webhook 地址无效');
+    }
+  }
+
   private formatDate (date: string): string {
     if (!/^\d{8}$/.test(date)) {
       return date;

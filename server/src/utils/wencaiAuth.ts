@@ -1,31 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 
-function setCookieValue (cookie: string, key: string, value: string): string {
-  const entries = cookie
-    .split(';')
-    .map(entry => entry.trim())
-    .filter(entry => entry && !entry.toLowerCase().startsWith(`${key.toLowerCase()}=`));
-
-  entries.push(`${key}=${value}`);
-  return entries.join('; ');
-}
-
 export function getWencaiCookie (
   hexinV: string,
-  fallbackCookie: string = ''
+  _fallbackCookie: string = ''
 ): string {
-  const configuredCookie = process.env.THS_WENCAI_COOKIE?.trim() || '';
-  const ticket = process.env.THS_TICKET?.trim() || '';
-  let cookie = configuredCookie || fallbackCookie;
-
-  cookie = setCookieValue(cookie, 'v', hexinV);
-
-  // Cookie 配置优先；仅在未配置问财 Cookie 时使用 Ticket 补充旧认证链路。
-  if (!configuredCookie && ticket) {
-    cookie = setCookieValue(cookie, 'ticket', ticket);
-  }
-
-  return cookie;
+  return `v=${hexinV}`;
 }
 
 export async function postWencaiQuery (
@@ -67,7 +46,6 @@ export async function postWencaiQuery (
         'Referer': 'https://www.iwencai.com/',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'hexin-v': hexinV,
-        'Cookie': getWencaiCookie(hexinV),
       },
       timeout,
     }

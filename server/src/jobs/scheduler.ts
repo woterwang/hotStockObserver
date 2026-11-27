@@ -63,6 +63,7 @@ export class JobScheduler {
 
   // 自动推送任务
   private autoPushJob: cron.ScheduledTask | null = null;
+  private ticketExpiryReminderJob: cron.ScheduledTask | null = null;
 
   /**
    * 启动所有定时任务
@@ -81,6 +82,7 @@ export class JobScheduler {
     this.startNightJobs();
     this.startDailyKlineUpdateJob();
     this.startAutoPushJob();
+    this.startTicketExpiryReminderJob();
 
     logger.info('定时任务已启动');
   }
@@ -127,6 +129,11 @@ export class JobScheduler {
     if (this.autoPushJob) {
       this.autoPushJob.stop();
       this.autoPushJob = null;
+    }
+
+    if (this.ticketExpiryReminderJob) {
+      this.ticketExpiryReminderJob.stop();
+      this.ticketExpiryReminderJob = null;
     }
 
     logger.info('定时任务已停止');
@@ -590,6 +597,54 @@ export class JobScheduler {
     })
 
     logger.info(`自动推送到GitHub任务已配置，Cron表达式: ${cronExpression}`);
+  }
+
+  /**
+   * 同花顺 Ticket 到期提醒
+   * 默认每天上午09:00执行，到期前5天开始每天提醒。
+   */
+  private startTicketExpiryReminderJob () {
+    const cronExpression = process.env.THS_TICKET_REMINDER_CRON || '0 9 * * *';
+    this.ticketExpiryReminderJob = cron.schedule(cronExpression, async () => {
+      try {
+        const expiresAtText = process.env.THS_TICKET_EXPIRES_AT?.trim();
+        const webhookUrl = process.env.WECHAT_TICKET_BOT_WEBHOOK?.trim() || '';
+        const reminderDays = Number(process.env.THS_TICKET_REMINDER_DAYS || 5);
+
+        if (!expiresAtText || !/^\d{4}-\d{2}-\d{2}$/.test(expiresAtText)) {
+          logger.error('[Ticket提醒] THS_TICKET_EXPIRES_AT 未配置或格式不是 YYYY-MM-DD');
+          return;
+        }
+
+        if (!Number.isInteger(reminderDays) || reminderDays < 0) {
+          logger.error('[Ticket提醒] THS_TICKET_REMINDER_DAYS 必须是非负整数');
+          return;
+        }
+
+        const expiresAt = dayjs(expiresAtText).startOf('day');
+        if (!expiresAt.isValid()) {
+          logger.error('[Ticket提醒] THS_TICKET_EXPIRES_AT 不是有效日期');
+          return;
+        }
+
+        const remainingDays = expiresAt.diff(dayjs().startOf('day'), 'day');
+        if (remainingDays > reminderDays) {
+          return;
+        }
+
+        await wechatWorkNotifyService.sendTicketExpiryReminder(
+          expiresAtText,
+          remainingDays,
+          webhookUrl
+        );
+      } catch (error) {
+        logger.error(`[Ticket提醒] 提醒失败: ${(error as Error).message}`);
+      }
+    }, {
+      timezone: 'Asia/Shanghai',
+    });
+
+    logger.info(`Ticket到期提醒任务已配置，Cron表达式: ${cronExpression}`);
   }
 }
 
