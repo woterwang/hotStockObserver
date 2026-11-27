@@ -16,6 +16,34 @@ function getMarketCode (stockCode: string): string {
 class GroupService {
 	private version = 0;
 
+	async validateCredentials (ticket: string, user: string): Promise<void> {
+		const url = `${GROUP_API_BASE}/group/v1/add`;
+		const response = await axios.post(
+			url,
+			this.buildFormBody({
+				from: 'sjcg_ios',
+				name: '',
+				type: '0',
+				version: '0',
+			}),
+			{
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Cookie': `ticket=${ticket}; user=${user}`,
+					'User-Agent': '%E5%90%8C%E8%8A%B1%E9%A1%BA/12.01.00 CFNetwork/1568.300.101 Darwin/24.2.0',
+				},
+				timeout: 30000,
+			}
+		);
+
+		if (response.data?.status_msg === 'auth failed') {
+			throw new Error('Ticket 或 User 验证失败，请重新从浏览器复制');
+		}
+		if (response.data?.status_msg !== 'param invalid') {
+			throw new Error(`同花顺认证验证异常: ${response.data?.status_msg || '未知响应'}`);
+		}
+	}
+
 	private getCookie (): string {
 		const ticket = process.env.THS_TICKET?.trim();
 		const user = process.env.THS_USER?.trim();

@@ -35,6 +35,7 @@ export const Header: React.FC = () => {
     { path: '/stats', label: '阶段统计', icon: '📈' },
     { path: '/backtest', label: '策略回测', icon: '🧪' },
     { path: '/backtest-analysis', label: '回测结果分析', icon: '🧩' },
+    { path: '/settings', label: '系统设置', icon: '⚙️' },
   ];
 
   // 关闭所有菜单

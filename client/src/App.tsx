@@ -14,6 +14,7 @@ const ConceptResonancePage = lazy(() => import('./pages/ConceptResonancePage'));
 const HundredDayHighPage = lazy(() => import('./pages/HundredDayHighPage'));
 const HistoryConceptPage = lazy(() => import('./pages/HistoryConceptPage'));
 const BacktestAnalysisPage = lazy(() => import('./pages/BacktestAnalysisPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
 const RouteLoading = () => (
   <div className="min-h-screen bg-gray-50">
@@ -37,6 +38,7 @@ function App() {
           <Route path="/backtest" element={<BacktestPage />} />
           <Route path="/backtest-analysis" element={<BacktestAnalysisPage />} />
           <Route path="/signals" element={<SignalPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/stock/:code" element={<StockDetailPage />} />
         </Routes>
       </Suspense>

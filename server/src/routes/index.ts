@@ -10,6 +10,7 @@ import hundredDayHighRoutes from './hundredDayHighRoutes';
 import buySignalRoutes from './buySignalRoutes';
 import conceptResonanceRoutes from './conceptResonanceRoutes';
 import testPanRoutes from './testPanRoutes';
+import adminRoutes from './adminRoutes';
 
 const router = Router();
 
@@ -25,6 +26,7 @@ router.use('/buy-signal', buySignalRoutes);
 router.use('/backtest', backtestRoutes);
 router.use('/signals', signalRoutes);
 router.use('/sentiment', sentimentRoutes);
+router.use('/admin', adminRoutes);
 
 // 健康检查
 router.get('/health', (req, res) => {

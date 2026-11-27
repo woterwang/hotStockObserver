@@ -199,6 +199,28 @@ export const adminApi = {
   manualUpdate: (): Promise<ApiResponse<{ message: string }>> => {
     return api.post('/admin/update');
   },
+  getThsTicketStatus: (adminKey: string): Promise<ApiResponse<{
+    configured: boolean;
+    hasUser: boolean;
+    updatedAt: string | null;
+    expiresAt: string | null;
+    remainingDays: number | null;
+  }>> => {
+    return api.get('/admin/ths-ticket/status', {
+      headers: { 'X-Admin-Key': adminKey },
+    });
+  },
+  updateThsTicket: (adminKey: string, ticket: string, user?: string): Promise<ApiResponse<{
+    configured: boolean;
+    hasUser: boolean;
+    updatedAt: string | null;
+    expiresAt: string | null;
+    remainingDays: number | null;
+  }>> => {
+    return api.put('/admin/ths-ticket', { ticket, user }, {
+      headers: { 'X-Admin-Key': adminKey },
+    });
+  },
 };
 
 /**
