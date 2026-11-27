@@ -1,4 +1,4 @@
-import { logger } from '../utils';
+import { logger, postWencaiQuery } from '../utils';
 import { MarketSentiment, IMarketSentiment, calculateSentimentScore, SentimentLevel, TradingAdvice } from '../models/MarketSentiment';
 import { formatDate, parseDate } from '../utils/dateUtils';
 import { marketMoodService } from './marketMoodService';
@@ -217,8 +217,6 @@ export class MarketSentimentService {
   private async queryWencai(question: string): Promise<any[]> {
     try {
       const hexinV = this.getHexinV();
-      const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
-      
       const data = {
         question,
         perpage: 200,
@@ -232,17 +230,7 @@ export class MarketSentimentService {
         log_info: JSON.stringify({ input_type: 'typewrite' }),
       };
 
-      const headers = {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Hexin-V': hexinV,
-        'Cookie': `v=${hexinV}`,
-        'Host': 'www.iwencai.com',
-        'Origin': 'http://www.iwencai.com',
-        'Referer': 'http://www.iwencai.com/',
-      };
-
-      const response = await axios.post(url, data, { headers, timeout: 30000 });
+      const response = await postWencaiQuery(data, hexinV);
       const resData = response.data;
 
       if (resData.status_code === 0) {

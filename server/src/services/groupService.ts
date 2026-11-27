@@ -19,11 +19,18 @@ class GroupService {
 	private version = 0;
 
 	private getCookie (): string {
-		const cookie = Cookies || process.env.THS_AUTH_COOKIE;
+		const cookie = process.env.THS_AUTH_COOKIE || Cookies;
 		if (!cookie) {
 			throw new Error('THS_AUTH_COOKIE 环境变量未配置');
 		}
-		return cookie;
+
+		const ticket = process.env.THS_TICKET?.trim();
+		if (!ticket) {
+			throw new Error('THS_TICKET 环境变量未配置');
+		}
+
+		const cookieWithoutTicket = cookie.replace(/(?:^|;\s*)ticket=[^;]*/i, '');
+		return `${cookieWithoutTicket.replace(/;\s*$/, '')}; ticket=${ticket}`;
 	}
 
 	private getHeaders () {

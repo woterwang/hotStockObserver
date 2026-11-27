@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
-import { logger } from '../utils';
+import { logger, postWencaiQuery } from '../utils';
 import { tradingCalendarService } from './tradingCalendarService';
 import { klineCacheService } from './klineCacheService';
 import {
@@ -106,7 +106,6 @@ export class TestPanService {
    * 通用问财查询
    */
   private async queryWencai(question: string): Promise<any[]> {
-    const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
     const hexinV = this.getHexinV();
 
     const data: Record<string, string | number> = {
@@ -124,14 +123,7 @@ export class TestPanService {
     };
 
     try {
-      const response = await axios.post(url, data, {
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'hexin-v': hexinV,
-        },
-        timeout: 30000,
-      });
+      const response = await postWencaiQuery(data, hexinV);
 
       // 问财接口响应结构
       const components = response.data?.data?.answer?.[0]?.txt?.[0]?.content?.components || [];

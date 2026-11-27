@@ -1,4 +1,4 @@
-import { logger } from '../utils';
+import { logger, postWencaiQuery } from '../utils';
 import { TradingSignal,PriceBreakthrough } from '../models';
 import { formatDate, parseDate } from '../utils/dateUtils';
 import axios from 'axios';
@@ -375,7 +375,6 @@ export class BacktestService {
       const question = `${stockCode} ${dateList} 开盘价，收盘价，最高价，最低价`;
       const hexinV = this.getHexinV();
 
-      const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
       const data = {
         question,
         perpage: 100,
@@ -389,17 +388,7 @@ export class BacktestService {
         log_info: JSON.stringify({ input_type: 'typewrite' }),
       };
 
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Hexin-V': hexinV,
-        'Cookie': `v=${hexinV}`,
-        'Host': 'www.iwencai.com',
-        'Origin': 'http://www.iwencai.com',
-        'Referer': 'http://www.iwencai.com/',
-      };
-
-      const response = await axios.post(url, data, { headers, timeout: 15000 });
+      const response = await postWencaiQuery(data, hexinV, 15000);
 
       const resData = response.data;
       if (resData.status_code === 0 && resData.data?.answer?.[0]?.txt?.[0]?.content?.components) {
@@ -455,7 +444,6 @@ export class BacktestService {
       const question = `${stockCode} ${dateStr}开盘价，${dateStr}收盘价，${dateStr}最高价，${dateStr}最低价`;
       const hexinV = this.getHexinV();
 
-      const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
       const data = {
         question,
         perpage: 10,
@@ -469,17 +457,7 @@ export class BacktestService {
         log_info: JSON.stringify({ input_type: 'typewrite' }),
       };
 
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Hexin-V': hexinV,
-        'Cookie': `v=${hexinV}`,
-        'Host': 'www.iwencai.com',
-        'Origin': 'http://www.iwencai.com',
-        'Referer': 'http://www.iwencai.com/',
-      };
-
-      const response = await axios.post(url, data, { headers, timeout: 15000 });
+      const response = await postWencaiQuery(data, hexinV, 15000);
       const resData = response.data;
 
       if (resData.status_code !== 0) {
@@ -556,7 +534,6 @@ export class BacktestService {
       const question = `${stockCode} ${startDate}到${dateList[dateList.length - 1] || startDate} 日K数据`;
       const hexinV = this.getHexinV();
 
-      const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
       const data = {
         question,
         perpage: 100,
@@ -570,17 +547,7 @@ export class BacktestService {
         log_info: JSON.stringify({ input_type: 'typewrite' }),
       };
 
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Hexin-V': hexinV,
-        'Cookie': `v=${hexinV}`,
-        'Host': 'www.iwencai.com',
-        'Origin': 'http://www.iwencai.com',
-        'Referer': 'http://www.iwencai.com/',
-      };
-
-      const response = await axios.post(url, data, { headers, timeout: 15000 });
+      const response = await postWencaiQuery(data, hexinV, 15000);
 
       const resData = response.data;
       if (resData.status_code !== 0) {
@@ -657,7 +624,6 @@ export class BacktestService {
       const question = `${stockCode} ${startDate}到${endDate}的日K线数据`;
       const hexinV = this.getHexinV();
 
-      const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
       const data = {
         question,
         perpage: 100,
@@ -671,14 +637,7 @@ export class BacktestService {
         log_info: JSON.stringify({ input_type: 'typewrite' }),
       };
 
-      const headers = {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Hexin-V': hexinV,
-        'Cookie': `v=${hexinV}`,
-      };
-
-      const response = await axios.post(url, data, { headers, timeout: 15000 });
+      const response = await postWencaiQuery(data, hexinV, 15000);
 
       // 解析K线数据（根据实际返回格式调整）
       const result = response.data;

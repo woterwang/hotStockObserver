@@ -8,7 +8,7 @@
  * 2. 强度验证：热点板块是否有真实涨幅支撑
  * 3. 地位验证：个股在板块中是龙头还是跟风
  */
-import { logger } from '../utils';
+import { logger, postWencaiQuery } from '../utils';
 import { ConceptResonance } from '../models/ConceptResonance';
 import { ConceptResonanceBuySignals } from '../models/ConceptResonanceBuySignals';
 import { getToday, formatDate } from '../utils/dateUtils';
@@ -116,7 +116,6 @@ export class ConceptResonanceService {
   // ========================================
 
   private async queryWencai (question: string): Promise<any[]> {
-    const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
     const hexinV = this.getHexinV();
 
     const data: Record<string, string | number> = {
@@ -134,14 +133,7 @@ export class ConceptResonanceService {
     };
 
     try {
-      const response = await axios.post(url, data, {
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'hexin-v': hexinV,
-        },
-        timeout: 30000,
-      });
+      const response = await postWencaiQuery(data, hexinV);
 
       const components = response.data?.data?.answer?.[0]?.txt?.[0]?.content?.components || [];
 

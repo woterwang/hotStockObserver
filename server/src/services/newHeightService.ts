@@ -6,7 +6,7 @@
  * @😍: 😃😃
  */
 import { groupService } from './groupService';
-import { logger } from '../utils';
+import { getWencaiCookie, logger } from '../utils';
 import { HundredDayHigh, HundredDayHighSignal, IHundredDayHighSignal } from '../models';
 import { getToday, formatDate, getTodayStr } from '../utils/dateUtils';
 import axios from 'axios';
@@ -298,11 +298,11 @@ export class NewHeightService {
           'Sec-Fetch-Mode': 'cors',
           'Sec-Fetch-Site': 'same-origin',
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36',
-          'hexin-v': 'A16qrqwWuLNsm-xXsyor-9OQr_-lHyGutO7WrQj4zl6dB_ChcK9yqYRzJufb',
+          'hexin-v': hexinV,
           'sec-ch-ua': '"Google Chrome";v="149", "Chromium";v="149", "Not)A;Brand";v="24"',
           'sec-ch-ua-mobile': '?0',
           'sec-ch-ua-platform': '"Windows"',
-          'Cookie': `other_uid=Ths_iwencai_Xuangu_e6cj4nqeyrtoifkfwr4wrqr57qwf4j4c; _clck=elr9o9%7C2%7Cg75%7C0%7C0; cid=00fe07961a4b9ab3a0eeb30249290bdc1782221489; _clsk=1tqj3sp1b2wx%7C1782221661119%7C6%7C1%7C; v=${hexinV}; ComputerID=d136bc6a1d3aca1eaa9f3efb043ff0501776084397; WafStatus=0; cid=d136bc6a1d3aca1eaa9f3efb043ff0501776084397`
+          'Cookie': getWencaiCookie(hexinV, 'other_uid=Ths_iwencai_Xuangu_e6cj4nqeyrtoifkfwr4wrqr57qwf4j4c; guideState=1; wencai_pc_version=1')
         },
         data: data,
         timeout: 30000,
@@ -366,11 +366,11 @@ export class NewHeightService {
         'Sec-Fetch-Mode': 'cors',
         'Sec-Fetch-Site': 'same-origin',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36',
-        'hexin-v': 'A16qrqwWuLNsm-xXsyor-9OQr_-lHyGutO7WrQj4zl6dB_ChcK9yqYRzJufb',
+        'hexin-v': hexinV,
         'sec-ch-ua': '"Google Chrome";v="149", "Chromium";v="149", "Not)A;Brand";v="24"',
         'sec-ch-ua-mobile': '?0',
         'sec-ch-ua-platform': '"Windows"',
-        'Cookie': `other_uid=Ths_iwencai_Xuangu_e6cj4nqeyrtoifkfwr4wrqr57qwf4j4c; _clck=elr9o9%7C2%7Cg75%7C0%7C0; cid=00fe07961a4b9ab3a0eeb30249290bdc1782221489; _clsk=1tqj3sp1b2wx%7C1782221661119%7C6%7C1%7C; v=${hexinV}; ComputerID=d136bc6a1d3aca1eaa9f3efb043ff0501776084397; WafStatus=0; cid=d136bc6a1d3aca1eaa9f3efb043ff0501776084397`
+        'Cookie': getWencaiCookie(hexinV, 'other_uid=Ths_iwencai_Xuangu_e6cj4nqeyrtoifkfwr4wrqr57qwf4j4c; guideState=1; wencai_pc_version=1')
       },
       data: data,
       timeout: 30000,

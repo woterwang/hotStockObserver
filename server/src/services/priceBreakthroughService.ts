@@ -1,4 +1,4 @@
-import { logger } from '../utils';
+import { getWencaiCookie, logger, postWencaiQuery } from '../utils';
 import { PriceBreakthrough, HotStock } from '../models';
 import { dataFetchService, HistoryKline } from './dataFetchService';
 import { getToday, formatDate, getDaysAgo } from '../utils/dateUtils';
@@ -104,8 +104,6 @@ export class PriceBreakthroughService {
     // 构建问财查询条件（三天模式）
     // 添加成交额、量比字段到查询中
     const question = `${day1}涨幅>8%，${day1}股价创188日新高，${day2}涨跌幅大于-3%且<3%，${day2}最高价>${day1}最高价，${day3}开盘价>${day2}当日均价，${day3}开盘涨幅<3%且>-5%，${day1}成交额，${day2}量比，非ST，非新股，非北交所，近二年未被立案`;
-    const url = 'http://www.iwencai.com/customized/chart/get-robot-data';
-    
     // 动态生成 Hexin-V
     const hexinV = this.getHexinV();
     
@@ -128,7 +126,7 @@ export class PriceBreakthroughService {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       'Accept': '*/*',
       'Referer': `http://www.iwencai.com/unifiedwap/result?w=${encodeURIComponent(question)}&querytype=stock`,
-      'Cookie': `other_uid=Ths_iwencai_Xuangu_0k9ulnwt96k6xiozeacd2z20dhuy0s9b; guideState=1; wencai_pc_version=1; ta_random_userid=mkoh08tein; v=${hexinV}`,
+      'Cookie': getWencaiCookie(hexinV, 'other_uid=Ths_iwencai_Xuangu_0k9ulnwt96k6xiozeacd2z20dhuy0s9b; guideState=1; wencai_pc_version=1; ta_random_userid=mkoh08tein'),
       'Hexin-V': hexinV,
       'Host': 'www.iwencai.com',
       'Origin': 'http://www.iwencai.com',
@@ -137,10 +135,7 @@ export class PriceBreakthroughService {
     try {
       logger.info(`问财查询 (day1=${day1}, day2=${day2}, day3=${day3}): ${question}`);
       logger.debug(`使用 Hexin-V: ${hexinV}`);
-      const response = await axios.post(url, data, { 
-        headers,
-        timeout: 30000 
-      });
+      const response = await postWencaiQuery(data, hexinV);
       
       const result = response.data;
       
