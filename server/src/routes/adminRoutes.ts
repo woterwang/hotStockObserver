@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import { timingSafeEqual } from 'crypto';
 import { logger } from '../utils';
 import { thsCredentialService } from '../services/thsCredentialService';
@@ -12,7 +12,11 @@ function isValidAdminKey (providedKey: string, configuredKey: string): boolean {
     && timingSafeEqual(provided, configured);
 }
 
-router.use((req, res, next) => {
+export function requireAdminApiKey(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   const configuredKey = process.env.ADMIN_API_KEY?.trim();
   if (!configuredKey) {
     res.status(503).json({ success: false, message: '服务端未配置 ADMIN_API_KEY' });
@@ -26,7 +30,9 @@ router.use((req, res, next) => {
   }
 
   next();
-});
+}
+
+router.use(requireAdminApiKey);
 
 router.get('/ths-ticket/status', (_req, res) => {
   res.json({

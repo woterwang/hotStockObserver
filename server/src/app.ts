@@ -8,8 +8,14 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 import routes from './routes';
+import { requireAdminApiKey } from './routes/adminRoutes';
 import { jobScheduler } from './jobs';
 import { logger } from './utils';
+import {
+  createAccessRouter,
+  requireSiteAccess,
+  sendAccessChallengePage,
+} from './middleware/accessGate';
 
 // 加载环境变量
 dotenv.config();
@@ -46,11 +52,27 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
+// 访问验证入口无需先通过站点访问门槛
+app.get('/access', sendAccessChallengePage);
+app.use('/api/access', createAccessRouter());
+
+// 健康检查保留供本机和监控探测
+app.get('/api/health', (_req, res) => {
+  res.json({
+    success: true,
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// 验证页面与普通 API 的统一访问门槛
+app.use(requireSiteAccess);
+
 // API路由
 app.use('/api', routes);
 
 // 手动触发更新路由
-app.post('/api/admin/update', async (req, res) => {
+app.post('/api/admin/update', requireAdminApiKey, async (req, res) => {
   try {
     const count = await jobScheduler.manualUpdate();
     res.json({ success: true, message: `更新成功，共保存 ${count} 条数据` });

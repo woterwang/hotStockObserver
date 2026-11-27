@@ -28,13 +28,4 @@ router.use('/signals', signalRoutes);
 router.use('/sentiment', sentimentRoutes);
 router.use('/admin', adminRoutes);
 
-// 健康检查
-router.get('/health', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Server is running',
-    timestamp: new Date().toISOString(),
-  });
-});
-
 export default router;
